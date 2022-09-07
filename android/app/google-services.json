@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "782203884662",
+    "project_id": "taqdaa-10e41",
+    "storage_bucket": "taqdaa-10e41.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:782203884662:android:92f455fd8e3958c27a7b57",
+        "android_client_info": {
+          "package_name": "com.example.taqdaa_application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "782203884662-ch81i296nlgn4j580f88b32e900lfcsl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrQ2UiNzImDzxToF5I5BaRREfkRWrUwN8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "782203884662-ch81i296nlgn4j580f88b32e900lfcsl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
