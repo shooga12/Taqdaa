@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:taqdaa_application/screens/list_of_stores.dart';
+//import 'package:taqdaa_application/screens/storeDetails.dart';
 import 'screens/home_page.dart';
 
 void main() async {
@@ -12,13 +14,6 @@ void main() async {
     home: MyApp(),
   ));
 }
-
-// child: ElevatedButton(
-//   onPressed: () {
-//     Navigator.pop(context);
-//   },
-//   child: const Text('Go back!'),
-// ),
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -33,15 +28,6 @@ class _MyAppState extends State<MyApp> {
   final List<Widget> _children = [
     HomePage(),
   ];
-  // void signup() async {
-  //   try {
-  //     await firebaseAuth.createUserWithEmailAndPassword(
-  //         email: "shooge@gmail.com", password: "12345");
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,29 +44,25 @@ class _MyAppState extends State<MyApp> {
         elevation: 0,
       ),
       body: _children[_currentIndex],
+      //
+      // bottomNavigationBar: BottomNavigationBar(
+      //   onTap: (onTapTapped) {},
+      //   currentIndex: _currentIndex,
+      //   items: [
+      //     BottomNavigationBarItem(
+      //       label: Title(child: Text),
+      //       icon: new Icon(Icons.home),
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: new Icon(Icons.explore),
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: new Icon(Icons.account_circle),
+      //     )
+      //   ],
+      // ),
     );
-    //   return MaterialApp(
-    //     home: Scaffold(
-    //       extendBodyBehindAppBar: true,
-    //       appBar: AppBar(
-    //         flexibleSpace: Container(
-    //           decoration: BoxDecoration(
-    //               image: DecorationImage(
-    //                   image: AssetImage("assets/background.png"),
-    //                   fit: BoxFit.fill)),
-    //         ),
-    //         toolbarHeight: 170,
-    //         //leading: BackButton(),
-    //         backgroundColor: Colors.transparent,
-    //         elevation: 0,
-    //       ),
-    //       body: Center(
-    //         child: ElevatedButton(
-    //             child: const Text('Open route'),
-    //             onPressed: () {
-    //             }),
-    //       ),
-    //     ),
-    //   );
   }
+
+  void onTapTapped() {}
 }
