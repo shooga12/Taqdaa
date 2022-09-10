@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'list_of_stores.dart';
+import 'scanBarCode.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -22,9 +23,10 @@ class HomePage extends StatelessWidget {
         child: ElevatedButton(
           child: const Text('Scan'),
           onPressed: () {
+            //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ));
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ListOfStores()),
+              MaterialPageRoute(builder: (context) => ListOfStores2()),
             );
           },
         ),

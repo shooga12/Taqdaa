@@ -3,10 +3,39 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:taqdaa_application/screens/scanBarCode.dart';
+import 'scanBarCode.dart';
 
-class ListOfStores extends StatelessWidget {
-  ListOfStores({super.key});
+class ListOfStores2 extends StatefulWidget {
+  const ListOfStores2({super.key});
+
+  @override
+  State<ListOfStores2> createState() => _ListOfStores2State();
+}
+
+class _ListOfStores2State extends State<ListOfStores2> {
   final List<Store> Stores = [];
+
+  String _counter = "";
+  String _value = "";
+
+  Future _scan(BuildContext context) async {
+    _counter = await FlutterBarcodeScanner.scanBarcode(
+        "#004297", "Cancel", true, ScanMode.BARCODE);
+
+    setState(() {
+      _value = _counter;
+    });
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => ScanPage(
+                _value,
+              )),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +57,23 @@ class ListOfStores extends StatelessWidget {
         elevation: 0,
       ),
       body: StreamBuilder<List<Store>>(
-          stream: readUsers(),
+          stream: readStores(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final stores = snapshot.data!;
-              return ListView(
-                children: stores.map(buildStoresCards).toList(),
+              return ListView.builder(
+                itemCount: stores.length,
+                itemBuilder: (BuildContext context, int index) =>
+                    buildStoresCards(stores[index], context),
+                //{
+                //   //Map thisItem = stores[index];
+                //   return ListTile(
+                //     title: Text(''),
+                //     subtitle: Text(''),
+                //   );
+                // }
+                //
+                //children: stores.map(buildStoresCards).toList(),
               );
             } else if (snapshot.hasError) {
               return Text("Some thing went wrong! ${snapshot.error}");
@@ -52,14 +92,14 @@ class ListOfStores extends StatelessWidget {
     );
   }
 
-  Stream<List<Store>> readUsers() => FirebaseFirestore.instance
+  Stream<List<Store>> readStores() => FirebaseFirestore.instance
       .collection('Stores')
       .orderBy('KilloMeters')
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Store.fromJson(doc.data())).toList());
 
-  Widget buildStoresCards(Store store) {
+  Widget buildStoresCards(Store store, BuildContext context) {
     return Container(
       child: Padding(
         padding: const EdgeInsets.only(
@@ -103,9 +143,10 @@ class ListOfStores extends StatelessWidget {
               ),
             ),
             onTap: () {
-              // Navigator.push(
+              _scan(context);
+              //   Navigator.push(
               //   context,
-              //   MaterialPageRoute(builder: (context) => ListOfStores()),
+              //   MaterialPageRoute(builder: (context) => ScanPage()),
               // );
             },
           ),
