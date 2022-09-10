@@ -49,17 +49,39 @@ body{
     padding: 0.3em 0em 0.3em 0.5em;
     width: 270px;
 }
-h4{
+h4.h2.h5{
     color:#141d54;
 }
 #login-btn{
     width: 180px;
+}
+.com-btn{
+    width: 100px; ;
+}
+.only{
+    color: #8e8e8e;
+    font-style: bold;
+}
+.login-end{
+color: #141d54;
+font-size: small;
+}
+.end{
+    color:#8e8e8e;
+    font-size: small;
 }
 
 #sendreq-btn{
     width: 180px ;
     text-align: center;
 }
+#g1{
+    margin-bottom: 20px;
+}
+#g2{
+    margin-bottom: 20px;
+}
+
 
 #box-2{
     background-color: #141d54;
