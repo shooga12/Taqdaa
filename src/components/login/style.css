@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@200&display=swap');
+@font-face {
+    font-family: 'Tajawal';
+    src: local('Tajawal'), url('../../shared/Tajawal/Tajawal-Bold.ttf') format('truetype');
+}
+body{
+    background-color: #fcfcfc !important;
+    font-family: 'Tajawal', sans-serif !important;
+}
+#box{
+    background-color: #FEB139;
+    box-shadow: 1px 1px 15px 5px #ebebeb;
+    border-radius: 40px;
+    margin: auto;
+    height: 590px;
+    color:#141d54;
+}
+#box a{
+    color:#2738a7;
+}
+#box a:hover{
+    color:#1c2a7f;
+}
+#box-content-container{
+    background-color: white;
+    border-top-right-radius: 180px;
+    border-bottom-right-radius: 180px;
+    border-top-left-radius: 40px;
+    border-bottom-left-radius: 40px;
+    height: 100%;
+}
+.btns{
+    border:none;
+    border-radius: 50px;
+    font-size: 22px;
+    padding: 0.2em 2.5em 0.2em 2.5em;
+}
+.filled-blue-btn{
+    background-color: transparent;
+    background-color: #1E286D;
+    color: white;
+}
+.filled-blue-btn:hover{
+    background-color: #141d54;
+}
+.nonfilled-btn{
+    background-color: transparent;
+    border: 1px solid #1E286D;
+    color:#1E286D;
+}
+.nonfilled-btn:hover{
+    background-color: rgb(242, 242, 242);
+}
+.input-field{
+    border-radius: 50px;
+    border: 1px solid #a6a6a6;
+    padding: 0.5em 0.5em 0em 0.5em;
+    width: 270px;
+}
+h4{
+    color:#141d54;
+}
+#login-btn{
+    width: 230px;
+}
