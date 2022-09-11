@@ -1,6 +1,6 @@
 {
-    "name": "shahad",
-    "short_name": "shahad",
+    "name": "loginlogout_resetpass",
+    "short_name": "loginlogout_resetpass",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

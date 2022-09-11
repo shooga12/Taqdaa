@@ -1,4 +1,4 @@
-name: shahad
+name: loginlogout_resetpass
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -36,9 +36,11 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+
+  #firebase database
+  cloud_firestore: ^3.4.6
   firebase_core: ^1.21.1
   firebase_auth: ^3.7.0
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -63,8 +65,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images
-  
+    - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -1,9 +1,11 @@
-import 'dart:js';
+//import 'dart:js';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-//import 'package:shahad/signup_page.dart';
+import 'package:loginlogout_resetpass/home_page.dart';
+import 'package:loginlogout_resetpass/register_page.dart';
 import 'reusable_widget/reusable_widget.dart';
+import 'package:loginlogout_resetpass/reset_page.dart';
 
 TextEditingController _emailController = TextEditingController();
 TextEditingController _passController = TextEditingController();
@@ -18,10 +20,10 @@ class LoginPage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.fromLTRB(
-                20, MediaQuery.of(context).size.height * 0.2, 20, 0),
+                20, MediaQuery.of(context).size.height * 0.1, 20, MediaQuery.of(context).size.height * 0.05),
             child: Column(
               children: <Widget>[
-                cloudDcrWidget("asset/images/LoginGroup.png"),
+                cloudDcrWidget("assets/images/LoginGroup.png"),
                 const SizedBox(
                   height: 36,
                 ),
@@ -31,24 +33,27 @@ class LoginPage extends StatelessWidget {
                   height: 20,
                 ),
                 reusableTextField(
-                    "Enter your password", false, _passController),
+                    "Enter your password", true, _passController),
                 const SizedBox(
                   height: 6,
                 ),
-                forgotPass(context),
-                loginRegisterButton(context, true, () {
-                  FirebaseAuth.instance
-                      .signInWithEmailAndPassword(
+                forgotPassword(context),
+
+                ReusableButton(context, 'LOG IN', () {
+
+                  FirebaseAuth.instance.signInWithEmailAndPassword(
                           email: _emailController.text,
-                          password: _passController.text)
-                      .then((value) {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => LoginPage()));
-                  }).onError((error, stackTrace) {
-                    print("Error ${error.toString()}");
+                          password: _passController.text).then((value) {
+                            Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => HomePage()));
+                  
                   });
                 }),
-                notRegistered()
+
+
+
+                notRegistered(context)
+                
               ],
             ),
           ),
@@ -57,37 +62,41 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Row notRegistered() {
+  Row notRegistered(context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Text("Don't have an account?",
-            style: TextStyle(color: Color.fromARGB(140, 255, 255, 255))),
+            style: TextStyle(color: Color.fromARGB(255, 15, 53, 120))),
         GestureDetector(
           onTap: () {
-            //Navigator.push(context, MaterialPageRoute(builder:(context)=> RegisterPage()));
+            Navigator.push(context, MaterialPageRoute(builder:(context)=> RegisterPage()));
           },
           child: const Text(
-            "Register",
+            "  Register",
             style: TextStyle(color: Color.fromARGB(255, 15, 53, 120) , fontWeight: FontWeight.bold),
           ),
         )
       ],
     );
   }
-  Widget forgotPass(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: 36,
-      alignment: Alignment.bottomCenter,
-      child: TextButton(
-        child: const Text("Forgot Password? reset" , style: TextStyle( color: Color.fromARGB(255, 9, 44, 104)),
-        textAlign: TextAlign.center,
-        ),
-        onPressed: () {
-          
-        },
-      ),
+
+
+  Row forgotPassword(context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text("Forgot password?",
+            style: TextStyle(color: Color.fromARGB(255, 15, 53, 120))),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder:(context)=> ResetPassPage()));
+          },
+          child: const Text(
+            "  Reset Password",
+            style: TextStyle(color: Color.fromARGB(255, 15, 53, 120) , fontWeight: FontWeight.bold),
+          ),
+        )
+      ],
     );
-  }
-}
+    } }

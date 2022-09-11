@@ -16,32 +16,42 @@ TextField reusableTextField(
     obscureText: isPasswordType,
     enableSuggestions: !isPasswordType,
     autocorrect: !isPasswordType,
-    cursorColor: Colors.white,
-    style: TextStyle(color: Colors.white.withOpacity(0.9)),
+    cursorColor: Color.fromARGB(255, 37, 43, 121),
+    style: TextStyle(color: Color.fromARGB(255, 15, 53, 120).withOpacity(0.9)),
     decoration: InputDecoration(
 // prefixIcon : Icon(
 // icon,
 // color: Colors .white70,
 // ), // Icon
       labelText: text,
-      labelStyle: TextStyle(color: Colors.white.withOpacity(0.9)),
+      labelStyle:
+          TextStyle(color: Color.fromARGB(236, 113, 113, 117).withOpacity(0.9)),
       filled: true,
-      floatingLabelBehavior: FloatingLabelBehavior.never,
+
       fillColor: Colors.white.withOpacity(0.9),
-      border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30.0),
-          borderSide: const BorderSide(
-              color: Colors.orange, width: 2.1, style: BorderStyle.solid)),
+      // border: OutlineInputBorder(
+      //  borderRadius: BorderRadius.circular(30.0),),
+
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(30.0),
+        borderSide: const BorderSide(
+            color: Color.fromARGB(255, 15, 53, 120), width: 2.0),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(30.0),
+        borderSide: const BorderSide(color: Colors.orange, width: 2.0),
+      ),
+    ),
+
 // OutlineInput Border
-    ), // InputDecoration
+
     keyboardType: isPasswordType
         ? TextInputType.visiblePassword
         : TextInputType.emailAddress,
-  ); // TextField
-} //controller
+  );
+}
 
-Container loginRegisterButton(
-    BuildContext context, bool isLogin, Function onTap) {
+Container ReusableButton(BuildContext context, String title, Function onTap) {
   return Container(
     width: MediaQuery.of(context).size.width,
     height: 50,
@@ -52,7 +62,7 @@ Container loginRegisterButton(
         onTap();
       },
       child: Text(
-        isLogin ? 'LOG IN' : 'SIGN UP',
+        title,
         style: const TextStyle(
             color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
       ),
@@ -65,7 +75,6 @@ Container loginRegisterButton(
           }),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)))),
-//button style
-    ), //ElevatedButton
-  ); // Container
+    ),
+  );
 }
