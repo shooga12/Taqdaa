@@ -13,7 +13,15 @@ body{
     box-shadow: 1px 1px 15px 5px #ebebeb;
     border-radius: 40px;
     margin: auto;
-    height: 590px;
+    height: fit-content;
+    color:#141d54;
+}
+#Reset-box{
+    background-color: #FEB139;
+    box-shadow: 1px 1px 15px 5px #ebebeb;
+    border-radius: 40px;
+    margin: auto;
+    height: 530px;
     color:#141d54;
 }
 #box a{
@@ -22,6 +30,10 @@ body{
 #box a:hover{
     color:#1c2a7f;
 }
+.labels{
+    width: 270px;
+    font-weight: 600;
+}
 #box-content-container{
     background-color: white;
     border-top-right-radius: 180px;
@@ -29,6 +41,12 @@ body{
     border-top-left-radius: 40px;
     border-bottom-left-radius: 40px;
     height: 100%;
+}
+#back-arrow{
+    font-size: 26px;
+    color:#1c2a7f;
+    cursor: pointer;
+   
 }
 .btns{
     border:none;
@@ -60,6 +78,7 @@ body{
 }
 h4{
     color:#141d54;
+    font-weight: 700;
 }
 #login-btn{
     width: 230px;

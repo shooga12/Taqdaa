@@ -53,8 +53,10 @@ function Login(){
            <div class="pt-4 pb-5 pl-5 pr-5 d-flex h-100 flex-column align-items-center justify-content-around">
              <img src={Logo} height="90" class="mb-3 mt-4" alt="logo"/>
              <h4 class="mb-5 mt-5">Store Manager Log In</h4>
-               <input type="email" placeholder="Email" class="input-field" onChange={(e) => setEmail(e.target.value)}/>
-               <input type="password" placeholder="Password" class="input-field mt-3" onChange={(e) => setPassword(e.target.value)}/>
+               <label for="email" class="text-start labels mb-2">Email</label>
+               <input type="email" placeholder="example@gmail.com" class="input-field mb-4" name="email" onChange={(e) => setEmail(e.target.value)}/>
+               <label for="password" class="text-start labels">Password</label>
+               <input type="password" name="password" placeholder="Password" class="input-field mt-3" onChange={(e) => setPassword(e.target.value)}/>
                <button onClick={login} class="mt-5 btns filled-blue-btn" id="login-btn">Log In</button>
                <p class="mt-4 mb-4"><a href="#" onClick={()=>navigate('/reset')}>Forgot your password?</a></p>
                <p class="mt-4">Don't have an account?<a href="#"> Register</a></p>
