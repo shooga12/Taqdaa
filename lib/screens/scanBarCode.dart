@@ -3,22 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'list_of_stores.dart';
 
 class ScanPage extends StatefulWidget {
-  //const Dashboard(this.userData, {Key key}) : super(key: key);
   const ScanPage(this.value, {Key? key}) : super(key: key);
   final String value;
   @override
-  State<ScanPage> createState() => _ScanPageState();
+  State<ScanPage> createState() => _ScanPageState(value);
 }
 
 class _ScanPageState extends State<ScanPage> {
+  String _value = "";
+  _ScanPageState(this._value);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Where are you shopping ?',
+          "",
           // style: TextStyle(fontFamily: 'Cairo'),
         ),
         flexibleSpace: Container(
@@ -63,7 +65,7 @@ class _ScanPageState extends State<ScanPage> {
 
   Stream<List<Product>> readItems() => FirebaseFirestore.instance
       .collection('Products')
-      .where("Item_number", isEqualTo: "036000291452")
+      .where("Item_number", isEqualTo: _value.substring(1))
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Product.fromJson(doc.data())).toList());

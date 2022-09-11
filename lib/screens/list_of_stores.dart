@@ -42,8 +42,8 @@ class _ListOfStores2State extends State<ListOfStores2> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Where are you shopping ?',
-          // style: TextStyle(fontFamily: 'Cairo'),
+          'Choose Store',
+          style: TextStyle(fontSize: 24), //TextStyle(fontFamily: 'Cairo'),
         ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
@@ -112,7 +112,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
           child: new InkWell(
             child: Padding(
               padding: const EdgeInsets.only(
-                  top: 25, bottom: 25, left: 15, right: 8),
+                  top: 12, bottom: 12, left: 15, right: 12),
               child: Row(
                 children: <Widget>[
                   Image.network(
@@ -120,25 +120,38 @@ class _ListOfStores2State extends State<ListOfStores2> {
                     width: 60,
                     height: 60,
                   ),
-                  Text(
-                    store.Name,
-                    style: new TextStyle(
-                      fontSize: 18,
-                    ),
+                  Column(
+                    children: <Widget>[
+                      Text(
+                        store.Name,
+                        style: new TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            store.KilloMeters,
+                            style: new TextStyle(
+                              fontSize: 12,
+                              color: Color.fromARGB(255, 77, 76, 76),
+                            ),
+                          ),
+                          Text(
+                            'Km  ',
+                            style: new TextStyle(
+                              fontSize: 12,
+                              color: Color.fromARGB(255, 77, 76, 76),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
+
                   Spacer(),
-                  Text(
-                    store.KilloMeters,
-                    style: new TextStyle(
-                      fontSize: 15,
-                      color: Color.fromARGB(255, 77, 76, 76),
-                    ),
-                  ),
-                  Text(' Km  '),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    size: 18,
-                  ),
+                  Icon(Icons.document_scanner_outlined),
+                  //size: 18,
                 ],
               ),
             ),
@@ -150,7 +163,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
               // );
             },
           ),
-          color: Color.fromARGB(255, 232, 229, 218),
+          color: Color.fromARGB(243, 243, 239, 231),
         ),
       ),
     );
