@@ -47,8 +47,8 @@ function Sidebar() {
                 <span class="link hide">Products Dataset</span>
               </a>
             </li>
-            <li class="tooltip-element" data-tooltip="1" id="tab-2" onclick="navigate(2)">
-              <a href="#" className={currentTab == 2? "active-tab" : "non-active"} data-active="1" onClick={()=>setCurrentTab(2)}>
+            <li class="tooltip-element" data-tooltip="1" id="tab-2" onClick={()=>setCurrentTab(2)}>
+              <a href="#" className={currentTab == 2? "active-tab" : "non-active"} data-active="1">
                 <div class="icon">
                   <BiReceipt />
                 </div>

@@ -6,6 +6,7 @@ import auth from '../../shared/firebase';
 import {useNavigate} from 'react-router-dom';
 
 
+
 function Login(){
   
   const navigate = useNavigate();
@@ -34,7 +35,10 @@ function Login(){
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-          alert(errorMessage);
+          if(errorCode == "auth/wrong-password" || errorCode == "auth/user-not-found")
+             alert("Wrong email or password");
+          else
+             alert(errorMessage);
         });
       }
      }
@@ -59,15 +63,12 @@ function Login(){
                <input type="password" name="password" placeholder="Password" class="input-field mt-3" onChange={(e) => setPassword(e.target.value)}/>
                <button onClick={login} class="mt-5 btns filled-blue-btn" id="login-btn">Log In</button>
                <p class="mt-4 mb-4"><a href="#" onClick={()=>navigate('/reset')}>Forgot your password?</a></p>
-               <p class="mt-4">Don't have an account?<a href="#"> Register</a></p>
+               <p class="mt-4">Don't have an account?<a href="#" onClick={() => navigate('/signup')}> Register</a></p>
            </div>
           </div>
         </div>
       </div> 
-     )
-
-       
-    
+     )    
 }
 
 export default Login;

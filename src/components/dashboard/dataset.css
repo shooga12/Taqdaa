@@ -67,7 +67,7 @@ h1{
   margin: auto;
   text-align: center;
 }
-input[type='submit']{
+#upload-btn{
   border:none;
   margin-top: 2em;
   background-color: #1E286D;
@@ -76,7 +76,15 @@ input[type='submit']{
   border-radius: 5px;
   font-size: 18px;
   cursor: pointer;
+  text-align: center;
 }
-input[type='submit']:hover{
+#upload-btn:hover{
   background-color: #161e58;
+}
+#file-name{
+  color: #161e58;
+  font-size: 20px;
+}
+#file-name span{
+  color: #e38c00;
 }
