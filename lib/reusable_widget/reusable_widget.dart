@@ -50,6 +50,7 @@ TextField reusableTextField(
         : TextInputType.emailAddress,
   );
 }
+//-----------------------------------------------------------------------------//
 
 Container ReusableButton(BuildContext context, String title, Function onTap) {
   return Container(
@@ -78,3 +79,4 @@ Container ReusableButton(BuildContext context, String title, Function onTap) {
     ),
   );
 }
+

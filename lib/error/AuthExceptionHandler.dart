@@ -1,5 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
+class CustomError {
+  final String message;
+
+  CustomError({ required this.message});
+}
+
 enum AuthStatus {
   successful,
   wrongPassword,
