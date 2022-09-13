@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.taqdaa_application">
+    package="com.example.flutter1_signup">
    <application
-        android:label="taqdaa_application"
+        android:label="flutter1_signup"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

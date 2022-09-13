@@ -1,6 +1,6 @@
 {
-    "name": "taqdaa_application",
-    "short_name": "taqdaa_application",
+    "name": "flutter1_signup",
+    "short_name": "flutter1_signup",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

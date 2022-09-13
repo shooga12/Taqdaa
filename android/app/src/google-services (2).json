@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "782203884662",
+    "firebase_url": "https://taqdaa-10e41-default-rtdb.firebaseio.com",
+    "project_id": "taqdaa-10e41",
+    "storage_bucket": "taqdaa-10e41.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:782203884662:android:92f455fd8e3958c27a7b57",
+        "android_client_info": {
+          "package_name": "com.example.taqdaa_application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "782203884662-ch81i296nlgn4j580f88b32e900lfcsl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrQ2UiNzImDzxToF5I5BaRREfkRWrUwN8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "782203884662-ch81i296nlgn4j580f88b32e900lfcsl.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "782203884662-h1o5e6j5d1ttu851n1t5u0kts8ju27as.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.taqdaaApplication"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
