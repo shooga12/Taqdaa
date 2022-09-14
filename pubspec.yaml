@@ -43,6 +43,8 @@ dependencies:
   firebase_storage: ^10.3.8
   mobile_scanner: ^2.0.0
   flutter_barcode_scanner: ^2.0.0
+  either_dart: ^0.2.0
+  form_field_validator: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +70,8 @@ flutter:
     - assets/background.png
     - assets/Zara.png
     - assets/Vector.png
+    - assets/SignupGroup.png
+    - assets/LoginGroup.png
     # To add assets to your application, add an assets section, like this:
     # assets:
     #   - images/a_dot_burr.jpeg
