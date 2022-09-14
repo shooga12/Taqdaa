@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:loginlogout_resetpass/reusable_widget/reusable_widget.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 
 class ResetPassPage extends StatefulWidget {
   const ResetPassPage({super.key});
@@ -29,6 +29,9 @@ class _ResetPassPageState extends State<ResetPassPage> {
             return AlertDialog(
               content: Text(
                   'We have sent you an email with a password reset link, Check your inbox'),
+                  actions: [TextButton(
+              onPressed: () => Navigator.pop(context, 'OK'),
+              child: const Text('OK'),)]
             );
           });
     } on FirebaseAuthException catch (e) {
@@ -38,6 +41,9 @@ class _ResetPassPageState extends State<ResetPassPage> {
           builder: (context) {
             return AlertDialog(
               content: Text(e.message.toString()),
+              actions: [TextButton(
+              onPressed: () => Navigator.pop(context, 'OK'),
+              child: const Text('OK'),)]
             );
           });
     }
@@ -67,8 +73,48 @@ class _ResetPassPageState extends State<ResetPassPage> {
           ),
           Padding(
             padding: const EdgeInsets.all(17.0),
-            child: reusableTextField(
-                "Enter Email Address", false, _emailController),
+            child: TextFormField(
+                  controller: _emailController,
+
+                  validator: MultiValidator([
+                    RequiredValidator(errorText: 'Required *'),
+                    EmailValidator(errorText: 'Not a valid Email *')
+                  ]),
+                  cursorColor: Color.fromARGB(255, 37, 43, 121),
+                  style: TextStyle(
+                      color: Color.fromARGB(255, 15, 53, 120).withOpacity(0.9)),
+
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide:
+                            const BorderSide(color: Colors.orange, width: 2.0)),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                      borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 15, 53, 120), width: 2.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                      borderSide:
+                          const BorderSide(color: Colors.orange, width: 2.0),
+                    ),
+                    prefixIcon: Icon(Icons.email),
+                      iconColor: Colors.white,
+                    labelText: "Enter your Email address",
+                    labelStyle: TextStyle(
+                        color: Color.fromARGB(236, 113, 113, 117)
+                            .withOpacity(0.9)),
+                    filled: true,
+
+                    fillColor: Colors.white.withOpacity(0.9),
+                    // border: OutlineInputBorder(
+                    //  borderRadius: BorderRadius.circular(30.0),),
+                  ),
+
+                  keyboardType: TextInputType.emailAddress,
+                  //--------------------------------------
+                ),
           ),
           SizedBox(
             height: 17,

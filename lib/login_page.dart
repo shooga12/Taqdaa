@@ -90,6 +90,8 @@ class _LoginPageState extends State<LoginPage> {
                       borderSide:
                           const BorderSide(color: Colors.orange, width: 2.0),
                     ),
+                    prefixIcon: Icon(Icons.email),
+                      iconColor: Colors.white,
                     labelText: "Enter your Email address",
                     labelStyle: TextStyle(
                         color: Color.fromARGB(236, 113, 113, 117)
@@ -132,6 +134,8 @@ class _LoginPageState extends State<LoginPage> {
                       borderSide:
                           const BorderSide(color: Colors.orange, width: 2.0),
                     ),
+                    prefixIcon: Icon(Icons.lock),
+                      iconColor: Colors.white,
                     labelText: "Enter your password",
                     labelStyle: TextStyle(
                         color: Color.fromARGB(236, 113, 113, 117)
@@ -315,8 +319,12 @@ class _LoginPageState extends State<LoginPage> {
           builder: (context) {
             return AlertDialog(
               content: Text('logged in sucessfully'),
+              actions: [TextButton(
+              onPressed: () => Navigator.pop(context, 'OK'),
+              child: const Text('OK'),)]
             );
-          });
+          }
+          );
     } on FirebaseAuthException catch (e) {
       print(e);
       showDialog(
@@ -324,6 +332,9 @@ class _LoginPageState extends State<LoginPage> {
           builder: (context) {
             return AlertDialog(
               content: Text(e.message.toString()),
+              actions: [TextButton(
+              onPressed: () => Navigator.pop(context, 'OK'),
+              child: const Text('OK'),)]
             );
           });
     }

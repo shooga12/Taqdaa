@@ -6,7 +6,6 @@ import 'login_page.dart';
 import 'register_page.dart';
 import 'home_page.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
@@ -33,7 +32,7 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-     home: StreamBuilder(
+      home: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -52,4 +51,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

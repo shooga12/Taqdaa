@@ -8,6 +8,11 @@ import 'reusable_widget/reusable_widget.dart';
 import 'package:loginlogout_resetpass/reset_page.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'login_page.dart';
+import 'package:intl/date_symbol_data_file.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/date_symbols.dart';
+import 'package:intl/date_symbol_data_custom.dart';
+import 'package:intl/intl.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -17,7 +22,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final  firstnameController = TextEditingController();
+  final firstnameController = TextEditingController();
   final lastnameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passController = TextEditingController();
@@ -28,7 +33,6 @@ class _RegisterPageState extends State<RegisterPage> {
   ///User? user = FirebaseAuth.instance.currentUser;
   String errorMsg = '';
   bool isLoading = false;
-  
 
   String? validateEmail(String? formEmail) {
     if (formEmail == null || formEmail.isEmpty)
@@ -62,9 +66,9 @@ class _RegisterPageState extends State<RegisterPage> {
           child: Padding(
             padding: EdgeInsets.fromLTRB(
                 20,
-                MediaQuery.of(context).size.height * 0.1,
+                MediaQuery.of(context).size.height * 0.02,
                 20,
-                MediaQuery.of(context).size.height * 0.05),
+                MediaQuery.of(context).size.height * 0.02),
             child: Column(
               children: <Widget>[
                 SignupcloudDcrWidget("assets/images/SignupGroup.png"),
@@ -76,7 +80,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
                   validator: MultiValidator([
                     RequiredValidator(errorText: 'Required *'),
-                    
                   ]),
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
                   style: TextStyle(
@@ -97,6 +100,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       borderSide:
                           const BorderSide(color: Colors.orange, width: 2.0),
                     ),
+                    prefixIcon: Icon(Icons.person),
+                      iconColor: Colors.white,
                     labelText: "Enter your First Name",
                     labelStyle: TextStyle(
                         color: Color.fromARGB(236, 113, 113, 117)
@@ -119,7 +124,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
                   validator: MultiValidator([
                     RequiredValidator(errorText: 'Required *'),
-                    
                   ]),
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
                   style: TextStyle(
@@ -140,6 +144,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       borderSide:
                           const BorderSide(color: Colors.orange, width: 2.0),
                     ),
+                    prefixIcon: Icon(Icons.person),
+                      iconColor: Colors.white,
                     labelText: "Enter your Last Name",
                     labelStyle: TextStyle(
                         color: Color.fromARGB(236, 113, 113, 117)
@@ -184,6 +190,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       borderSide:
                           const BorderSide(color: Colors.orange, width: 2.0),
                     ),
+                    prefixIcon: Icon(Icons.email),
+                      iconColor: Colors.white,
                     labelText: "Enter your Email address",
                     labelStyle: TextStyle(
                         color: Color.fromARGB(236, 113, 113, 117)
@@ -230,6 +238,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       borderSide:
                           const BorderSide(color: Colors.orange, width: 2.0),
                     ),
+                    prefixIcon: Icon(Icons.lock),
+                      iconColor: Colors.white,
                     labelText: "Enter your password",
                     labelStyle: TextStyle(
                         color: Color.fromARGB(236, 113, 113, 117)
@@ -251,8 +261,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
                   validator: MultiValidator([
                     RequiredValidator(errorText: 'Required *'),
-                    PatternValidator(r'^(?:[+0][1-9])?[0-9]{10,12}$', errorText: 'Enter a valid phone number')
-                    
+                    PatternValidator(r'^(?:[+0][1-9])?[0-9]{10,12}$',
+                        errorText: 'Enter a valid phone number')
                   ]),
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
                   style: TextStyle(
@@ -273,6 +283,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       borderSide:
                           const BorderSide(color: Colors.orange, width: 2.0),
                     ),
+                    prefixIcon: Icon(Icons.phone),
+                      iconColor: Colors.white,
                     labelText: "Enter your Phone Number",
                     labelStyle: TextStyle(
                         color: Color.fromARGB(236, 113, 113, 117)
@@ -291,19 +303,22 @@ class _RegisterPageState extends State<RegisterPage> {
                   height: 20,
                 ),
                 //-------birthday field----------
-                TextFormField(
-                  controller: dateofbirthController,
+                GestureDetector(
+                  child: TextFormField(
+                    controller: dateofbirthController,
 
-                  validator: MultiValidator([
-                    RequiredValidator(errorText: 'Required *'),
-                    
-                  ]),
-                  cursorColor: Color.fromARGB(255, 37, 43, 121),
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 15, 53, 120).withOpacity(0.9)),
+                    validator: MultiValidator([
+                      RequiredValidator(errorText: 'Required *'),
+                    ]),
+                    cursorColor: Color.fromARGB(255, 37, 43, 121),
+                    style: TextStyle(
+                        color: Color.fromARGB(255, 15, 53, 120).withOpacity(0.9)),
+                        
 
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.calendar_today),
+                      iconColor: Colors.white,
+                      border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30.0),
                         borderSide:
                             const BorderSide(color: Colors.orange, width: 2.0)),
@@ -317,22 +332,40 @@ class _RegisterPageState extends State<RegisterPage> {
                       borderSide:
                           const BorderSide(color: Colors.orange, width: 2.0),
                     ),
-                    labelText: "Enter your Birthdate dd/mm/yyyy",
-                    labelStyle: TextStyle(
-                        color: Color.fromARGB(236, 113, 113, 117)
-                            .withOpacity(0.9)),
-                    filled: true,
+                       
+                      labelText: "Enter Date Of Birth" , //label text of field
+                      ),
+                  readOnly:
+                      true, //set it true, so that user will not able to edit text
+                  onTap: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(
+                            1900), //DateTime.now() - not to allow to choose before today.
+                        lastDate: DateTime(2040));
 
-                    fillColor: Colors.white.withOpacity(0.9),
-                    // border: OutlineInputBorder(
-                    //  borderRadius: BorderRadius.circular(30.0),),
+                    if (pickedDate != null) {
+                      print(
+                          pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                      String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
+                      print(
+                          formattedDate); //formatted date output using intl package =>  2021-03-16
+                      //you can implement different kind of Date Format here according to your requirement
+
+                  setState(() {
+                    dateofbirthController.text =
+                        formattedDate; //set output date to TextField value.
+                  });
+                } else {
+                  print("Date is not selected");
+                }
+              },
+                    //--------------------------------------
                   ),
-
-                  keyboardType: TextInputType.datetime,
-                  //--------------------------------------
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 2,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -400,8 +433,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             // } on FirebaseAuthException catch (error) {
                             //   errorMsg = error.message!;
                             // }
-                            // setState(() {Navigator.push(context,
-                            //      MaterialPageRoute(builder: (context) => HomePage()));});
+                            // setState(() {Navigator.push(context,      MaterialPageRoute(builder: (context) => HomePage()));});
                           },
                           child: Text(
                             'SIGN UP',
@@ -465,23 +497,33 @@ class _RegisterPageState extends State<RegisterPage> {
     try {
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
-              email: _emailController.text, password: _passController.text)
-          .then((value) => Navigator.of(context).pop());
+              email: _emailController.text.trim(),
+              password: _passController.text)
+          .then((value) => Navigator.pop(
+              context, MaterialPageRoute(builder: (context) => LoginPage())));
       showDialog(
           context: context,
           builder: (context) {
             return AlertDialog(
-              content: Text('Account created sucessfully'),
-            );
+                content: Text('Account created sucessfully'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'OK'),
+                    child: const Text('OK'),
+                  )
+                ]);
           });
     } on FirebaseAuthException catch (e) {
       print(e);
       showDialog(
           context: context,
           builder: (context) {
-            return AlertDialog(
-              content: Text(e.message.toString()),
-            );
+            return AlertDialog(content: Text(e.message.toString()), actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, 'OK'),
+                child: const Text('OK'),
+              )
+            ]);
           });
     }
   }

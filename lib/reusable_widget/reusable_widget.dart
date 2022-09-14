@@ -12,7 +12,7 @@ Image LogincloudDcrWidget(String imageName) {
 Image SignupcloudDcrWidget(String imageName) {
   return Image.asset(
     imageName,
-    fit: BoxFit.fitWidth,
+    //fit: BoxFit.fitWidth,
     width: 224,
     height: 196.77,
   );
