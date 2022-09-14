@@ -27,24 +27,26 @@ class _ResetPassPageState extends State<ResetPassPage> {
           context: context,
           builder: (context) {
             return AlertDialog(
-              content: Text(
-                  'We have sent you an email with a password reset link, Check your inbox'),
-                  actions: [TextButton(
-              onPressed: () => Navigator.pop(context, 'OK'),
-              child: const Text('OK'),)]
-            );
+                content: Text(
+                    'We have sent you an email with a password reset link, Check your inbox'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'OK'),
+                    child: const Text('OK'),
+                  )
+                ]);
           });
     } on FirebaseAuthException catch (e) {
       print(e);
       showDialog(
           context: context,
           builder: (context) {
-            return AlertDialog(
-              content: Text(e.message.toString()),
-              actions: [TextButton(
-              onPressed: () => Navigator.pop(context, 'OK'),
-              child: const Text('OK'),)]
-            );
+            return AlertDialog(content: Text(e.message.toString()), actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, 'OK'),
+                child: const Text('OK'),
+              )
+            ]);
           });
     }
   }
@@ -55,25 +57,28 @@ class _ResetPassPageState extends State<ResetPassPage> {
       appBar: AppBar(
         backgroundColor: Colors.orange,
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(
-                20,
-                MediaQuery.of(context).size.height * 0.1,
-                20,
-                MediaQuery.of(context).size.height * 0.05),
-            child: Text(
-              'Enter tha email associated with your account and we will send you an email with a password reset link',
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 15, 53, 120)),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(
+                  20,
+                  MediaQuery.of(context).size.height * 0.1,
+                  20,
+                  MediaQuery.of(context).size.height * 0.05),
+              child: Text(
+                'Enter tha email associated with your account and we will send you an email with a password reset link',
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 15, 53, 120)),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(17.0),
-            child: TextFormField(
+            Padding(
+              padding: const EdgeInsets.all(17.0),
+              child: Form(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: TextFormField(
                   controller: _emailController,
 
                   validator: MultiValidator([
@@ -100,7 +105,7 @@ class _ResetPassPageState extends State<ResetPassPage> {
                           const BorderSide(color: Colors.orange, width: 2.0),
                     ),
                     prefixIcon: Icon(Icons.email),
-                      iconColor: Colors.white,
+                    iconColor: Colors.white,
                     labelText: "Enter your Email address",
                     labelStyle: TextStyle(
                         color: Color.fromARGB(236, 113, 113, 117)
@@ -115,38 +120,42 @@ class _ResetPassPageState extends State<ResetPassPage> {
                   keyboardType: TextInputType.emailAddress,
                   //--------------------------------------
                 ),
-          ),
-          SizedBox(
-            height: 17,
-          ),
-          MaterialButton(
-            onPressed: () {
-              resetPass();
-            },
-            //ButtonStyle: BorderRadius.circular(30),
-            child: Text(
-              "Reset Password",
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16),
+              ),
             ),
-            color: Colors.orange,
-          )
+            SizedBox(
+              height: 17,
+            ),
+            MaterialButton(
+              onPressed: () {
+                resetPass();
+              },
+              //ButtonStyle: BorderRadius.circular(30),
+              child: Text(
+                "Reset Password",
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16),
+              ),
+              color: Colors.orange,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(30.0))),
+            )
 
-          //     ReusableButton(context, 'Reset Password', (){
-          //       FirebaseAuth.instance
-          //     .sendPasswordResetEmail(email: _emailController.text).then((value)=>Navigator.of(context).pop());
-          // showDialog(
-          //     context: context,
-          //     builder: (context) {
-          //       return AlertDialog(
-          //         content: Text(
-          //             'We have sent you an email with a password reset link, Check your inbox'),
-          //       );
-          //     });
-          //     })
-        ],
+            //     ReusableButton(context, 'Reset Password', (){
+            //       FirebaseAuth.instance
+            //     .sendPasswordResetEmail(email: _emailController.text).then((value)=>Navigator.of(context).pop());
+            // showDialog(
+            //     context: context,
+            //     builder: (context) {
+            //       return AlertDialog(
+            //         content: Text(
+            //             'We have sent you an email with a password reset link, Check your inbox'),
+            //       );
+            //     });
+            //     })
+          ],
+        ),
       ),
     );
   }
