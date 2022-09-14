@@ -35,8 +35,7 @@ class _MyAppState extends State<MyApp> {
         flexibleSpace: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage("assets/background.png"),
-                  fit: BoxFit.fill)),
+                  image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
         ),
         toolbarHeight: 170,
         //leading: BackButton(),

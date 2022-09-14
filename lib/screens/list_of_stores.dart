@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:taqdaa_application/confige/EcommerceApp.dart';
 import 'package:taqdaa_application/screens/scanBarCode.dart';
 import 'scanBarCode.dart';
 
@@ -28,6 +29,8 @@ class _ListOfStores2State extends State<ListOfStores2> {
       _value = _counter;
     });
 
+    EcommerceApp.itemsCounter++;
+
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -48,8 +51,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
         flexibleSpace: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage("assets/background.png"),
-                  fit: BoxFit.fill)),
+                  image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
         ),
         toolbarHeight: 170,
         //leading: BackButton(),

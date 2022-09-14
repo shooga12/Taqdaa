@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:taqdaa_application/screens/api.dart';
 import 'list_of_stores.dart';
 import 'scanBarCode.dart';
 
@@ -39,6 +40,8 @@ class _HomePageState extends State<HomePage> {
                         child: FittedBox(
                           child: FloatingActionButton(
                             onPressed: () {
+                              // ApiServices apiServices = ApiServices();
+                              // apiServices.addCollection();
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
