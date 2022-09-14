@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {createUserWithEmailAndPassword} from 'firebase/auth';
+import {createUserWithEmailAndPassword,fetchSignInMethodsForEmail} from 'firebase/auth';
 import './style.css';
 import Logo from '../../shared/Logo_Light.png';
 import auth, {db} from '../../shared/firebase';
@@ -171,6 +171,22 @@ function Signup(){
         error = true;
         document.querySelector('#error-msg-email').innerHTML = 'Invalid email';
         document.querySelector('#error-msg-email').style.visibility = "visible";
+      }
+      if(email != '' && validEmail(email)){
+        fetchSignInMethodsForEmail(auth,email)
+        .then((signInMethods) => {
+          if (signInMethods.length) {
+            error = true;
+            document.querySelector('#error-msg-email').innerHTML = 'Email Already Exists!';
+            document.querySelector('#error-msg-email').style.visibility = "visible";
+          } 
+          else{
+           
+          }
+        })
+        .catch((error) => { 
+          // Some error occurred.
+        });
       }
       if(phone != '' && !validPhone(phone.toString())){
         error = true;

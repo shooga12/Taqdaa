@@ -1,49 +1,29 @@
 import React, {useState} from 'react';
 import "./dataset.css";
+
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+
 import {BsCloudArrowUp} from 'react-icons/bs';
 import * as XLSX from 'xlsx';
 import { async } from '@firebase/util';
 import auth,{DB} from '../../shared/firebase';
+import "bootstrap/dist/css/bootstrap.min.css";
 import {ref, set, child, get, push,update } from "firebase/database";
 
 
 function Dataset(){
 
     //const [fileName, setFileName] = useState('No File');
-    //const [file, setFile] = useState('');
+    const [file, setFile] = useState('');
     const [jsonData, setJsonData] = useState('');
     const [data, setData] = useState('');
     const [work, setWork] = useState('');
     
-    function writeNewPost() {
     
       
-        // A post entry.
-        const postData = {
-          author: "Reem",
-         
-        };
-      
-        // Get a key for a new Post.
-        const newPostKey = push(child(ref(DB), 'Store'+auth.currentUser.uid)).key;
-      
-        // Write the new post's data simultaneously in the posts list and the user's post list.
-        const updates = {};
-        updates['Store'+auth.currentUser.uid+'/' + newPostKey] = postData;
-        updates['Store'+auth.currentUser.uid + '/' + newPostKey] = postData;
-      
-        return update(ref(DB), updates);
-      }
-      
     const printData = ()=>{
-        var rootRef = ref(DB);
-        var storesRef = rootRef.child('Store'+auth.currentUser.uid);
-        var newStoreRef = storesRef.push();
-        newStoreRef.set({
-            name: "Cars",
-            "pageId": "23",
-            "storeURL": "kk"
-        });
+        
     }
  const handleFile = async (e) => {
     let fileType = e.target.files[0].type; 
@@ -63,7 +43,24 @@ function Dataset(){
 
 }
 
+    const showAlert = () => {
 
+        confirmAlert({
+        message: 'Replace The Current Dataset?',
+        buttons: [
+            {
+            label: 'Replace',
+            onClick: () => {set(ref(DB, 'Store'+auth.currentUser.uid), {
+                            store: jsonData,
+                            })}
+            },
+            {
+            label: 'Cancel',
+            //onClick: () => alert('Click No')
+            }
+        ]
+        });
+    }
 
     
     function writeUserData() {
@@ -113,15 +110,26 @@ function Dataset(){
 
                 
                 if(errorMsg){
+                    document.querySelector('#file-input').value = "";
                     alert(errorMsg)
                     return;
                 }
 
             }
-
-            set(ref(DB, 'Store'+auth.currentUser.uid), {
-                store: jsonData,
-            })
+            const dbRef = ref(DB);
+            get(child(dbRef, 'Store'+auth.currentUser.uid)).then((snapshot) => {
+              if (snapshot.exists()) {
+                showAlert();
+              } else {
+                console.log("No data available");
+                set(ref(DB, 'Store'+auth.currentUser.uid), {
+                    store: jsonData,
+                })
+              }
+            }).catch((error) => {
+              console.error(error);
+            });
+            
     
            
         
@@ -137,13 +145,14 @@ function Dataset(){
                     </div>
                     <p>Drag & Drop to Upload File</p>
                     <span>OR</span>
-                    <input className="ml-5" onChange={(e) => {handleFile(e).then(()=>{
+                    <input id="file-input" className="ml-5" onChange={(e) => {handleFile(e).then(()=>{
                           console.log(jsonData);
                         })}
                     } type="file" accept=".xlsx, .xls, .csv"/>
                 </div>
-                <button id="upload-btn" onClick={()=>writeNewPost()}>Upload</button>
+                <button id="upload-btn" onClick={()=>writeUserData()}>Upload</button>
         </div> 
+       
         </>     
     )
 
