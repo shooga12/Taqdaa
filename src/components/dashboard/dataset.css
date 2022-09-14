@@ -21,9 +21,20 @@ h1{
   width: 700px;
   border-radius: 5px;
   display: flex;
-  align-items: center;
+  align-items: center !important;
   justify-content: center;
   flex-direction: column;
+}
+::-webkit-file-upload-button {
+  padding: 10px 25px;
+  font-size: 26px;
+  font-weight: 600;
+  border: none;
+  outline: none;
+  background: #FEB139;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
 }
 .drag-area.active{
   border: 2px solid green;
@@ -32,7 +43,7 @@ h1{
   font-size: 100px;
   color: #FEB139;
 }
-.drag-area header{
+.drag-area p{
   font-size: 30px;
   font-weight: 500;
   color: #FEB139;

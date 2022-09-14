@@ -3,6 +3,7 @@
 import { initializeApp } from "firebase/app";
 import {getDatabase} from "firebase/database";
 import {getAuth} from 'firebase/auth';
+import { getFirestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -15,11 +16,13 @@ const firebaseConfig = {
   storageBucket: "taqdaa-10e41.appspot.com",
   messagingSenderId: "782203884662",
   appId: "1:782203884662:web:25a264931b063aaf7a7b57"
-};
+} ;
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 export const DB = getDatabase();
+export const db = getFirestore(app);
+
 
 export default auth;

@@ -6,7 +6,7 @@ body{
     box-shadow: 1px 1px 15px 5px #ebebeb;
     border-radius: 40px;
     margin: auto;
-    height: 600px;
+    height: fit-content;
     
 }
 #box-content-container{
@@ -105,6 +105,10 @@ form .user-detailes .input-box{
 .user-detailes .input-box input{
 height: 45px;
 width:100%;
+}
+.error-msg{
+    color: rgb(207, 0, 0);
+    visibility: hidden;
 }
 
   
