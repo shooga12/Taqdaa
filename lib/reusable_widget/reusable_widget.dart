@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Image cloudDcrWidget(String imageName) {
+Image LogincloudDcrWidget(String imageName) {
   return Image.asset(
     imageName,
     fit: BoxFit.fitWidth,
@@ -8,6 +8,16 @@ Image cloudDcrWidget(String imageName) {
     height: 274.82,
   );
 }
+
+Image SignupcloudDcrWidget(String imageName) {
+  return Image.asset(
+    imageName,
+    fit: BoxFit.fitWidth,
+    width: 224,
+    height: 196.77,
+  );
+}
+
 
 TextField reusableTextField(
     String text, bool isPasswordType, TextEditingController controller) {

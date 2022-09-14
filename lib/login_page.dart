@@ -58,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
                 MediaQuery.of(context).size.height * 0.05),
             child: Column(
               children: <Widget>[
-                cloudDcrWidget("assets/images/LoginGroup.png"),
+                LogincloudDcrWidget("assets/images/LoginGroup.png"),
                 const SizedBox(
                   height: 36,
                 ),

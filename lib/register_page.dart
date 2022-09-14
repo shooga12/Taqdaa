@@ -17,13 +17,18 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final  firstnameController = TextEditingController();
+  final lastnameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passController = TextEditingController();
+  final phonenumberController = TextEditingController();
+  final dateofbirthController = TextEditingController();
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
 
   ///User? user = FirebaseAuth.instance.currentUser;
   String errorMsg = '';
   bool isLoading = false;
+  
 
   String? validateEmail(String? formEmail) {
     if (formEmail == null || formEmail.isEmpty)
@@ -39,8 +44,12 @@ class _RegisterPageState extends State<RegisterPage> {
   String? validatePassword(String? formPassword) {
     if (formPassword == null || formPassword.isEmpty)
       return 'Password is required.';
-
-    return null;
+    else if (formPassword.length < 8)
+      return 'Should be at least 8 chatacter.';
+    else if (formPassword.length > 15)
+      return 'Should be no more than 15 chatacter.';
+    else
+      return null;
   }
 
   @override
@@ -58,12 +67,97 @@ class _RegisterPageState extends State<RegisterPage> {
                 MediaQuery.of(context).size.height * 0.05),
             child: Column(
               children: <Widget>[
-                cloudDcrWidget("assets/images/SignupGroup.png"),
+                SignupcloudDcrWidget("assets/images/SignupGroup.png"),
                 const SizedBox(
-                  height: 36,
+                  height: 20,
                 ),
-                // reusableTextField(
-                //     "Enter Email Address", false, _emailController),
+                TextFormField(
+                  controller: firstnameController,
+
+                  validator: MultiValidator([
+                    RequiredValidator(errorText: 'Required *'),
+                    
+                  ]),
+                  cursorColor: Color.fromARGB(255, 37, 43, 121),
+                  style: TextStyle(
+                      color: Color.fromARGB(255, 15, 53, 120).withOpacity(0.9)),
+
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide:
+                            const BorderSide(color: Colors.orange, width: 2.0)),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                      borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 15, 53, 120), width: 2.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                      borderSide:
+                          const BorderSide(color: Colors.orange, width: 2.0),
+                    ),
+                    labelText: "Enter your First Name",
+                    labelStyle: TextStyle(
+                        color: Color.fromARGB(236, 113, 113, 117)
+                            .withOpacity(0.9)),
+                    filled: true,
+
+                    fillColor: Colors.white.withOpacity(0.9),
+                    // border: OutlineInputBorder(
+                    //  borderRadius: BorderRadius.circular(30.0),),
+                  ),
+
+                  keyboardType: TextInputType.name,
+                  //--------------------------------------
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  controller: lastnameController,
+
+                  validator: MultiValidator([
+                    RequiredValidator(errorText: 'Required *'),
+                    
+                  ]),
+                  cursorColor: Color.fromARGB(255, 37, 43, 121),
+                  style: TextStyle(
+                      color: Color.fromARGB(255, 15, 53, 120).withOpacity(0.9)),
+
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide:
+                            const BorderSide(color: Colors.orange, width: 2.0)),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                      borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 15, 53, 120), width: 2.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                      borderSide:
+                          const BorderSide(color: Colors.orange, width: 2.0),
+                    ),
+                    labelText: "Enter your Last Name",
+                    labelStyle: TextStyle(
+                        color: Color.fromARGB(236, 113, 113, 117)
+                            .withOpacity(0.9)),
+                    filled: true,
+
+                    fillColor: Colors.white.withOpacity(0.9),
+                    // border: OutlineInputBorder(
+                    //  borderRadius: BorderRadius.circular(30.0),),
+                  ),
+
+                  keyboardType: TextInputType.name,
+                  //--------------------------------------
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                //email field
                 TextFormField(
                   controller: _emailController,
 
@@ -112,6 +206,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: _passController,
                   validator: MultiValidator([
                     RequiredValidator(errorText: 'Requiered *'),
+                    MaxLengthValidator(15,
+                        errorText: 'Should be no more than 15 chatacter.'),
+                    MinLengthValidator(8,
+                        errorText: 'Should be no more than 15 chatacter.')
                   ]),
                   obscureText: true,
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
@@ -145,15 +243,96 @@ class _RegisterPageState extends State<RegisterPage> {
                   //keyboardType: TextInputType.emailAddress,
                 ),
                 const SizedBox(
-                  height: 7,
+                  height: 20,
                 ),
+                //----Phone Number Field----
+                TextFormField(
+                  controller: phonenumberController,
 
-                const SizedBox(
-                  height: 13,
+                  validator: MultiValidator([
+                    RequiredValidator(errorText: 'Required *'),
+                    PatternValidator(r'^(?:[+0][1-9])?[0-9]{10,12}$', errorText: 'Enter a valid phone number')
+                    
+                  ]),
+                  cursorColor: Color.fromARGB(255, 37, 43, 121),
+                  style: TextStyle(
+                      color: Color.fromARGB(255, 15, 53, 120).withOpacity(0.9)),
+
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide:
+                            const BorderSide(color: Colors.orange, width: 2.0)),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                      borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 15, 53, 120), width: 2.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                      borderSide:
+                          const BorderSide(color: Colors.orange, width: 2.0),
+                    ),
+                    labelText: "Enter your Phone Number",
+                    labelStyle: TextStyle(
+                        color: Color.fromARGB(236, 113, 113, 117)
+                            .withOpacity(0.9)),
+                    filled: true,
+
+                    fillColor: Colors.white.withOpacity(0.9),
+                    // border: OutlineInputBorder(
+                    //  borderRadius: BorderRadius.circular(30.0),),
+                  ),
+
+                  keyboardType: TextInputType.phone,
+                  //--------------------------------------
                 ),
-                
                 const SizedBox(
-                  height: 2,
+                  height: 20,
+                ),
+                //-------birthday field----------
+                TextFormField(
+                  controller: dateofbirthController,
+
+                  validator: MultiValidator([
+                    RequiredValidator(errorText: 'Required *'),
+                    
+                  ]),
+                  cursorColor: Color.fromARGB(255, 37, 43, 121),
+                  style: TextStyle(
+                      color: Color.fromARGB(255, 15, 53, 120).withOpacity(0.9)),
+
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide:
+                            const BorderSide(color: Colors.orange, width: 2.0)),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                      borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 15, 53, 120), width: 2.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                      borderSide:
+                          const BorderSide(color: Colors.orange, width: 2.0),
+                    ),
+                    labelText: "Enter your Birthdate dd/mm/yyyy",
+                    labelStyle: TextStyle(
+                        color: Color.fromARGB(236, 113, 113, 117)
+                            .withOpacity(0.9)),
+                    filled: true,
+
+                    fillColor: Colors.white.withOpacity(0.9),
+                    // border: OutlineInputBorder(
+                    //  borderRadius: BorderRadius.circular(30.0),),
+                  ),
+
+                  keyboardType: TextInputType.datetime,
+                  //--------------------------------------
+                ),
+                const SizedBox(
+                  height: 20,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -281,8 +460,6 @@ class _RegisterPageState extends State<RegisterPage> {
       ],
     );
   }
-
-  
 
   Future register() async {
     try {
