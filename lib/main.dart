@@ -6,20 +6,11 @@ import 'login_page.dart';
 import 'register_page.dart';
 import 'home_page.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (kIsWeb) {
-    await Firebase.initializeApp(
-        options: const FirebaseOptions(
-            apiKey: "AIzaSyDrQ2UiNzImDzxToF5I5BaRREfkRWrUwN8",
-            projectId: "taqdaa-10e41",
-            storageBucket: "taqdaa-10e41.appspot.com",
-            messagingSenderId: "782203884662",
-            appId: "1:782203884662:android:92f455fd8e3958c27a7b57"));
-  } else {
-    await Firebase.initializeApp();
-  }
-  runApp(const MyApp());
+  await Firebase.initializeApp();
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {

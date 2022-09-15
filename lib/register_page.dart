@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'methods/authentication_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:loginlogout_resetpass/home_page.dart';
 import 'package:loginlogout_resetpass/register_page.dart';
+import 'model/user_model.dart';
 import 'reusable_widget/reusable_widget.dart';
 import 'package:loginlogout_resetpass/reset_page.dart';
 import 'package:form_field_validator/form_field_validator.dart';
@@ -13,6 +16,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/date_symbols.dart';
 import 'package:intl/date_symbol_data_custom.dart';
 import 'package:intl/intl.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -28,10 +32,11 @@ class _RegisterPageState extends State<RegisterPage> {
   final _passController = TextEditingController();
   final phonenumberController = TextEditingController();
   final dateofbirthController = TextEditingController();
-  final GlobalKey<FormState> _key = GlobalKey<FormState>();
 
-  ///User? user = FirebaseAuth.instance.currentUser;
+  final GlobalKey<FormState> _key = GlobalKey<FormState>();
+  final _auth = FirebaseAuth.instance;
   String errorMsg = '';
+
   bool isLoading = false;
 
   String? validateEmail(String? formEmail) {
@@ -60,7 +65,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Form(
-        //key: _key,
+        key: _key,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: SingleChildScrollView(
           child: Padding(
@@ -101,7 +106,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           const BorderSide(color: Colors.orange, width: 2.0),
                     ),
                     prefixIcon: Icon(Icons.person),
-                      iconColor: Colors.white,
+                    iconColor: Colors.white,
                     labelText: "Enter your First Name",
                     labelStyle: TextStyle(
                         color: Color.fromARGB(236, 113, 113, 117)
@@ -145,7 +150,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           const BorderSide(color: Colors.orange, width: 2.0),
                     ),
                     prefixIcon: Icon(Icons.person),
-                      iconColor: Colors.white,
+                    iconColor: Colors.white,
                     labelText: "Enter your Last Name",
                     labelStyle: TextStyle(
                         color: Color.fromARGB(236, 113, 113, 117)
@@ -191,7 +196,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           const BorderSide(color: Colors.orange, width: 2.0),
                     ),
                     prefixIcon: Icon(Icons.email),
-                      iconColor: Colors.white,
+                    iconColor: Colors.white,
                     labelText: "Enter your Email address",
                     labelStyle: TextStyle(
                         color: Color.fromARGB(236, 113, 113, 117)
@@ -239,7 +244,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           const BorderSide(color: Colors.orange, width: 2.0),
                     ),
                     prefixIcon: Icon(Icons.lock),
-                      iconColor: Colors.white,
+                    iconColor: Colors.white,
                     labelText: "Enter your password",
                     labelStyle: TextStyle(
                         color: Color.fromARGB(236, 113, 113, 117)
@@ -284,7 +289,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           const BorderSide(color: Colors.orange, width: 2.0),
                     ),
                     prefixIcon: Icon(Icons.phone),
-                      iconColor: Colors.white,
+                    iconColor: Colors.white,
                     labelText: "Enter your Phone Number",
                     labelStyle: TextStyle(
                         color: Color.fromARGB(236, 113, 113, 117)
@@ -312,55 +317,57 @@ class _RegisterPageState extends State<RegisterPage> {
                     ]),
                     cursorColor: Color.fromARGB(255, 37, 43, 121),
                     style: TextStyle(
-                        color: Color.fromARGB(255, 15, 53, 120).withOpacity(0.9)),
-                        
+                        color:
+                            Color.fromARGB(255, 15, 53, 120).withOpacity(0.9)),
 
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.calendar_today),
                       iconColor: Colors.white,
                       border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                          borderSide: const BorderSide(
+                              color: Colors.orange, width: 2.0)),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide: const BorderSide(
+                            color: Color.fromARGB(255, 15, 53, 120),
+                            width: 2.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30.0),
                         borderSide:
-                            const BorderSide(color: Colors.orange, width: 2.0)),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                      borderSide: const BorderSide(
-                          color: Color.fromARGB(255, 15, 53, 120), width: 2.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                      borderSide:
-                          const BorderSide(color: Colors.orange, width: 2.0),
-                    ),
-                       
-                      labelText: "Enter Date Of Birth" , //label text of field
+                            const BorderSide(color: Colors.orange, width: 2.0),
                       ),
-                  readOnly:
-                      true, //set it true, so that user will not able to edit text
-                  onTap: () async {
-                    DateTime? pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(
-                            1900), //DateTime.now() - not to allow to choose before today.
-                        lastDate: DateTime(2040));
 
-                    if (pickedDate != null) {
-                      print(
-                          pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
-                      String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
-                      print(
-                          formattedDate); //formatted date output using intl package =>  2021-03-16
-                      //you can implement different kind of Date Format here according to your requirement
+                      labelText: "Enter Date Of Birth", //label text of field
+                    ),
+                    readOnly:
+                        true, //set it true, so that user will not able to edit text
+                    onTap: () async {
+                      DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(
+                              1900), //DateTime.now() - not to allow to choose before today.
+                          lastDate: DateTime(2040));
 
-                  setState(() {
-                    dateofbirthController.text =
-                        formattedDate; //set output date to TextField value.
-                  });
-                } else {
-                  print("Date is not selected");
-                }
-              },
+                      if (pickedDate != null) {
+                        print(
+                            pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                        String formattedDate =
+                            DateFormat('dd-MM-yyyy').format(pickedDate);
+                        print(
+                            formattedDate); //formatted date output using intl package =>  2021-03-16
+                        //you can implement different kind of Date Format here according to your requirement
+
+                        setState(() {
+                          dateofbirthController.text =
+                              formattedDate; //set output date to TextField value.
+                        });
+                      } else {
+                        print("Date is not selected");
+                      }
+                    },
                     //--------------------------------------
                   ),
                 ),
@@ -397,7 +404,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             // setState(() {
                             //   isLoading = true;
                             // });
-                            register();
+                            register(_emailController.text.trim(),
+                                _passController.text);
                             // final respone = await FirebaseAuthMethods().login(
                             //     _emailController.text.trim(),
                             //     _passController.text);
@@ -493,7 +501,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Future register() async {
+  Future signup() async {
     try {
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
@@ -526,5 +534,83 @@ class _RegisterPageState extends State<RegisterPage> {
             ]);
           });
     }
+  }
+
+  void register(String email, String password) async {
+    if (_key.currentState!.validate()) {
+      try {
+        await _auth
+            .createUserWithEmailAndPassword(email: email, password: password)
+            .then((value) => {postDetailsToFirestore()})
+            .catchError((e) {
+          Fluttertoast.showToast(msg: e!.message);
+        });
+      } on FirebaseAuthException catch (error) {
+        switch (error.code) {
+          case "invalid-email":
+            errorMsg = "Your email address appears to be malformed.";
+            break;
+          case "wrong-password":
+            errorMsg = "Your password is wrong.";
+            break;
+          case "user-not-found":
+            errorMsg = "User with this email doesn't exist.";
+            break;
+          case "user-disabled":
+            errorMsg = "User with this email has been disabled.";
+            break;
+          case "too-many-requests":
+            errorMsg = "Too many requests";
+            break;
+          case "operation-not-allowed":
+            errorMsg = "Signing in with Email and Password is not enabled.";
+            break;
+          default:
+            errorMsg = "An undefined Error happened.";
+        }
+        Fluttertoast.showToast(msg: errorMsg);
+        print(error.code);
+        // showDialog(
+        //   context: context,
+        //   builder: (context) {
+        //     return AlertDialog(content: Text(errorMsg), actions: [
+        //       TextButton(
+        //         onPressed: () => Navigator.pop(context, 'OK'),
+        //         child: const Text('OK'),
+        //       )
+        //     ]);
+        //   });
+    
+        
+      }
+    }
+  }
+
+  postDetailsToFirestore() async {
+    // calling our firestore
+    // calling our user model
+    // sedning these values
+
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    User? user = _auth.currentUser;
+
+    UserModel userModel = UserModel();
+
+    // writing all the values
+    userModel.email = user!.email;
+    userModel.uid = user.uid;
+    userModel.firstName = firstnameController.text;
+    userModel.secondName = lastnameController.text;
+    userModel.phonenumber = phonenumberController.text;
+    userModel.dateofbirth = dateofbirthController.text;
+
+    await firebaseFirestore
+        .collection("users")
+        .doc(user.uid)
+        .set(userModel.toMap());
+    Fluttertoast.showToast(msg: "Account created successfully :) ");
+
+    Navigator.pushAndRemoveUntil((context),
+        MaterialPageRoute(builder: (context) => LoginPage()), (route) => false);
   }
 }
