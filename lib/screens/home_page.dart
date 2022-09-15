@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:taqdaa_application/confige/EcommerceApp.dart';
+import 'package:taqdaa_application/screens/NoItmesCart.dart';
 import 'package:taqdaa_application/screens/api.dart';
+import 'ShoppingCart.dart';
 import 'list_of_stores.dart';
 import 'scanBarCode.dart';
 
@@ -71,7 +75,21 @@ class _HomePageState extends State<HomePage> {
                                 color: Colors.white,
                               )),
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                if (EcommerceApp.haveItmes) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => shoppingCart()),
+                                  );
+                                } else {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => emptyCart()),
+                                  );
+                                }
+                              },
                               icon: Icon(
                                 Icons.shopping_cart,
                                 size: 30,

@@ -1,3 +1,4 @@
+import 'package:either_dart/either.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -62,15 +63,25 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // firebase_auth.FirebaseAuth firebaseAuth = firebase_auth.FirebaseAuth.instance;
-  // int _currentIndex = 0;
-  // final List<Widget> _children = [
-  //   HomePage(),
-  // ];
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
+  String getCurrentUser() {
+    final User? user = auth.currentUser;
+    final uid = user!.uid;
+    return uid;
+    // here you write the codes to input the data into firestore
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+          Text(
+            "Hey, Shoug",
+            style: TextStyle(fontSize: 25),
+          ),
+        ]),
         flexibleSpace: Container(
           decoration: BoxDecoration(
               image: DecorationImage(

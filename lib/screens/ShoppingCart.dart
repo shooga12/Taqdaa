@@ -3,27 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:taqdaa_application/main.dart';
+import 'package:taqdaa_application/screens/home_page.dart';
 import '../confige/EcommerceApp.dart';
 import 'scanBarCode.dart';
 
 class shoppingCart extends StatefulWidget {
-  const shoppingCart(this.value, {Key? key}) : super(key: key);
-  final String value;
+  const shoppingCart({Key? key}) : super(key: key);
   @override
-  State<shoppingCart> createState() => _shoppingCartState(value);
+  State<shoppingCart> createState() => _shoppingCartState();
 }
 
 class _shoppingCartState extends State<shoppingCart> {
-  String _value = "";
-  _shoppingCartState(_value);
-  String collectionName = "sjjbkAloSn0nggB3B";
+  _shoppingCartState();
+  String collectionName = EcommerceApp().getCurrentUser();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            "zara shopping cart",
+            EcommerceApp.storeName + " Shopping Cart",
             // style: TextStyle(fontFamily: 'Cairo'),
           ),
           flexibleSpace: Container(
@@ -35,6 +35,20 @@ class _shoppingCartState extends State<shoppingCart> {
           //leading: BackButton(),
           backgroundColor: Colors.transparent,
           elevation: 0,
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyHomePage()),
+                );
+              },
+              icon: Icon(
+                Icons.home,
+                size: 30,
+              ),
+            )
+          ],
         ),
         body: StreamBuilder<List<Product>>(
             stream: readCartItems(),
@@ -102,7 +116,7 @@ class _shoppingCartState extends State<shoppingCart> {
 
   Future saveUserItems(Product product) async {
     final docUser = FirebaseFirestore.instance
-        .collection('10NoXYa9i2zFkhJqObtG')
+        .collection('${collectionName}')
         .doc('UserItem');
     final json = {
       "Category": product.Category,
@@ -111,15 +125,6 @@ class _shoppingCartState extends State<shoppingCart> {
       "Store": product.Store,
     };
     await docUser.set(json);
-    // FirebaseFirestore.instance
-    //     .collection("ktRaj5JVLTY69zWa8MX4")
-    //     .doc("UserItme") ////لازم نغيره لفاريبل بعدين fUser.uid
-    //     .set({
-    //   "Category": product.Category,
-    //   "Item_number": product.Item_number,
-    //   "Price": product.Price,
-    //   "Store": product.Store,
-    // });
   }
 
   Stream<List<Product>> readCartItems() => FirebaseFirestore.instance
@@ -210,12 +215,12 @@ class _shoppingCartState extends State<shoppingCart> {
         "#004297", "Cancel", true, ScanMode.BARCODE);
 
     setState(() {
-      _value = _counter;
+      EcommerceApp.value = _counter;
     });
 
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => ScanPage(_value)),
+      MaterialPageRoute(builder: (context) => ScanPage()),
     );
   }
 }

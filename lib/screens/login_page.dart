@@ -172,61 +172,9 @@ class _LoginPageState extends State<LoginPage> {
                       ? Center(
                           child: CircularProgressIndicator(),
                         )
-
-                      // ReusableButton(context, 'LOG IN', () {
-                      //   FirebaseAuth.instance
-                      //       .signInWithEmailAndPassword(
-                      //           email: _emailController.text.trim(),
-                      //           password: _passController.text)
-                      //       .then((value) {
-                      //     Navigator.push(context,
-                      //         MaterialPageRoute(builder: (context) => HomePage()));
-                      //   });
-                      // }),
-
                       : ElevatedButton(
                           onPressed: () async {
-                            // setState(() {
-                            //   isLoading = true;
-                            // });
                             login();
-                            // final respone = await FirebaseAuthMethods().login(
-                            //     _emailController.text.trim(),
-                            //     _passController.text);
-                            // respone.fold((left) {
-                            //   setState(() {
-                            //     errorMsg = left.message;
-                            //   });
-                            // }, (right) => print(right.user!.email));
-                            // setState(() {
-                            //   isLoading = false;
-                            // });
-                            // if (errorMsg=='') {
-                            //   Navigator.push(
-                            //       context,
-                            //       MaterialPageRoute(
-                            //         builder: (context) => HomePage(),
-                            //       ));
-                            // }
-
-                            // try {
-                            //   await FirebaseAuth.instance
-                            //       .signInWithEmailAndPassword(
-                            //           email: _emailController.text.trim(),
-                            //           password: _passController.text);
-                            //   setState(() {
-                            //     Navigator.push(
-                            //         context,
-                            //         MaterialPageRoute(
-                            //             builder: (context) => HomePage()));
-                            //   });
-
-                            //   errorMsg = '';
-                            // } on FirebaseAuthException catch (error) {
-                            //   errorMsg = error.message!;
-                            // }
-                            // setState(() {Navigator.push(context,
-                            //      MaterialPageRoute(builder: (context) => HomePage()));});
                           },
                           child: Text(
                             'LOG IN',
@@ -276,7 +224,7 @@ class _LoginPageState extends State<LoginPage> {
                 ));
           },
           child: const Text(
-            "  Register",
+            "  SignUp",
             style: TextStyle(
                 color: Color.fromARGB(255, 15, 53, 120),
                 fontWeight: FontWeight.bold),

@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
 import 'package:taqdaa_application/screens/scanBarCode.dart';
+import '../controller/searchBar.dart';
 import 'scanBarCode.dart';
 
 class ListOfStores2 extends StatefulWidget {
@@ -19,24 +20,18 @@ class _ListOfStores2State extends State<ListOfStores2> {
   final List<Store> Stores = [];
 
   String _counter = "";
-  String _value = "";
 
   Future _scan(BuildContext context) async {
     _counter = await FlutterBarcodeScanner.scanBarcode(
         "#004297", "Cancel", true, ScanMode.BARCODE);
 
     setState(() {
-      _value = _counter;
+      EcommerceApp.value = _counter;
     });
-
-    EcommerceApp.itemsCounter++;
 
     Navigator.push(
       context,
-      MaterialPageRoute(
-          builder: (context) => ScanPage(
-                _value,
-              )),
+      MaterialPageRoute(builder: (context) => ScanPage()),
     );
   }
 
@@ -48,6 +43,13 @@ class _ListOfStores2State extends State<ListOfStores2> {
           'Choose Store',
           style: TextStyle(fontSize: 24), //TextStyle(fontFamily: 'Cairo'),
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                showSearch(context: context, delegate: MySearchDelegate());
+              },
+              icon: const Icon(Icons.search))
+        ],
         flexibleSpace: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
@@ -67,15 +69,6 @@ class _ListOfStores2State extends State<ListOfStores2> {
                 itemCount: stores.length,
                 itemBuilder: (BuildContext context, int index) =>
                     buildStoresCards(stores[index], context),
-                //{
-                //   //Map thisItem = stores[index];
-                //   return ListTile(
-                //     title: Text(''),
-                //     subtitle: Text(''),
-                //   );
-                // }
-                //
-                //children: stores.map(buildStoresCards).toList(),
               );
             } else if (snapshot.hasError) {
               return Text("Some thing went wrong! ${snapshot.error}");
@@ -83,14 +76,6 @@ class _ListOfStores2State extends State<ListOfStores2> {
               return Center(child: CircularProgressIndicator());
             }
           }),
-
-      // Container(
-      //   color: Color.fromARGB(255, 243, 243, 243),
-      //   child: new ListView.builder(
-      //       itemCount: Stores.length,
-      //       itemBuilder: (BuildContext context, int index) =>
-      //           buildStoresCards(context, index)),
-      // ),
     );
   }
 
@@ -158,11 +143,8 @@ class _ListOfStores2State extends State<ListOfStores2> {
               ),
             ),
             onTap: () {
+              EcommerceApp.storeName = store.Name;
               _scan(context);
-              //   Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => ScanPage()),
-              // );
             },
           ),
           color: Color.fromARGB(243, 243, 239, 231),
