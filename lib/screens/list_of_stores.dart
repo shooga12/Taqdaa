@@ -1,13 +1,13 @@
 import 'dart:ffi';
-
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
 import 'package:taqdaa_application/screens/scanBarCode.dart';
 import '../controller/searchBar.dart';
 import 'scanBarCode.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class ListOfStores2 extends StatefulWidget {
   const ListOfStores2({super.key});
@@ -18,6 +18,7 @@ class ListOfStores2 extends StatefulWidget {
 
 class _ListOfStores2State extends State<ListOfStores2> {
   final List<Store> Stores = [];
+  // Query dbref = FirebaseDatabase.instance.ref().child('Stores');
 
   String _counter = "";
 
@@ -60,22 +61,35 @@ class _ListOfStores2State extends State<ListOfStores2> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: StreamBuilder<List<Store>>(
-          stream: readStores(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              final stores = snapshot.data!;
-              return ListView.builder(
-                itemCount: stores.length,
-                itemBuilder: (BuildContext context, int index) =>
-                    buildStoresCards(stores[index], context),
-              );
-            } else if (snapshot.hasError) {
-              return Text("Some thing went wrong! ${snapshot.error}");
-            } else {
-              return Center(child: CircularProgressIndicator());
-            }
-          }),
+      body:
+          // Container(
+          //   height: double.infinity,
+          //   child: FirebaseAnimatedList(
+          //       query: dbref,
+          //       itemBuilder: (BuildContext context, DataSnapshot snapshot,
+          //           Animation<double> animation, int index) {
+          //         Map store = snapshot.value as Map;
+          //         store['key'] = snapshot.key;
+          //         return buildStoresCards(store: store);
+          //       }),
+          // ),
+
+          StreamBuilder<List<Store>>(
+              stream: readStores(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final stores = snapshot.data!;
+                  return ListView.builder(
+                    itemCount: stores.length,
+                    itemBuilder: (BuildContext context, int index) =>
+                        buildStoresCards(stores[index], context),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text("Some thing went wrong! ${snapshot.error}");
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              }),
     );
   }
 
@@ -87,6 +101,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
           snapshot.docs.map((doc) => Store.fromJson(doc.data())).toList());
 
   Widget buildStoresCards(Store store, BuildContext context) {
+    //{required Map store}
     return Container(
       child: Padding(
         padding: const EdgeInsets.only(
@@ -118,7 +133,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
                       Row(
                         children: <Widget>[
                           Text(
-                            store.KilloMeters,
+                            store.KilloMeters.toString(),
                             style: new TextStyle(
                               fontSize: 12,
                               color: Color.fromARGB(255, 77, 76, 76),

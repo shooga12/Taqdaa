@@ -78,37 +78,73 @@ class _shoppingCartState extends State<shoppingCart> {
               }
             }),
         bottomNavigationBar: SizedBox(
-          height: 100,
+          height: 140,
           child: Container(
-              child: Row(
+              child: Column(
             children: [
               Container(
-                child: ElevatedButton(
+                child: ElevatedButton.icon(
                   onPressed: () {
                     _scan(
                       context,
                     );
-                  }, //_scan,
-                  child: const Text('Continue Scanning'),
-                  style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(255, 245, 161, 14)),
+                  },
+                  label: Text(
+                    'Continue Scanning',
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                  ),
+                  icon: Icon(Icons.document_scanner_outlined),
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.resolveWith((states) {
+                        if (states.contains(MaterialState.pressed)) {
+                          return Colors.grey;
+                        }
+                        return Colors.orange;
+                      }),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30)))),
                 ),
               ),
-              Spacer(),
               Container(
                 child: ElevatedButton(
-                  child: const Text('Checkout'),
-                  onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) => ListOfStores2()),
-                    // );
-                  },
-                  style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(255, 245, 161, 14)),
+                  onPressed: () {},
+                  child: Text(
+                    'Checkout',
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                  ),
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.resolveWith((states) {
+                        if (states.contains(MaterialState.pressed)) {
+                          return Colors.grey;
+                        }
+                        return Colors.orange;
+                      }),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30)))),
                 ),
-              )
+                // ElevatedButton(
+                //   child: const Text('Checkout'),
+                //   onPressed: () {
+                //     // Navigator.push(
+                //     //   context,
+                //     //   MaterialPageRoute(
+                //     //       builder: (context) => ListOfStores2()),
+                //     // );
+                //   },
+                //   style: ElevatedButton.styleFrom(
+                //       primary: Color.fromARGB(255, 245, 161, 14)),
+                // ),
+              ),
             ],
           )),
         ));
@@ -150,21 +186,21 @@ class _shoppingCartState extends State<shoppingCart> {
                       children: <Widget>[
                         new Container(
                           child: Stack(children: <Widget>[
-                            // Container(
-                            //   child: new Image.asset(
-                            //     'assets/Rectangle.png',
-                            //     height: 80.0,
-                            //     fit: BoxFit.cover,
-                            //   ),
-                            // ),
+                            Container(
+                              child: new Image.asset(
+                                'assets/Rectangle.png',
+                                height: 100.0,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                             Container(
                               alignment: Alignment.bottomLeft, //اعدله
                               child: Text(
-                                "\n      " + product.Category,
+                                "\n " + product.Category,
                                 style: new TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                                  color: Color.fromARGB(255, 32, 7, 121),
                                 ),
                               ),
                             ),

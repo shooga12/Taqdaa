@@ -103,6 +103,9 @@ class _ScanPageState extends State<ScanPage> {
           Column(
             //upper part
             children: [
+              Text('\n'),
+              Text("The product you Scanned is :\n",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
               Card(
                 child: new InkWell(
                   child: Padding(
@@ -112,21 +115,21 @@ class _ScanPageState extends State<ScanPage> {
                       children: <Widget>[
                         new Container(
                           child: Stack(children: <Widget>[
-                            // Container(
-                            //   child: new Image.asset(
-                            //     'assets/Rectangle.png',
-                            //     height: 80.0,
-                            //     fit: BoxFit.cover,
-                            //   ),
-                            // ),
                             Container(
-                              alignment: Alignment.bottomLeft, //اعدله
+                              child: new Image.asset(
+                                'assets/Rectangle.png',
+                                height: 100.0,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.center, //اعدله
                               child: Text(
-                                "\n      " + product.Category,
+                                "\n " + product.Category,
                                 style: new TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                                  color: Color.fromARGB(255, 32, 7, 121),
                                 ),
                               ),
                             ),
@@ -140,7 +143,6 @@ class _ScanPageState extends State<ScanPage> {
                             color: Color.fromARGB(255, 77, 76, 76),
                           ),
                         ),
-
                         IconButton(
                             onPressed: () {
                               //controller.removeProduct(product);
@@ -158,23 +160,21 @@ class _ScanPageState extends State<ScanPage> {
                       ],
                     ),
                   ),
-                  onTap: () {},
                 ),
                 color: Color.fromARGB(255, 248, 248, 246),
               ),
+              Text('\n'),
             ],
           ),
           //),
           Column(
             //lower part
             children: [
-              Divider(thickness: 2, color: Color.fromARGB(255, 162, 190, 243)),
               Column(
                 children: [
                   Center(
                     child: ElevatedButton(
                       onPressed: () {
-                        //save
                         EcommerceApp.haveItmes = true;
                         saveUserItems(product);
                         Navigator.push(
@@ -182,10 +182,27 @@ class _ScanPageState extends State<ScanPage> {
                           MaterialPageRoute(
                               builder: (context) => shoppingCart()),
                         );
-                      }, //_scan,
-                      child: const Text('Add to cart'),
-                      style: ElevatedButton.styleFrom(
-                          primary: Color.fromARGB(255, 245, 161, 14)),
+                      },
+                      child: Text(
+                        'Add to cart',
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16),
+                      ),
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.resolveWith((states) {
+                            if (states.contains(MaterialState.pressed)) {
+                              return Colors.grey;
+                            }
+                            return Colors.orange;
+                          }),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(30)))),
                     ),
                   ),
                 ],
