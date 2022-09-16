@@ -1,13 +1,12 @@
-import 'dart:ffi';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
 import 'package:taqdaa_application/screens/scanBarCode.dart';
 import '../controller/searchBar.dart';
 import 'scanBarCode.dart';
-//import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 
 class ListOfStores2 extends StatefulWidget {
   const ListOfStores2({super.key});
@@ -18,7 +17,6 @@ class ListOfStores2 extends StatefulWidget {
 
 class _ListOfStores2State extends State<ListOfStores2> {
   final List<Store> Stores = [];
-  // Query dbref = FirebaseDatabase.instance.ref().child('Stores');
 
   String _counter = "";
 
@@ -61,35 +59,22 @@ class _ListOfStores2State extends State<ListOfStores2> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body:
-          // Container(
-          //   height: double.infinity,
-          //   child: FirebaseAnimatedList(
-          //       query: dbref,
-          //       itemBuilder: (BuildContext context, DataSnapshot snapshot,
-          //           Animation<double> animation, int index) {
-          //         Map store = snapshot.value as Map;
-          //         store['key'] = snapshot.key;
-          //         return buildStoresCards(store: store);
-          //       }),
-          // ),
-
-          StreamBuilder<List<Store>>(
-              stream: readStores(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  final stores = snapshot.data!;
-                  return ListView.builder(
-                    itemCount: stores.length,
-                    itemBuilder: (BuildContext context, int index) =>
-                        buildStoresCards(stores[index], context),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text("Some thing went wrong! ${snapshot.error}");
-                } else {
-                  return Center(child: CircularProgressIndicator());
-                }
-              }),
+      body: StreamBuilder<List<Store>>(
+          stream: readStores(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final stores = snapshot.data!;
+              return ListView.builder(
+                itemCount: stores.length,
+                itemBuilder: (BuildContext context, int index) =>
+                    buildStoresCards(stores[index], context),
+              );
+            } else if (snapshot.hasError) {
+              return Text("Some thing went wrong! ${snapshot.error}");
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          }),
     );
   }
 
@@ -158,6 +143,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
               ),
             ),
             onTap: () {
+              EcommerceApp.storeId = store.StoreId;
               EcommerceApp.storeName = store.StoreName;
               _scan(context);
             },
@@ -173,21 +159,25 @@ class Store {
   final String StoreName;
   final String StoreLogo;
   final String kilometers;
+  final String StoreId;
 
   Store(
       {required this.StoreName,
       required this.StoreLogo,
-      required this.kilometers});
+      required this.kilometers,
+      required this.StoreId});
 
   Map<String, dynamic> toJson() => {
         'StoreName': StoreName,
         'StoreLogo': StoreLogo,
         'kilometers': kilometers,
+        'StoreId': StoreId,
       };
 
   static Store fromJson(Map<String, dynamic> json) => Store(
         StoreName: json['StoreName'],
         StoreLogo: json['StoreLogo'],
         kilometers: json['kilometers'].toString(),
+        StoreId: json['StoreId'],
       );
 }

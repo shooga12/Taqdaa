@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -6,6 +6,8 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:taqdaa_application/screens/ShoppingCart.dart';
 import '../confige/EcommerceApp.dart';
 import 'list_of_stores.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 
 class ScanPage extends StatefulWidget {
   const ScanPage({Key? key}) : super(key: key);
@@ -15,6 +17,13 @@ class ScanPage extends StatefulWidget {
 
 class _ScanPageState extends State<ScanPage> {
   _ScanPageState();
+
+  Query dbref = FirebaseDatabase.instance
+      .ref()
+      .child(EcommerceApp.storeId) //Ecommerce.storeName
+      .child('store')
+      .orderByChild('Barcode')
+      .equalTo(int.parse(EcommerceApp.value.substring(1)));
 
   String collectionName = EcommerceApp().getCurrentUser();
 
@@ -36,46 +45,61 @@ class _ScanPageState extends State<ScanPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: StreamBuilder<List<Product>>(
-          stream: readItems(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              final products = snapshot.data!;
-              return ListView.builder(
-                  itemCount: products.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    if (EcommerceApp.storeName == products[index].Store) {
-                      return buildBeforeCart(products[index], context);
-                    } else {
-                      return AlertDialog(
-                          content: Text("Sorry you can only scan items from " +
-                              EcommerceApp.storeName +
-                              " store!"),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, 'OK'),
-                              child: const Text('OK'),
-                            )
-                          ]);
-                    }
-                  }
-                  //{
-                  //   //Map thisItem = stores[index];
-                  //   return ListTile(
-                  //     title: Text(''),
-                  //     subtitle: Text(''),
-                  //   );
-                  // }
-                  //
-                  //children: stores.map(buildStoresCards).toList(),
-                  );
-            } else if (snapshot.hasError) {
-              return Text("Some thing went wrong! ${snapshot.error}");
-            } else {
-              return Center(child: CircularProgressIndicator());
-            }
-          }),
-      //Text(widget.value),
+      body: Container(
+        height: double.infinity,
+        child: FirebaseAnimatedList(
+            query: dbref,
+            itemBuilder: (BuildContext context, DataSnapshot snapshot,
+                Animation<double> animation, int index) {
+              Map product = snapshot.value as Map;
+              product['key'] = snapshot.key;
+              if (EcommerceApp.storeName == product['StoreName']) {
+                return buildBeforeCart(product: product);
+              } else {
+                return AlertDialog(
+                    content: Text("Sorry you can only scan items from " +
+                        EcommerceApp.storeName +
+                        " store!"),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, 'OK'),
+                        child: const Text('OK'),
+                      )
+                    ]);
+              }
+            }),
+      ),
+
+      // StreamBuilder<List<Product>>(
+      //     stream: readItems(),
+      //     builder: (context, snapshot) {
+      //       if (snapshot.hasData) {
+      //         final products = snapshot.data!;
+      //         return ListView.builder(
+      //             itemCount: products.length,
+      //             itemBuilder: (BuildContext context, int index) {
+      //               if (EcommerceApp.storeName == products[index].Store) {
+      //                 return buildBeforeCart(products[index], context);
+      //               } else {
+      //                 return AlertDialog(
+      //                     content: Text(
+      //                         "Sorry you can only scan items from " +
+      //                             EcommerceApp.storeName +
+      //                             " store!"),
+      //                     actions: [
+      //                       TextButton(
+      //                         onPressed: () => Navigator.pop(context, 'OK'),
+      //                         child: const Text('OK'),
+      //                       )
+      //                     ]);
+      //               }
+      //             });
+      //       } else if (snapshot.hasError) {
+      //         return Text("Some thing went wrong! ${snapshot.error}");
+      //       } else {
+      //         return Center(child: CircularProgressIndicator());
+      //       }
+      //     }),
     );
   }
 
@@ -95,7 +119,7 @@ class _ScanPageState extends State<ScanPage> {
       .map((snapshot) =>
           snapshot.docs.map((doc) => Product.fromJson(doc.data())).toList());
 
-  Widget buildBeforeCart(Product product, BuildContext context) {
+  Widget buildBeforeCart({required Map product}) {
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -125,9 +149,9 @@ class _ScanPageState extends State<ScanPage> {
                             Container(
                               alignment: Alignment.center, //اعدله
                               child: Text(
-                                "\n " + product.Category,
+                                "\n " + product['Product Name'],
                                 style: new TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                   color: Color.fromARGB(255, 32, 7, 121),
                                 ),
@@ -136,7 +160,7 @@ class _ScanPageState extends State<ScanPage> {
                           ]),
                         ),
                         Text(
-                          "   Price : " + product.Price + " SR",
+                          "   Price : " + product['Price'].toString() + " SR",
                           textAlign: TextAlign.center,
                           style: new TextStyle(
                             fontSize: 16,
@@ -176,7 +200,11 @@ class _ScanPageState extends State<ScanPage> {
                     child: ElevatedButton(
                       onPressed: () {
                         EcommerceApp.haveItmes = true;
-                        saveUserItems(product);
+                        saveUserItems(Product(
+                            Category: product['Product Name'],
+                            Item_number: product['Barcode'].toString(),
+                            Price: product['Price'],
+                            Store: product['StoreName']));
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -218,7 +246,7 @@ class _ScanPageState extends State<ScanPage> {
 class Product {
   final String Category;
   final String Item_number;
-  final String Price;
+  final int Price;
   final String Store;
 
   Product(
@@ -237,7 +265,7 @@ class Product {
   static Product fromJson(Map<String, dynamic> json) => Product(
         Category: json['Category'],
         Item_number: json['Item_number'],
-        Price: json['Price'].toString(),
+        Price: json['Price'],
         Store: json['Store'],
       );
 }

@@ -198,7 +198,7 @@ class _shoppingCartState extends State<shoppingCart> {
                               child: Text(
                                 "\n " + product.Category,
                                 style: new TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                   color: Color.fromARGB(255, 32, 7, 121),
                                 ),
@@ -207,7 +207,7 @@ class _shoppingCartState extends State<shoppingCart> {
                           ]),
                         ),
                         Text(
-                          "   Price : " + product.Price + " SR",
+                          "   Price : " + product.Price.toString() + " SR",
                           textAlign: TextAlign.center,
                           style: new TextStyle(
                             fontSize: 16,

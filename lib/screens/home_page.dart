@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
 import 'package:taqdaa_application/screens/NoItmesCart.dart';
-import 'package:taqdaa_application/screens/api.dart';
 import 'ShoppingCart.dart';
 import 'list_of_stores.dart';
 import 'scanBarCode.dart';
