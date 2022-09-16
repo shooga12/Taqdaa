@@ -7,7 +7,7 @@ import 'package:taqdaa_application/confige/EcommerceApp.dart';
 import 'package:taqdaa_application/screens/scanBarCode.dart';
 import '../controller/searchBar.dart';
 import 'scanBarCode.dart';
-import 'package:firebase_database/firebase_database.dart';
+//import 'package:firebase_database/firebase_database.dart';
 
 class ListOfStores2 extends StatefulWidget {
   const ListOfStores2({super.key});
@@ -95,7 +95,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
 
   Stream<List<Store>> readStores() => FirebaseFirestore.instance
       .collection('Stores')
-      .orderBy('KilloMeters')
+      .orderBy('kilometers')
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Store.fromJson(doc.data())).toList());
@@ -118,14 +118,14 @@ class _ListOfStores2State extends State<ListOfStores2> {
               child: Row(
                 children: <Widget>[
                   Image.network(
-                    store.url,
+                    store.StoreLogo,
                     width: 60,
                     height: 60,
                   ),
                   Column(
                     children: <Widget>[
                       Text(
-                        store.Name,
+                        store.StoreName,
                         style: new TextStyle(
                           fontSize: 18,
                         ),
@@ -133,7 +133,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
                       Row(
                         children: <Widget>[
                           Text(
-                            store.KilloMeters.toString(),
+                            store.kilometers.toString(),
                             style: new TextStyle(
                               fontSize: 12,
                               color: Color.fromARGB(255, 77, 76, 76),
@@ -158,7 +158,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
               ),
             ),
             onTap: () {
-              EcommerceApp.storeName = store.Name;
+              EcommerceApp.storeName = store.StoreName;
               _scan(context);
             },
           ),
@@ -170,21 +170,24 @@ class _ListOfStores2State extends State<ListOfStores2> {
 }
 
 class Store {
-  final String Name;
-  final String url;
-  final String KilloMeters;
+  final String StoreName;
+  final String StoreLogo;
+  final String kilometers;
 
-  Store({required this.Name, required this.url, required this.KilloMeters});
+  Store(
+      {required this.StoreName,
+      required this.StoreLogo,
+      required this.kilometers});
 
   Map<String, dynamic> toJson() => {
-        'Name': Name,
-        'url': url,
-        'KilloMeters': KilloMeters,
+        'StoreName': StoreName,
+        'StoreLogo': StoreLogo,
+        'kilometers': kilometers,
       };
 
   static Store fromJson(Map<String, dynamic> json) => Store(
-        Name: json['Name'],
-        url: json['url'],
-        KilloMeters: json['KilloMeters'].toString(),
+        StoreName: json['StoreName'],
+        StoreLogo: json['StoreLogo'],
+        kilometers: json['kilometers'].toString(),
       );
 }

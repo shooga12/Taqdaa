@@ -510,7 +510,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 content: Text('Account created sucessfully'),
                 actions: [
                   TextButton(
-                    onPressed: () => Navigator.pop(context, 'OK'),
+                    onPressed: () => Navigator.pop(context,
+                        MaterialPageRoute(builder: (context) => LoginPage())),
                     child: const Text('OK'),
                   )
                 ]);
