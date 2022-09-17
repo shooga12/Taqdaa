@@ -34,6 +34,8 @@ class _ListOfStores2State extends State<ListOfStores2> {
     );
   }
 
+  String SearchName = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,20 +44,27 @@ class _ListOfStores2State extends State<ListOfStores2> {
           'Choose Store',
           style: TextStyle(fontSize: 24), //TextStyle(fontFamily: 'Cairo'),
         ),
-        actions: [
-          IconButton(
-              onPressed: () {
-                showSearch(context: context, delegate: MySearchDelegate());
-              },
-              icon: const Icon(Icons.search))
-        ],
+        bottom: PreferredSize(
+            child: Flexible(
+              child: Card(
+                child: TextField(
+                  decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.search), hintText: 'Search..'),
+                  onChanged: (val) {
+                    setState(() {
+                      SearchName = val;
+                    });
+                  },
+                ),
+              ),
+            ),
+            preferredSize: Size.zero),
         flexibleSpace: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
                   image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
         ),
         toolbarHeight: 170,
-        //leading: BackButton(),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -64,11 +73,62 @@ class _ListOfStores2State extends State<ListOfStores2> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final stores = snapshot.data!;
+              /*if (SearchName.isEmpty) {
+                return ListView.builder(
+                    itemCount: stores.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      var data = stores[index];
+                      return buildStoresCards(stores[index], context);
+                    });
+              } else if (!SearchName.isEmpty) {
+                ListView.builder(
+                    itemCount: stores.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      var data = stores[index];
+
+                      if (data.StoreName.toString()
+                          .toLowerCase()
+                          .startsWith(SearchName.toLowerCase())) {
+                        return buildStoresCards(stores[index], context);
+                      }
+                    });
+              }
+              return Container(
+                  child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  'No Results',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
+                ),
+              ));*/
               return ListView.builder(
-                itemCount: stores.length,
-                itemBuilder: (BuildContext context, int index) =>
-                    buildStoresCards(stores[index], context),
-              );
+                  itemCount: stores.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    var data = stores[index];
+
+                    if (SearchName.isEmpty) {
+                      return buildStoresCards(stores[index], context);
+                    } else if (data.StoreName.toString()
+                        .toLowerCase()
+                        .startsWith(SearchName.toLowerCase())) {
+                      return buildStoresCards(stores[index], context);
+                    } else {
+                      return Container(
+                          child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'No Results',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ));
+                    }
+                  });
             } else if (snapshot.hasError) {
               return Text("Some thing went wrong! ${snapshot.error}");
             } else {

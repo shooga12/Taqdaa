@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 
 class MySearchDelegate extends SearchDelegate {
   @override
@@ -23,12 +23,11 @@ class MySearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
-    throw UnimplementedError();
+    
   }
 
   @override
-  Widget buildSuggestions(BuildContext context) {
+  /*Widget buildSuggestions(BuildContext context) {
     List<String> suggestions = ['', '', ''];
     return ListView.builder(
       itemCount: suggestions.length,
@@ -36,5 +35,5 @@ class MySearchDelegate extends SearchDelegate {
         return ListTile();
       }),
     );
-  }
-}
+  }*/
+}*/
