@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -55,6 +57,7 @@ class _shoppingCartState extends State<shoppingCart> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 final products = snapshot.data!;
+
                 return ListView.builder(
                     itemCount: products.length,
                     itemBuilder: (BuildContext context, int index) {
@@ -110,41 +113,70 @@ class _shoppingCartState extends State<shoppingCart> {
                               borderRadius: BorderRadius.circular(30)))),
                 ),
               ),
+
+              //----------------------------------------------------------------
+
               Container(
-                child: ElevatedButton(
-                  onPressed: () {},
-                  child: Text(
-                    'Checkout',
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16),
-                  ),
-                  style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.resolveWith((states) {
-                        if (states.contains(MaterialState.pressed)) {
-                          return Colors.grey;
-                        }
-                        return Colors.orange;
-                      }),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30)))),
+                height: kToolbarHeight,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            child: Text(
+                              'TOTAL',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            child: Text(
+                              'SR ', //${products.totalAmount.roundToDouble()}
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: Text(
+                          'Checkout',
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                        ),
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.resolveWith((states) {
+                              if (states.contains(MaterialState.pressed)) {
+                                return Colors.grey;
+                              }
+                              return Colors.orange;
+                            }),
+                            shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30)))),
+                      ),
+                    )
+                  ],
                 ),
-                // ElevatedButton(
-                //   child: const Text('Checkout'),
-                //   onPressed: () {
-                //     // Navigator.push(
-                //     //   context,
-                //     //   MaterialPageRoute(
-                //     //       builder: (context) => ListOfStores2()),
-                //     // );
-                //   },
-                //   style: ElevatedButton.styleFrom(
-                //       primary: Color.fromARGB(255, 245, 161, 14)),
-                // ),
               ),
+              //-----------------------------------------------------------------
             ],
           )),
         ));
