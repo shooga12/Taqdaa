@@ -1,0 +1,52 @@
+#products-container{
+    padding: 0.8em;
+    max-height: 600px;
+    overflow-y: scroll;
+}
+#products-box{
+    background-color: white;
+    box-shadow: 1px 1px 15px 1px #ebebeb;
+    border-radius: 10px;
+    padding: 1em;
+}
+th{
+    font-weight: 600;
+    color: #faa213;
+    padding: 1em;
+    font-size: 22px;
+    text-align: center !important;
+}
+td{
+    padding: 1.5em;
+    text-align: center;
+    font-size: 20px;
+}
+.edit-icons{
+    font-size: 30px;
+    cursor: pointer;
+    color:rgb(164, 164, 164);
+}
+.edit-icons:hover{
+    color:rgb(136, 136, 136);
+}
+.delete-icons{
+    font-size: 30px;
+    cursor: pointer;
+    color: rgb(169, 0, 0);
+    margin-left: 2em;
+}
+.delete-icons:hover{
+    color: rgb(134, 0, 0);
+}
+.second-col{
+    width: 100%;
+    text-align: center !important;
+}
+.product-img{
+    height: 130px !important;
+    padding: 1em;
+}
+td:first-child{
+    display: flex;
+    justify-content: center;
+}

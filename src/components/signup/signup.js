@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import {createUserWithEmailAndPassword,fetchSignInMethodsForEmail} from 'firebase/auth';
 import './style.css';
+import parse from 'html-react-parser'
+import { confirmAlert } from 'react-confirm-alert'; 
 import Logo from '../../shared/Logo_Light.png';
 import auth, {db} from '../../shared/firebase';
 import {validEmail,validName,emptyImage,validPhone} from '../../shared/validations';
@@ -9,6 +11,7 @@ import emailjs from 'emailjs-com';
 import { async } from '@firebase/util';
 import { collection, doc, setDoc, addDoc }  from 'firebase/firestore';
 import {getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { parseHTML } from 'jquery';
 
 function Signup(){
 
@@ -24,7 +27,8 @@ function Signup(){
   const [StoreLogo, setStoreLogo] = useState("");
   const [logoURL, setLogoURL] = useState("");
   const storage = getStorage();
-
+  //const [userID, setUserID] = useState("");
+  let userID = "";
   const navigate = useNavigate();
     const generatePass = () => {
       var chars = "0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -49,17 +53,30 @@ function Signup(){
            console.log('FAILED...', error);
       });
     }
-    const createAccount = ()=>{
+    const createAccount = async ()=>{
       
       setPassword(generatePass());
       createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(async(userCredential) => {
         // Signed in 
         const user = userCredential.user;
-        alert("Registered");
+        userID = user.uid;
         auth.signOut();
+        showAlert();
         sendEmail(email,password);
-        // ...
+        await setDoc(doc(db, "Stores", 'Store'+userID), {
+              FirstName: firstName,
+              LastName: lastName,
+              CompanyName: companyName,
+              StoreName: storeName,
+              Email: email,
+              Phone: phone,
+              CommercialRegister: CommercialRegisterURL,
+              StoreLogo: logoURL,
+              kilometers: 2.6,
+              StoreId:'Store'+userID
+        });
+        
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -71,7 +88,7 @@ function Signup(){
         if (user) {
           navigate('/dashboard');
         } else {
-          // No user is signed in.
+
         }
      });
 
@@ -120,7 +137,20 @@ function Signup(){
     }
 
 
-    const addData =  async() =>{
+    const showAlert = () => {
+      var msg = parse('<span id="registration-msg">Store Registration Sent Successfully</span> <br><br> you will recieve an email if your registration get accepted')
+      confirmAlert({
+      message: msg,
+      buttons: [
+          {
+          label: 'Ok',
+          //onClick: () => alert('Click No')
+          }
+      ]
+      });
+    }
+
+    const addData =  async () =>{
       
       var errorMsgsArr = document.querySelectorAll('.error-msg');
       for(var i = 0; i< errorMsgsArr.length; i++){
@@ -167,6 +197,16 @@ function Signup(){
         document.querySelector('#error-msg-cr').innerHTML = 'Commercial Register is required<br>';
         document.querySelector('#error-msg-cr').style.visibility = "visible";
       }
+      if(firstName != '' && !validName(firstName)){
+        error = true;
+        document.querySelector('#error-msg-fn').innerHTML = 'First name should contain only letters';
+        document.querySelector('#error-msg-fn').style.visibility = "visible";
+      }
+      if(lastName != '' && !validName(lastName)){
+        error = true;
+        document.querySelector('#error-msg-ln').innerHTML = 'Last name should contain only letters';
+        document.querySelector('#error-msg-ln').style.visibility = "visible";
+      }
       if(email != '' && !validEmail(email)){
         error = true;
         document.querySelector('#error-msg-email').innerHTML = 'Invalid email';
@@ -210,7 +250,8 @@ function Signup(){
               Status: 'Accepted',
             });
             console.log("Document written with ID: ", docRef.id);
-            createAccount(email);
+            createAccount(email)
+            
 
           } catch (e) {
             console.error("Error adding document: ", e);
@@ -221,65 +262,74 @@ function Signup(){
 
 
       return(
-        <div className='container w-100 vh-100 d-flex align-items-center'>
-        <div id="signup-box" className="col-12 col-lg-9">
+        <div className='container w-100 vh-100 d-flex align-items-center signup-cont'>
+        <div id="signup-box" className="col-12 col-lg-11 col-xl-9">
           <div id="box-content-container" className="col-11">
-           <div className="container pt-4 pb-5 pl-5 pr-5 d-flex h-100 flex-column align-items-center justify-content-around">
+           <div className="container pt-4 pb-4 pl-5 pr-5 d-flex h-100 flex-column align-items-center justify-content-around">
              <img src={Logo} height="90" className="mb-3" alt="logo"/>
-             <h4>Store Registeration</h4><br/>
-                <div>
-                  <div className="col-12 d-flex flex-column flex-lg-row justify-content-around" id="g1">
+             <h4 className='mt-4 mb-4'>Store Registeration</h4><br/>
+                <div className='col-9'>
+                  <div className="col-12 d-flex flex-column flex-lg-row justify-content-between">
                     <div>
-                      <input type="text" placeholder="First Name" className="input-field" onChange={(e) => setFirstName(e.target.value)} required/> 
+                      <label htmlFor='firstname'>First Name</label>
+                      <input name="firstname" type="text" placeholder="First Name" className="input-field" onChange={(e) => setFirstName(e.target.value)} required maxLength={30}/> 
                       <p className='error-msg' id="error-msg-fn"></p>
                     </div>
                     <div>
-                      <input type="text" placeholder="Last Name" className="input-field" onChange={(e) => setLastName(e.target.value)} required/>
+                      <label htmlFor='lastname'>Last Name</label>
+                      <input name="lastname" type="text" placeholder="Last Name" className="input-field" onChange={(e) => setLastName(e.target.value)} required maxLength={30}/>
                       <p className='error-msg' id="error-msg-ln"></p>
                     </div>
                   </div>
 
-                  <div className="d-flex flex-column flex-lg-row" id="g2">
+                  <div className="col-12 d-flex flex-column flex-lg-row justify-content-between">
                     <div>
-                      <input type="text" placeholder="company Name" className="input-field" onChange={(e) => setCompanyName(e.target.value)} required/>
+                      <label htmlFor='companyname'>Company Name</label>
+                      <input name="companyname" type="text" placeholder="company Name" className="input-field" onChange={(e) => setCompanyName(e.target.value)} required maxLength={30}/>
                       <p className='error-msg' id="error-msg-cn"></p>
                     </div>
                     <div>
-                      <input type="text" placeholder="Store Name" className="input-field" onChange={(e) => setStoreName(e.target.value)} required/>
+                      <label htmlFor='storename'>Store Name</label>
+                      <input name="storename" type="text" placeholder="Store Name" className="input-field" onChange={(e) => setStoreName(e.target.value)} required maxLength={30}/>
                       <p className='error-msg' id="error-msg-sn"></p>
                     </div>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   </div>
 
-                  <div className="d-flex flex-column flex-lg-row" id="g3">
+                  <div className="col-12 d-flex flex-column flex-lg-row justify-content-between">
                     <div>
-                       <input type="email" placeholder="Email Address" className="input-field" onChange={(e)=>setEmail(e.target.value)} required/>
+                       <label htmlFor='email'>Email</label>
+                       <input name="email" type="email" placeholder="example@gmail.com" className="input-field" onChange={(e)=>setEmail(e.target.value)} required maxLength={60}/>
                        <p className='error-msg' id="error-msg-email"></p>
                     </div>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <div>
-                      <input type="phone" placeholder="Phone Number" className="input-field" onChange={(e) => setPhone(e.target.value)} required/>
+                      <label htmlFor='phone'>Phone Number</label>
+                      <input name="phone" type="phone" placeholder="05xxxxxxxx" className="input-field" onChange={(e) => setPhone(e.target.value)} required maxLength={10}/>
                       <p className='error-msg' id="error-msg-pn"></p>
                     </div>
                   </div>
+                  
                 </div>
 
                 <div className="d-flex flex-column flex-lg-row">
                   <div>
-                    <h5>Commercial Register</h5> 
+                    <h5 className='mt-3 mb-3'>Commercial Register</h5> 
                     <input type="file" accept="png,Pdf,jpeg" className="Upload-btn" id="com-btn" onChange={(e) => handleCommercialRegister(e)} required/> 
                     <p className="only">only:Pdf,jpeg,Png</p>
                     <p className='error-msg' id="error-msg-cr">Commercial Register is Required</p>
                   </div>
                   <div>
-                    <h5>Store Logo </h5> 
+                    <h5 className='mt-3 mb-3'>Store Logo</h5> 
                     <input type="file" accept="png,jpeg" className="Upload-btn" id="com-btn" onChange={(e) => handleLogo(e)} required/> 
                     <p className="only">only: jpeg,Png</p>
                     <p className='error-msg' id="error-msg-sl">Store Logo is Required</p>
                   </div>
                 </div>
 
-                <button onClick={addData} id="sendreq-btn" className="btns filled-orange-btn text-center">Send</button>
+                <button onClick={addData} id="sendreq-btn" className="btns filled-orange-btn text-center">Register</button>
              
-             <p className="end">Already Joined?<a href="#" className="login-end" onClick={() => navigate('/')}> Log In</a></p> 
+             <p className="end mt-3">Already Joined?<a href="#" className="login-end" onClick={() => navigate('/')}> Log In</a></p> 
 
            </div>
           </div>

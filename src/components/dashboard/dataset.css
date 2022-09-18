@@ -13,7 +13,7 @@ body{
 }
 h1{
   color: #1E286D;
-  padding-bottom: 2em;
+  padding-bottom: 1em;
 }
 .drag-area{
   border: 2px dashed #FEB139;
@@ -36,10 +36,13 @@ h1{
   border-radius: 5px;
   cursor: pointer;
 }
+::-webkit-file-upload-button:hover{
+  background: #ffa20c;
+}
 .drag-area.active{
   border: 2px solid green;
 }
-.drag-area .icon{
+.cloud-icon{
   font-size: 100px;
   color: #FEB139;
 }
@@ -81,7 +84,7 @@ h1{
 #upload-btn{
   border:none;
   margin-top: 2em;
-  background-color: #1E286D;
+  background-color: #232e75;
   color: white;
   padding: 0.5em 1em 0.5em 1em;
   border-radius: 5px;
@@ -90,7 +93,7 @@ h1{
   text-align: center;
 }
 #upload-btn:hover{
-  background-color: #161e58;
+  background-color: #12194f;
 }
 #file-name{
   color: #161e58;
@@ -98,4 +101,16 @@ h1{
 }
 #file-name span{
   color: #e38c00;
+}
+#warning{
+  margin: auto;
+  color: #e38c00;
+  font-size: 22px;
+  text-align: center;
+  font-weight: 600;
+}
+#warning span{
+  color: #161e58;
+  font-size: 18px;
+  font-weight: 400;
 }

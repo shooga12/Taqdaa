@@ -70,7 +70,7 @@ body{
 .nonfilled-btn:hover{
     background-color: rgb(242, 242, 242);
 }
-.input-field{
+.login-cont .input-field{
     border-radius: 50px;
     border: 1px solid #a6a6a6;
     padding: 0.5em 0.5em 0em 0.5em;
@@ -82,4 +82,7 @@ h4{
 }
 #login-btn{
     width: 230px;
+}
+#reset-btn{
+    width: 220px;
 }

@@ -26,6 +26,7 @@ function Dataset(){
         
     }
  const handleFile = async (e) => {
+    setFile(e.target.files[0]);
     let fileType = e.target.files[0].type; 
     let validExtensions = ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv"]; //adding some valid image extensions in array
     if(!validExtensions.includes(fileType)){
@@ -64,10 +65,14 @@ function Dataset(){
 
     
     function writeUserData() {
-        
+
+            if(file.length == 0){
+                alert("No file chosen!");
+                return;
+            }
             
             if(jsonData.length == 0){
-                alert("The uploaded dataset is empty!");
+                alert("Dataset is empty!");
                 return;
             }
             else{
@@ -124,7 +129,10 @@ function Dataset(){
                 console.log("No data available");
                 set(ref(DB, 'Store'+auth.currentUser.uid), {
                     store: jsonData,
+                }).then(()=>{
+                    alert("Dataset Uploaded Sucessfully");
                 })
+                
               }
             }).catch((error) => {
               console.error(error);
@@ -138,14 +146,18 @@ function Dataset(){
      return(  
         <>
         <h1 className="mt-3">Products Dataset</h1>
+        <p id="warning">Uploading a new dataset will replace the current one<br></br>
+         <span>Dataset must contain the following feilds with the same names: <strong>Barcode</strong>, <strong>Product Name</strong>, <strong>Price</strong></span><br></br>
+         <span>Only .xlsx and .csv files are acceptable</span>
+        </p>
         <div id="container">  
                 <div className="drag-area">
-                    <div className="icon">
+                    <div className="cloud-icon">
                         <BsCloudArrowUp/>
                     </div>
-                    <p>Drag & Drop to Upload File</p>
-                    <span>OR</span>
-                    <input id="file-input" className="ml-5" onChange={(e) => {handleFile(e).then(()=>{
+                    <p>Upload File</p>
+                 
+                    <input id="file-input" className="ml-5 mb-3 mt-3" onChange={(e) => {handleFile(e).then(()=>{
                           console.log(jsonData);
                         })}
                     } type="file" accept=".xlsx, .xls, .csv"/>

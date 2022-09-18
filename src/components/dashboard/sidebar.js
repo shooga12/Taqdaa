@@ -4,12 +4,16 @@ import Logo from '../../shared/Logo.png';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import { BiBarcode, BiReceipt, BiPackage, BiPurchaseTagAlt } from 'react-icons/bi';
 import {IoIosArrowBack} from 'react-icons/io';
+import {RiFileListFill} from 'react-icons/ri';
 import {CgLogOut} from 'react-icons/cg';
 import Dataset from './dataset';
 import Invoices from './invoices';
+import Return_Req from './return_request';
+import Exchange_Req from './exchange_request';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import auth from '../../shared/firebase';
 import {useNavigate} from 'react-router-dom';
+import Products_List from './products_list';
 
 
 function Sidebar() {
@@ -55,16 +59,24 @@ function Sidebar() {
                 <span className="link hide">Invoices</span>
               </a>
             </li>
-            <li className="tooltip-element" data-tooltip="2" id="tab-3" onClick={()=>setCurrentTab(3)}>
-              <a href="#" className={currentTab == 3? "active-tab" : "non-active"} data-active="2">
+            <li className="tooltip-element" data-tooltip="1" id="tab-2" onClick={()=>setCurrentTab(3)}>
+              <a href="#" className={currentTab == 3? "active-tab" : "non-active"} data-active="1">
+                <div className="icon">
+                  <RiFileListFill />
+                </div>
+                <span className="link hide">Products</span>
+              </a>
+            </li>
+            <li className="tooltip-element" data-tooltip="2" id="tab-3" onClick={()=>setCurrentTab(4)}>
+              <a href="#" className={currentTab == 4? "active-tab" : "non-active"} data-active="2">
                 <div className="icon">
                   <BiPackage />
                 </div>
                 <span className="link hide">Return Requests</span>
               </a>
             </li>
-            <li className="tooltip-element" data-tooltip="3" id="tab-4" onClick={()=>setCurrentTab(4)}>
-              <a href="#" className={currentTab == 4? "active-tab" : "non-active"} data-active="3">
+            <li className="tooltip-element" data-tooltip="3" id="tab-4" onClick={()=>setCurrentTab(5)}>
+              <a href="#" className={currentTab == 5? "active-tab" : "non-active"} data-active="3">
                 <div className="icon">
                   <BiPurchaseTagAlt />
                 </div>
@@ -83,7 +95,7 @@ function Sidebar() {
         </div>
       </nav>
       <main>
-        {currentTab == 1? <Dataset /> : currentTab == 2? <Invoices /> : currentTab == 3? <Invoices /> : <Invoices />}
+        {currentTab == 1? <Dataset /> : currentTab == 2? <Invoices /> : currentTab == 3? <Products_List /> : currentTab == 4? <Return_Req /> : <Exchange_Req />}
       </main>
    
   

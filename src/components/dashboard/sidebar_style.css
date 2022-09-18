@@ -23,7 +23,7 @@ body {
   position: relative;
 }
 
-a {
+.tooltip-element a {
   text-decoration: none !important;
 }
 

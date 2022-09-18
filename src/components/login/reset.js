@@ -44,7 +44,7 @@ function Reset(){
               <h4 class="mb-5 mt-3">Reset Password</h4>
                 <label for="email" class="text-start labels">Email</label>
                 <input type={"email"} placeholder="example@gmail.com" class="input-field" onChange={(e) => setEmailField(e.target.value)}/>
-                <button class="mt-5 btns filled-blue-btn" onClick={reset} id="login-btn">Send Link</button>
+                <button class="mt-5 btns filled-blue-btn" onClick={reset} id="reset-btn">Send Link</button>
             </div>
             </div>
           </div>
