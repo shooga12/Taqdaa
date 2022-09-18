@@ -23,7 +23,7 @@ class _ScanPageState extends State<ScanPage> {
       .child(EcommerceApp.storeId) //Ecommerce.storeName
       .child('store')
       .orderByChild('Barcode')
-      .equalTo(int.parse(EcommerceApp.value.substring(1)));
+      .equalTo(int.parse(EcommerceApp.value));
 
   String collectionName = EcommerceApp().getCurrentUser();
 
@@ -51,21 +51,25 @@ class _ScanPageState extends State<ScanPage> {
             query: dbref,
             itemBuilder: (BuildContext context, DataSnapshot snapshot,
                 Animation<double> animation, int index) {
-              Map product = snapshot.value as Map;
-              product['key'] = snapshot.key;
-              if (EcommerceApp.storeName == product['StoreName']) {
-                return buildBeforeCart(product: product);
+              if (snapshot.hasChild('Barcode')) {
+                Map product = snapshot.value as Map;
+                product['key'] = snapshot.key;
+                if (EcommerceApp.storeName == product['StoreName']) {
+                  return buildBeforeCart(product: product);
+                } else {
+                  return AlertDialog(
+                      content: Text("Sorry you can only scan items from " +
+                          EcommerceApp.storeName +
+                          " store!"),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, 'OK'),
+                          child: const Text('OK'),
+                        )
+                      ]);
+                }
               } else {
-                return AlertDialog(
-                    content: Text("Sorry you can only scan items from " +
-                        EcommerceApp.storeName +
-                        " store!"),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, 'OK'),
-                        child: const Text('OK'),
-                      )
-                    ]);
+                return Center(child: CircularProgressIndicator());
               }
             }),
       ),
@@ -109,15 +113,16 @@ class _ScanPageState extends State<ScanPage> {
       "Item_number": product.Item_number,
       "Price": product.Price,
       "Store": product.Store,
+      "quantity": product.quantity,
     });
   }
 
-  Stream<List<Product>> readItems() => FirebaseFirestore.instance
-      .collection('Products')
-      .where("Item_number", isEqualTo: EcommerceApp.value.substring(1))
-      .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => Product.fromJson(doc.data())).toList());
+  // Stream<List<Product>> readCartItems() => FirebaseFirestore.instance
+  //     .collection(EcommerceApp.uid)
+  //     .where("Item_number", isEqualTo: EcommerceApp.value.substring(1))
+  //     .snapshots()
+  //     .map((snapshot) =>
+  //         snapshot.docs.map((doc) => Product.fromJson(doc.data())).toList());
 
   Widget buildBeforeCart({required Map product}) {
     return Container(
@@ -169,14 +174,16 @@ class _ScanPageState extends State<ScanPage> {
                         ),
                         IconButton(
                             onPressed: () {
+                              checkItemExist(false);
                               //controller.removeProduct(product);
                             },
                             icon: Icon(Icons.remove_circle,
                                 color: Color.fromARGB(255, 245, 161, 14))),
                         //Text('$quantity'),
-                        Text('1'),
+                        Text(EcommerceApp.quantity.toString()), /////bug fixes
                         IconButton(
                             onPressed: () {
+                              checkItemExist(true);
                               //controller.addProduct(product);
                             },
                             icon: Icon(Icons.add_circle,
@@ -198,13 +205,17 @@ class _ScanPageState extends State<ScanPage> {
                 children: [
                   Center(
                     child: ElevatedButton(
-                      onPressed: () {
-                        EcommerceApp.haveItmes = true;
-                        saveUserItems(Product(
-                            Category: product['Product Name'],
-                            Item_number: product['Barcode'].toString(),
-                            Price: product['Price'],
-                            Store: product['StoreName']));
+                      onPressed: () async {
+                        EcommerceApp.haveItems = true; ////bug fixes
+                        if (await checkItemExist(true)) {
+                        } else {
+                          saveUserItems(Product(
+                              Category: product['Product Name'],
+                              Item_number: product['Barcode'].toString(),
+                              Price: product['Price'],
+                              Store: product['StoreName'],
+                              quantity: product['quantity']));
+                        }
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -241,6 +252,25 @@ class _ScanPageState extends State<ScanPage> {
       ),
     );
   }
+
+  Future<bool> checkItemExist(bool increment) async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('${collectionName}')
+        .where("Item_number", isEqualTo: EcommerceApp.value.substring(1))
+        .get();
+    final DocumentSnapshot document = result.docs.first;
+    if (document.exists && increment) {
+      ///increment real time
+      document.reference.update({'quantity': FieldValue.increment(1)});
+      return true;
+    } else if (!increment) {
+      ///decrement real time
+      document.reference.update({'quantity': FieldValue.increment(-1)});
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
 
 class Product {
@@ -248,18 +278,21 @@ class Product {
   final String Item_number;
   final int Price;
   final String Store;
+  final int quantity;
 
   Product(
       {required this.Category,
       required this.Item_number,
       required this.Price,
-      required this.Store});
+      required this.Store,
+      required this.quantity});
 
   Map<String, dynamic> toJson() => {
         'Category': Category,
         'Item_number': Item_number,
         'Price': Price,
         'Store': Store,
+        'quantity': quantity,
       };
 
   static Product fromJson(Map<String, dynamic> json) => Product(
@@ -267,5 +300,6 @@ class Product {
         Item_number: json['Item_number'],
         Price: json['Price'],
         Store: json['Store'],
+        quantity: json['quantity'],
       );
 }

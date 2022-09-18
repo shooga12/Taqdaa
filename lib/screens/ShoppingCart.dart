@@ -150,17 +150,21 @@ class _shoppingCartState extends State<shoppingCart> {
         ));
   }
 
-  Future saveUserItems(Product product) async {
-    final docUser = FirebaseFirestore.instance
+  Future<bool> checkItemExist(bool increment) async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
         .collection('${collectionName}')
-        .doc('UserItem');
-    final json = {
-      "Category": product.Category,
-      "Item_number": product.Item_number,
-      "Price": product.Price,
-      "Store": product.Store,
-    };
-    await docUser.set(json);
+        .where("Item_number", isEqualTo: EcommerceApp.value.substring(1))
+        .get();
+    final DocumentSnapshot document = result.docs.first;
+    if (document.exists && increment) {
+      document.reference.update({'quantity': FieldValue.increment(1)});
+      return true;
+    } else if (!increment) {
+      document.reference.update({'quantity': FieldValue.increment(-1)});
+      return true;
+    } else {
+      return false;
+    }
   }
 
   Stream<List<Product>> readCartItems() => FirebaseFirestore.instance
@@ -217,14 +221,16 @@ class _shoppingCartState extends State<shoppingCart> {
                         Spacer(),
                         IconButton(
                             onPressed: () {
+                              checkItemExist(false);
                               //controller.removeProduct(product);
                             },
                             icon: Icon(Icons.remove_circle,
                                 color: Color.fromARGB(255, 245, 161, 14))),
                         //Text('$quantity'),
-                        Text('1'),
+                        Text(product.quantity.toString()),
                         IconButton(
                             onPressed: () {
+                              checkItemExist(true);
                               //controller.addProduct(product);
                             },
                             icon: Icon(Icons.add_circle,

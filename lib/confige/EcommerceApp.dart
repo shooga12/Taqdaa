@@ -1,10 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 class EcommerceApp {
-  static bool haveItmes = false;
+  static bool haveItems = false;
   static String storeName = '';
   static String value = '';
   static String storeId = '';
+  static int quantity = 0;
 
   static String uid = '';
   final FirebaseAuth auth = FirebaseAuth.instance;

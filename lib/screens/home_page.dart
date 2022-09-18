@@ -75,7 +75,8 @@ class _HomePageState extends State<HomePage> {
                               )),
                           IconButton(
                               onPressed: () {
-                                if (EcommerceApp.haveItmes) {
+                                if (EcommerceApp.haveItems) {
+                                  /////bug fixes
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
