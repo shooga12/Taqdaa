@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:either_dart/either.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -58,6 +59,8 @@ class _shoppingCartState extends State<shoppingCart> {
                 return ListView.builder(
                     itemCount: products.length,
                     itemBuilder: (BuildContext context, int index) {
+                      EcommerceApp.total = (products[index].Price *
+                          products[index].quantity); ////bug fixes
                       //saveUserItems(products[index]);
                       return buildSecondItmes(products[index], context);
                     }
@@ -78,10 +81,19 @@ class _shoppingCartState extends State<shoppingCart> {
               }
             }),
         bottomNavigationBar: SizedBox(
-          height: 140,
+          height: 170,
           child: Container(
               child: Column(
             children: [
+              Container(
+                child: Text(
+                  'Total: ' + EcommerceApp.total.toString() + '\n',
+                  style: TextStyle(
+                      color: Color.fromARGB(255, 32, 7, 121),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
               Container(
                 child: ElevatedButton.icon(
                   onPressed: () {
@@ -132,28 +144,16 @@ class _shoppingCartState extends State<shoppingCart> {
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30)))),
                 ),
-                // ElevatedButton(
-                //   child: const Text('Checkout'),
-                //   onPressed: () {
-                //     // Navigator.push(
-                //     //   context,
-                //     //   MaterialPageRoute(
-                //     //       builder: (context) => ListOfStores2()),
-                //     // );
-                //   },
-                //   style: ElevatedButton.styleFrom(
-                //       primary: Color.fromARGB(255, 245, 161, 14)),
-                // ),
               ),
             ],
           )),
         ));
   }
 
-  Future<bool> checkItemExist(bool increment) async {
+  Future<bool> checkItemExist(bool increment, String itemName) async {
     final QuerySnapshot result = await FirebaseFirestore.instance
         .collection('${collectionName}')
-        .where("Item_number", isEqualTo: EcommerceApp.value.substring(1))
+        .where("Category", isEqualTo: itemName)
         .get();
     final DocumentSnapshot document = result.docs.first;
     if (document.exists && increment) {
@@ -193,35 +193,40 @@ class _shoppingCartState extends State<shoppingCart> {
                             Container(
                               child: new Image.asset(
                                 'assets/Rectangle.png',
-                                height: 100.0,
+                                height: 92.0,
                                 fit: BoxFit.cover,
                               ),
                             ),
-                            Container(
-                              alignment: Alignment.bottomLeft, //اعدله
-                              child: Text(
-                                "\n " + product.Category,
-                                style: new TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 32, 7, 121),
-                                ),
-                              ),
-                            ),
+                            // Container(
+                            //   alignment: Alignment.bottomLeft, //اعدله
+                            //   child:
+                            // ),
                           ]),
                         ),
-                        Text(
-                          "   Price : " + product.Price.toString() + " SR",
-                          textAlign: TextAlign.center,
-                          style: new TextStyle(
-                            fontSize: 16,
-                            color: Color.fromARGB(255, 77, 76, 76),
-                          ),
+                        Column(
+                          children: <Widget>[
+                            Text(
+                              "\n " + product.Category,
+                              style: new TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 32, 7, 121),
+                              ),
+                            ),
+                            Text(
+                              "   Price : " + product.Price.toString() + " SR",
+                              textAlign: TextAlign.center,
+                              style: new TextStyle(
+                                fontSize: 16,
+                                color: Color.fromARGB(255, 77, 76, 76),
+                              ),
+                            ),
+                          ],
                         ),
                         Spacer(),
                         IconButton(
                             onPressed: () {
-                              checkItemExist(false);
+                              checkItemExist(false, product.Category);
                               //controller.removeProduct(product);
                             },
                             icon: Icon(Icons.remove_circle,
@@ -230,7 +235,7 @@ class _shoppingCartState extends State<shoppingCart> {
                         Text(product.quantity.toString()),
                         IconButton(
                             onPressed: () {
-                              checkItemExist(true);
+                              checkItemExist(true, product.Category);
                               //controller.addProduct(product);
                             },
                             icon: Icon(Icons.add_circle,

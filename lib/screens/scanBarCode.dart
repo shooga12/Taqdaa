@@ -23,7 +23,7 @@ class _ScanPageState extends State<ScanPage> {
       .child(EcommerceApp.storeId) //Ecommerce.storeName
       .child('store')
       .orderByChild('Barcode')
-      .equalTo(int.parse(EcommerceApp.value));
+      .equalTo(EcommerceApp.value.substring(1));
 
   String collectionName = EcommerceApp().getCurrentUser();
 
@@ -51,26 +51,26 @@ class _ScanPageState extends State<ScanPage> {
             query: dbref,
             itemBuilder: (BuildContext context, DataSnapshot snapshot,
                 Animation<double> animation, int index) {
-              if (snapshot.hasChild('Barcode')) {
-                Map product = snapshot.value as Map;
-                product['key'] = snapshot.key;
-                if (EcommerceApp.storeName == product['StoreName']) {
-                  return buildBeforeCart(product: product);
-                } else {
-                  return AlertDialog(
-                      content: Text("Sorry you can only scan items from " +
-                          EcommerceApp.storeName +
-                          " store!"),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, 'OK'),
-                          child: const Text('OK'),
-                        )
-                      ]);
-                }
+              //if (snapshot.hasChild('Barcode')) {
+              Map product = snapshot.value as Map;
+              product['key'] = snapshot.key;
+              if (EcommerceApp.storeName == product['StoreName']) {
+                return buildBeforeCart(product: product);
               } else {
-                return Center(child: CircularProgressIndicator());
+                return AlertDialog(
+                    content: Text("Sorry you can only scan items from " +
+                        EcommerceApp.storeName +
+                        " store!"),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, 'OK'),
+                        child: const Text('OK'),
+                      )
+                    ]);
               }
+              // } else {
+              //   return Center(child: CircularProgressIndicator());
+              // }
             }),
       ),
 
@@ -151,43 +151,34 @@ class _ScanPageState extends State<ScanPage> {
                                 fit: BoxFit.cover,
                               ),
                             ),
-                            Container(
-                              alignment: Alignment.center, //اعدله
-                              child: Text(
-                                "\n " + product['Product Name'],
-                                style: new TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 32, 7, 121),
-                                ),
-                              ),
-                            ),
+                            // Container(
+                            //   alignment: Alignment.center, //اعدله
+                            //   child:  photo*****
+                            // ),
                           ]),
                         ),
-                        Text(
-                          "   Price : " + product['Price'].toString() + " SR",
-                          textAlign: TextAlign.center,
-                          style: new TextStyle(
-                            fontSize: 16,
-                            color: Color.fromARGB(255, 77, 76, 76),
-                          ),
-                        ),
-                        IconButton(
-                            onPressed: () {
-                              checkItemExist(false);
-                              //controller.removeProduct(product);
-                            },
-                            icon: Icon(Icons.remove_circle,
-                                color: Color.fromARGB(255, 245, 161, 14))),
-                        //Text('$quantity'),
-                        Text(EcommerceApp.quantity.toString()), /////bug fixes
-                        IconButton(
-                            onPressed: () {
-                              checkItemExist(true);
-                              //controller.addProduct(product);
-                            },
-                            icon: Icon(Icons.add_circle,
-                                color: Color.fromARGB(255, 245, 161, 14))),
+                        Column(
+                          children: <Widget>[
+                            Text(
+                              "\n " + product['Product Name'],
+                              style: new TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 32, 7, 121),
+                              ),
+                            ),
+                            Text(
+                              "   Price : " +
+                                  product['Price'].toString() +
+                                  " SR",
+                              textAlign: TextAlign.center,
+                              style: new TextStyle(
+                                fontSize: 16,
+                                color: Color.fromARGB(255, 77, 76, 76),
+                              ),
+                            ),
+                          ],
+                        )
                       ],
                     ),
                   ),
@@ -207,11 +198,11 @@ class _ScanPageState extends State<ScanPage> {
                     child: ElevatedButton(
                       onPressed: () async {
                         EcommerceApp.haveItems = true; ////bug fixes
-                        if (await checkItemExist(true)) {
+                        if (await checkItemExist()) {
                         } else {
                           saveUserItems(Product(
                               Category: product['Product Name'],
-                              Item_number: product['Barcode'].toString(),
+                              Item_number: product['Barcode'],
                               Price: product['Price'],
                               Store: product['StoreName'],
                               quantity: product['quantity']));
@@ -253,19 +244,15 @@ class _ScanPageState extends State<ScanPage> {
     );
   }
 
-  Future<bool> checkItemExist(bool increment) async {
+  Future<bool> checkItemExist() async {
     final QuerySnapshot result = await FirebaseFirestore.instance
         .collection('${collectionName}')
         .where("Item_number", isEqualTo: EcommerceApp.value.substring(1))
         .get();
-    final DocumentSnapshot document = result.docs.first;
-    if (document.exists && increment) {
+    final List<DocumentSnapshot> documents = result.docs;
+    if (documents.length == 1) {
       ///increment real time
-      document.reference.update({'quantity': FieldValue.increment(1)});
-      return true;
-    } else if (!increment) {
-      ///decrement real time
-      document.reference.update({'quantity': FieldValue.increment(-1)});
+      documents[0].reference.update({'quantity': FieldValue.increment(1)});
       return true;
     } else {
       return false;
