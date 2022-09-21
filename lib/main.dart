@@ -1,9 +1,10 @@
-import 'package:either_dart/either.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_local_notifications_platform_interface/src/types.dart';
 import 'package:taqdaa_application/screens/list_of_stores.dart';
+import 'package:taqdaa_application/services/local_notification_service.dart';
 //import 'package:taqdaa_application/screens/storeDetails.dart';
 import '../methods/authentication_services.dart';
 import '../screens/home_page.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/foundation.dart';
 
 import '../screens/login_page.dart';
 import '../screens/register_page.dart';
+import '../confige/EcommerceApp.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -65,11 +67,14 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
-  String getCurrentUser() {
-    final User? user = auth.currentUser;
-    final uid = user!.uid;
-    return uid;
-    // here you write the codes to input the data into firestore
+  late final LocalNotificationsService service;
+
+  @override
+  void initState() {
+    service = LocalNotificationsService();
+    service.initialize();
+    listenToNotification();
+    super.initState();
   }
 
   @override
@@ -109,7 +114,32 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: HomePage(),
+      body: StreamBuilder<List<Store>>(
+          stream: readStores(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final stores = snapshot.data!;
+              if (stores.isNotEmpty) {
+                service.showNotification(
+                    id: 0,
+                    title: 'Taqdaa is waiting for you!',
+                    body: 'Hey, ' +
+                        EcommerceApp.userName +
+                        '\nyou\'re very close from ${stores.first.StoreName} come and shop with us now!',
+                    payload: 'payload nav');
+              }
+              return HomePage();
+              //   }
+              // );
+            } else if (snapshot.hasError) {
+              return Text("Some thing went wrong! ${snapshot.error}");
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          }),
+
+      //HomePage(),
+
       //
       // bottomNavigationBar: BottomNavigationBar(
       //   onTap: (onTapTapped) {},
@@ -128,5 +158,25 @@ class _MyHomePageState extends State<MyHomePage> {
       //   ],
       // ),
     );
+  }
+
+  Stream<List<Store>> readStores() => FirebaseFirestore.instance
+      .collection('Stores')
+      .where('kilometers', isEqualTo: 0.1)
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Store.fromJson(doc.data())).toList());
+
+  void listenToNotification() =>
+      service.onNotificationClick.stream.listen(onNotificationListener);
+
+  void onNotificationListener(NotificationResponse? payload) {
+    if (payload != null) {
+      print('payload $payload');
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ListOfStores2()),
+      );
+    }
   }
 }

@@ -10,6 +10,7 @@ firebase_database_web=/Users/shougalotaibi/flutter/.pub-cache/hosted/pub.dartlan
 firebase_storage=/Users/shougalotaibi/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_storage-10.3.8/
 firebase_storage_web=/Users/shougalotaibi/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_storage_web-3.3.6/
 flutter_barcode_scanner=/Users/shougalotaibi/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_barcode_scanner-2.0.0/
+flutter_local_notifications=/Users/shougalotaibi/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_local_notifications-11.0.0/
 flutter_plugin_android_lifecycle=/Users/shougalotaibi/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_plugin_android_lifecycle-2.0.7/
 mobile_scanner=/Users/shougalotaibi/flutter/.pub-cache/hosted/pub.dartlang.org/mobile_scanner-2.0.0/
 path_provider=/Users/shougalotaibi/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-2.0.11/

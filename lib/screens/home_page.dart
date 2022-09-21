@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
 import 'package:taqdaa_application/screens/NoItmesCart.dart';
+import 'package:taqdaa_application/services/local_notification_service.dart';
 import 'ShoppingCart.dart';
 import 'list_of_stores.dart';
 import 'scanBarCode.dart';
@@ -15,6 +17,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  // Future checkLocation() async {
+  //   final QuerySnapshot result = await FirebaseFirestore.instance
+  //       .collection('Stores')
+  //       .where('kilometers', isEqualTo: 0.1)
+  //       .get();
+  //   final List<DocumentSnapshot> documents = result.docs;
+  //   if (documents.length == 1) {
+  //     service.showNotification(
+  //         id: 0,
+  //         title: 'Taqdaa is waiting for you!',
+  //         body: 'Hey, ' +
+  //             EcommerceApp.userName +
+  //             '\nyou\'re very close from ${documents[0].get('StoreName')} come and shop with us now!');
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -43,8 +61,6 @@ class _HomePageState extends State<HomePage> {
                         child: FittedBox(
                           child: FloatingActionButton(
                             onPressed: () {
-                              // ApiServices apiServices = ApiServices();
-                              // apiServices.addCollection();
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -106,7 +122,7 @@ class _HomePageState extends State<HomePage> {
                                 color: Colors.white,
                               )),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () async {},
                             icon: Icon(
                               Icons.settings,
                               size: 30,
