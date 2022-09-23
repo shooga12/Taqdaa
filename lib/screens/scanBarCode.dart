@@ -54,12 +54,13 @@ class _ScanPageState extends State<ScanPage> {
               //if (snapshot.hasChild('Barcode')) {
               Map product = snapshot.value as Map;
               product['key'] = snapshot.key;
-              if (EcommerceApp.storeName == product['StoreName']) {
+              if (product.isEmpty) {
+                //EcommerceApp.storeName == product['StoreName']) {
                 return buildBeforeCart(product: product);
               } else {
                 return AlertDialog(
                     content: Text("Sorry you can only scan items from " +
-                        EcommerceApp.storeName +
+                        //EcommerceApp.storeName +
                         " store!"),
                     actions: [
                       TextButton(

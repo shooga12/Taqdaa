@@ -13,6 +13,8 @@ import 'package:flutter/foundation.dart';
 import '../screens/login_page.dart';
 import '../screens/register_page.dart';
 import '../confige/EcommerceApp.dart';
+import '../controller/Notification_api.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +29,7 @@ void main() async {
   } else {
     await Firebase.initializeApp();
   }
+  tz.initializeTimeZones();
   runApp(const MyApp());
 }
 
@@ -67,15 +70,15 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
-  late final LocalNotificationsService service;
+  // late final LocalNotificationsService service;
 
-  @override
-  void initState() {
-    service = LocalNotificationsService();
-    service.initialize();
-    listenToNotification();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   service = LocalNotificationsService();
+  //   service.initialize();
+  //   listenToNotification();
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -120,13 +123,29 @@ class _MyHomePageState extends State<MyHomePage> {
             if (snapshot.hasData) {
               final stores = snapshot.data!;
               if (stores.isNotEmpty) {
-                service.showNotification(
-                    id: 0,
+                // service.showNotification(
+                //     id: 0,
+                //     title: 'Taqdaa is waiting for you!',
+                //     body: 'Hey, ' +
+                //         EcommerceApp.userName +
+                //         '\nyou\'re very close from ${stores.first.StoreName} come and shop with us now!',
+                //     payload: 'payload nav');
+
+                // NotificationApi.showNotification(
+                //   title: 'Taqdaa is waiting for you!',
+                //   body: 'Hey, ' +
+                //       EcommerceApp.userName +
+                //       '\nyou\'re very close from ${stores.first.StoreName} come and shop with us now!',
+                //   payload: 'paylod nav',
+                // );
+
+                NotificationApi.showScheduledNotification(
                     title: 'Taqdaa is waiting for you!',
                     body: 'Hey, ' +
                         EcommerceApp.userName +
                         '\nyou\'re very close from ${stores.first.StoreName} come and shop with us now!',
-                    payload: 'payload nav');
+                    payload: 'paylod.nav',
+                    scheduledDate: DateTime.now().add(Duration(seconds: 3)));
               }
               return HomePage();
               //   }
@@ -167,16 +186,16 @@ class _MyHomePageState extends State<MyHomePage> {
       .map((snapshot) =>
           snapshot.docs.map((doc) => Store.fromJson(doc.data())).toList());
 
-  void listenToNotification() =>
-      service.onNotificationClick.stream.listen(onNotificationListener);
+  // void listenToNotification() =>
+  //     service.onNotificationClick.stream.listen(onNotificationListener);
 
-  void onNotificationListener(NotificationResponse? payload) {
-    if (payload != null) {
-      print('payload $payload');
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ListOfStores2()),
-      );
-    }
-  }
+  // void onNotificationListener(NotificationResponse? payload) {
+  //   if (payload != null) {
+  //     print('payload $payload');
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(builder: (context) => ListOfStores2()),
+  //     );
+  //   }
+  // }
 }

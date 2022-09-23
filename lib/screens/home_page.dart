@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
 import 'package:taqdaa_application/screens/NoItmesCart.dart';
 import 'package:taqdaa_application/services/local_notification_service.dart';
+import '../controller/Notification_api.dart';
 import 'ShoppingCart.dart';
 import 'list_of_stores.dart';
 import 'scanBarCode.dart';
@@ -32,6 +34,21 @@ class _HomePageState extends State<HomePage> {
   //             '\nyou\'re very close from ${documents[0].get('StoreName')} come and shop with us now!');
   //   }
   // }
+
+  void initState() {
+    super.initState();
+
+    NotificationApi.init();
+    listenNotifications();
+  }
+
+  void listenNotifications() =>
+      NotificationApi.onNotification.stream.listen(onClickNotification);
+
+  void onClickNotification(NotificationResponse? details) => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ListOfStores2()),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -115,14 +132,31 @@ class _HomePageState extends State<HomePage> {
                             width: size.width * 0.20,
                           ),
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                NotificationApi.showScheduledNotification(
+                                    title: 'Taqdaa is waiting for you!',
+                                    body: 'Hey, ' +
+                                        EcommerceApp.userName +
+                                        '\nyou\'re very close from {stores.first.StoreName} come and shop with us now!',
+                                    payload: 'paylod.nav',
+                                    scheduledDate: DateTime.now()
+                                        .add(Duration(seconds: 3)));
+                              },
                               icon: Icon(
                                 Icons.person,
                                 size: 30,
                                 color: Colors.white,
                               )),
                           IconButton(
-                            onPressed: () async {},
+                            onPressed: () async {
+                              NotificationApi.showNotification(
+                                title: 'Taqdaa is waiting for you!',
+                                body: 'Hey, ' +
+                                    EcommerceApp.userName +
+                                    '\nyou\'re very close from {stores.first.StoreName} come and shop with us now!',
+                                payload: 'paylod.nav',
+                              );
+                            },
                             icon: Icon(
                               Icons.settings,
                               size: 30,
