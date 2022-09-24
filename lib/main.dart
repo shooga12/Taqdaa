@@ -4,13 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:taqdaa_application/screens/list_of_stores.dart';
-//import 'package:taqdaa_application/screens/storeDetails.dart';
 import '../methods/authentication_services.dart';
 import '../screens/home_page.dart';
 import 'package:flutter/foundation.dart';
-
 import '../screens/login_page.dart';
 import '../screens/register_page.dart';
+import '../screens/userLocation.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -63,8 +62,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  @override
   final FirebaseAuth auth = FirebaseAuth.instance;
-
+  @override
   String getCurrentUser() {
     final User? user = auth.currentUser;
     final uid = user!.uid;
@@ -76,12 +76,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-        //   Text(
-        //     "Hey, Shoug",
-        //     style: TextStyle(fontSize: 25),
-        //   ),
-        // ]),
         flexibleSpace: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
@@ -105,28 +99,10 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
         toolbarHeight: 170,
-        //leading: BackButton(),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
       body: HomePage(),
-      //
-      // bottomNavigationBar: BottomNavigationBar(
-      //   onTap: (onTapTapped) {},
-      //   currentIndex: _currentIndex,
-      //   items: [
-      //     BottomNavigationBarItem(
-      //       label: Title(child: Text),
-      //       icon: new Icon(Icons.home),
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: new Icon(Icons.explore),
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: new Icon(Icons.account_circle),
-      //     )
-      //   ],
-      // ),
     );
   }
 }

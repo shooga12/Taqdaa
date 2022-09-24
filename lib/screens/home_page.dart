@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
@@ -11,10 +12,10 @@ class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -43,8 +44,6 @@ class _HomePageState extends State<HomePage> {
                         child: FittedBox(
                           child: FloatingActionButton(
                             onPressed: () {
-                              // ApiServices apiServices = ApiServices();
-                              // apiServices.addCollection();
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
