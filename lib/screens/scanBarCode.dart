@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -46,65 +47,18 @@ class _ScanPageState extends State<ScanPage> {
         elevation: 0,
       ),
       body: Container(
-        height: double.infinity,
-        child: FirebaseAnimatedList(
-            query: dbref,
-            itemBuilder: (BuildContext context, DataSnapshot snapshot,
-                Animation<double> animation, int index) {
-              //if (snapshot.hasChild('Barcode')) {
-              Map product = snapshot.value as Map;
-              product['key'] = snapshot.key;
-              if (product.isEmpty) {
-                //EcommerceApp.storeName == product['StoreName']) {
-                return buildBeforeCart(product: product);
-              } else {
-                return AlertDialog(
-                    content: Text("Sorry you can only scan items from " +
-                        //EcommerceApp.storeName +
-                        " store!"),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, 'OK'),
-                        child: const Text('OK'),
-                      )
-                    ]);
-              }
-              // } else {
-              //   return Center(child: CircularProgressIndicator());
-              // }
-            }),
-      ),
+          height: double.infinity,
+          child: FirebaseAnimatedList(
+              query: dbref,
+              itemBuilder: (BuildContext context, DataSnapshot snapshot,
+                  Animation<double> animation, int index) {
+                //if (snapshot.hasChild('Barcode')) {
+                Map product = snapshot.value as Map;
+                product['key'] = snapshot.key;
+                //return buildBeforeCart(product: product);
 
-      // StreamBuilder<List<Product>>(
-      //     stream: readItems(),
-      //     builder: (context, snapshot) {
-      //       if (snapshot.hasData) {
-      //         final products = snapshot.data!;
-      //         return ListView.builder(
-      //             itemCount: products.length,
-      //             itemBuilder: (BuildContext context, int index) {
-      //               if (EcommerceApp.storeName == products[index].Store) {
-      //                 return buildBeforeCart(products[index], context);
-      //               } else {
-      //                 return AlertDialog(
-      //                     content: Text(
-      //                         "Sorry you can only scan items from " +
-      //                             EcommerceApp.storeName +
-      //                             " store!"),
-      //                     actions: [
-      //                       TextButton(
-      //                         onPressed: () => Navigator.pop(context, 'OK'),
-      //                         child: const Text('OK'),
-      //                       )
-      //                     ]);
-      //               }
-      //             });
-      //       } else if (snapshot.hasError) {
-      //         return Text("Some thing went wrong! ${snapshot.error}");
-      //       } else {
-      //         return Center(child: CircularProgressIndicator());
-      //       }
-      //     }),
+                return buildBeforeCart(product: product);
+              })),
     );
   }
 

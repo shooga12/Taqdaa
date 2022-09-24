@@ -1,5 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
 import 'package:either_dart/either.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -265,9 +266,36 @@ class _shoppingCartState extends State<shoppingCart> {
       EcommerceApp.value = _counter;
     });
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => ScanPage()),
-    );
+    Query dbref = FirebaseDatabase.instance
+        .ref()
+        .child(EcommerceApp.storeId)
+        .child('store')
+        .orderByChild('Barcode')
+        .equalTo(EcommerceApp.value.substring(1));
+
+    final event = await dbref.once(DatabaseEventType.value);
+
+    if (event.snapshot.value != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ScanPage()),
+      );
+    } else {
+      //Navigator.pop(context);
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                content: Text("Sorry you can only scan items from " +
+                    EcommerceApp.storeName +
+                    " store!"),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'OK'),
+                    child: const Text('OK'),
+                  )
+                ]);
+          });
+    }
   }
 }

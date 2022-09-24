@@ -17,6 +17,7 @@ class ListOfStores2 extends StatefulWidget {
 
 class _ListOfStores2State extends State<ListOfStores2> {
   final List<Store> Stores = [];
+  FirebaseDatabase database = FirebaseDatabase.instance;
 
   String _counter = "";
 
@@ -28,10 +29,36 @@ class _ListOfStores2State extends State<ListOfStores2> {
       EcommerceApp.value = _counter;
     });
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => ScanPage()),
-    );
+    Query dbref = FirebaseDatabase.instance
+        .ref()
+        .child(EcommerceApp.storeId) //Ecommerce.storeName
+        .child('store')
+        .orderByChild('Barcode')
+        .equalTo(EcommerceApp.value.substring(1));
+
+    final event = await dbref.once(DatabaseEventType.value);
+
+    if (event.snapshot.value != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ScanPage()),
+      );
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                content: Text("Sorry you can only scan items from " +
+                    EcommerceApp.storeName +
+                    " store!"),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'OK'),
+                    child: const Text('OK'),
+                  )
+                ]);
+          });
+    }
   }
 
   @override
