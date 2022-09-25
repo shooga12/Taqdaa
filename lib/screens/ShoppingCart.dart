@@ -60,10 +60,64 @@ class _shoppingCartState extends State<shoppingCart> {
                 return ListView.builder(
                     itemCount: products.length,
                     itemBuilder: (BuildContext context, int index) {
-                      EcommerceApp.total = (products[index].Price *
-                          products[index].quantity); ////bug fixes
-                      //saveUserItems(products[index]);
-                      return buildSecondItmes(products[index], context);
+                      if (products[index].quantity == 0) {
+                        deleteItem(products[index].Category);
+                        products.removeAt(index);
+                      }
+                      // EcommerceApp.total = (products[index].Price *
+                      //     products[index].quantity); ////bug fixes
+                      else {
+                        return Dismissible(
+                            key: ValueKey(products[index].Item_number),
+                            background: Container(
+                              color: Colors.redAccent,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 300),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.delete_forever,
+                                      color: Colors.white,
+                                      size: 40,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              padding: EdgeInsets.all(8.0),
+                              margin: const EdgeInsets.all(8.0),
+                            ),
+                            direction: DismissDirection.endToStart,
+                            confirmDismiss: (direction) {
+                              return showDialog(
+                                  context: context,
+                                  builder: (ctx) => AlertDialog(
+                                        title: Text("Please Confirm"),
+                                        content: Text(
+                                            "Are you sure you want to delete this item ?"),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.of(ctx).pop(false);
+                                              },
+                                              child: Text("Cancel")),
+                                          ElevatedButton(
+                                              //style: Color.,
+                                              onPressed: () {
+                                                Navigator.of(ctx).pop(true);
+                                              },
+                                              child: Text("Delete")),
+                                        ],
+                                      ));
+                            },
+                            onDismissed: (DismissDirection direction) {
+                              if (direction == DismissDirection.endToStart) {
+                                deleteItem(products[index].Category);
+                                products.removeAt(index);
+                              }
+                            },
+                            child: buildSecondItmes(products[index], context));
+                      }
+                      return Center(child: CircularProgressIndicator());
                     }
                     //{
                     //   //Map thisItem = stores[index];
@@ -236,6 +290,23 @@ class _shoppingCartState extends State<shoppingCart> {
                         Text(product.quantity.toString()),
                         IconButton(
                             onPressed: () {
+                              // showDialog(
+                              //     context: context,
+                              //     builder: (context) {
+                              //       return AlertDialog(
+                              //           content: Text(
+                              //               "You have to scan the barcode again, In order to increment the quantity"),
+                              //           actions: [
+                              //             TextButton(
+                              //               onPressed: () {
+                              //                 Navigator.pop(context, 'OK');
+                              //                 _scan(context);
+                              //               },
+                              //               child: const Text('OK'),
+                              //             )
+                              //           ]);
+                              //     });
+
                               checkItemExist(true, product.Category);
                               //controller.addProduct(product);
                             },
@@ -253,6 +324,20 @@ class _shoppingCartState extends State<shoppingCart> {
         ],
       ),
     );
+  }
+
+  Future<bool> deleteItem(String productName) async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('${EcommerceApp.uid}')
+        .where("Category", isEqualTo: productName)
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
+    if (documents.length == 1) {
+      documents[0].reference.delete();
+      return true;
+    } else {
+      return false;
+    }
   }
 
   String _counter = "";
@@ -286,9 +371,7 @@ class _shoppingCartState extends State<shoppingCart> {
           context: context,
           builder: (context) {
             return AlertDialog(
-                content: Text("Sorry you can only scan items from " +
-                    EcommerceApp.storeName +
-                    " store!"),
+                content: Text("Sorry Item not found!"),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'OK'),

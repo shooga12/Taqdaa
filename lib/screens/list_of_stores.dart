@@ -48,9 +48,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
           context: context,
           builder: (context) {
             return AlertDialog(
-                content: Text("Sorry you can only scan items from " +
-                    EcommerceApp.storeName +
-                    " store!"),
+                content: Text("Sorry Item not found!"),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'OK'),
@@ -171,8 +169,26 @@ class _ListOfStores2State extends State<ListOfStores2> {
             ),
             onTap: () {
               EcommerceApp.storeId = store.StoreId;
-              EcommerceApp.storeName = store.StoreName;
-              _scan(context);
+              if (EcommerceApp.storeName == "") {
+                EcommerceApp.storeName = store.StoreName;
+                _scan(context);
+              } else if (EcommerceApp.storeName == store.StoreName) {
+                _scan(context);
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                          content: Text(
+                              "Sorry you already have an order in ${EcommerceApp.storeName}."),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, 'OK'),
+                              child: const Text('OK'),
+                            )
+                          ]);
+                    });
+              }
             },
           ),
           color: Color.fromARGB(243, 243, 239, 231),

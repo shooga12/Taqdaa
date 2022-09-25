@@ -50,6 +50,10 @@ class _HomePageState extends State<HomePage> {
         MaterialPageRoute(builder: (context) => ListOfStores2()),
       );
 
+  bool isInsideHome = true;
+  bool isInsideProfile = false;
+  bool isInsideSettings = false;
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -102,9 +106,11 @@ class _HomePageState extends State<HomePage> {
                           IconButton(
                               onPressed: () {},
                               icon: Icon(
-                                Icons.home,
-                                size: 30,
-                                color: Colors.white,
+                                Icons.home_outlined,
+                                size: 35,
+                                color: isInsideHome
+                                    ? Color.fromARGB(255, 254, 176, 60)
+                                    : Colors.white,
                               )),
                           IconButton(
                               onPressed: () {
@@ -132,35 +138,22 @@ class _HomePageState extends State<HomePage> {
                             width: size.width * 0.20,
                           ),
                           IconButton(
-                              onPressed: () {
-                                NotificationApi.showScheduledNotification(
-                                    title: 'Taqdaa is waiting for you!',
-                                    body: 'Hey, ' +
-                                        EcommerceApp.userName +
-                                        '\nyou\'re very close from {stores.first.StoreName} come and shop with us now!',
-                                    payload: 'paylod.nav',
-                                    scheduledDate: DateTime.now()
-                                        .add(Duration(seconds: 3)));
-                              },
+                              onPressed: () {},
                               icon: Icon(
                                 Icons.person,
                                 size: 30,
-                                color: Colors.white,
+                                color: isInsideProfile
+                                    ? Color.fromARGB(255, 254, 176, 60)
+                                    : Colors.white,
                               )),
                           IconButton(
-                            onPressed: () async {
-                              NotificationApi.showNotification(
-                                title: 'Taqdaa is waiting for you!',
-                                body: 'Hey, ' +
-                                    EcommerceApp.userName +
-                                    '\nyou\'re very close from {stores.first.StoreName} come and shop with us now!',
-                                payload: 'paylod.nav',
-                              );
-                            },
+                            onPressed: () {},
                             icon: Icon(
                               Icons.settings,
                               size: 30,
-                              color: Colors.white,
+                              color: isInsideSettings
+                                  ? Color.fromARGB(255, 254, 176, 60)
+                                  : Colors.white,
                             ),
                           ),
                         ]),
