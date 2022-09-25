@@ -8,6 +8,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:taqdaa_application/main.dart';
 import 'package:taqdaa_application/screens/home_page.dart';
 import '../confige/EcommerceApp.dart';
+import 'paypalPayment.dart';
 import 'scanBarCode.dart';
 
 class shoppingCart extends StatefulWidget {
@@ -151,7 +152,14 @@ class _shoppingCartState extends State<shoppingCart> {
                     ),
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          //-------make paypal payment-----------
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  PaypalPayment(onFinish: (number) async {
+                                    print('order id:' + number);
+                                  })));
+                        },
                         child: Text(
                           'Checkout',
                           style: const TextStyle(
