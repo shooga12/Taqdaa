@@ -20,6 +20,9 @@ class ListOfStores2 extends StatefulWidget {
 }
 
 class _ListOfStores2State extends State<ListOfStores2> {
+  List<Store> StoresList = <Store>[];
+  List<Store> StoresToDisplay = <Store>[];
+
   Position? _currentPosition;
 
   Future<bool> _handleLocationPermission() async {
@@ -64,8 +67,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
   }
 
   @override
-  final List<Store> Stores = [];
-
+  String SearchName = '';
   String _counter = "";
 
   Future _scan(BuildContext context) async {
@@ -82,78 +84,117 @@ class _ListOfStores2State extends State<ListOfStores2> {
     );
   }
 
-  String SearchName = '';
-  //List<Store> results = [];
+  searchStore(String name) async {
+    for (var i = 0; i < StoresList.length; i++) {
+      // var data = StoresList[i];
+      if (StoresList[i]
+          .StoreName
+          .toString()
+          .toLowerCase()
+          .startsWith(SearchName.toLowerCase())) {
+        StoresToDisplay.add(StoresList[i]);
+      }
+    }
+    if (StoresToDisplay.isEmpty) {
+      return Container(
+          child: Align(
+        alignment: Alignment.center,
+        child: Text(
+          'No Results',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 20,
+          ),
+        ),
+      ));
+    }
+  }
+
+/*
+    for (var i = 0; i < StoresList.length; i++) {
+      var data = StoresList[i];
+      if (data.StoreName.toString()
+          .toLowerCase()
+          .startsWith(SearchName.toLowerCase())) {
+        buildStoresCards(StoresList[i], context);
+      }
+    }
+    return Container(
+        child: Align(
+      alignment: Alignment.center,
+      child: Text(
+        'No Results',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 20,
+        ),
+      ),
+    ));*/
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Choose Store',
-          style: TextStyle(fontSize: 24), //TextStyle(fontFamily: 'Cairo'),
-        ),
-        bottom: PreferredSize(
-            child: Flexible(
-              child: Card(
-                child: TextField(
-                  decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.search), hintText: 'Search..'),
-                  onChanged: (val) {
-                    setState(() {
-                      SearchName = val;
-                    });
-                  },
+        appBar: AppBar(
+          title: Text(
+            'Choose Store',
+            style: TextStyle(fontSize: 24), //TextStyle(fontFamily: 'Cairo'),
+          ),
+          bottom: PreferredSize(
+              child: Flexible(
+                child: Card(
+                  child: TextField(
+                    decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.search),
+                        hintText: 'Search for a store name..'),
+                    onChanged: (val) {
+                      val = val.toLowerCase();
+                      setState(() {
+                        SearchName = val;
+                        searchStore(SearchName);
+                      });
+                    },
+                  ),
                 ),
               ),
-            ),
-            preferredSize: Size.zero),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
+              preferredSize: Size.zero),
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
+          ),
+          toolbarHeight: 170,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
         ),
-        toolbarHeight: 170,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: StreamBuilder<List<Store>>(
-          stream: readStores(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              final stores = snapshot.data!;
-              return ListView.builder(
-                  itemCount: stores.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    var data = stores[index];
-
-                    if (SearchName.isEmpty) {
-                      return buildStoresCards(stores[index], context);
-                    } else if (data.StoreName.toString()
-                        .toLowerCase()
-                        .startsWith(SearchName.toLowerCase())) {
-                      return buildStoresCards(stores[index], context);
-                    } else {
-                      return Container(
-                          child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'No Results',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
-                      ));
-                    }
-                  });
-            } else if (snapshot.hasError) {
-              return Text("Some thing went wrong! ${snapshot.error}");
-            } else {
-              return Center(child: CircularProgressIndicator());
-            }
-          }),
-    );
+        body: Column(
+          children: [
+            StreamBuilder<List<Store>>(
+                stream: readStores(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    final stores = snapshot.data!;
+                    return ListView.builder(
+                        itemCount: stores.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          StoresList.add(stores[index]);
+                          return buildStoresCards(index, context);
+                        });
+                  } else if (snapshot.hasError) {
+                    return Text("Some thing went wrong! ${snapshot.error}");
+                  } else {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                }),
+            Expanded(
+              child: ListView.builder(
+                itemBuilder: (BuildContext context, int index) {
+                  return buildStoresCards(index, context);
+                },
+                itemCount: StoresToDisplay.length,
+              ),
+            )
+          ],
+        ));
   }
 
   Stream<List<Store>> readStores() => FirebaseFirestore.instance
@@ -171,18 +212,28 @@ class _ListOfStores2State extends State<ListOfStores2> {
     return 12742 * asin(sqrt(a));
   }
 
-  buildStoresCards(Store store, BuildContext context) {
+  buildStoresCards(int index, BuildContext context) {
+    _getCurrentPosition();
     if (_currentPosition == null) {
       return CircularProgressIndicator();
     } else if (_currentPosition != null) {
-      store.kilometers = calculateDistance(
-              store.lat,
-              store.lng,
+      StoresToDisplay[index].kilometers = calculateDistance(
+              StoresToDisplay[index].lat,
+              StoresToDisplay[index].lng,
               _currentPosition?.latitude ?? "",
               _currentPosition?.longitude ?? "")
-          .toStringAsFixed(3);
-      //store.kilometers = calculateDistance(store, context) as String;
-      //var distance = calculateDistance(store, context);
+          .toStringAsFixed(2);
+
+      Future<void> writeLocation(String distance, String id) async {
+        final location = await FirebaseFirestore.instance
+            .collection("Stores")
+            .doc('$id')
+            .update({"kilometers": "$distance"});
+      }
+
+      writeLocation(
+          StoresToDisplay[index].kilometers, StoresToDisplay[index].StoreId);
+
       //{required Map store}
       return Container(
         child: Padding(
@@ -200,14 +251,14 @@ class _ListOfStores2State extends State<ListOfStores2> {
                 child: Row(
                   children: <Widget>[
                     Image.network(
-                      store.StoreLogo,
+                      StoresToDisplay[index].StoreLogo,
                       width: 60,
                       height: 60,
                     ),
                     Column(
                       children: <Widget>[
                         Text(
-                          store.StoreName,
+                          StoresToDisplay[index].StoreName,
                           style: new TextStyle(
                             fontSize: 18,
                           ),
@@ -215,7 +266,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
                         Row(
                           children: <Widget>[
                             Text(
-                              store.kilometers.toString(),
+                              StoresToDisplay[index].kilometers.toString(),
                               style: new TextStyle(
                                 fontSize: 12,
                                 color: Color.fromARGB(255, 77, 76, 76),
@@ -240,8 +291,8 @@ class _ListOfStores2State extends State<ListOfStores2> {
                 ),
               ),
               onTap: () {
-                EcommerceApp.storeId = store.StoreId;
-                EcommerceApp.storeName = store.StoreName;
+                EcommerceApp.storeId = StoresToDisplay[index].StoreId;
+                EcommerceApp.storeName = StoresToDisplay[index].StoreName;
                 _scan(context);
               },
             ),
@@ -250,6 +301,30 @@ class _ListOfStores2State extends State<ListOfStores2> {
         ),
       );
     }
+
+    /*{
+                    var data = stores[index];
+
+                    if (SearchName.isEmpty) {
+                      return buildStoresCards(stores[index], context);
+                    } else if (data.StoreName.toString()
+                        .toLowerCase()
+                        .startsWith(SearchName.toLowerCase())) {
+                      return buildStoresCards(stores[index], context);
+                    } else {
+                      return Container(
+                          child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'No Results',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ));
+                    }
+                  }*/
 
 /*
   Future<double> calculateDistance(Store store, BuildContext context) async {

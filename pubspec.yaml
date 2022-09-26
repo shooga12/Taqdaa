@@ -48,6 +48,7 @@ dependencies:
   firebase_database: ^9.1.4
   geolocator: ^9.0.2
   geocoding: ^2.0.5
+  http: ^0.13.5
 
 dev_dependencies:
   flutter_test:
