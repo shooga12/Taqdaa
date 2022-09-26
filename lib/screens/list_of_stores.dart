@@ -20,8 +20,8 @@ class ListOfStores2 extends StatefulWidget {
 }
 
 class _ListOfStores2State extends State<ListOfStores2> {
-  List<Store> StoresList = <Store>[];
-  List<Store> StoresToDisplay = <Store>[];
+  //List<Store> StoresList = <Store>[];
+  //List<Store> StoresToDisplay = <Store>[];
 
   Position? _currentPosition;
 
@@ -83,7 +83,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
       MaterialPageRoute(builder: (context) => ScanPage()),
     );
   }
-
+/*
   searchStore(String name) async {
     for (var i = 0; i < StoresList.length; i++) {
       // var data = StoresList[i];
@@ -108,7 +108,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
         ),
       ));
     }
-  }
+  }*/
 
 /*
     for (var i = 0; i < StoresList.length; i++) {
@@ -134,67 +134,64 @@ class _ListOfStores2State extends State<ListOfStores2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Choose Store',
-            style: TextStyle(fontSize: 24), //TextStyle(fontFamily: 'Cairo'),
-          ),
-          bottom: PreferredSize(
-              child: Flexible(
-                child: Card(
-                  child: TextField(
-                    decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.search),
-                        hintText: 'Search for a store name..'),
-                    onChanged: (val) {
-                      val = val.toLowerCase();
-                      setState(() {
-                        SearchName = val;
-                        searchStore(SearchName);
-                      });
-                    },
-                  ),
+      appBar: AppBar(
+        title: Text(
+          'Choose Store',
+          style: TextStyle(fontSize: 24), //TextStyle(fontFamily: 'Cairo'),
+        ),
+        bottom: PreferredSize(
+            child: Flexible(
+              child: Card(
+                child: TextField(
+                  decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.search),
+                      hintText: 'Search for a store name..'),
+                  onChanged: (val) {
+                    //val = val.toLowerCase();
+                    setState(() {
+                      SearchName = val;
+                      //searchStore(SearchName);
+                    });
+                  },
                 ),
               ),
-              preferredSize: Size.zero),
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
-          ),
-          toolbarHeight: 170,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
+            ),
+            preferredSize: Size.zero),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
         ),
-        body: Column(
-          children: [
-            StreamBuilder<List<Store>>(
-                stream: readStores(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    final stores = snapshot.data!;
-                    return ListView.builder(
-                        itemCount: stores.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          StoresList.add(stores[index]);
-                          return buildStoresCards(index, context);
-                        });
-                  } else if (snapshot.hasError) {
-                    return Text("Some thing went wrong! ${snapshot.error}");
-                  } else {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                }),
-            Expanded(
+        toolbarHeight: 170,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: StreamBuilder<List<Store>>(
+          stream: readStores(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final stores = snapshot.data!;
+              return ListView.builder(
+                  itemCount: stores.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    //StoresList.add(stores[index]);
+                    return buildStoresCards(stores[index], context);
+                  });
+            } else if (snapshot.hasError) {
+              return Text("Some thing went wrong! ${snapshot.error}");
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          }),
+      /*Expanded(
               child: ListView.builder(
                 itemBuilder: (BuildContext context, int index) {
                   return buildStoresCards(index, context);
                 },
                 itemCount: StoresToDisplay.length,
               ),
-            )
-          ],
-        ));
+            )*/
+    );
   }
 
   Stream<List<Store>> readStores() => FirebaseFirestore.instance
@@ -212,14 +209,14 @@ class _ListOfStores2State extends State<ListOfStores2> {
     return 12742 * asin(sqrt(a));
   }
 
-  buildStoresCards(int index, BuildContext context) {
+  buildStoresCards(Store store, BuildContext context) {
     _getCurrentPosition();
     if (_currentPosition == null) {
       return CircularProgressIndicator();
     } else if (_currentPosition != null) {
-      StoresToDisplay[index].kilometers = calculateDistance(
-              StoresToDisplay[index].lat,
-              StoresToDisplay[index].lng,
+      store.kilometers = calculateDistance(
+              store.lat,
+              store.lng,
               _currentPosition?.latitude ?? "",
               _currentPosition?.longitude ?? "")
           .toStringAsFixed(2);
@@ -231,8 +228,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
             .update({"kilometers": "$distance"});
       }
 
-      writeLocation(
-          StoresToDisplay[index].kilometers, StoresToDisplay[index].StoreId);
+      writeLocation(store.kilometers, store.StoreId);
 
       //{required Map store}
       return Container(
@@ -251,14 +247,14 @@ class _ListOfStores2State extends State<ListOfStores2> {
                 child: Row(
                   children: <Widget>[
                     Image.network(
-                      StoresToDisplay[index].StoreLogo,
+                      store.StoreLogo,
                       width: 60,
                       height: 60,
                     ),
                     Column(
                       children: <Widget>[
                         Text(
-                          StoresToDisplay[index].StoreName,
+                          store.StoreName,
                           style: new TextStyle(
                             fontSize: 18,
                           ),
@@ -266,7 +262,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
                         Row(
                           children: <Widget>[
                             Text(
-                              StoresToDisplay[index].kilometers.toString(),
+                              store.kilometers.toString(),
                               style: new TextStyle(
                                 fontSize: 12,
                                 color: Color.fromARGB(255, 77, 76, 76),
@@ -291,8 +287,8 @@ class _ListOfStores2State extends State<ListOfStores2> {
                 ),
               ),
               onTap: () {
-                EcommerceApp.storeId = StoresToDisplay[index].StoreId;
-                EcommerceApp.storeName = StoresToDisplay[index].StoreName;
+                EcommerceApp.storeId = store.StoreId;
+                EcommerceApp.storeName = store.StoreName;
                 _scan(context);
               },
             ),
