@@ -20,9 +20,6 @@ class ListOfStores2 extends StatefulWidget {
 }
 
 class _ListOfStores2State extends State<ListOfStores2> {
-  //List<Store> StoresList = <Store>[];
-  //List<Store> StoresToDisplay = <Store>[];
-
   Position? _currentPosition;
 
   Future<bool> _handleLocationPermission() async {
@@ -83,54 +80,9 @@ class _ListOfStores2State extends State<ListOfStores2> {
       MaterialPageRoute(builder: (context) => ScanPage()),
     );
   }
-/*
-  searchStore(String name) async {
-    for (var i = 0; i < StoresList.length; i++) {
-      // var data = StoresList[i];
-      if (StoresList[i]
-          .StoreName
-          .toString()
-          .toLowerCase()
-          .startsWith(SearchName.toLowerCase())) {
-        StoresToDisplay.add(StoresList[i]);
-      }
-    }
-    if (StoresToDisplay.isEmpty) {
-      return Container(
-          child: Align(
-        alignment: Alignment.center,
-        child: Text(
-          'No Results',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 20,
-          ),
-        ),
-      ));
-    }
-  }*/
 
-/*
-    for (var i = 0; i < StoresList.length; i++) {
-      var data = StoresList[i];
-      if (data.StoreName.toString()
-          .toLowerCase()
-          .startsWith(SearchName.toLowerCase())) {
-        buildStoresCards(StoresList[i], context);
-      }
-    }
-    return Container(
-        child: Align(
-      alignment: Alignment.center,
-      child: Text(
-        'No Results',
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 20,
-        ),
-      ),
-    ));*/
-
+  bool flag = false;
+  int count = -1;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,10 +99,8 @@ class _ListOfStores2State extends State<ListOfStores2> {
                       prefixIcon: Icon(Icons.search),
                       hintText: 'Search for a store name..'),
                   onChanged: (val) {
-                    //val = val.toLowerCase();
                     setState(() {
-                      SearchName = val;
-                      //searchStore(SearchName);
+                      SearchName = val.replaceAll(' ', '');
                     });
                   },
                 ),
@@ -171,11 +121,35 @@ class _ListOfStores2State extends State<ListOfStores2> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final stores = snapshot.data!;
+              count = stores.length; //2
               return ListView.builder(
                   itemCount: stores.length,
                   itemBuilder: (BuildContext context, int index) {
-                    //StoresList.add(stores[index]);
-                    return buildStoresCards(stores[index], context);
+                    var data = stores[index];
+
+                    if (SearchName.isEmpty) {
+                      flag = false;
+                      return buildStoresCards(stores[index], context);
+                    } else if (SearchName.isNotEmpty &&
+                        data.StoreName.toString()
+                            .toLowerCase()
+                            .startsWith(SearchName.toLowerCase())) {
+                      flag = true;
+                      return buildStoresCards(stores[index], context);
+                    } else if (flag == false && index == count - 1) {
+                      return Container(
+                          child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'No Results',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ));
+                    }
+                    return nothing();
                   });
             } else if (snapshot.hasError) {
               return Text("Some thing went wrong! ${snapshot.error}");
@@ -183,15 +157,11 @@ class _ListOfStores2State extends State<ListOfStores2> {
               return Center(child: CircularProgressIndicator());
             }
           }),
-      /*Expanded(
-              child: ListView.builder(
-                itemBuilder: (BuildContext context, int index) {
-                  return buildStoresCards(index, context);
-                },
-                itemCount: StoresToDisplay.length,
-              ),
-            )*/
     );
+  }
+
+  nothing() {
+    return Container();
   }
 
   Stream<List<Store>> readStores() => FirebaseFirestore.instance
@@ -230,7 +200,6 @@ class _ListOfStores2State extends State<ListOfStores2> {
 
       writeLocation(store.kilometers, store.StoreId);
 
-      //{required Map store}
       return Container(
         child: Padding(
           padding: const EdgeInsets.only(
@@ -297,56 +266,6 @@ class _ListOfStores2State extends State<ListOfStores2> {
         ),
       );
     }
-
-    /*{
-                    var data = stores[index];
-
-                    if (SearchName.isEmpty) {
-                      return buildStoresCards(stores[index], context);
-                    } else if (data.StoreName.toString()
-                        .toLowerCase()
-                        .startsWith(SearchName.toLowerCase())) {
-                      return buildStoresCards(stores[index], context);
-                    } else {
-                      return Container(
-                          child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'No Results',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
-                      ));
-                    }
-                  }*/
-
-/*
-  Future<double> calculateDistance(Store store, BuildContext context) async {
-    //Position? position = HomePageState.currentPosition;
-    double lat1 = store.lat.toDouble();
-    double lng1 = store.lng.toDouble();
-    if (currentPosition == null) {
-      return 0;
-    }
-    double lat2 = currentPosition.latitude;
-    double lng2 = currentPosition!.longitude;
-
-    double _distanceInMeters = Geolocator.distanceBetween(
-      lat1,
-      lng1,
-      currentPosition!.latitude,
-      currentPosition!.longitude,
-    );
-    return _distanceInMeters / 1000; */
-/*
-    var p = 0.017453292519943295;
-    var c = cos;
-    var a = 0.5 -
-        c((lat2 - lat1) * p) / 2 +
-        c(lat1 * p) * c(lat2 * p) * (1 - c((lng2 - lng1) * p)) / 2;
-    return 12742 * asin(sqrt(a)); */
   }
 }
 
@@ -384,180 +303,3 @@ class Store {
         lng: json['lng'],
       );
 }
-
-/*
-                    itemBuilder: (BuildContext context, int index) {
-                      var data = stores[index];
-
-                      if (data.StoreName.toString()
-                          .toLowerCase()
-                          .startsWith(SearchName.toLowerCase())) {
-                        return getResults(stores[index], context);
-                      }
-                      
-                    });
-              }
-              
-              if (results.isEmpty) {
-                return Container(
-                    child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'No Results',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                ));
-              } else {
-                return buildStoresCards(results;
-              }
-              
-              return ListView.builder(
-                  itemCount: stores.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    var data = stores[index];
-
-                    if (SearchName.isEmpty) {
-                      return buildStoresCards(stores[index], context);
-                    } else if (data.StoreName.toString()
-                        .toLowerCase()
-                        .startsWith(SearchName.toLowerCase())) {
-                          results.add(stores[index]);
-                      //return buildStoresCards(stores[index], context);
-                    } else {
-                      return Container(
-                          child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'No Results',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
-                      ));
-                    }
-                  });*/
-
-                  
-  /*
-            if (snapshot.hasData) {
-              final stores = snapshot.data!;
-              return ListView.builder(
-                  itemCount: stores.length,
-                  itemBuilder: (BuildContext context, int index) {
-
-                    var data = stores[index];
-                    if (SearchName.isEmpty) {
-                return ListView.builder(
-                    itemCount: stores.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      var data = stores[index];
-                      return buildStoresCards(stores[index], context);
-                    });
-
-                    if (SearchName.isEmpty) {
-                      return buildStoresCards(stores[index], context);
-                    } else if (data.StoreName.toString()
-                        .toLowerCase()
-                        .startsWith(SearchName.toLowerCase())) {
-                      return getResults(stores[index], context);
-                    } else {
-                      return Container(
-                          child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'No Results',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
-                      ));
-                    }
-                  });
-
-              /*if (SearchName.isEmpty) {
-                return ListView.builder(
-                    itemCount: stores.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      var data = stores[index];
-                      return buildStoresCards(stores[index], context);
-                    });
-              } else if (!SearchName.isEmpty) {
-                ListView.builder(
-                    itemCount: stores.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      for (var i = 0; i < stores.length; i++) {
-                        var data = stores[i];
-                        if (data.StoreName.toString()
-                            .toLowerCase()
-                            .startsWith(SearchName.toLowerCase())) {
-                          return getResults(stores[index], context);
-                        }
-                      }
-
-                      if (results.isEmpty) {
-                        return Container(
-                            child: Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            'No Results',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                          ),
-                        ));
-                      } else {
-                        return buildStoresCards(results.first, context);
-                      }
-                    });
-              }*/
-
-            } else if (snapshot.hasError) {
-              return Text("Some thing went wrong! ${snapshot.error}");
-            } else {
-              return Center(child: CircularProgressIndicator());
-            }
-            
-            //return buildStoresCards(results[1], context);*/
-
-/*
-  getResults(Store store, BuildContext context) {
-    results.add(store);
-    // return buildStoresCards(store, context);
-  }*/
-   /*
-              final stores = snapshot.data!;
-              return ListView.builder(
-                  itemCount: stores.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    var data = stores[index];
-                    if (SearchName.isEmpty) {
-                      return buildStoresCards(data, context);
-                    } else if (SearchName.isNotEmpty) {
-                      if (data.StoreName.toString()
-                          .toLowerCase()
-                          .startsWith(SearchName.toLowerCase())) {
-                        getResults(data, context);
-                      }
-                    }
-                    if (results.isEmpty) {
-                      return Container(
-                          child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'No Results',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
-                      ));
-                    } else {
-                      return buildStoresCards(results.first, context);
-                    }
-                  });*/
