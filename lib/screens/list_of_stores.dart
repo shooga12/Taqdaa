@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
+import 'package:taqdaa_application/screens/ShoppingCart.dart';
 import 'package:taqdaa_application/screens/scanBarCode.dart';
 import '../controller/searchBar.dart';
-import 'scanBarCode.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 
 class ListOfStores2 extends StatefulWidget {
   const ListOfStores2({super.key});
@@ -29,6 +28,31 @@ class _ListOfStores2State extends State<ListOfStores2> {
       EcommerceApp.value = _counter;
     });
 
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('${EcommerceApp.uid}All')
+        .where("Item_number", isEqualTo: EcommerceApp.value.substring(1))
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
+    if (documents.length == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => shoppingCart()),
+      );
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                content: Text("Item already have been added."), ///////
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'OK'),
+                    child: const Text('OK'),
+                  )
+                ]);
+          });
+      return false;
+    }
+
     Query dbref = FirebaseDatabase.instance
         .ref()
         .child(EcommerceApp.storeId) //Ecommerce.storeName
@@ -43,6 +67,8 @@ class _ListOfStores2State extends State<ListOfStores2> {
         context,
         MaterialPageRoute(builder: (context) => ScanPage()),
       );
+    } else if (_counter == "-1") {
+      return false;
     } else {
       showDialog(
           context: context,
@@ -182,10 +208,14 @@ class _ListOfStores2State extends State<ListOfStores2> {
                           content: Text(
                               "Sorry you already have an order in ${EcommerceApp.storeName}."),
                           actions: [
+                            ElevatedButton(
+                                onPressed: () {}, /////add cancelation
+                                child: Text(
+                                    "Cancel ${EcommerceApp.storeName} order")),
                             TextButton(
                               onPressed: () => Navigator.pop(context, 'OK'),
                               child: const Text('OK'),
-                            )
+                            ),
                           ]);
                     });
               }

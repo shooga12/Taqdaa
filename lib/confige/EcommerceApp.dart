@@ -8,6 +8,7 @@ class EcommerceApp {
   static int quantity = 0;
   static int total = 0;
   static String userName = 'Shoug'; //bug fixes
+  static String productName = '';
 
   static String uid = '';
   final FirebaseAuth auth = FirebaseAuth.instance;

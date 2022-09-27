@@ -1,12 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
-import 'package:either_dart/either.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:taqdaa_application/main.dart';
-import 'package:taqdaa_application/screens/home_page.dart';
 import '../confige/EcommerceApp.dart';
 import 'scanBarCode.dart';
 
@@ -111,6 +107,7 @@ class _shoppingCartState extends State<shoppingCart> {
                             },
                             onDismissed: (DismissDirection direction) {
                               if (direction == DismissDirection.endToStart) {
+                                deleteItemGroup(products[index].Category);
                                 deleteItem(products[index].Category);
                                 products.removeAt(index);
                               }
@@ -152,9 +149,7 @@ class _shoppingCartState extends State<shoppingCart> {
               Container(
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    _scan(
-                      context,
-                    );
+                    _scan(context, "NewItem");
                   },
                   label: Text(
                     'Continue Scanning',
@@ -215,6 +210,7 @@ class _shoppingCartState extends State<shoppingCart> {
       document.reference.update({'quantity': FieldValue.increment(1)});
       return true;
     } else if (!increment) {
+      //&& document.get("Category") == EcommerceApp.productName
       document.reference.update({'quantity': FieldValue.increment(-1)});
       return true;
     } else {
@@ -280,35 +276,53 @@ class _shoppingCartState extends State<shoppingCart> {
                         ),
                         Spacer(),
                         IconButton(
-                            onPressed: () {
-                              checkItemExist(false, product.Category);
-                              //controller.removeProduct(product);
+                            onPressed: () async {
+                              await showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                        title: Text("Please note that :"),
+                                        content: Text(
+                                            "You have to scan the barcode of the removed Item, In order to decrement the quantity."),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context, 'OK');
+                                            },
+                                            child: const Text('OK'),
+                                          )
+                                        ]);
+                                  });
+                              if (await _scan(context, "Decrement")) {
+                                checkItemExist(false, product.Category);
+                              }
                             },
                             icon: Icon(Icons.remove_circle,
                                 color: Color.fromARGB(255, 245, 161, 14))),
                         //Text('$quantity'),
                         Text(product.quantity.toString()),
                         IconButton(
-                            onPressed: () {
-                              // showDialog(
-                              //     context: context,
-                              //     builder: (context) {
-                              //       return AlertDialog(
-                              //           content: Text(
-                              //               "You have to scan the barcode again, In order to increment the quantity"),
-                              //           actions: [
-                              //             TextButton(
-                              //               onPressed: () {
-                              //                 Navigator.pop(context, 'OK');
-                              //                 _scan(context);
-                              //               },
-                              //               child: const Text('OK'),
-                              //             )
-                              //           ]);
-                              //     });
-
-                              checkItemExist(true, product.Category);
-                              //controller.addProduct(product);
+                            onPressed: () async {
+                              EcommerceApp.productName = product.Category;
+                              await showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                        title: Text("Please note that :"),
+                                        content: Text(
+                                            "You have to scan the barcode of the added Item, In order to increment the quantity."),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context, 'OK');
+                                            },
+                                            child: const Text('OK'),
+                                          )
+                                        ]);
+                                  });
+                              if (await _scan(context, "Increment")) {
+                                checkItemExist(true, product.Category);
+                              }
                             },
                             icon: Icon(Icons.add_circle,
                                 color: Color.fromARGB(255, 245, 161, 14))),
@@ -326,6 +340,137 @@ class _shoppingCartState extends State<shoppingCart> {
     );
   }
 
+  String _counter = "";
+
+  Future<bool> _scan(BuildContext context, String action) async {
+    _counter = await FlutterBarcodeScanner.scanBarcode(
+        "#004297", "Cancel", true, ScanMode.BARCODE);
+
+    setState(() {
+      EcommerceApp.value = _counter;
+    });
+
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('${collectionName}All')
+        .where("Item_number", isEqualTo: EcommerceApp.value.substring(1))
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
+    if (action != "Decrement" && documents.length == 1) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                content: Text("Item already have been added."), ///////
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'OK'),
+                    child: const Text('OK'),
+                  )
+                ]);
+          });
+      return false;
+    }
+
+    Query dbref = FirebaseDatabase.instance
+        .ref()
+        .child(EcommerceApp.storeId)
+        .child('store')
+        .orderByChild('Barcode')
+        .equalTo(EcommerceApp.value.substring(1));
+
+    final event = await dbref.once(DatabaseEventType.value);
+
+    if (event.snapshot.exists &&
+        action == "Increment" &&
+        event.snapshot.children.first.child('Product Name').value ==
+            EcommerceApp.productName) {
+      var barcode = event.snapshot.children.first.child('Barcode').value;
+      var productName =
+          event.snapshot.children.first.child('Product Name').value;
+      saveUserItemsDublicate(barcode, productName);
+      return true;
+    } else if (event.snapshot.exists &&
+        action == "Decrement" &&
+        event.snapshot.children.first.child('Product Name').value ==
+            EcommerceApp.productName) {
+      String dat =
+          event.snapshot.children.first.child('Barcode').value as String;
+      deleteSingleItem(dat);
+      return true;
+    } else if (event.snapshot.exists && action == "Increment") {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                content: Text(
+                    "Sorry, this is not a ${EcommerceApp.productName}."), ///////
+                actions: [
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ScanPage()),
+                        );
+                      },
+                      child: Text('Add it either way')),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'OK'),
+                    child: const Text('OK'),
+                  )
+                ]);
+          });
+      return false;
+    } else if (event.snapshot.exists && action == "Decrement") {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                content: Text(
+                    "Sorry, this is not a ${EcommerceApp.productName}."), ///////
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'OK'),
+                    child: const Text('OK'),
+                  )
+                ]);
+          });
+      return false;
+    } else if (event.snapshot.value != null && action == "NewItem") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ScanPage()),
+      );
+      return true;
+    } else if (_counter == "-1") {
+      return false;
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                content: Text("Sorry Item not found!"),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'OK'),
+                    child: const Text('OK'),
+                  )
+                ]);
+          });
+      return false;
+    }
+  }
+
+  Future saveUserItemsDublicate(var barcode, var productName) async {
+    FirebaseFirestore.instance.collection('${collectionName}All').add({
+      "Category": productName,
+      "Item_number": barcode,
+      "Price": "new",
+      "Store": "new",
+      "quantity": "new",
+    });
+  }
+
   Future<bool> deleteItem(String productName) async {
     final QuerySnapshot result = await FirebaseFirestore.instance
         .collection('${EcommerceApp.uid}')
@@ -340,45 +485,28 @@ class _shoppingCartState extends State<shoppingCart> {
     }
   }
 
-  String _counter = "";
-  //String _value = "";
+  Future<void> deleteItemGroup(String productName) async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('${EcommerceApp.uid}All')
+        .where("Category", isEqualTo: productName)
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
+    for (int i = 0; i < documents.length; i++) {
+      documents[i].reference.delete();
+    }
+  }
 
-  Future _scan(BuildContext context) async {
-    _counter = await FlutterBarcodeScanner.scanBarcode(
-        "#004297", "Cancel", true, ScanMode.BARCODE);
-
-    setState(() {
-      EcommerceApp.value = _counter;
-    });
-
-    Query dbref = FirebaseDatabase.instance
-        .ref()
-        .child(EcommerceApp.storeId)
-        .child('store')
-        .orderByChild('Barcode')
-        .equalTo(EcommerceApp.value.substring(1));
-
-    final event = await dbref.once(DatabaseEventType.value);
-
-    if (event.snapshot.value != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ScanPage()),
-      );
+  Future<bool> deleteSingleItem(String dat) async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('${collectionName}All')
+        .where("Item_number", isEqualTo: dat)
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
+    if (documents.length == 1) {
+      documents[0].reference.delete();
+      return true;
     } else {
-      //Navigator.pop(context);
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-                content: Text("Sorry Item not found!"),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, 'OK'),
-                    child: const Text('OK'),
-                  )
-                ]);
-          });
+      return false;
     }
   }
 }

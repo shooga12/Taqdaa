@@ -1,9 +1,5 @@
-//import 'dart:js';
-import '../methods/authentication_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'home_page.dart';
 import 'register_page.dart';
 import '../reusable_widget/reusable_widget.dart';
 import 'reset_page.dart';

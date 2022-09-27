@@ -2,14 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_local_notifications_platform_interface/src/types.dart';
 import 'package:taqdaa_application/screens/list_of_stores.dart';
-import 'package:taqdaa_application/services/local_notification_service.dart';
-//import 'package:taqdaa_application/screens/storeDetails.dart';
 import '../methods/authentication_services.dart';
 import '../screens/home_page.dart';
 import 'package:flutter/foundation.dart';
-
 import '../screens/login_page.dart';
 import '../screens/register_page.dart';
 import '../confige/EcommerceApp.dart';

@@ -1,12 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:taqdaa_application/screens/ShoppingCart.dart';
 import '../confige/EcommerceApp.dart';
-import 'list_of_stores.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 
@@ -64,6 +59,16 @@ class _ScanPageState extends State<ScanPage> {
 
   Future saveUserItems(Product product) async {
     FirebaseFirestore.instance.collection('${collectionName}').add({
+      "Category": product.Category,
+      "Item_number": product.Item_number,
+      "Price": product.Price,
+      "Store": product.Store,
+      "quantity": product.quantity,
+    });
+  }
+
+  Future saveUserItemsDublicate(Product product) async {
+    FirebaseFirestore.instance.collection('${collectionName}All').add({
       "Category": product.Category,
       "Item_number": product.Item_number,
       "Price": product.Price,
@@ -153,14 +158,20 @@ class _ScanPageState extends State<ScanPage> {
                     child: ElevatedButton(
                       onPressed: () async {
                         EcommerceApp.haveItems = true; ////bug fixes
+                        EcommerceApp.productName = product['Product Name'];
+
+                        Product toBeSavedProduct = Product(
+                            Category: product['Product Name'],
+                            Item_number: product['Barcode'],
+                            Price: product['Price'],
+                            Store: product['StoreName'],
+                            quantity: product['quantity']);
+
                         if (await checkItemExist()) {
+                          saveUserItemsDublicate(toBeSavedProduct);
                         } else {
-                          saveUserItems(Product(
-                              Category: product['Product Name'],
-                              Item_number: product['Barcode'],
-                              Price: product['Price'],
-                              Store: product['StoreName'],
-                              quantity: product['quantity']));
+                          saveUserItemsDublicate(toBeSavedProduct);
+                          saveUserItems(toBeSavedProduct);
                         }
                         Navigator.push(
                           context,
@@ -202,10 +213,10 @@ class _ScanPageState extends State<ScanPage> {
   Future<bool> checkItemExist() async {
     final QuerySnapshot result = await FirebaseFirestore.instance
         .collection('${collectionName}')
-        .where("Item_number", isEqualTo: EcommerceApp.value.substring(1))
+        .where("Category", isEqualTo: EcommerceApp.productName)
         .get();
     final List<DocumentSnapshot> documents = result.docs;
-    if (documents.length == 1) {
+    if (documents.length >= 1) {
       ///increment real time
       documents[0].reference.update({'quantity': FieldValue.increment(1)});
       return true;

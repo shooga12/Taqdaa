@@ -1,11 +1,7 @@
-import '../methods/authentication_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'home_page.dart';
 //import 'package:loginlogout_resetpass/register_page.dart';
 import '../reusable_widget/reusable_widget.dart';
-import 'reset_page.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'login_page.dart';
 import 'package:intl/date_symbol_data_file.dart';

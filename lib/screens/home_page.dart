@@ -1,15 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
 import 'package:taqdaa_application/screens/NoItmesCart.dart';
-import 'package:taqdaa_application/services/local_notification_service.dart';
 import '../controller/Notification_api.dart';
 import 'ShoppingCart.dart';
 import 'list_of_stores.dart';
-import 'scanBarCode.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
