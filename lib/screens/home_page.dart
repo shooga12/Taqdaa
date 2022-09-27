@@ -1,11 +1,17 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
+import 'package:taqdaa_application/model/user_model.dart';
+import 'package:taqdaa_application/profile/homep_profile.dart';
 import 'package:taqdaa_application/screens/NoItmesCart.dart';
 import 'ShoppingCart.dart';
 import 'list_of_stores.dart';
 import 'scanBarCode.dart';
+import '../profile/homep_profile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -98,7 +104,13 @@ class _HomePageState extends State<HomePage> {
                             width: size.width * 0.20,
                           ),
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Homepprofile()),
+                                );
+                              },
                               icon: Icon(
                                 Icons.person,
                                 size: 30,

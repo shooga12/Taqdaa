@@ -1,7 +1,12 @@
+import 'dart:html';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../methods/authentication_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import '../model/user_model.dart';
 import 'home_page.dart';
 //import 'package:loginlogout_resetpass/register_page.dart';
 import '../reusable_widget/reusable_widget.dart';
@@ -13,6 +18,8 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/date_symbols.dart';
 import 'package:intl/date_symbol_data_custom.dart';
 import 'package:intl/intl.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import '../profile/homep_profile.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -28,10 +35,11 @@ class _RegisterPageState extends State<RegisterPage> {
   final _passController = TextEditingController();
   final phonenumberController = TextEditingController();
   final dateofbirthController = TextEditingController();
-  final GlobalKey<FormState> _key = GlobalKey<FormState>();
 
-  ///User? user = FirebaseAuth.instance.currentUser;
+  final GlobalKey<FormState> _key = GlobalKey<FormState>();
+  final _auth = FirebaseAuth.instance;
   String errorMsg = '';
+
   bool isLoading = false;
 
   String? validateEmail(String? formEmail) {
@@ -51,7 +59,7 @@ class _RegisterPageState extends State<RegisterPage> {
     else if (formPassword.length < 8)
       return 'Should be at least 8 chatacter.';
     else if (formPassword.length > 15)
-      return 'Should be no more than 15 chatacter.';
+      return 'Should be less than 15 chatacter.';
     else
       return null;
   }
@@ -60,8 +68,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Form(
-        //key: _key,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
+        key: _key,
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.fromLTRB(
@@ -80,7 +87,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
                   validator: MultiValidator([
                     RequiredValidator(errorText: 'Required *'),
+                    PatternValidator(r'^[a-z A-Z]+$',
+                        errorText: 'name should contain onley letters')
                   ]),
+
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
                   style: TextStyle(
                       color: Color.fromARGB(255, 15, 53, 120).withOpacity(0.9)),
@@ -124,6 +134,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
                   validator: MultiValidator([
                     RequiredValidator(errorText: 'Required *'),
+                    PatternValidator(r'^[a-z A-Z]+$',
+                        errorText: 'name should contain onley letters')
                   ]),
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
                   style: TextStyle(
@@ -214,10 +226,15 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: _passController,
                   validator: MultiValidator([
                     RequiredValidator(errorText: 'Requiered *'),
+                    PatternValidator(
+                        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$',
+                        errorText: 'Invalid Password'),
+/*
                     MaxLengthValidator(15,
                         errorText: 'Should be no more than 15 chatacter.'),
                     MinLengthValidator(8,
                         errorText: 'Should be no more than 15 chatacter.')
+*/
                   ]),
                   obscureText: true,
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
@@ -261,7 +278,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
                   validator: MultiValidator([
                     RequiredValidator(errorText: 'Required *'),
-                    PatternValidator(r'^(?:[+0][1-9])?[0-9]{10,12}$',
+                    PatternValidator(
+                        r'^(?:[+0][1-9])?[0-9]{10,12}$', //should stop after enering 10 numbers not let the user enter more
                         errorText: 'Enter a valid phone number')
                   ]),
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
@@ -399,7 +417,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             // setState(() {
                             //   isLoading = true;
                             // });
-                            register();
+                            register(_emailController.text.trim(),
+                                _passController.text);
                             // final respone = await FirebaseAuthMethods().login(
                             //     _emailController.text.trim(),
                             //     _passController.text);
@@ -495,7 +514,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Future register() async {
+  Future signup() async {
     try {
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
@@ -529,5 +548,82 @@ class _RegisterPageState extends State<RegisterPage> {
             ]);
           });
     }
+  }
+
+  void register(String email, String password) async {
+    if (_key.currentState!.validate()) {
+      try {
+        await _auth
+            .createUserWithEmailAndPassword(email: email, password: password)
+            .then((value) => {postDetailsToFirestore()})
+            .catchError((e) {
+          Fluttertoast.showToast(msg: e!.message);
+        });
+      } on FirebaseAuthException catch (error) {
+        switch (error.code) {
+          case "invalid-email":
+            errorMsg = "Your email address appears to be malformed.";
+            break;
+          case "wrong-password":
+            errorMsg = "Your password is wrong.";
+            break;
+          case "user-not-found":
+            errorMsg = "User with this email doesn't exist.";
+            break;
+          case "user-disabled":
+            errorMsg = "User with this email has been disabled.";
+            break;
+          case "too-many-requests":
+            errorMsg = "Too many requests";
+            break;
+          case "operation-not-allowed":
+            errorMsg = "Signing in with Email and Password is not enabled.";
+            break;
+          default:
+            errorMsg = "An undefined Error happened.";
+        }
+        Fluttertoast.showToast(msg: errorMsg);
+        print(error.code);
+        // showDialog(
+        //   context: context,
+        //   builder: (context) {
+        //     return AlertDialog(content: Text(errorMsg), actions: [
+        //       TextButton(
+        //         onPressed: () => Navigator.pop(context, 'OK'),
+        //         child: const Text('OK'),
+        //       )
+        //     ]);
+        //   });
+
+      }
+    }
+  }
+
+  postDetailsToFirestore() async {
+    // calling our firestore
+    // calling our user model
+    // sedning these values
+
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    User? user = _auth.currentUser;
+
+    UserModel userModel = UserModel();
+
+    // writing all the values
+    userModel.email = user!.email;
+    userModel.uid = user.uid;
+    userModel.firstName = firstnameController.text;
+    userModel.secondName = lastnameController.text;
+    userModel.phonenumber = phonenumberController.text;
+    userModel.dateofbirth = dateofbirthController.text;
+
+    await firebaseFirestore
+        .collection("users")
+        .doc(user.uid)
+        .set(userModel.toMap());
+    Fluttertoast.showToast(msg: "Account created successfully :) ");
+
+    Navigator.pushAndRemoveUntil((context),
+        MaterialPageRoute(builder: (context) => LoginPage()), (route) => false);
   }
 }

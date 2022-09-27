@@ -11,6 +11,7 @@ import 'package:flutter/foundation.dart';
 
 import '../screens/login_page.dart';
 import '../screens/register_page.dart';
+import '../profile/homep_profile.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
