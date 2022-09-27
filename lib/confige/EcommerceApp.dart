@@ -5,6 +5,7 @@ class EcommerceApp {
   static String storeName = '';
   static String value = '';
   static String storeId = '';
+  static String userName = '';
 
   static String uid = '';
   final FirebaseAuth auth = FirebaseAuth.instance;

@@ -7,6 +7,10 @@ import 'package:taqdaa_application/screens/NoItmesCart.dart';
 import 'ShoppingCart.dart';
 import 'list_of_stores.dart';
 import 'scanBarCode.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import '../controller/NotificationApi.dart';
+import '../profile/homep_profile.dart';
+import 'package:taqdaa_application/model/user_model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,6 +20,21 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  void initState() {
+    super.initState();
+
+    NotificationApi.init();
+    listenNotifications();
+  }
+
+  void listenNotifications() =>
+      NotificationApi.onNotification.stream.listen(onClickNotification);
+
+  void onClickNotification(NotificationResponse? details) => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ListOfStores2()),
+      );
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -97,14 +116,29 @@ class HomePageState extends State<HomePage> {
                             width: size.width * 0.20,
                           ),
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Homepprofile()),
+                                );
+                              },
                               icon: Icon(
                                 Icons.person,
                                 size: 30,
                                 color: Colors.white,
                               )),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              NotificationApi.showScheduledNotification(
+                                  title: 'Taqdaa is waiting for you!',
+                                  body: 'Hey, ' +
+                                      EcommerceApp.userName +
+                                      '\nyou\'re very close from {stores.first.StoreName} come and shop with us now!',
+                                  payload: 'paylod.nav',
+                                  scheduledDate:
+                                      DateTime.now().add(Duration(seconds: 3)));
+                            },
                             icon: Icon(
                               Icons.settings,
                               size: 30,

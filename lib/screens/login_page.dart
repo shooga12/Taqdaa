@@ -181,7 +181,7 @@ class _LoginPageState extends State<LoginPage> {
                             style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 16),
+                                fontSize: 18),
                           ),
                           style: ButtonStyle(
                               backgroundColor:
@@ -213,7 +213,7 @@ class _LoginPageState extends State<LoginPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Don't have an account?",
+        const Text("Don't have an account? ",
             style: TextStyle(color: Color.fromARGB(255, 15, 53, 120))),
         GestureDetector(
           onTap: () {
@@ -224,8 +224,9 @@ class _LoginPageState extends State<LoginPage> {
                 ));
           },
           child: const Text(
-            "  SignUp",
+            "SignUp",
             style: TextStyle(
+                decoration: TextDecoration.underline,
                 color: Color.fromARGB(255, 15, 53, 120),
                 fontWeight: FontWeight.bold),
           ),
@@ -238,7 +239,7 @@ class _LoginPageState extends State<LoginPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Forgot password?",
+        const Text("Forgot password? ",
             style: TextStyle(color: Color.fromARGB(255, 15, 53, 120))),
         GestureDetector(
           onTap: () {
@@ -246,8 +247,9 @@ class _LoginPageState extends State<LoginPage> {
                 MaterialPageRoute(builder: (context) => ResetPassPage()));
           },
           child: const Text(
-            "  Reset Password",
+            "Reset Password",
             style: TextStyle(
+                decoration: TextDecoration.underline,
                 color: Color.fromARGB(255, 15, 53, 120),
                 fontWeight: FontWeight.bold),
           ),
