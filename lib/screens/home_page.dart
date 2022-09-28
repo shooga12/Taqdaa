@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../controller/NotificationApi.dart';
 import '../profile/homep_profile.dart';
 import 'package:taqdaa_application/model/user_model.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,8 +22,25 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  Future checkLocation() async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('Stores')
+        .where('kilometers', isEqualTo: 0.1)
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
+    if (documents.length == 1) {
+      ////service.showNotification(
+      //   id: 0,
+      //   title: 'Taqdaa is waiting for you!',
+      //   body: 'Hey, ' +
+      //       EcommerceApp.userName +
+      //      '\nyou\'re very close from ${documents[0].get('StoreName')} come and shop with us now!');
+    }
+  }
+
   void initState() {
     super.initState();
+    tz.initializeTimeZones();
 
     NotificationApi.init();
     listenNotifications();
