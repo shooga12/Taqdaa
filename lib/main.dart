@@ -9,7 +9,6 @@ import '../screens/home_page.dart';
 import 'package:flutter/foundation.dart';
 import '../screens/login_page.dart';
 import '../screens/register_page.dart';
-import '../screens/userLocation.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
