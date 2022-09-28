@@ -56,13 +56,24 @@ class _shoppingCartState extends State<shoppingCart> {
                 return ListView.builder(
                     itemCount: products.length,
                     itemBuilder: (BuildContext context, int index) {
+                      int previousTotal = EcommerceApp.total;
+                      EcommerceApp.total = products
+                          .map<int>((e) => e.Price * e.quantity)
+                          .reduce((value, element) => value + element);
+                      if (products.isEmpty) {
+                        saveUserTotal(0);
+                      }
+                      if (previousTotal != EcommerceApp.total &&
+                          products.isNotEmpty) {
+                        saveUserTotal(EcommerceApp.total);
+                      }
+                      //getUserTotal();
                       if (products[index].quantity == 0) {
                         deleteItem(products[index].Category);
                         products.removeAt(index);
-                      }
-                      // EcommerceApp.total = (products[index].Price *
-                      //     products[index].quantity); ////bug fixes
-                      else {
+                        saveUserTotal(0);
+                      } else {
+                        getUserTotal();
                         return Dismissible(
                             key: ValueKey(products[index].Item_number),
                             background: Container(
@@ -97,7 +108,7 @@ class _shoppingCartState extends State<shoppingCart> {
                                               },
                                               child: Text("Cancel")),
                                           ElevatedButton(
-                                              //style: Color.,
+                                              //style: Color
                                               onPressed: () {
                                                 Navigator.of(ctx).pop(true);
                                               },
@@ -109,23 +120,16 @@ class _shoppingCartState extends State<shoppingCart> {
                               if (direction == DismissDirection.endToStart) {
                                 deleteItemGroup(products[index].Category);
                                 deleteItem(products[index].Category);
-                                products.removeAt(index);
+                                products.removeAt(index); ////bug fixes
+                                if (products.isEmpty) {
+                                  saveUserTotal(0);
+                                }
                               }
                             },
                             child: buildSecondItmes(products[index], context));
                       }
                       return Center(child: CircularProgressIndicator());
-                    }
-                    //{
-                    //   //Map thisItem = stores[index];
-                    //   return ListTile(
-                    //     title: Text(''),
-                    //     subtitle: Text(''),
-                    //   );
-                    // }
-                    //
-                    //children: stores.map(buildStoresCards).toList(),
-                    );
+                    });
               } else if (snapshot.hasError) {
                 return Text("Some thing went wrong! ${snapshot.error}");
               } else {
@@ -138,14 +142,13 @@ class _shoppingCartState extends State<shoppingCart> {
               child: Column(
             children: [
               Container(
-                child: Text(
-                  'Total: ' + EcommerceApp.total.toString() + '\n',
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 32, 7, 121),
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
+                  child: Text(
+                'Total: ' + EcommerceApp.total.toString() + '\n',
+                style: TextStyle(
+                    color: Color.fromARGB(255, 32, 7, 121),
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold),
+              )),
               Container(
                 child: ElevatedButton.icon(
                   onPressed: () {
@@ -210,7 +213,6 @@ class _shoppingCartState extends State<shoppingCart> {
       document.reference.update({'quantity': FieldValue.increment(1)});
       return true;
     } else if (!increment) {
-      //&& document.get("Category") == EcommerceApp.productName
       document.reference.update({'quantity': FieldValue.increment(-1)});
       return true;
     } else {
@@ -277,6 +279,7 @@ class _shoppingCartState extends State<shoppingCart> {
                         Spacer(),
                         IconButton(
                             onPressed: () async {
+                              EcommerceApp.productName = product.Category;
                               await showDialog(
                                   context: context,
                                   builder: (context) {
@@ -461,6 +464,8 @@ class _shoppingCartState extends State<shoppingCart> {
     }
   }
 
+  ///End of _scan()
+
   Future saveUserItemsDublicate(var barcode, var productName) async {
     FirebaseFirestore.instance.collection('${collectionName}All').add({
       "Category": productName,
@@ -468,6 +473,31 @@ class _shoppingCartState extends State<shoppingCart> {
       "Price": "new",
       "Store": "new",
       "quantity": "new",
+    });
+  }
+
+  Future saveUserTotal(var total) async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('${collectionName}Total')
+        .get();
+    final DocumentSnapshot document = result.docs.first;
+    if (document.exists) {
+      document.reference.update({'Total': total});
+    }
+  }
+
+  Future getUserTotal() async {
+    var collection =
+        FirebaseFirestore.instance.collection('${collectionName}Total');
+    collection.doc('total').snapshots().listen((docSnapshot) {
+      if (docSnapshot.exists) {
+        Map<String, dynamic> data = docSnapshot.data()!;
+
+        // You can then retrieve the value from the Map like this:
+        setState(() {
+          EcommerceApp.total = data['Total'];
+        });
+      }
     });
   }
 

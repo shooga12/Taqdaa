@@ -77,13 +77,6 @@ class _ScanPageState extends State<ScanPage> {
     });
   }
 
-  // Stream<List<Product>> readCartItems() => FirebaseFirestore.instance
-  //     .collection(EcommerceApp.uid)
-  //     .where("Item_number", isEqualTo: EcommerceApp.value.substring(1))
-  //     .snapshots()
-  //     .map((snapshot) =>
-  //         snapshot.docs.map((doc) => Product.fromJson(doc.data())).toList());
-
   Widget buildBeforeCart({required Map product}) {
     return Container(
       child: Column(
