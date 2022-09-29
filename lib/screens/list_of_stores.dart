@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
 import 'package:taqdaa_application/screens/scanBarCode.dart';
+import 'ShoppingCart.dart';
 import 'scanBarCode.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
@@ -63,6 +64,8 @@ class _ListOfStores2State extends State<ListOfStores2> {
   }
 
   @override
+  final List<Store> Stores = [];
+  FirebaseDatabase database = FirebaseDatabase.instance;
   String SearchName = '';
   String _counter = "";
 
@@ -74,10 +77,61 @@ class _ListOfStores2State extends State<ListOfStores2> {
       EcommerceApp.value = _counter;
     });
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => ScanPage()),
-    );
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('${EcommerceApp.uid}All')
+        .where("Item_number", isEqualTo: EcommerceApp.value.substring(1))
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
+    if (documents.length == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => shoppingCart()),
+      );
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                content: Text("Item already have been added."), ///////
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'OK'),
+                    child: const Text('OK'),
+                  )
+                ]);
+          });
+      return false;
+    }
+
+    Query dbref = FirebaseDatabase.instance
+        .ref()
+        .child(EcommerceApp.storeId) //Ecommerce.storeName
+        .child('store')
+        .orderByChild('Barcode')
+        .equalTo(EcommerceApp.value.substring(1));
+
+    final event = await dbref.once(DatabaseEventType.value);
+
+    if (event.snapshot.value != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ScanPage()),
+      );
+    } else if (_counter == "-1") {
+      return false;
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                content: Text("Sorry Item not found!"),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'OK'),
+                    child: const Text('OK'),
+                  )
+                ]);
+          });
+    }
   }
 
   bool flag = false;
@@ -256,8 +310,30 @@ class _ListOfStores2State extends State<ListOfStores2> {
               ),
               onTap: () {
                 EcommerceApp.storeId = store.StoreId;
-                EcommerceApp.storeName = store.StoreName;
-                _scan(context);
+                if (EcommerceApp.storeName == "") {
+                  EcommerceApp.storeName = store.StoreName;
+                  _scan(context);
+                } else if (EcommerceApp.storeName == store.StoreName) {
+                  _scan(context);
+                } else {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                            content: Text(
+                                "Sorry you already have an order in ${EcommerceApp.storeName}."),
+                            actions: [
+                              ElevatedButton(
+                                  onPressed: () {}, /////add cancelation
+                                  child: Text(
+                                      "Cancel ${EcommerceApp.storeName} order")),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'OK'),
+                                child: const Text('OK'),
+                              ),
+                            ]);
+                      });
+                }
               },
             ),
             color: Color.fromARGB(243, 243, 239, 231),

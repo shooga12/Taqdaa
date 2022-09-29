@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
 import 'package:taqdaa_application/screens/NoItmesCart.dart';
 import 'ShoppingCart.dart';
@@ -22,22 +25,6 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  Future checkLocation() async {
-    final QuerySnapshot result = await FirebaseFirestore.instance
-        .collection('Stores')
-        .where('kilometers', isEqualTo: 0.1)
-        .get();
-    final List<DocumentSnapshot> documents = result.docs;
-    if (documents.length == 1) {
-      ////service.showNotification(
-      //   id: 0,
-      //   title: 'Taqdaa is waiting for you!',
-      //   body: 'Hey, ' +
-      //       EcommerceApp.userName +
-      //      '\nyou\'re very close from ${documents[0].get('StoreName')} come and shop with us now!');
-    }
-  }
-
   void initState() {
     super.initState();
     tz.initializeTimeZones();
@@ -53,6 +40,11 @@ class HomePageState extends State<HomePage> {
         context,
         MaterialPageRoute(builder: (context) => ListOfStores2()),
       );
+
+  @override
+  bool isInsideHome = true;
+  bool isInsideProfile = false;
+  bool isInsideSettings = false;
 
   @override
   Widget build(BuildContext context) {
@@ -106,13 +98,16 @@ class HomePageState extends State<HomePage> {
                           IconButton(
                               onPressed: () {},
                               icon: Icon(
-                                Icons.home,
-                                size: 30,
-                                color: Colors.white,
+                                Icons.home_outlined,
+                                size: 35,
+                                color: isInsideHome
+                                    ? Color.fromARGB(255, 254, 176, 60)
+                                    : Colors.white,
                               )),
                           IconButton(
                               onPressed: () {
-                                if (EcommerceApp.haveItmes) {
+                                if (EcommerceApp.haveItems) {
+                                  /////bug fixes
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -145,23 +140,18 @@ class HomePageState extends State<HomePage> {
                               icon: Icon(
                                 Icons.person,
                                 size: 30,
-                                color: Colors.white,
+                                color: isInsideProfile
+                                    ? Color.fromARGB(255, 254, 176, 60)
+                                    : Colors.white,
                               )),
                           IconButton(
-                            onPressed: () {
-                              NotificationApi.showScheduledNotification(
-                                  title: 'Taqdaa is waiting for you!',
-                                  body: 'Hey, ' +
-                                      EcommerceApp.userName +
-                                      '\nyou\'re very close from {stores.first.StoreName} come and shop with us now!',
-                                  payload: 'paylod.nav',
-                                  scheduledDate:
-                                      DateTime.now().add(Duration(seconds: 3)));
-                            },
+                            onPressed: () {},
                             icon: Icon(
                               Icons.settings,
                               size: 30,
-                              color: Colors.white,
+                              color: isInsideSettings
+                                  ? Color.fromARGB(255, 254, 176, 60)
+                                  : Colors.white,
                             ),
                           ),
                         ]),

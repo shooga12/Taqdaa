@@ -232,11 +232,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     PatternValidator(
                         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$',
                         errorText: 'Invalid Password'),
-                    /*
-                    MaxLengthValidator(15,
-                        errorText: 'Should be no more than 15 chatacter.'),
-                    MinLengthValidator(8,
-                        errorText: 'Should be no more than 15 chatacter.')*/
                   ]),
                   obscureText: true,
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
@@ -264,10 +259,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         color: Color.fromARGB(236, 113, 113, 117)
                             .withOpacity(0.9)),
                     filled: true,
-
                     fillColor: Colors.white.withOpacity(0.9),
-                    // border: OutlineInputBorder(
-                    //  borderRadius: BorderRadius.circular(30.0),),
                   ),
                   //keyboardType: TextInputType.emailAddress,
                 ),
@@ -312,10 +304,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         color: Color.fromARGB(236, 113, 113, 117)
                             .withOpacity(0.9)),
                     filled: true,
-
                     fillColor: Colors.white.withOpacity(0.9),
-                    // border: OutlineInputBorder(
-                    //  borderRadius: BorderRadius.circular(30.0),),
                   ),
 
                   keyboardType: TextInputType.phone,
@@ -364,10 +353,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     onTap: () async {
                       DateTime? pickedDate = await showDatePicker(
                           context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(
-                              1960), //DateTime.now() - not to allow to choose before today.
-                          lastDate: DateTime.now());
+                          initialDate: DateTime(2012, 12, 31, 0, 0),
+                          firstDate: DateTime(1930),
+                          lastDate: DateTime(2012, 12, 31, 0, 0));
 
                       if (pickedDate != null) {
                         print(
@@ -405,31 +393,35 @@ class _RegisterPageState extends State<RegisterPage> {
                       ? Center(
                           child: CircularProgressIndicator(),
                         )
-                      : ElevatedButton(
-                          onPressed: () async {
-                            register(_emailController.text.trim(),
-                                _passController.text);
-                          },
-                          child: Text(
-                            'SIGN UP',
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18),
+                      : SizedBox(
+                          width: 200,
+                          height: 50,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              register(_emailController.text.trim(),
+                                  _passController.text);
+                            },
+                            child: Text(
+                              'SIGN UP',
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18),
+                            ),
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.resolveWith((states) {
+                                  if (states.contains(MaterialState.pressed)) {
+                                    return Colors.grey;
+                                  }
+                                  return Colors.orange;
+                                }),
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(30)))),
                           ),
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.resolveWith((states) {
-                                if (states.contains(MaterialState.pressed)) {
-                                  return Colors.grey;
-                                }
-                                return Colors.orange;
-                              }),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(30)))),
                         ),
                 ),
 
@@ -539,26 +531,11 @@ class _RegisterPageState extends State<RegisterPage> {
         }
         Fluttertoast.showToast(msg: errorMsg);
         print(error.code);
-        // showDialog(
-        //   context: context,
-        //   builder: (context) {
-        //     return AlertDialog(content: Text(errorMsg), actions: [
-        //       TextButton(
-        //         onPressed: () => Navigator.pop(context, 'OK'),
-        //         child: const Text('OK'),
-        //       )
-        //     ]);
-        //   });
-
       }
     }
   }
 
   postDetailsToFirestore() async {
-    // calling our firestore
-    // calling our user model
-    // sedning these values
-
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User? user = _auth.currentUser;
 

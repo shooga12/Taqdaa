@@ -114,28 +114,33 @@ class _HomepprofileState extends State<Homepprofile> {
               ),
               Padding(
                 padding: EdgeInsets.only(top: 40.0),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    logout(context);
-                  },
-                  child: Text(
-                    'Logout',
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18),
+                child: SizedBox(
+                  width: 200,
+                  height: 40,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      logout(context);
+                    },
+                    child: Text(
+                      'Logout',
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18),
+                    ),
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith((states) {
+                          if (states.contains(MaterialState.pressed)) {
+                            return Colors.grey;
+                          }
+                          return Colors.orange;
+                        }),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30)))),
                   ),
-                  style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.resolveWith((states) {
-                        if (states.contains(MaterialState.pressed)) {
-                          return Colors.grey;
-                        }
-                        return Colors.orange;
-                      }),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30)))),
                 ),
               ),
             ],

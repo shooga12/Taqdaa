@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Form(
         //key: _key,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
+        //autovalidateMode: AutovalidateMode.onUserInteraction,
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.fromLTRB(
@@ -66,6 +66,7 @@ class _LoginPageState extends State<LoginPage> {
                 //     "Enter Email Address", false, _emailController),
                 TextFormField(
                   controller: _emailController,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
 
                   validator: MultiValidator([
                     RequiredValidator(errorText: 'Required *'),
@@ -112,6 +113,7 @@ class _LoginPageState extends State<LoginPage> {
                 // reusableTextField("Enter your password", true, _passController),
                 TextFormField(
                   controller: _passController,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: MultiValidator([
                     RequiredValidator(errorText: 'Requiered *'),
                   ]),
@@ -172,30 +174,34 @@ class _LoginPageState extends State<LoginPage> {
                       ? Center(
                           child: CircularProgressIndicator(),
                         )
-                      : ElevatedButton(
-                          onPressed: () async {
-                            login();
-                          },
-                          child: Text(
-                            'LOG IN',
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18),
+                      : SizedBox(
+                          width: 200,
+                          height: 40,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              login();
+                            },
+                            child: Text(
+                              'LOG IN',
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18),
+                            ),
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.resolveWith((states) {
+                                  if (states.contains(MaterialState.pressed)) {
+                                    return Colors.grey;
+                                  }
+                                  return Colors.orange;
+                                }),
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(30)))),
                           ),
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.resolveWith((states) {
-                                if (states.contains(MaterialState.pressed)) {
-                                  return Colors.grey;
-                                }
-                                return Colors.orange;
-                              }),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(30)))),
                         ),
                 ),
 
