@@ -174,7 +174,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final stores = snapshot.data!;
-              count = stores.length; //2
+              count = stores.length;
               return ListView.builder(
                   itemCount: stores.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -235,7 +235,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
   buildStoresCards(Store store, BuildContext context) {
     _getCurrentPosition();
     if (_currentPosition == null) {
-      return CircularProgressIndicator();
+      return Visibility(visible: false, child: CircularProgressIndicator());
     } else if (_currentPosition != null) {
       store.kilometers = calculateDistance(
               store.lat,
