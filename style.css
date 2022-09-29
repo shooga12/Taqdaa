@@ -1,13 +1,17 @@
 body{
     background-color: #fcfcfc !important;
 }
-#box{
+#signup-box{
     background-color: #1E286D;
     box-shadow: 1px 1px 15px 5px #ebebeb;
     border-radius: 40px;
     margin: auto;
-    height: 600px;
+    height: fit-content;
     
+}
+.signup-cont{
+    padding-top: 1em;
+    padding-bottom: 1em;
 }
 #box-content-container{
     background-color: white;
@@ -51,37 +55,33 @@ body{
 }
 h4.h2.h5{
     color:#141d54;
+
 }
 #login-btn{
     width: 180px;
 }
-.com-btn{
-    width: 100px; ;
-}
+
 .only{
     color: #8e8e8e;
     font-style: bold;
 }
 .login-end{
 color: #141d54;
-font-size: small;
+font-size: medium;
 }
 .end{
     color:#8e8e8e;
-    font-size: small;
+    font-size:medium;
 }
 
 #sendreq-btn{
     width: 180px ;
     text-align: center;
 }
-#g1{
-    margin-bottom: 20px;
-}
-#g2{
-    margin-bottom: 20px;
-}
 
+#sendreq-btn:hover{
+    background-color: #fda00b;
+}
 
 #box-2{
     background-color: #141d54;
@@ -90,21 +90,44 @@ font-size: small;
     margin: auto;
     height: 450px;
 }
-.container form .user-detailes{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+
+.error-msg{
+    color: rgb(207, 0, 0);
+    visibility: hidden;
+}
+#registration-msg{
+    color: darkgreen;
+    font-weight: 600;
 }
 
-form .user-detailes .input-box{
-    margin: 20px 0 12px 0;
-  width: calc(100% /2 - 20px);
-  text-align: center;
+.Upload-btn{
+    height: 100px;
+    width: 100px;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid grey;
 }
+#photo{
+    height: 100%;
+    width: 100%;
+  }
+  
+.logo-pic-div{
+    height: 140px;
+    width: 140px;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid grey;
+  } 
+  #com-btn{
+    display: none;
+  }
 
-.user-detailes .input-box input{
-height: 45px;
-width:100%;
-}
-
+  label{
+    font-size:large;
+  }
   

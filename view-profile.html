@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="style.css">
+     <!--Bootstrap-->
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+    <div className='container w-100 vh-100 d-flex align-items-center signup-cont'>
+        <div id="signup-box" className="col-12 col-lg-11 col-xl-9">
+          <div id="box-content-container" className="col-11">
+           <div className="container pt-4 pb-4 pl-5 pr-5 d-flex h-100 flex-column align-items-center justify-content-around">
+            
+            &nbsp; &nbsp;&nbsp;&nbsp; <h4 className='mt-4 mb-4'>My Profile</h4><br/>
+             <form class="w-100 d-flex flex-column align-items-center">
+                <div className='col-9'>
+                  <div className="col-12 d-flex flex-column flex-lg-row justify-content-between">
+
+                    <div className="d-flex flex-column flex-lg-row">
+                  
+                    </div>
+
+                    <div class="logo-pic-div"> 
+                        <img src="images.png" id="photo">
+                        <input type="file" accept="png,jpeg" className="Upload-btn" id="com-btn" required/> 
+                      </div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+
+          <div class="col-12 d-flex justify-content-around" id="g1">
+                    <div>
+                      <label htmlFor='firstname'>First Name</label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <input name="firstname" type="text"  className="input-field" > 
+                    
+                    </div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <div>
+                      <label htmlFor='lastname'>Last Name</label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <input name="lastname" type="text"  className="input-field" >
+                     
+                    </div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  </div>
+
+           </div> <br> <br>
+
+                  <div className="col-12 d-flex flex-column flex-lg-row justify-content-between">
+       <div class="d-flex" id="g2"> 
+                    <div>
+                      <label htmlFor='companyname'>Company Name</label>
+                      <input name="companyname" type="text"  className="input-field" >
+                      
+                    </div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                    <div>
+                      <label htmlFor='storename'>Store Name</label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <input name="storename" type="text"  className="input-field">
+                    
+                    </div>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       </div> <br> <br>
+                  </div>
+
+                  <div className="col-12 d-flex flex-column flex-lg-row justify-content-between">
+       <div class="d-flex" id="g3"> 
+                    <div>
+                       <label htmlFor='email'>Email</label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                       <input name="email" type="email"  className="input-field" >
+                       
+                    </div>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <div>
+                      <label htmlFor='phone'>Phone Number</label> 
+                      <input name="phone" type="phone"  className="input-field" >
+                      
+                    </div>
+         </div> <br> <br>
+                  </div>
+                  
+                </div>
+              </form>
+             
+             
+           
+           </div>
+          </div>
+        </div>
+      </div>
+
+</body>
+
+</html>
