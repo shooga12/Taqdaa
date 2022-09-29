@@ -27,10 +27,6 @@ class _ScanPageState extends State<ScanPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "",
-          // style: TextStyle(fontFamily: 'Cairo'),
-        ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
@@ -64,6 +60,7 @@ class _ScanPageState extends State<ScanPage> {
       "Price": product.Price,
       "Store": product.Store,
       "quantity": product.quantity,
+      "RFID": product.RFID,
     });
   }
 
@@ -74,6 +71,7 @@ class _ScanPageState extends State<ScanPage> {
       "Price": product.Price,
       "Store": product.Store,
       "quantity": product.quantity,
+      "RFID": product.RFID,
     });
   }
 
@@ -154,11 +152,13 @@ class _ScanPageState extends State<ScanPage> {
                         EcommerceApp.productName = product['Product Name'];
 
                         Product toBeSavedProduct = Product(
-                            Category: product['Product Name'],
-                            Item_number: product['Barcode'],
-                            Price: product['Price'],
-                            Store: product['StoreName'],
-                            quantity: product['quantity']);
+                          Category: product['Product Name'],
+                          Item_number: product['Barcode'],
+                          Price: product['Price'],
+                          Store: product['StoreName'],
+                          quantity: product['quantity'],
+                          RFID: product['RFID'],
+                        );
 
                         if (await checkItemExist()) {
                           saveUserItemsDublicate(toBeSavedProduct);
@@ -225,13 +225,15 @@ class Product {
   final int Price;
   final String Store;
   final int quantity;
+  final String RFID;
 
   Product(
       {required this.Category,
       required this.Item_number,
       required this.Price,
       required this.Store,
-      required this.quantity});
+      required this.quantity,
+      required this.RFID});
 
   Map<String, dynamic> toJson() => {
         'Category': Category,
@@ -239,6 +241,7 @@ class Product {
         'Price': Price,
         'Store': Store,
         'quantity': quantity,
+        'RFID': RFID,
       };
 
   static Product fromJson(Map<String, dynamic> json) => Product(
@@ -247,5 +250,6 @@ class Product {
         Price: json['Price'],
         Store: json['Store'],
         quantity: json['quantity'],
+        RFID: json['RFID'],
       );
 }

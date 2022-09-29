@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:taqdaa_application/main.dart';
+import 'package:taqdaa_application/screens/checkout_Page.dart';
 import '../confige/EcommerceApp.dart';
 import 'scanBarCode.dart';
 
@@ -177,7 +178,12 @@ class _shoppingCartState extends State<shoppingCart> {
               ),
               Container(
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CheckOut()),
+                    );
+                  },
                   child: Text(
                     'Checkout',
                     style: const TextStyle(
@@ -390,7 +396,8 @@ class _shoppingCartState extends State<shoppingCart> {
       var barcode = event.snapshot.children.first.child('Barcode').value;
       var productName =
           event.snapshot.children.first.child('Product Name').value;
-      saveUserItemsDublicate(barcode, productName);
+      var RFID = event.snapshot.children.first.child('RFID').value;
+      saveUserItemsDublicate(barcode, productName, RFID);
       return true;
     } else if (event.snapshot.exists &&
         action == "Decrement" &&
@@ -466,13 +473,14 @@ class _shoppingCartState extends State<shoppingCart> {
 
   ///End of _scan()
 
-  Future saveUserItemsDublicate(var barcode, var productName) async {
+  Future saveUserItemsDublicate(var barcode, var productName, var RFID) async {
     FirebaseFirestore.instance.collection('${collectionName}All').add({
       "Category": productName,
       "Item_number": barcode,
       "Price": "new",
       "Store": "new",
       "quantity": "new",
+      "RFID": RFID,
     });
   }
 
