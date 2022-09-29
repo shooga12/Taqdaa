@@ -1,4 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+:root {
+  --main-color: #1E286D;
+  --main-color-dark: #2d3777;
+  --main-color-light: #1E286D;
+  --text-color: #cfcde7;
+  --orange: #faa213;
+  --orange-dark: #d88a0c;
+}
 *{
   margin: 0;
   padding: 0;
@@ -33,11 +41,11 @@ h1{
   outline: none;
   background: #FEB139;
   color: white;
-  border-radius: 5px;
+  border-radius: 40px;
   cursor: pointer;
 }
 ::-webkit-file-upload-button:hover{
-  background: #ffa20c;
+  background: var(--orange-dark);
 }
 .drag-area.active{
   border: 2px solid green;
@@ -69,7 +77,7 @@ h1{
   cursor: pointer;
 }
 .drag-area button:hover{
-  background: #faa213;
+  background: var(--orange-dark);
 }
 .drag-area img{
   height: 100%;
@@ -87,7 +95,7 @@ h1{
   background-color: #232e75;
   color: white;
   padding: 0.5em 1em 0.5em 1em;
-  border-radius: 5px;
+  border-radius: 40px;
   font-size: 18px;
   cursor: pointer;
   text-align: center;

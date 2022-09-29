@@ -50,3 +50,8 @@ td:first-child{
     display: flex;
     justify-content: center;
 }
+.loading-img{
+    width: 150px;
+    height: 150px;
+    margin: auto;
+}

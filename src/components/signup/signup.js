@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo} from 'react';
 import {createUserWithEmailAndPassword,fetchSignInMethodsForEmail} from 'firebase/auth';
 import './style.css';
 import parse from 'html-react-parser'
@@ -12,6 +12,7 @@ import { async } from '@firebase/util';
 import { collection, doc, setDoc, addDoc }  from 'firebase/firestore';
 import {getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { parseHTML } from 'jquery';
+import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api"
 
 function Signup(){
 
@@ -28,6 +29,11 @@ function Signup(){
   const [logoURL, setLogoURL] = useState("");
   const storage = getStorage();
   //const [userID, setUserID] = useState("");
+
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+  })
+
   let userID = "";
   const navigate = useNavigate();
     const generatePass = () => {
@@ -184,12 +190,12 @@ function Signup(){
       }
       if(storeName == ''){
         error = true;
-        document.querySelector('#error-msg-sn').innerHTML = 'Store Name is required<br>';
+        document.querySelector('#error-msg-sn').innerHTML = 'Brand Name is required<br>';
         document.querySelector('#error-msg-sn').style.visibility = "visible";
       }
       if(emptyImage(StoreLogo)){
         error = true;
-        document.querySelector('#error-msg-sl').innerHTML = 'Store Logo is required<br>';
+        document.querySelector('#error-msg-sl').innerHTML = 'Brand Logo is required<br>';
         document.querySelector('#error-msg-sl').style.visibility = "visible";
       }
       if(emptyImage(CommercialRegister)){
@@ -258,7 +264,9 @@ function Signup(){
           }
       }
     }
-
+    function Map(){
+      return <GoogleMap zoom={10} center={{lat: 44, lng:-80}}></GoogleMap>;
+    }
 
 
       return(
@@ -289,8 +297,8 @@ function Signup(){
                       <p className='error-msg' id="error-msg-cn"></p>
                     </div>
                     <div>
-                      <label htmlFor='storename'>Store Name</label>
-                      <input name="storename" type="text" placeholder="Store Name" className="input-field" onChange={(e) => setStoreName(e.target.value)} required maxLength={30}/>
+                      <label htmlFor='storename'>Brand Name</label>
+                      <input name="storename" type="text" placeholder="Brand Name" className="input-field" onChange={(e) => setStoreName(e.target.value)} required maxLength={30}/>
                       <p className='error-msg' id="error-msg-sn"></p>
                     </div>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -317,16 +325,19 @@ function Signup(){
                     <h5 className='mt-3 mb-3'>Commercial Register</h5> 
                     <input type="file" accept="png,Pdf,jpeg" className="Upload-btn" id="com-btn" onChange={(e) => handleCommercialRegister(e)} required/> 
                     <p className="only">only:Pdf,jpeg,Png</p>
-                    <p className='error-msg' id="error-msg-cr">Commercial Register is Required</p>
+                    <p className='error-msg' id="error-msg-cr"></p>
                   </div>
                   <div>
-                    <h5 className='mt-3 mb-3'>Store Logo</h5> 
+                    <h5 className='mt-3 mb-3'>Brand Logo</h5> 
                     <input type="file" accept="png,jpeg" className="Upload-btn" id="com-btn" onChange={(e) => handleLogo(e)} required/> 
                     <p className="only">only: jpeg,Png</p>
-                    <p className='error-msg' id="error-msg-sl">Store Logo is Required</p>
+                    <p className='error-msg' id="error-msg-sl"></p>
                   </div>
                 </div>
-
+                <div className='map'>
+                  
+                   {isLoaded? <Map/> : <div>Loading...</div> }
+                </div>
                 <button onClick={addData} id="sendreq-btn" className="btns filled-orange-btn text-center">Register</button>
              
              <p className="end mt-3">Already Joined?<a href="#" className="login-end" onClick={() => navigate('/')}> Log In</a></p> 

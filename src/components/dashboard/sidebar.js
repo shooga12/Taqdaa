@@ -5,8 +5,9 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import { BiBarcode, BiReceipt, BiPackage, BiPurchaseTagAlt } from 'react-icons/bi';
 import {IoIosArrowBack} from 'react-icons/io';
 import {RiFileListFill} from 'react-icons/ri';
-import {CgLogOut} from 'react-icons/cg';
+import {CgLogOut,CgProfile} from 'react-icons/cg';
 import Dataset from './dataset';
+import Profile from './profile';
 import Invoices from './invoices';
 import Return_Req from './return_request';
 import Exchange_Req from './exchange_request';
@@ -42,7 +43,14 @@ function Sidebar() {
 
         <div className="sidebar-links">
           <ul>
-            
+           <li className="tooltip-element" data-tooltip="0">
+              <a href="#" className={currentTab == 0? "active-tab" : "non-active"} data-active="0" id="tab-0" onClick={()=>setCurrentTab(0)}>
+                <div className="icon">
+                  <CgProfile />
+                </div>
+                <span className="link hide">Profile</span>
+              </a>
+            </li>
             <li className="tooltip-element" data-tooltip="0">
               <a href="#" className={currentTab == 1? "active-tab" : "non-active"} data-active="0" id="tab-1" onClick={()=>setCurrentTab(1)}>
                 <div className="icon">
@@ -51,20 +59,20 @@ function Sidebar() {
                 <span className="link hide">Products Dataset</span>
               </a>
             </li>
-            <li className="tooltip-element" data-tooltip="1" id="tab-2" onClick={()=>setCurrentTab(2)}>
-              <a href="#" className={currentTab == 2? "active-tab" : "non-active"} data-active="1">
-                <div className="icon">
-                  <BiReceipt />
-                </div>
-                <span className="link hide">Invoices</span>
-              </a>
-            </li>
             <li className="tooltip-element" data-tooltip="1" id="tab-2" onClick={()=>setCurrentTab(3)}>
               <a href="#" className={currentTab == 3? "active-tab" : "non-active"} data-active="1">
                 <div className="icon">
                   <RiFileListFill />
                 </div>
                 <span className="link hide">Products</span>
+              </a>
+            </li>
+            <li className="tooltip-element" data-tooltip="1" id="tab-2" onClick={()=>setCurrentTab(2)}>
+              <a href="#" className={currentTab == 2? "active-tab" : "non-active"} data-active="1">
+                <div className="icon">
+                  <BiReceipt />
+                </div>
+                <span className="link hide">Invoices</span>
               </a>
             </li>
             <li className="tooltip-element" data-tooltip="2" id="tab-3" onClick={()=>setCurrentTab(4)}>
@@ -95,7 +103,7 @@ function Sidebar() {
         </div>
       </nav>
       <main>
-        {currentTab == 1? <Dataset /> : currentTab == 2? <Invoices /> : currentTab == 3? <Products_List /> : currentTab == 4? <Return_Req /> : <Exchange_Req />}
+        {currentTab == 0? <Profile /> : currentTab == 1? <Dataset /> : currentTab == 2? <Invoices /> : currentTab == 3? <Products_List /> : currentTab == 4? <Return_Req /> : <Exchange_Req />}
       </main>
    
   

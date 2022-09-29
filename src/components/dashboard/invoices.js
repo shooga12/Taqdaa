@@ -6,7 +6,7 @@ function Invoices(){
     }
         return(  
             <>
-            <h1 class="mt-3">Invoices</h1>
+            <h1 className="mt-3">Invoices</h1>
            
             </>     
         )

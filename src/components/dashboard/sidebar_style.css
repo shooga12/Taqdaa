@@ -13,6 +13,8 @@
   --main-color-dark: #2d3777;
   --main-color-light: #1E286D;
   --text-color: #cfcde7;
+  --orange: #faa213;
+  --orange-dark: #d88a0c;
 }
 
 body {
@@ -364,4 +366,54 @@ body.shrink .admin-profile {
 
 body.shrink .tooltip {
   display: grid;
+}
+#profile-container{
+  padding-left: 2em;
+}
+#profile-container input{
+  border-radius: 50px;
+  border: 1px solid #898989;
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+  padding: 0.3em;
+}
+#profile-container label{
+  color: var(--main-color);
+  font-weight: 600;
+}
+#save-changes-btn{
+  border:none;
+  background-color: var(--orange);
+  color: white;
+  border-radius: 30px;
+  padding: 0.6em;
+  font-size: 20px;
+}
+#save-changes-btn:hover{
+  background-color: var(--orange-dark);
+}
+#edit-logo-btn{
+  border:none;
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+  font-size: 26px;
+  color:#1E286D;
+  background-color: #e6e6e6;
+}
+#edit-logo-btn:hover{
+  background-color: #d3d3d3;
+}
+#brand-logo-title{
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--main-color);
+  margin-bottom: 2em;
+}
+#logo-container{
+  border: 1px solid #898989;
+  border-radius: 30px;
+}
+#edit-btn-container{
+  margin-top: -0.8em;
 }
