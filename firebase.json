@@ -1,0 +1,14 @@
+{
+  "functions": {
+    "ignore": [
+      "node_modules",
+      ".git",
+      "firebase-debug.log",
+      "firebase-debug.*.log"
+    ],
+    "predeploy": [
+      "npm --prefix $Env:RESOURCE_DIR run lint"
+      ],
+    "source": "functions"
+  }
+}
