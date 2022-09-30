@@ -170,14 +170,18 @@ class _shoppingCartState extends State<shoppingCart> {
                               //-------------------make paypal payment---------------
 
                               var request = BraintreeDropInRequest(
-                                  tokenizationKey:
-                                      'sandbox_jy7b8nfy_pdhgjqwbz3wk8t76',
-                                  collectDeviceData: true,
-                                  paypalRequest: BraintreePayPalRequest(
-                                      amount: '9.77', displayName: 'Taqdaa'),
-                                  cardEnabled: true);
+                                tokenizationKey:
+                                    'sandbox_jy7b8nfy_pdhgjqwbz3wk8t76',
+                                collectDeviceData: true,
+                                cardEnabled: true,
+                                paypalRequest: BraintreePayPalRequest(
+                                    amount: '9',
+                                    currencyCode: 'USD',
+                                    displayName: 'Taqdaa'),
+                              );
                               BraintreeDropInResult? result =
                                   await BraintreeDropIn.start(request);
+
                               if (result != null) {
                                 print(result.paymentMethodNonce.description);
                                 print(result.paymentMethodNonce.nonce);
@@ -185,21 +189,16 @@ class _shoppingCartState extends State<shoppingCart> {
                                 String urli =
                                     '$url?payment_method_nonce=${result.paymentMethodNonce.nonce}&device_data=${result.deviceData}';
 
-                                final http.Response response =
-                                    await 
-                                    http.post(Uri.parse(urli)); //tryParse?
-                                    //http.post(Uri.parse(Uri.encodeFull(urli)));
+                                final http.Response response = await http
+                                    .post(Uri.parse(urli)); //tryParse?
 
-                                // final payResult = jsonDecode(response.body);
-                                // if (payResult['result'] == 'success') {
+                                // final payResult = jsonEncode(response.body);
+
+                                // if (payResult == null) {
                                 //   print('payment done');
                                 // }
-                                final payResult =
-                                    jsonDecode(jsonEncode(response.body));
 
-                                if (payResult == null) {
-                                  print('payment done');
-                                }
+                                print('Here!');
                               }
                             },
                             style: ElevatedButton.styleFrom(

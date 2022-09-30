@@ -8,6 +8,7 @@ const functions = require('firebase-functions');
 //   response.send("Hello from Firebase!");
 // });
 const braintree = require('braintree');
+const { CreditCard } = require('braintree');
 
 const gateway = new braintree.BraintreeGateway({
     environment: braintree.Environment.Sandbox,
@@ -28,9 +29,11 @@ const gateway = new braintree.BraintreeGateway({
 exports.paypalPayment = functions.https.onRequest(async(req, res) => {
     const nonceFromTheClient = req.body.payment_method_nonce;
     const deviceData = req.body.device_data;
+    
 
     gateway.transaction.sale({
-        amount: '9.77',
+        amount: '9',
+        currencyCode: 'USD',
         paymentMethodNonce: 'fake-paypal-one-time-nonce',
         deviceData: deviceData,
         options: {

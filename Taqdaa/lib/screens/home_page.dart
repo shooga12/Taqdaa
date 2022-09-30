@@ -1,17 +1,11 @@
-import 'dart:convert';
-import 'dart:core';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_braintree/flutter_braintree.dart';
 import 'package:taqdaa/confige/EcommerceApp.dart';
-import 'package:taqdaa/screens/NoItmesCart.dart';
+import 'NoItmesCart.dart';
 import 'ShoppingCart.dart';
 import 'list_of_stores.dart';
-import 'paypalPayment.dart';
 import 'scanBarCode.dart';
-import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,8 +15,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var url = 'https://us-central1-taqdaa-10e41.cloudfunctions.net/paypalPayment';
-
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -30,57 +22,6 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                 mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              ElevatedButton.icon(
-                icon: Icon(
-                  Icons.paypal,
-                  color: Colors.lightBlue,
-                  size: 30.0,
-                ),
-                label: Text('Pay with paypal'),
-                onPressed: () async {
-                  //-------make paypal payment-----------
-
-                  var request = BraintreeDropInRequest(
-                      tokenizationKey: 'sandbox_jy7b8nfy_pdhgjqwbz3wk8t76',
-                      collectDeviceData: true,
-                      paypalRequest: BraintreePayPalRequest(
-                          amount: '9.77', displayName: 'Taqdaa'),
-                      cardEnabled: true);
-                  BraintreeDropInResult? result =
-                      await BraintreeDropIn.start(request);
-                  if (result != null) {
-                    print(result.paymentMethodNonce.description);
-                    print(result.paymentMethodNonce.nonce);
-
-                    String urli =
-                        '$url?payment_method_nonce=${result.paymentMethodNonce.nonce}&device_data=${result.deviceData}';
-            
-                    final http.Response response = await http
-                        .post(Uri.parse(urli)); //tryParse?
-                          //http.post(Uri.parse(Uri.encodeFull(urli)));
-
-                    
-
-                    final payResult = jsonDecode(jsonEncode(response.body));
-
-                    if (payResult == null) {
-                      print('payment done');
-                    }
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(20.0),
-                  ),
-                ),
-              )
-            ],
-          )),
           Positioned(
             bottom: 0,
             left: 0,

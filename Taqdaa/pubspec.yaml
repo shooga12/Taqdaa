@@ -43,6 +43,7 @@ dependencies:
   flutter_paypal: ^0.0.7
   form_field_validator: ^1.1.0
   google_fonts: ^3.0.1
+  http: ^0.13.5
   http_auth: ^1.0.1
   mobile_scanner: ^2.0.0
   provider: ^6.0.3

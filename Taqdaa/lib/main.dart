@@ -90,12 +90,30 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           IconButton(
             onPressed: () {
-              FirebaseAuthMethods().signOut();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LoginPage(),
-                  ));
+              showDialog(
+                  context: context,
+                  builder: ((context) {
+                    return AlertDialog(
+                      title: Text("Are you sure you want to Log out?"),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              FirebaseAuthMethods().signOut();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => LoginPage(),
+                                  ));
+                            },
+                            child: Text("Log out")),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text("cancel"))
+                      ],
+                    );
+                  }));
             },
             icon: Icon(
               Icons.logout,
