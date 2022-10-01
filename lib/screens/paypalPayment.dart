@@ -2,14 +2,7 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import '../services/paypalServices.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-
-import 'package:firebase_database/firebase_database.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:taqdaa_application/main.dart';
 import '../confige/EcommerceApp.dart';
-import 'paymentButton.dart';
-import 'scanBarCode.dart';
-import 'ShoppingCart.dart';
 
 class PaypalPayment extends StatefulWidget {
   final Function onFinish;
@@ -79,7 +72,7 @@ class _PaypalPaymentState extends State<PaypalPayment> {
       "transactions": [
         {
           "amount": {
-            "total": EcommerceApp.total, ////-------------
+            "total": EcommerceApp.inDollars, ////-------------
             "currency": defaultCurrency["currency"],
           },
           "description": "The payment trasaction description.",

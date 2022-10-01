@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:taqdaa_application/screens/paypalPayment.dart';
 
 class MakePayment extends StatefulWidget {

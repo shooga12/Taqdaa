@@ -19,7 +19,7 @@ class checkOut {
       collectDeviceData: true,
       paypalEnabled: true,
       paypalRequest: BraintreePayPalRequest(
-          amount: EcommerceApp.total.toString(), displayName: 'Taqdaa'),
+          amount: EcommerceApp.inDollars.toString(), displayName: 'Taqdaa'),
     );
 
     BraintreeDropInResult? result = await BraintreeDropIn.start(request);

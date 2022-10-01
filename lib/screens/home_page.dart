@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
-import 'package:taqdaa_application/screens/NoItmesCart.dart';
+import 'package:taqdaa_application/views/NoItmesCart.dart';
 import '../controller/Notification_api.dart';
 import 'ShoppingCart.dart';
 import 'list_of_stores.dart';
@@ -14,21 +14,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // Future checkLocation() async {
-  //   final QuerySnapshot result = await FirebaseFirestore.instance
-  //       .collection('Stores')
-  //       .where('kilometers', isEqualTo: 0.1)
-  //       .get();
-  //   final List<DocumentSnapshot> documents = result.docs;
-  //   if (documents.length == 1) {
-  //     service.showNotification(
-  //         id: 0,
-  //         title: 'Taqdaa is waiting for you!',
-  //         body: 'Hey, ' +
-  //             EcommerceApp.userName +
-  //             '\nyou\'re very close from ${documents[0].get('StoreName')} come and shop with us now!');
-  //   }
-  // }
 
   void initState() {
     super.initState();

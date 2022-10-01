@@ -2,17 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:taqdaa_application/screens/home_page.dart';
 import '../main.dart';
-import '../screens/checkout_Page.dart';
+import '../controller/checkout_Page.dart';
 import '../confige/EcommerceApp.dart';
-import 'paypalPayment.dart';
 import 'scanBarCode.dart';
-import 'dart:convert';
 import 'dart:core';
-import 'package:flutter_braintree/flutter_braintree.dart';
-import '../screens/NoItmesCart.dart';
-import 'package:http/http.dart' as http;
 
 class shoppingCart extends StatefulWidget {
   const shoppingCart({Key? key}) : super(key: key);
@@ -191,11 +185,11 @@ class _shoppingCartState extends State<shoppingCart> {
                           EcommerceApp.finalTotal = -1;
                           return 'Total: ' +
                               EcommerceApp.finalTotal.toString() +
-                              '\n';
+                              ' SR\n';
                         } else {
                           return 'Total: ' +
                               EcommerceApp.total.toString() +
-                              '\n';
+                              ' SR\n';
                         }
                       }()))),
               Container(
@@ -233,13 +227,48 @@ class _shoppingCartState extends State<shoppingCart> {
                   onPressed: () {
                     if (EcommerceApp.total == 0 ||
                         EcommerceApp.finalTotal == 0) {
-                      null;
+                      showDialog(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                                content: Text(
+                                  "Your Cart is empty!",
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.of(ctx).pop(false);
+                                      },
+                                      child: Text("Cancel")),
+                                ],
+                              ));
                     } else {
+                      EcommerceApp.inDollars = EcommerceApp.total / 3.75;
+                      showDialog(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                                title: Text("Please Note"),
+                                content: Text(
+                                    "Your total price will be in ${EcommerceApp.inDollars.toStringAsFixed(2)}\$ dollars."),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.of(ctx).pop(false);
+                                      },
+                                      child: Text("Cancel")),
+                                  ElevatedButton(
+                                      //style: Color
+                                      onPressed: () {
+                                        checkOut().payment(context);
+                                        Navigator.of(ctx).pop(false);
+                                      },
+                                      child: Text("Continue")),
+                                ],
+                              ));
                       // Navigator.push(
                       //   context,
                       //   MaterialPageRoute(builder: (context) => CheckOut()),
                       // );
-                      checkOut().payment(context);
                     }
                   },
                   child: Text(
@@ -289,6 +318,24 @@ class _shoppingCartState extends State<shoppingCart> {
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Product.fromJson(doc.data())).toList());
+
+  Widget bulidEmptyCart() {
+    return Center(
+      child: SizedBox(
+        height: 400,
+        child: Center(
+          child: Text(
+            "",
+            //"Your cart is empty!",
+            style: TextStyle(
+                fontWeight: FontWeight.normal,
+                fontSize: 23,
+                color: Color.fromARGB(255, 173, 173, 173)),
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget buildSecondItmes(Product product, BuildContext context) {
     return Container(
@@ -369,7 +416,7 @@ class _shoppingCartState extends State<shoppingCart> {
                                       return AlertDialog(
                                           title: Text("Please note that :"),
                                           content: Text(
-                                              "You have to scan the barcode of the removed Item, In order to decrement the quantity."),
+                                              "You have to scan the barcode of the removed Item."),
                                           actions: [
                                             TextButton(
                                               onPressed: () {
@@ -408,7 +455,7 @@ class _shoppingCartState extends State<shoppingCart> {
                                     return AlertDialog(
                                         title: Text("Please note that :"),
                                         content: Text(
-                                            "You have to scan the barcode of the added Item, In order to increment the quantity."),
+                                            "You have to scan the barcode of the added Item."),
                                         actions: [
                                           TextButton(
                                             onPressed: () {

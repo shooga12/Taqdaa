@@ -4,7 +4,6 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
 import 'package:taqdaa_application/screens/ShoppingCart.dart';
 import 'package:taqdaa_application/screens/scanBarCode.dart';
-import '../controller/searchBar.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class ListOfStores2 extends StatefulWidget {

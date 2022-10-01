@@ -116,12 +116,12 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-        //   Text(
-        //     "Hey, Shoug",
-        //     style: TextStyle(fontSize: 25),
-        //   ),
-        // ]),
+        title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+          Text(
+            "Hey, Shoug",
+            style: TextStyle(fontSize: 25),
+          ),
+        ]),
         flexibleSpace: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
