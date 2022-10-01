@@ -85,6 +85,9 @@ class _ListOfStores2State extends State<ListOfStores2> {
     }
   }
 
+  String SearchName = '';
+  bool flag = false;
+  int count = -1;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,13 +96,26 @@ class _ListOfStores2State extends State<ListOfStores2> {
           'Choose Store',
           style: TextStyle(fontSize: 24), //TextStyle(fontFamily: 'Cairo'),
         ),
-        actions: [
-          IconButton(
-              onPressed: () {
-                showSearch(context: context, delegate: MySearchDelegate());
-              },
-              icon: const Icon(Icons.search))
-        ],
+        bottomOpacity: 0.7,
+        bottom: PreferredSize(
+            child: Flexible(
+              child: Card(
+                child: SizedBox(
+                  width: 375,
+                  child: TextField(
+                    decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.search),
+                        hintText: 'Search for a store name..'),
+                    onChanged: (val) {
+                      setState(() {
+                        SearchName = val.replaceAll(' ', '');
+                      });
+                    },
+                  ),
+                ),
+              ),
+            ),
+            preferredSize: Size.zero),
         flexibleSpace: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
@@ -115,11 +131,35 @@ class _ListOfStores2State extends State<ListOfStores2> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final stores = snapshot.data!;
+              count = stores.length;
               return ListView.builder(
-                itemCount: stores.length,
-                itemBuilder: (BuildContext context, int index) =>
-                    buildStoresCards(stores[index], context),
-              );
+                  itemCount: stores.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    var data = stores[index];
+                    if (SearchName.isEmpty) {
+                      flag = false;
+                      return buildStoresCards(stores[index], context);
+                    } else if (SearchName.isNotEmpty &&
+                        data.StoreName.toString()
+                            .toLowerCase()
+                            .startsWith(SearchName.toLowerCase())) {
+                      flag = true;
+                      return buildStoresCards(stores[index], context);
+                    } else if (flag == false && index == count - 1) {
+                      return Container(
+                          child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'No Results',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ));
+                    }
+                    return nothing();
+                  });
             } else if (snapshot.hasError) {
               return Text("Some thing went wrong! ${snapshot.error}");
             } else {
@@ -127,6 +167,10 @@ class _ListOfStores2State extends State<ListOfStores2> {
             }
           }),
     );
+  }
+
+  nothing() {
+    return Container();
   }
 
   Stream<List<Store>> readStores() => FirebaseFirestore.instance

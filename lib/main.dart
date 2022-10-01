@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,7 +27,51 @@ void main() async {
   } else {
     await Firebase.initializeApp();
   }
+
   tz.initializeTimeZones();
+
+  String closest = "";
+  String storeName = "";
+  int theIndex = -1;
+
+  Future readClosest() async {
+    String distance = "";
+    final QuerySnapshot result =
+        await FirebaseFirestore.instance.collection('Stores').get();
+    final List<DocumentSnapshot> documents = result.docs;
+    for (int i = 0; i < documents.length; i++) {
+      distance = documents[i].get("kilometers");
+      if (distance == "0.1") {
+        closest = documents[i].id;
+        theIndex = i;
+      }
+    }
+    storeName = documents[theIndex].get("StoreName");
+  }
+
+  await readClosest();
+
+  var collection = FirebaseFirestore.instance.collection('Stores');
+  QuerySnapshot result =
+      await FirebaseFirestore.instance.collection('Stores').get();
+  final List<DocumentSnapshot> documents = result.docs;
+  for (int i = 0; i < documents.length; i++) {
+    collection.doc("${documents[i].id}").snapshots().listen((docSnapshot) {
+      if (docSnapshot.exists) {
+        Map<String, dynamic> data = docSnapshot.data()!;
+        if (data["kilometers"] == "0.1") {
+          NotificationApi.showScheduledNotification(
+              title: 'Taqdaa is waiting for you!',
+              body: 'Hey, ' +
+                  EcommerceApp.userName +
+                  '\nyou\'re very close from ${data['StoreName']} come and shop with us now!', ////bug fixes StoreName
+              payload: 'paylod.nav',
+              scheduledDate: DateTime.now().add(Duration(seconds: 1)));
+        }
+      }
+    });
+  }
+
   runApp(const MyApp());
 }
 
@@ -65,16 +111,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
-
-  // late final LocalNotificationsService service;
-
-  // @override
-  // void initState() {
-  //   service = LocalNotificationsService();
-  //   service.initialize();
-  //   listenToNotification();
-  //   super.initState();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -119,22 +155,6 @@ class _MyHomePageState extends State<MyHomePage> {
             if (snapshot.hasData) {
               final stores = snapshot.data!;
               if (stores.isNotEmpty) {
-                // service.showNotification(
-                //     id: 0,
-                //     title: 'Taqdaa is waiting for you!',
-                //     body: 'Hey, ' +
-                //         EcommerceApp.userName +
-                //         '\nyou\'re very close from ${stores.first.StoreName} come and shop with us now!',
-                //     payload: 'payload nav');
-
-                // NotificationApi.showNotification(
-                //   title: 'Taqdaa is waiting for you!',
-                //   body: 'Hey, ' +
-                //       EcommerceApp.userName +
-                //       '\nyou\'re very close from ${stores.first.StoreName} come and shop with us now!',
-                //   payload: 'paylod nav',
-                // );
-
                 NotificationApi.showScheduledNotification(
                     title: 'Taqdaa is waiting for you!',
                     body: 'Hey, ' +
@@ -152,26 +172,6 @@ class _MyHomePageState extends State<MyHomePage> {
               return Center(child: CircularProgressIndicator());
             }
           }),
-
-      //HomePage(),
-
-      //
-      // bottomNavigationBar: BottomNavigationBar(
-      //   onTap: (onTapTapped) {},
-      //   currentIndex: _currentIndex,
-      //   items: [
-      //     BottomNavigationBarItem(
-      //       label: Title(child: Text),
-      //       icon: new Icon(Icons.home),
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: new Icon(Icons.explore),
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: new Icon(Icons.account_circle),
-      //     )
-      //   ],
-      // ),
     );
   }
 
@@ -181,17 +181,4 @@ class _MyHomePageState extends State<MyHomePage> {
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Store.fromJson(doc.data())).toList());
-
-  // void listenToNotification() =>
-  //     service.onNotificationClick.stream.listen(onNotificationListener);
-
-  // void onNotificationListener(NotificationResponse? payload) {
-  //   if (payload != null) {
-  //     print('payload $payload');
-  //     Navigator.push(
-  //       context,
-  //       MaterialPageRoute(builder: (context) => ListOfStores2()),
-  //     );
-  //   }
-  // }
 }

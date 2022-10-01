@@ -1,77 +1,94 @@
 import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_braintree/flutter_braintree.dart';
 import '../confige/EcommerceApp.dart';
+import '../main.dart';
+import 'package:http/http.dart' as http;
 
-class CheckOut extends StatefulWidget {
-  const CheckOut({super.key});
+class checkOut {
+  var url = 'https://us-central1-taqdaa-10e41.cloudfunctions.net/paypalPayment';
 
-  @override
-  State<CheckOut> createState() => _CheckOutState();
-}
-
-class _CheckOutState extends State<CheckOut> {
   String collectionName = EcommerceApp().getCurrentUser();
   final RFIDs = [];
   String data1 = "";
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
-          ),
-          toolbarHeight: 170,
-          //leading: BackButton(),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-        ),
-        body: Center(
-          child: ElevatedButton(
-            onPressed: () {
-              readRFIDs();
-              writeRFID();
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                        title: Text(
-                          "Your Payment completed succefully!",
-                          style: TextStyle(fontSize: 18),
-                        ), ///////
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context, 'OK'),
-                            child: const Text('OK'),
-                          )
-                        ]);
-                  });
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(9.0),
-              child: Text(
-                'Pay',
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.normal,
-                    fontSize: 20),
-              ),
-            ),
-            style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.resolveWith((states) {
-                  if (states.contains(MaterialState.pressed)) {
-                    return Colors.grey;
-                  }
-                  return Colors.orange;
-                }),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30)))),
-          ),
-        ));
+
+  void payment(BuildContext context) async {
+    var request = BraintreeDropInRequest(
+      tokenizationKey: 'sandbox_jy7b8nfy_pdhgjqwbz3wk8t76',
+      collectDeviceData: true,
+      paypalEnabled: true,
+      paypalRequest: BraintreePayPalRequest(
+          amount: EcommerceApp.total.toString(), displayName: 'Taqdaa'),
+    );
+
+    BraintreeDropInResult? result = await BraintreeDropIn.start(request);
+    if (result != null) {
+      print(result.paymentMethodNonce.description);
+      print(result.paymentMethodNonce.nonce);
+
+      EcommerceApp.storeName = "";
+
+      String urli =
+          '$url?payment_method_nonce=${result.paymentMethodNonce.nonce}&device_data=${result.deviceData}';
+
+      final http.Response response = await http.post(Uri.parse(urli));
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MyHomePage()),
+      );
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                title: Text(
+                  "Your Payment completed succefully!\nThank you!",
+                  style: TextStyle(fontSize: 18),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () async {
+                      await readRFIDs();
+                      await writeRFID();
+                      await deleteCart();
+                      await deleteCartDublicate();
+                      await saveUserTotal(0);
+                      Navigator.pop(context, 'OK');
+                    },
+                    child: const Text('OK'),
+                  )
+                ]);
+          });
+    }
+  }
+
+  Future saveUserTotal(var total) async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('${collectionName}Total')
+        .get();
+    final DocumentSnapshot document = result.docs.first;
+    if (document.exists) {
+      document.reference.update({'Total': total});
+    }
+  }
+
+  Future deleteCart() async {
+    final QuerySnapshot result =
+        await FirebaseFirestore.instance.collection('${collectionName}').get();
+    final List<DocumentSnapshot> documents = result.docs;
+    for (int i = 0; i < documents.length; i++) {
+      documents[i].reference.delete();
+    }
+  }
+
+  Future deleteCartDublicate() async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('${collectionName}All')
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
+    for (int i = 0; i < documents.length; i++) {
+      documents[i].reference.delete();
+    }
   }
 
   Future readRFIDs() async {

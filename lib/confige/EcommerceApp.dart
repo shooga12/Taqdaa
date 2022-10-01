@@ -7,8 +7,11 @@ class EcommerceApp {
   static String storeId = '';
   static int quantity = 0;
   static int total = 0;
+  static int finalTotal = -1;
   static String userName = 'Shoug'; //bug fixes
   static String productName = '';
+  static int counter = 0;
+  static String totalAmount = '9.77';
 
   static String uid = '';
   final FirebaseAuth auth = FirebaseAuth.instance;

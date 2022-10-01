@@ -61,6 +61,7 @@ class _ScanPageState extends State<ScanPage> {
       "Store": product.Store,
       "quantity": product.quantity,
       "RFID": product.RFID,
+      "ProductImage": product.ProductImage,
     });
   }
 
@@ -72,6 +73,7 @@ class _ScanPageState extends State<ScanPage> {
       "Store": product.Store,
       "quantity": product.quantity,
       "RFID": product.RFID,
+      "ProductImage": product.ProductImage,
     });
   }
 
@@ -102,6 +104,25 @@ class _ScanPageState extends State<ScanPage> {
                                 fit: BoxFit.cover,
                               ),
                             ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 25, top: 5),
+                              child: Container(
+                                width: 70,
+                                margin: EdgeInsets.all(10),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Image(
+                                    image: NetworkImage(
+                                      product['ProductImage'],
+                                    ),
+                                  ),
+                                ),
+                                // Container(
+                                //   alignment: Alignment.bottomLeft, //اعدله
+                                //   child:
+                                // ),
+                              ),
+                            )
                             // Container(
                             //   alignment: Alignment.center, //اعدله
                             //   child:  photo*****
@@ -158,6 +179,7 @@ class _ScanPageState extends State<ScanPage> {
                           Store: product['StoreName'],
                           quantity: product['quantity'],
                           RFID: product['RFID'],
+                          ProductImage: product['ProductImage'],
                         );
 
                         if (await checkItemExist()) {
@@ -166,6 +188,7 @@ class _ScanPageState extends State<ScanPage> {
                           saveUserItemsDublicate(toBeSavedProduct);
                           saveUserItems(toBeSavedProduct);
                         }
+                        EcommerceApp.counter++;
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -226,6 +249,7 @@ class Product {
   final String Store;
   final int quantity;
   final String RFID;
+  final String ProductImage;
 
   Product(
       {required this.Category,
@@ -233,7 +257,8 @@ class Product {
       required this.Price,
       required this.Store,
       required this.quantity,
-      required this.RFID});
+      required this.RFID,
+      required this.ProductImage});
 
   Map<String, dynamic> toJson() => {
         'Category': Category,
@@ -242,6 +267,7 @@ class Product {
         'Store': Store,
         'quantity': quantity,
         'RFID': RFID,
+        'ProductImage': ProductImage,
       };
 
   static Product fromJson(Map<String, dynamic> json) => Product(
@@ -251,5 +277,6 @@ class Product {
         Store: json['Store'],
         quantity: json['quantity'],
         RFID: json['RFID'],
+        ProductImage: json['ProductImage'],
       );
 }
