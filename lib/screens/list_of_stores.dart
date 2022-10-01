@@ -16,6 +16,7 @@ class ListOfStores2 extends StatefulWidget {
 class _ListOfStores2State extends State<ListOfStores2> {
   final List<Store> Stores = [];
   FirebaseDatabase database = FirebaseDatabase.instance;
+  String collectionName = EcommerceApp().getCurrentUser();
 
   String _counter = "";
 
@@ -99,19 +100,19 @@ class _ListOfStores2State extends State<ListOfStores2> {
         bottom: PreferredSize(
             child: Flexible(
               child: Card(
-                child: SizedBox(
-                  width: 375,
-                  child: TextField(
-                    decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.search),
-                        hintText: 'Search for a store name..'),
-                    onChanged: (val) {
-                      setState(() {
-                        SearchName = val.replaceAll(' ', '');
-                      });
-                    },
-                  ),
+                // child: SizedBox(
+                //   width: 375,
+                child: TextField(
+                  decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.search),
+                      hintText: 'Search for a store name..'),
+                  onChanged: (val) {
+                    setState(() {
+                      SearchName = val.replaceAll(' ', '');
+                    });
+                  },
                 ),
+                //),
               ),
             ),
             preferredSize: Size.zero),
@@ -252,7 +253,13 @@ class _ListOfStores2State extends State<ListOfStores2> {
                               "Sorry you already have an order in ${EcommerceApp.storeName}."),
                           actions: [
                             ElevatedButton(
-                                onPressed: () {}, /////add cancelation
+                                onPressed: () async {
+                                  EcommerceApp.storeName = "";
+                                  await deleteCart();
+                                  await deleteCartDublicate();
+                                  await saveUserTotal(0);
+                                  Navigator.pop(context, 'OK');
+                                }, /////add cancelation
                                 child: Text(
                                     "Cancel ${EcommerceApp.storeName} order")),
                             TextButton(
@@ -268,6 +275,35 @@ class _ListOfStores2State extends State<ListOfStores2> {
         ),
       ),
     );
+  }
+
+  Future saveUserTotal(var total) async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('${collectionName}Total')
+        .get();
+    final DocumentSnapshot document = result.docs.first;
+    if (document.exists) {
+      document.reference.update({'Total': total});
+    }
+  }
+
+  Future deleteCart() async {
+    final QuerySnapshot result =
+        await FirebaseFirestore.instance.collection('${collectionName}').get();
+    final List<DocumentSnapshot> documents = result.docs;
+    for (int i = 0; i < documents.length; i++) {
+      documents[i].reference.delete();
+    }
+  }
+
+  Future deleteCartDublicate() async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('${collectionName}All')
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
+    for (int i = 0; i < documents.length; i++) {
+      documents[i].reference.delete();
+    }
   }
 }
 

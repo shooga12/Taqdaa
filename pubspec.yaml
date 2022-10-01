@@ -55,6 +55,7 @@ dependencies:
   webview_flutter: ^3.0.4
   flutter_braintree: ^2.3.1
   flutter_paypal: ^0.0.7
+  fluttertoast: ^8.0.9
 
 flutter_native_splash:
   background_image: "assets/SplashScreen.png"

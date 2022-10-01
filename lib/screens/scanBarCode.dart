@@ -167,54 +167,62 @@ class _ScanPageState extends State<ScanPage> {
               Column(
                 children: [
                   Center(
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        EcommerceApp.haveItems = true; ////bug fixes
-                        EcommerceApp.productName = product['Product Name'];
+                    child: SizedBox(
+                      width: 200,
+                      height: 40,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          EcommerceApp.haveItems = true; ////bug fixes
+                          EcommerceApp.productName = product['Product Name'];
 
-                        Product toBeSavedProduct = Product(
-                          Category: product['Product Name'],
-                          Item_number: product['Barcode'],
-                          Price: product['Price'],
-                          Store: product['StoreName'],
-                          quantity: product['quantity'],
-                          RFID: product['RFID'],
-                          ProductImage: product['ProductImage'],
-                        );
+                          Product toBeSavedProduct = Product(
+                            Category: product['Product Name'],
+                            Item_number: product['Barcode'],
+                            Price: product['Price'],
+                            Store: product['StoreName'],
+                            quantity: product['quantity'],
+                            RFID: product['RFID'],
+                            ProductImage: product['ProductImage'],
+                          );
 
-                        if (await checkItemExist()) {
-                          saveUserItemsDublicate(toBeSavedProduct);
-                        } else {
-                          saveUserItemsDublicate(toBeSavedProduct);
-                          saveUserItems(toBeSavedProduct);
-                        }
-                        EcommerceApp.counter++;
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => shoppingCart()),
-                        );
-                      },
-                      child: Text(
-                        'Add to cart',
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16),
+                          if (await checkItemExist()) {
+                            saveUserItemsDublicate(toBeSavedProduct);
+                          } else {
+                            saveUserItemsDublicate(toBeSavedProduct);
+                            saveUserItems(toBeSavedProduct);
+                          }
+                          EcommerceApp.counter++;
+                          // await FirebaseFirestore.instance
+                          //     .collection('total')
+                          //     .add({
+                          //   "Total": 0,
+                          // });
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => shoppingCart()),
+                          );
+                        },
+                        child: Text(
+                          'Add to cart',
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18),
+                        ),
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.resolveWith((states) {
+                              if (states.contains(MaterialState.pressed)) {
+                                return Colors.grey;
+                              }
+                              return Colors.orange;
+                            }),
+                            shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30)))),
                       ),
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.resolveWith((states) {
-                            if (states.contains(MaterialState.pressed)) {
-                              return Colors.grey;
-                            }
-                            return Colors.orange;
-                          }),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(30)))),
                     ),
                   ),
                 ],

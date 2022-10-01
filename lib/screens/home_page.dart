@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
 import 'package:taqdaa_application/views/NoItmesCart.dart';
+import '../controller/BNBCustomePainter.dart';
 import '../controller/Notification_api.dart';
+import '../views/profile_view.dart';
 import 'ShoppingCart.dart';
 import 'list_of_stores.dart';
 
@@ -14,22 +16,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-  void initState() {
-    super.initState();
-
-    NotificationApi.init();
-    listenNotifications();
-  }
-
-  void listenNotifications() =>
-      NotificationApi.onNotification.stream.listen(onClickNotification);
-
-  void onClickNotification(NotificationResponse? details) => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ListOfStores2()),
-      );
-
   bool isInsideHome = true;
   bool isInsideProfile = false;
   bool isInsideSettings = false;
@@ -118,7 +104,13 @@ class _HomePageState extends State<HomePage> {
                             width: size.width * 0.20,
                           ),
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Homepprofile()),
+                                );
+                              },
                               icon: Icon(
                                 Icons.person,
                                 size: 30,
@@ -145,29 +137,5 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
-  }
-}
-
-class BNBCustomePainter extends CustomPainter {
-  void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()
-      ..color = Color.fromARGB(255, 32, 7, 121)
-      ..style = PaintingStyle.fill;
-    Path path = Path()..moveTo(0, 20);
-    path.quadraticBezierTo(size.width * 0.20, 0, size.width * 0.35, 0);
-    path.quadraticBezierTo(size.width * 0.40, 0, size.width * 0.40, 20);
-    path.arcToPoint(Offset(size.width * 0.60, 20),
-        radius: Radius.circular(10.0), clockwise: false);
-    path.quadraticBezierTo(size.width * 0.60, 0, size.width * 0.65, 0);
-    path.quadraticBezierTo(size.width * 0.80, 0, size.width, 20);
-    path.lineTo(size.width, size.height);
-    path.lineTo(0, size.height);
-    path.close();
-    canvas.drawShadow(path, Colors.black, 5, true);
-    canvas.drawPath(path, paint);
-  }
-
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
   }
 }

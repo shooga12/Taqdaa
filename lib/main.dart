@@ -14,6 +14,8 @@ import '../confige/EcommerceApp.dart';
 import '../controller/Notification_api.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
+import '../models/user_model.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
@@ -111,15 +113,30 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
+  User? user = FirebaseAuth.instance.currentUser;
+  UserModel loggedInUser = UserModel();
+
+  void initState() {
+    super.initState();
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(user!.uid)
+        .get()
+        .then((value) {
+      this.loggedInUser = UserModel.fromMap(value.data());
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
           Text(
-            "Hey, Shoug",
-            style: TextStyle(fontSize: 25),
+            "Hey, ${loggedInUser.firstName}",
+            style: TextStyle(fontSize: 24),
           ),
         ]),
         flexibleSpace: Container(

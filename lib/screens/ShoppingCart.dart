@@ -24,7 +24,7 @@ class _shoppingCartState extends State<shoppingCart> {
         appBar: AppBar(
           title: Text(
             EcommerceApp.storeName + " Shopping Cart",
-            style: TextStyle(fontSize: 20),
+            style: TextStyle(fontSize: 24),
           ),
           flexibleSpace: Container(
             decoration: BoxDecoration(
@@ -249,7 +249,7 @@ class _shoppingCartState extends State<shoppingCart> {
                           builder: (ctx) => AlertDialog(
                                 title: Text("Please Note"),
                                 content: Text(
-                                    "Your total price will be in ${EcommerceApp.inDollars.toStringAsFixed(2)}\$ dollars."),
+                                    "Your total price will be in ${EcommerceApp.inDollars.toStringAsFixed(2)}\$."),
                                 actions: [
                                   TextButton(
                                       onPressed: () {
@@ -628,12 +628,21 @@ class _shoppingCartState extends State<shoppingCart> {
   }
 
   Future saveUserTotal(var total) async {
-    final QuerySnapshot result = await FirebaseFirestore.instance
-        .collection('${collectionName}Total')
-        .get();
-    final DocumentSnapshot document = result.docs.first;
-    if (document.exists) {
-      document.reference.update({'Total': total});
+    if (EcommerceApp.itsFirst) {
+      EcommerceApp.itsFirst = false;
+      await FirebaseFirestore.instance
+          .collection('${collectionName}Total')
+          .doc("total")
+          .set({"Total": total});
+      EcommerceApp.itsFirst = false;
+    } else {
+      final QuerySnapshot result = await FirebaseFirestore.instance
+          .collection('${collectionName}Total')
+          .get();
+      final List<QueryDocumentSnapshot<Object?>> document = result.docs;
+      if (document.length == 1) {
+        document[0].reference.update({'Total': total});
+      }
     }
   }
 
