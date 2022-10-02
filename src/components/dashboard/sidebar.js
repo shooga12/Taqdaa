@@ -1,8 +1,10 @@
 import React, { useState, Component } from 'react';
 import "./sidebar_style.css";
 import Logo from '../../shared/Logo.png';
+import { confirmAlert } from 'react-confirm-alert'; 
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
-import { BiBarcode, BiReceipt, BiPackage, BiPurchaseTagAlt } from 'react-icons/bi';
+import { BiBarcode, BiReceipt, BiPackage, BiPurchaseTagAlt }
+from 'react-icons/bi';
 import {IoIosArrowBack} from 'react-icons/io';
 import {RiFileListFill} from 'react-icons/ri';
 import {CgLogOut,CgProfile} from 'react-icons/cg';
@@ -27,9 +29,27 @@ function Sidebar() {
           navigate('/');
         }
     });
+
     
     const [currentTab, setCurrentTab] = useState(1);
 
+    const showAlert = (msg, func) => {
+
+      confirmAlert({
+      message: msg,
+      buttons: [
+          {
+          label: 'Logout',
+          onClick: func
+          },
+          {
+          label: 'Cancel',
+          //onClick: () => alert('Click No')
+          }
+      ]
+      });
+  }
+    
     return(
       <div id="main-div"><nav>
         <div className="sidebar-top">
@@ -96,7 +116,7 @@ function Sidebar() {
 
         <div className="sidebar-footer">
           <div className="admin-user tooltip-element" data-tooltip="1">
-            <a href="#" className="log-out" onClick={() => {auth.signOut(); navigate('/');}}>
+            <a href="#" className="log-out" onClick={()=>showAlert('Do You Want To Logout?',() => {auth.signOut(); navigate('/')})}>
               <CgLogOut />
             </a>
           </div>
@@ -106,7 +126,6 @@ function Sidebar() {
         {currentTab == 0? <Profile /> : currentTab == 1? <Dataset /> : currentTab == 2? <Invoices /> : currentTab == 3? <Products_List /> : currentTab == 4? <Return_Req /> : <Exchange_Req />}
       </main>
    
-  
       </div>
 
     )

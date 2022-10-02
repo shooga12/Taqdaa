@@ -24,9 +24,10 @@ function Child({ datum }) {
             <tr>
             <th>Photo</th>
             <th>Barcode</th>
-            <th>Product Name</th>
+            <th id="name-col">Product Name</th>
             <th>Price</th>
             <th>RFID UID</th>
+            <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -35,12 +36,12 @@ function Child({ datum }) {
             datum.map(item => (
               <tr>
                    <td>
-                    <img src={img1} className="product-img"></img>
+                    <img src={item["Photo"]} className="product-img"></img>
                    </td>
-                   <td>2275849844</td>
-                   <td><div  className="second-col">item9</div></td>
+                   <td>{item["Barcode"]}</td>
+                   <td><div className="second-col">{item["Name"]}</div></td>
                    <td>{item["Price"]}</td>
-                   <td>53rjenwn</td>
+                   <td>{item["UID"]}</td>
                    <td><span className='edit-icons'><FiEdit /></span><span className='delete-icons'><MdDelete /></span></td>
               </tr>
             )) : null
@@ -95,7 +96,7 @@ function Products_List(){
              
               let store = pro["store"];
               store.map(doc =>{
-                myDataArray.push({"Price" : doc.Price, "Name" : doc["Product Name"] })
+                myDataArray.push({"Barcode" : doc["Barcode"], "Price" : doc.Price, "Name" : doc["Product Name"], "UID" : doc["UID"], "Photo" : doc["Photo"]})
                 }
               )
 

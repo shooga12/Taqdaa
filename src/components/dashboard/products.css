@@ -17,7 +17,7 @@ th{
     text-align: center !important;
 }
 td{
-    padding: 1.5em;
+    padding: 0.2em 1.5em 0.2em 1.5em;
     text-align: center;
     font-size: 20px;
 }
@@ -33,7 +33,7 @@ td{
     font-size: 30px;
     cursor: pointer;
     color: rgb(169, 0, 0);
-    margin-left: 2em;
+    margin-left: 1.5em;
 }
 .delete-icons:hover{
     color: rgb(134, 0, 0);
@@ -55,3 +55,4 @@ td:first-child{
     height: 150px;
     margin: auto;
 }
+

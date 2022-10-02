@@ -6,12 +6,11 @@ body{
     box-shadow: 1px 1px 15px 5px #ebebeb;
     border-radius: 40px;
     margin: auto;
-    height: fit-content;
-    
+    height: fit-content; 
 }
 .signup-cont{
     padding-top: 1em;
-    padding-bottom: 1em;
+    margin-bottom: 2em;
 }
 #box-content-container{
     background-color: white;
@@ -51,7 +50,7 @@ body{
     border-radius: 50px;
     border: 1px solid #8e8e8e;
     padding: 0.3em 0em 0.3em 0.5em;
-    width: 270px;
+    width: 290px;
 }
 h4.h2.h5{
     color:#141d54;
@@ -99,7 +98,16 @@ font-size: medium;
     font-weight: 600;
 }
 .map{
-    width: 200px;
-    height: 300px;
+    width: 400px;
+    height: 400px;
+    margin-top: 3em;
+    margin-bottom: 6em;
+}
+#map-cont{
+    width: 100%;
+    height: 100%;
+}
+.default-text{
+    font-weight: 500;
 }
   

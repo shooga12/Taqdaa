@@ -122,3 +122,19 @@ h1{
   font-size: 18px;
   font-weight: 400;
 }
+#select-file{
+  background-color: #faa213;
+  color: white;
+  border-radius: 50px;
+  padding: 0.5em 1em 0.5em 1em;
+  cursor: pointer;
+  font-size: 20px;
+  margin-top: 0.5em;
+}
+#select-file:hover{
+  background-color: #e08a00;
+}
+#file-name{
+  font-size: 20px;
+  margin-top: 1.5em;
+}
