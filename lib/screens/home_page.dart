@@ -12,7 +12,7 @@ import '../controller/BNBCustomePainter.dart';
 import 'ShoppingCart.dart';
 import 'list_of_stores.dart';
 import 'scanBarCode.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+//import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../controller/NotificationApi.dart';
 import '../profile/homep_profile.dart';
 import 'package:taqdaa_application/model/user_model.dart';
@@ -30,17 +30,17 @@ class HomePageState extends State<HomePage> {
     super.initState();
     tz.initializeTimeZones();
 
-    NotificationApi.init();
-    listenNotifications();
+    //NotificationApi.init();
+    //listenNotifications();
   }
 
-  void listenNotifications() =>
-      NotificationApi.onNotification.stream.listen(onClickNotification);
+  // void listenNotifications() =>
+  //     NotificationApi.onNotification.stream.listen(onClickNotification);
 
-  void onClickNotification(NotificationResponse? details) => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ListOfStores2()),
-      );
+  // void onClickNotification(NotificationResponse? details) => Navigator.push(
+  //       context,
+  //       MaterialPageRoute(builder: (context) => ListOfStores2()),
+  //     );
 
   @override
   bool isInsideHome = true;

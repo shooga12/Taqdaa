@@ -141,15 +141,15 @@ class _MyHomePageState extends State<MyHomePage> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final stores = snapshot.data!;
-              if (stores.isNotEmpty) {
-                NotificationApi.showScheduledNotification(
-                    title: 'Taqdaa is waiting for you!',
-                    body: 'Hey, ' +
-                        EcommerceApp.userName +
-                        '\nyou\'re very close from ${stores.first.StoreName} come and shop with us now!',
-                    payload: 'paylod.nav',
-                    scheduledDate: DateTime.now().add(Duration(seconds: 3)));
-              }
+              // if (stores.isNotEmpty) {
+              //   NotificationApi.showScheduledNotification(
+              //       title: 'Taqdaa is waiting for you!',
+              //       body: 'Hey, ' +
+              //           EcommerceApp.userName +
+              //           '\nyou\'re very close from ${stores.first.StoreName} come and shop with us now!',
+              //       payload: 'paylod.nav',
+              //       scheduledDate: DateTime.now().add(Duration(seconds: 3)));
+              // }
               return HomePage();
             } else if (snapshot.hasError) {
               return Text("Some thing went wrong! ${snapshot.error}");

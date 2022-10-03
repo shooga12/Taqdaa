@@ -49,7 +49,7 @@ dependencies:
   geolocator: ^9.0.2
   geocoding: ^2.0.5
   http: ^0.13.5
-  flutter_local_notifications: ^11.0.1
+  #flutter_local_notifications: ^11.0.1
   rxdart: ^0.27.5
   timezone: ^0.9.0
   fluttertoast: ^8.0.9
@@ -65,7 +65,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_native_splash: ^2.2.10+1
+  #flutter_native_splash: ^2.2.10+1
 
 
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -75,7 +75,7 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
 
-flutter_native_splash:
+flutter_native_splash: 
     color: "1e285d"
     image: assets/splash_400.png
     android: true

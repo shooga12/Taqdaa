@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.taqdaa_application">
+    package="com.example.taqdaa_application" xmlns:tools="http://schemas.android.com/tools">
     
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
@@ -11,7 +11,9 @@
    <application
         android:label="Taqdaa"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        tools:replace="android:label">
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
