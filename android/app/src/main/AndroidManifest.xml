@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     
+
    <application
         android:label="Taqdaa"
         android:name="${applicationName}"
@@ -37,5 +38,5 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-    </application>
-</manifest>
+    </application >
+</manifest >

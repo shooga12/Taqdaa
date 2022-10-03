@@ -11,7 +11,7 @@ class emptyCart extends StatelessWidget {
           title: Text(
             //EcommerceApp.storeName +
             "Shopping Cart",
-            // style: TextStyle(fontFamily: 'Cairo'),
+            style: TextStyle(fontSize: 24),
           ),
           flexibleSpace: Container(
             decoration: BoxDecoration(
@@ -39,37 +39,37 @@ class emptyCart extends StatelessWidget {
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                 Text(""),
                 SizedBox(
-                    width: 200,
-                    height: 40,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ListOfStores2()),
-                        );
-                      },
-                      child: Text(
-                        'Start Shopping',
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18),
-                      ),
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.resolveWith((states) {
-                            if (states.contains(MaterialState.pressed)) {
-                              return Colors.grey;
-                            }
-                            return Colors.orange;
-                          }),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(30)))),
-                    )),
+                  width: 200,
+                  height: 40,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ListOfStores2()),
+                      );
+                    },
+                    child: Text(
+                      'Start Shopping',
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18),
+                    ),
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith((states) {
+                          if (states.contains(MaterialState.pressed)) {
+                            return Colors.grey;
+                          }
+                          return Colors.orange;
+                        }),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30)))),
+                  ),
+                ),
               ],
             ),
           ),

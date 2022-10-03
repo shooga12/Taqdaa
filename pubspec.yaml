@@ -53,6 +53,12 @@ dependencies:
   rxdart: ^0.27.5
   timezone: ^0.9.0
   fluttertoast: ^8.0.9
+  flutter_native_timezone: ^2.0.0
+  flutter_native_splash: ^2.2.9
+  http_auth: ^1.0.1
+  webview_flutter: ^3.0.4
+  flutter_braintree: ^2.3.1
+  flutter_paypal: ^0.0.7
   
 
 

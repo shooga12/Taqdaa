@@ -2,10 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:taqdaa_application/main.dart';
-//import 'package:taqdaa_application/screens/checkout_Page.dart';
+import '../main.dart';
+import '../screens/checkout_Page.dart';
 import '../confige/EcommerceApp.dart';
 import 'scanBarCode.dart';
+import 'dart:core';
 
 class shoppingCart extends StatefulWidget {
   const shoppingCart({Key? key}) : super(key: key);
@@ -23,7 +24,7 @@ class _shoppingCartState extends State<shoppingCart> {
         appBar: AppBar(
           title: Text(
             EcommerceApp.storeName + " Shopping Cart",
-            // style: TextStyle(fontFamily: 'Cairo'),
+            style: TextStyle(fontSize: 24),
           ),
           flexibleSpace: Container(
             decoration: BoxDecoration(
@@ -52,16 +53,40 @@ class _shoppingCartState extends State<shoppingCart> {
         body: StreamBuilder<List<Product>>(
             stream: readCartItems(),
             builder: (context, snapshot) {
+              // if (!snapshot.hasData) {
+              //   return Center(
+              //     child: Text("Your cart is empty!"),
+              //   );
+              // }
               if (snapshot.hasData) {
+                /// ماراح يدخل اصلا اذا مافيه ايتمز
                 final products = snapshot.data!;
                 return ListView.builder(
                     itemCount: products.length,
                     itemBuilder: (BuildContext context, int index) {
                       int previousTotal = EcommerceApp.total;
+                      if (EcommerceApp.counter == 0) {
+                        saveUserTotal(0);
+                        return SizedBox(
+                          height: 400,
+                          child: Center(
+                            child: Text(
+                              "",
+                              //"Your cart is empty!",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 23,
+                                  color: Color.fromARGB(255, 173, 173, 173)),
+                            ),
+                          ),
+                        );
+                      } //else if (EcommerceApp.counter != 0) {
+                      ///else
                       EcommerceApp.total = products
                           .map<int>((e) => e.Price * e.quantity)
                           .reduce((value, element) => value + element);
                       if (products.isEmpty) {
+                        ///////
                         saveUserTotal(0);
                       }
                       if (previousTotal != EcommerceApp.total &&
@@ -119,16 +144,22 @@ class _shoppingCartState extends State<shoppingCart> {
                             },
                             onDismissed: (DismissDirection direction) {
                               if (direction == DismissDirection.endToStart) {
+                                EcommerceApp.counter--;
                                 deleteItemGroup(products[index].Category);
                                 deleteItem(products[index].Category);
                                 products.removeAt(index); ////bug fixes
-                                if (products.isEmpty) {
+                                if (EcommerceApp.counter == 0) {
                                   saveUserTotal(0);
                                 }
+                                // if (products.length == 0) {
+                                //   EcommerceApp.finalTotal = 0;
+                                //   saveUserTotal(0);
+                                // }
                               }
                             },
                             child: buildSecondItmes(products[index], context));
                       }
+                      //}
                       return Center(child: CircularProgressIndicator());
                     });
               } else if (snapshot.hasError) {
@@ -144,15 +175,25 @@ class _shoppingCartState extends State<shoppingCart> {
             children: [
               Container(
                   child: Text(
-                'Total: ' + EcommerceApp.total.toString() + '\n',
-                style: TextStyle(
-                    color: Color.fromARGB(255, 32, 7, 121),
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold),
-              )),
+                      style: TextStyle(
+                          color: Color.fromARGB(255, 32, 7, 121),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                      (() {
+                        if (EcommerceApp.finalTotal == 0) {
+                          saveUserTotal(0);
+                          EcommerceApp.finalTotal = -1;
+                          return 'Total: ' +
+                              EcommerceApp.finalTotal.toString() +
+                              ' SR\n';
+                        } else {
+                          return 'Total: ' +
+                              EcommerceApp.total.toString() +
+                              ' SR\n';
+                        }
+                      }()))),
               Container(
                 child: SizedBox(
-                  width: 200,
                   height: 40,
                   child: ElevatedButton.icon(
                     onPressed: () {
@@ -163,7 +204,7 @@ class _shoppingCartState extends State<shoppingCart> {
                       style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 16),
+                          fontSize: 18),
                     ),
                     icon: Icon(Icons.document_scanner_outlined),
                     style: ButtonStyle(
@@ -182,36 +223,72 @@ class _shoppingCartState extends State<shoppingCart> {
                 ),
               ),
               Container(
-                child: SizedBox(
-                  width: 200,
-                  height: 40,
-                  child: ElevatedButton(
-                    onPressed: () {
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (EcommerceApp.total == 0 ||
+                        EcommerceApp.finalTotal == 0) {
+                      showDialog(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                                content: Text(
+                                  "Your Cart is empty!",
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.of(ctx).pop(false);
+                                      },
+                                      child: Text("Cancel")),
+                                ],
+                              ));
+                    } else {
+                      EcommerceApp.inDollars = EcommerceApp.total / 3.75;
+                      showDialog(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                                title: Text("Please Note"),
+                                content: Text(
+                                    "Your total price will be in ${EcommerceApp.inDollars.toStringAsFixed(2)}\$."),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.of(ctx).pop(false);
+                                      },
+                                      child: Text("Cancel")),
+                                  ElevatedButton(
+                                      //style: Color
+                                      onPressed: () {
+                                        checkOut().payment(context);
+                                        Navigator.of(ctx).pop(false);
+                                      },
+                                      child: Text("Continue")),
+                                ],
+                              ));
                       // Navigator.push(
                       //   context,
                       //   MaterialPageRoute(builder: (context) => CheckOut()),
                       // );
-                    },
-                    child: Text(
-                      'Checkout',
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16),
-                    ),
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.resolveWith((states) {
-                          if (states.contains(MaterialState.pressed)) {
-                            return Colors.grey;
-                          }
-                          return Colors.orange;
-                        }),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30)))),
+                    }
+                  },
+                  child: Text(
+                    'Checkout',
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18),
                   ),
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.resolveWith((states) {
+                        if (states.contains(MaterialState.pressed)) {
+                          return Colors.grey;
+                        }
+                        return Colors.orange;
+                      }),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30)))),
                 ),
               ),
             ],
@@ -242,6 +319,24 @@ class _shoppingCartState extends State<shoppingCart> {
       .map((snapshot) =>
           snapshot.docs.map((doc) => Product.fromJson(doc.data())).toList());
 
+  Widget bulidEmptyCart() {
+    return Center(
+      child: SizedBox(
+        height: 400,
+        child: Center(
+          child: Text(
+            "",
+            //"Your cart is empty!",
+            style: TextStyle(
+                fontWeight: FontWeight.normal,
+                fontSize: 23,
+                color: Color.fromARGB(255, 173, 173, 173)),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget buildSecondItmes(Product product, BuildContext context) {
     return Container(
       child: Column(
@@ -266,10 +361,26 @@ class _shoppingCartState extends State<shoppingCart> {
                                 fit: BoxFit.cover,
                               ),
                             ),
-                            // Container(
-                            //   alignment: Alignment.bottomLeft, //اعدله
-                            //   child:
-                            // ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 25, top: 2.5),
+                              child: Container(
+                                width: 65,
+                                margin: EdgeInsets.all(10),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Image(
+                                    image: NetworkImage(
+                                      product.ProductImage,
+                                    ),
+                                  ),
+                                ),
+                                // Container(
+                                //   alignment: Alignment.bottomLeft, //اعدله
+                                //   child:
+                                // ),
+                              ),
+                            )
                           ]),
                         ),
                         Column(
@@ -277,7 +388,7 @@ class _shoppingCartState extends State<shoppingCart> {
                             Text(
                               "\n " + product.Category,
                               style: new TextStyle(
-                                fontSize: 14,
+                                fontSize: 17,
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromARGB(255, 32, 7, 121),
                               ),
@@ -286,7 +397,7 @@ class _shoppingCartState extends State<shoppingCart> {
                               "   Price : " + product.Price.toString() + " SR",
                               textAlign: TextAlign.center,
                               style: new TextStyle(
-                                fontSize: 16,
+                                fontSize: 15,
                                 color: Color.fromARGB(255, 77, 76, 76),
                               ),
                             ),
@@ -295,29 +406,44 @@ class _shoppingCartState extends State<shoppingCart> {
                         Spacer(),
                         IconButton(
                             onPressed: () async {
-                              EcommerceApp.productName = product.Category;
-                              await showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                        title: Text("Please note that :"),
-                                        content: Text(
-                                            "You have to scan the barcode of the removed Item, In order to decrement the quantity."),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context, 'OK');
-                                            },
-                                            child: const Text('OK'),
-                                          )
-                                        ]);
-                                  });
-                              if (await _scan(context, "Decrement")) {
-                                checkItemExist(false, product.Category);
+                              if (product.quantity == 1) {
+                                null;
+                              } else {
+                                EcommerceApp.productName = product.Category;
+                                await showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                          title: Text("Please note that :"),
+                                          content: Text(
+                                              "You have to scan the barcode of the removed Item."),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context, 'OK');
+                                              },
+                                              child: const Text('OK'),
+                                            )
+                                          ]);
+                                    });
+                                if (await _scan(context, "Decrement")) {
+                                  checkItemExist(false, product.Category);
+                                }
+                                // ScaffoldMessenger.of(context)
+                                //     .showSnackBar(SnackBar(
+                                //   duration: const Duration(seconds: 1),
+                                //   backgroundColor:
+                                //       Color.fromARGB(255, 135, 155, 190),
+                                //   content: Text(
+                                //       "${product.Category} deleted succeffully"),
+                                //   action: null,
+                                // ));
                               }
                             },
                             icon: Icon(Icons.remove_circle,
-                                color: Color.fromARGB(255, 245, 161, 14))),
+                                color: product.quantity == 1
+                                    ? Color.fromARGB(255, 195, 195, 195)
+                                    : Color.fromARGB(255, 245, 161, 14))),
                         //Text('$quantity'),
                         Text(product.quantity.toString()),
                         IconButton(
@@ -329,7 +455,7 @@ class _shoppingCartState extends State<shoppingCart> {
                                     return AlertDialog(
                                         title: Text("Please note that :"),
                                         content: Text(
-                                            "You have to scan the barcode of the added Item, In order to increment the quantity."),
+                                            "You have to scan the barcode of the added Item."),
                                         actions: [
                                           TextButton(
                                             onPressed: () {
@@ -416,6 +542,12 @@ class _shoppingCartState extends State<shoppingCart> {
       String dat =
           event.snapshot.children.first.child('Barcode').value as String;
       deleteSingleItem(dat);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        duration: const Duration(seconds: 1),
+        backgroundColor: Color.fromARGB(255, 135, 155, 190),
+        content: Text("Item deleted succeffully"),
+        action: null,
+      ));
       return true;
     } else if (event.snapshot.exists && action == "Increment") {
       showDialog(
@@ -490,16 +622,26 @@ class _shoppingCartState extends State<shoppingCart> {
       "Store": "new",
       "quantity": "new",
       "RFID": RFID,
+      "ProductImage": "new",
     });
   }
 
   Future saveUserTotal(var total) async {
-    final QuerySnapshot result = await FirebaseFirestore.instance
-        .collection('${collectionName}Total')
-        .get();
-    final DocumentSnapshot document = result.docs.first;
-    if (document.exists) {
-      document.reference.update({'Total': total});
+    if (EcommerceApp.itsFirst) {
+      EcommerceApp.itsFirst = false;
+      await FirebaseFirestore.instance
+          .collection('${collectionName}Total')
+          .doc("total")
+          .set({"Total": total});
+      EcommerceApp.itsFirst = false;
+    } else {
+      final QuerySnapshot result = await FirebaseFirestore.instance
+          .collection('${collectionName}Total')
+          .get();
+      final List<QueryDocumentSnapshot<Object?>> document = result.docs;
+      if (document.length == 1) {
+        document[0].reference.update({'Total': total});
+      }
     }
   }
 
