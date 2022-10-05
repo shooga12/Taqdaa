@@ -42,7 +42,7 @@ void main() async {
         await FirebaseFirestore.instance.collection('Stores').get();
     final List<DocumentSnapshot> documents = result.docs;
     for (int i = 0; i < documents.length; i++) {
-      distance = documents[i].get("kilometers");
+      distance = documents[0].get("kilometers");
       if (distance == "0.1") {
         closest = documents[i].id;
         theIndex = i;
@@ -147,12 +147,30 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           IconButton(
             onPressed: () {
-              FirebaseAuthMethods().signOut();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LoginPage(),
-                  ));
+              showDialog(
+                  context: context,
+                  builder: ((context) {
+                    return AlertDialog(
+                      title: Text("Are you sure you want to Log out?"),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              FirebaseAuthMethods().signOut();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => LoginPage(),
+                                  ));
+                            },
+                            child: Text("Log out")),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text("cancel"))
+                      ],
+                    );
+                  }));
             },
             icon: Icon(
               Icons.logout,

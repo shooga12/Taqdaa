@@ -96,23 +96,22 @@ class _ListOfStores2State extends State<ListOfStores2> {
           'Choose Store',
           style: TextStyle(fontSize: 24), //TextStyle(fontFamily: 'Cairo'),
         ),
-        bottomOpacity: 0.7,
         bottom: PreferredSize(
             child: Flexible(
               child: Card(
-                // child: SizedBox(
-                //   width: 375,
-                child: TextField(
-                  decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.search),
-                      hintText: 'Search for a store name..'),
-                  onChanged: (val) {
-                    setState(() {
-                      SearchName = val.replaceAll(' ', '');
-                    });
-                  },
+                child: SizedBox(
+                  width: 375,
+                  child: TextField(
+                    decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.search),
+                        hintText: 'Search for a store name..'),
+                    onChanged: (val) {
+                      setState(() {
+                        SearchName = val.replaceAll(' ', '');
+                      });
+                    },
+                  ),
                 ),
-                //),
               ),
             ),
             preferredSize: Size.zero),

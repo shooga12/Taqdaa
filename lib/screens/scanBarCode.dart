@@ -192,11 +192,6 @@ class _ScanPageState extends State<ScanPage> {
                             saveUserItems(toBeSavedProduct);
                           }
                           EcommerceApp.counter++;
-                          // await FirebaseFirestore.instance
-                          //     .collection('total')
-                          //     .add({
-                          //   "Total": 0,
-                          // });
                           Navigator.push(
                             context,
                             MaterialPageRoute(

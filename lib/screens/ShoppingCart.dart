@@ -53,11 +53,6 @@ class _shoppingCartState extends State<shoppingCart> {
         body: StreamBuilder<List<Product>>(
             stream: readCartItems(),
             builder: (context, snapshot) {
-              // if (!snapshot.hasData) {
-              //   return Center(
-              //     child: Text("Your cart is empty!"),
-              //   );
-              // }
               if (snapshot.hasData) {
                 /// ماراح يدخل اصلا اذا مافيه ايتمز
                 final products = snapshot.data!;
@@ -80,20 +75,17 @@ class _shoppingCartState extends State<shoppingCart> {
                             ),
                           ),
                         );
-                      } //else if (EcommerceApp.counter != 0) {
-                      ///else
+                      }
                       EcommerceApp.total = products
                           .map<int>((e) => e.Price * e.quantity)
                           .reduce((value, element) => value + element);
                       if (products.isEmpty) {
-                        ///////
                         saveUserTotal(0);
                       }
                       if (previousTotal != EcommerceApp.total &&
                           products.isNotEmpty) {
                         saveUserTotal(EcommerceApp.total);
                       }
-                      //getUserTotal();
                       if (products[index].quantity == 0) {
                         deleteItem(products[index].Category);
                         products.removeAt(index);
@@ -134,7 +126,6 @@ class _shoppingCartState extends State<shoppingCart> {
                                               },
                                               child: Text("Cancel")),
                                           ElevatedButton(
-                                              //style: Color
                                               onPressed: () {
                                                 Navigator.of(ctx).pop(true);
                                               },
@@ -145,21 +136,23 @@ class _shoppingCartState extends State<shoppingCart> {
                             onDismissed: (DismissDirection direction) {
                               if (direction == DismissDirection.endToStart) {
                                 EcommerceApp.counter--;
+                                if (products[index].quantity > 1) {
+                                  for (int i = 0;
+                                      i < products[index].quantity - 1;
+                                      i++) {
+                                    EcommerceApp.counter--;
+                                  }
+                                }
                                 deleteItemGroup(products[index].Category);
                                 deleteItem(products[index].Category);
-                                products.removeAt(index); ////bug fixes
-                                if (EcommerceApp.counter == 0) {
+                                products.removeAt(index);
+                                if (EcommerceApp.counter < 1) {
                                   saveUserTotal(0);
                                 }
-                                // if (products.length == 0) {
-                                //   EcommerceApp.finalTotal = 0;
-                                //   saveUserTotal(0);
-                                // }
                               }
                             },
                             child: buildSecondItmes(products[index], context));
                       }
-                      //}
                       return Center(child: CircularProgressIndicator());
                     });
               } else if (snapshot.hasError) {
@@ -249,7 +242,7 @@ class _shoppingCartState extends State<shoppingCart> {
                           builder: (ctx) => AlertDialog(
                                 title: Text("Please Note"),
                                 content: Text(
-                                    "Your total price will be in ${EcommerceApp.inDollars.toStringAsFixed(2)}\$."),
+                                    "Your total price will be in ${EcommerceApp.inDollars.toStringAsFixed(2)}\$."), ////Teacher note
                                 actions: [
                                   TextButton(
                                       onPressed: () {
@@ -265,10 +258,6 @@ class _shoppingCartState extends State<shoppingCart> {
                                       child: Text("Continue")),
                                 ],
                               ));
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => CheckOut()),
-                      // );
                     }
                   },
                   child: Text(
@@ -343,7 +332,6 @@ class _shoppingCartState extends State<shoppingCart> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Column(
-            //upper part
             children: [
               Card(
                 child: new InkWell(
@@ -375,10 +363,6 @@ class _shoppingCartState extends State<shoppingCart> {
                                     ),
                                   ),
                                 ),
-                                // Container(
-                                //   alignment: Alignment.bottomLeft, //اعدله
-                                //   child:
-                                // ),
                               ),
                             )
                           ]),
@@ -429,22 +413,12 @@ class _shoppingCartState extends State<shoppingCart> {
                                 if (await _scan(context, "Decrement")) {
                                   checkItemExist(false, product.Category);
                                 }
-                                // ScaffoldMessenger.of(context)
-                                //     .showSnackBar(SnackBar(
-                                //   duration: const Duration(seconds: 1),
-                                //   backgroundColor:
-                                //       Color.fromARGB(255, 135, 155, 190),
-                                //   content: Text(
-                                //       "${product.Category} deleted succeffully"),
-                                //   action: null,
-                                // ));
                               }
                             },
                             icon: Icon(Icons.remove_circle,
                                 color: product.quantity == 1
                                     ? Color.fromARGB(255, 195, 195, 195)
                                     : Color.fromARGB(255, 245, 161, 14))),
-                        //Text('$quantity'),
                         Text(product.quantity.toString()),
                         IconButton(
                             onPressed: () async {
@@ -467,6 +441,7 @@ class _shoppingCartState extends State<shoppingCart> {
                                   });
                               if (await _scan(context, "Increment")) {
                                 checkItemExist(true, product.Category);
+                                EcommerceApp.counter++;
                               }
                             },
                             icon: Icon(Icons.add_circle,
@@ -479,7 +454,6 @@ class _shoppingCartState extends State<shoppingCart> {
               ),
             ],
           ),
-          //),
         ],
       ),
     );
@@ -505,7 +479,7 @@ class _shoppingCartState extends State<shoppingCart> {
           context: context,
           builder: (context) {
             return AlertDialog(
-                content: Text("Item already have been added."), ///////
+                content: Text("Item already have been added."),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'OK'),
@@ -554,8 +528,8 @@ class _shoppingCartState extends State<shoppingCart> {
           context: context,
           builder: (context) {
             return AlertDialog(
-                content: Text(
-                    "Sorry, this is not a ${EcommerceApp.productName}."), ///////
+                content:
+                    Text("Sorry, this is not a ${EcommerceApp.productName}."),
                 actions: [
                   ElevatedButton(
                       onPressed: () {
@@ -578,8 +552,8 @@ class _shoppingCartState extends State<shoppingCart> {
           context: context,
           builder: (context) {
             return AlertDialog(
-                content: Text(
-                    "Sorry, this is not a ${EcommerceApp.productName}."), ///////
+                content:
+                    Text("Sorry, this is not a ${EcommerceApp.productName}."),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'OK'),
@@ -628,22 +602,10 @@ class _shoppingCartState extends State<shoppingCart> {
   }
 
   Future saveUserTotal(var total) async {
-    if (EcommerceApp.itsFirst) {
-      EcommerceApp.itsFirst = false;
-      await FirebaseFirestore.instance
-          .collection('${collectionName}Total')
-          .doc("total")
-          .set({"Total": total});
-      EcommerceApp.itsFirst = false;
-    } else {
-      final QuerySnapshot result = await FirebaseFirestore.instance
-          .collection('${collectionName}Total')
-          .get();
-      final List<QueryDocumentSnapshot<Object?>> document = result.docs;
-      if (document.length == 1) {
-        document[0].reference.update({'Total': total});
-      }
-    }
+    await FirebaseFirestore.instance
+        .collection('${collectionName}Total')
+        .doc("total")
+        .set({"Total": total});
   }
 
   Future getUserTotal() async {
