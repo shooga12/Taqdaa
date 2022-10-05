@@ -86,7 +86,7 @@ class _ScanPageState extends State<ScanPage> {
             //upper part
             children: [
               Text('\n'),
-              Text("The product you Scanned is :\n",
+              Text("المنتج الذي تم مسحه هو: \n",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
               Card(
                 child: new InkWell(
@@ -140,9 +140,9 @@ class _ScanPageState extends State<ScanPage> {
                               ),
                             ),
                             Text(
-                              "   Price : " +
+                              "   السعر : " +
                                   product['Price'].toString() +
-                                  " SR",
+                                  " ريال",
                               textAlign: TextAlign.center,
                               style: new TextStyle(
                                 fontSize: 16,
@@ -204,7 +204,7 @@ class _ScanPageState extends State<ScanPage> {
                           );
                         },
                         child: Text(
-                          'Add to cart',
+                          'إضافة للسلة',
                           style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,

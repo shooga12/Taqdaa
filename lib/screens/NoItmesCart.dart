@@ -10,7 +10,7 @@ class emptyCart extends StatelessWidget {
         appBar: AppBar(
           title: Text(
             //EcommerceApp.storeName +
-            "Shopping Cart",
+            "سلة التسوق",
             style: TextStyle(fontSize: 24),
           ),
           flexibleSpace: Container(
@@ -31,10 +31,10 @@ class emptyCart extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Your Cart is empty! ",
+                  "لا يوجد منتجات!",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
-                Text("Start shopping Now!",
+                Text("ابدأ التسوق الآن!",
                     style:
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                 Text(""),
@@ -50,7 +50,7 @@ class emptyCart extends StatelessWidget {
                       );
                     },
                     child: Text(
-                      'Start Shopping',
+                      'ابدأ التسوق!',
                       style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,

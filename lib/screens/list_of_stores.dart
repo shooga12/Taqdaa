@@ -91,8 +91,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
       showDialog(
           context: context,
           builder: (context) {
-            return AlertDialog(
-                content: Text("Item already have been added."), ///////
+            return AlertDialog(content: Text("تم إضافة المنتج مسبقًا!"), ///////
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'OK'),
@@ -124,11 +123,11 @@ class _ListOfStores2State extends State<ListOfStores2> {
           context: context,
           builder: (context) {
             return AlertDialog(
-                content: Text("Sorry Item not found!"),
+                content: Text("عذرًا، لم يتم العثور على المنتج"),
                 actions: [
                   TextButton(
-                    onPressed: () => Navigator.pop(context, 'OK'),
-                    child: const Text('OK'),
+                    onPressed: () => Navigator.pop(context, 'حسنًا'),
+                    child: const Text('حسنًا'),
                   )
                 ]);
           });
@@ -142,7 +141,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Choose Store',
+          'إختر متجرًا',
           style: TextStyle(fontSize: 24), //TextStyle(fontFamily: 'Cairo'),
         ),
         bottom: PreferredSize(
@@ -151,7 +150,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
                 child: TextField(
                   decoration: InputDecoration(
                       prefixIcon: Icon(Icons.search),
-                      hintText: 'Search for a store name..'),
+                      hintText: 'إبحث عن إسم متجر محدد'),
                   onChanged: (val) {
                     setState(() {
                       SearchName = val.replaceAll(' ', '');
@@ -195,7 +194,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
                           child: Align(
                         alignment: Alignment.center,
                         child: Text(
-                          'No Results',
+                          'لا يوجد نتائج',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 20,
@@ -292,7 +291,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
                               ),
                             ),
                             Text(
-                              'Km  ',
+                              'كم',
                               style: new TextStyle(
                                 fontSize: 12,
                                 color: Color.fromARGB(255, 77, 76, 76),
@@ -322,7 +321,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
                       builder: (context) {
                         return AlertDialog(
                             content: Text(
-                                "Sorry you already have an order in ${EcommerceApp.storeName}."),
+                                " ${EcommerceApp.storeName}عذرًا، لديك طلب بالفعل في"),
                             actions: [
                               ElevatedButton(
                                   onPressed: () async {
@@ -333,10 +332,11 @@ class _ListOfStores2State extends State<ListOfStores2> {
                                     Navigator.pop(context, 'OK');
                                   }, /////add cancelation
                                   child: Text(
-                                      "Cancel ${EcommerceApp.storeName} order")),
+                                      " ${EcommerceApp.storeName} إلغاء طلب")),
                               TextButton(
-                                onPressed: () => Navigator.pop(context, 'OK'),
-                                child: const Text('OK'),
+                                onPressed: () =>
+                                    Navigator.pop(context, 'حسنًا'),
+                                child: const Text('حسنًا'),
                               ),
                             ]);
                       });

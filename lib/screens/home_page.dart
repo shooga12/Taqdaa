@@ -9,8 +9,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
 import 'package:taqdaa_application/screens/NoItmesCart.dart';
 import '../controller/BNBCustomePainter.dart';
+import '../methods/authentication_services.dart';
 import 'ShoppingCart.dart';
 import 'list_of_stores.dart';
+import 'login_page.dart';
 import 'scanBarCode.dart';
 //import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../controller/NotificationApi.dart';
@@ -45,7 +47,7 @@ class HomePageState extends State<HomePage> {
   @override
   bool isInsideHome = true;
   bool isInsideProfile = false;
-  bool isInsideSettings = false;
+  bool isInsidelogout = false;
 
   @override
   Widget build(BuildContext context) {
@@ -146,11 +148,42 @@ class HomePageState extends State<HomePage> {
                                     : Colors.white,
                               )),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: ((context) {
+                                    return AlertDialog(
+                                      title: Text("هل تريد تسجيل الخروج؟"),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              FirebaseAuthMethods().signOut();
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        LoginPage(),
+                                                  ));
+                                            },
+                                            child: Text(
+                                              "تسجيل خروج",
+                                              style: TextStyle(
+                                                color: Colors.red,
+                                              ),
+                                            )),
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text("إلغاء"))
+                                      ],
+                                    );
+                                  }));
+                            },
                             icon: Icon(
-                              Icons.settings,
+                              Icons.logout,
                               size: 30,
-                              color: isInsideSettings
+                              color: isInsidelogout
                                   ? Color.fromARGB(255, 254, 176, 60)
                                   : Colors.white,
                             ),

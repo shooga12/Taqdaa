@@ -43,22 +43,22 @@ class _RegisterPageState extends State<RegisterPage> {
 
   String? validateEmail(String? formEmail) {
     if (formEmail == null || formEmail.isEmpty)
-      return 'Email address is required.';
+      return 'البريد الالكتروني مطلوب';
 
     String pattern = r'\w+@\w+\.\w+';
     RegExp regex = RegExp(pattern);
-    if (!regex.hasMatch(formEmail)) return 'Invalid E-mail Address format.';
+    if (!regex.hasMatch(formEmail)) return 'صيغة البريد الالكتروني غير صحيحة';
 
     return null;
   }
 
   String? validatePassword(String? formPassword) {
     if (formPassword == null || formPassword.isEmpty)
-      return 'Password is required.';
+      return 'كلمة المرور مطلوبة';
     else if (formPassword.length < 8)
-      return 'Should be at least 8 chatacter.';
+      return 'يجب ان تحتوي كلمة السر على 8 خانات أو أكثر';
     else if (formPassword.length > 15)
-      return 'Should be less than 15 chatacter.';
+      return 'يجب أن تكون كلمة السر أقل من 15 خانة';
     else
       return null;
   }
@@ -87,9 +87,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: firstnameController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: MultiValidator([
-                    RequiredValidator(errorText: 'Required *'),
+                    RequiredValidator(errorText: 'مطلوب*'),
                     PatternValidator(r'^[a-z A-Z]+$',
-                        errorText: 'name should contain onley letters')
+                        errorText: 'يجب أن يتكون الأسم من حروف فقط')
                   ]),
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
                   style: TextStyle(
@@ -112,7 +112,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     prefixIcon: Icon(Icons.person),
                     iconColor: Colors.white,
-                    labelText: "Enter your First Name",
+                    labelText: "أدخل الاسم الاول",
                     labelStyle: TextStyle(
                         color: Color.fromARGB(236, 113, 113, 117)
                             .withOpacity(0.9)),
@@ -134,9 +134,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   autovalidateMode: AutovalidateMode.onUserInteraction,
 
                   validator: MultiValidator([
-                    RequiredValidator(errorText: 'Required *'),
+                    RequiredValidator(errorText: 'مطلوب *'),
                     PatternValidator(r'^[a-z A-Z]+$',
-                        errorText: 'name should contain only letters')
+                        errorText: 'يجب أن يتكون الأسم من حروف فقط')
                   ]),
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
                   style: TextStyle(
@@ -159,7 +159,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     prefixIcon: Icon(Icons.person),
                     iconColor: Colors.white,
-                    labelText: "Enter your Last Name",
+                    labelText: "أدخل الاسم الاخير",
                     labelStyle: TextStyle(
                         color: Color.fromARGB(236, 113, 113, 117)
                             .withOpacity(0.9)),
@@ -182,8 +182,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   autovalidateMode: AutovalidateMode.onUserInteraction,
 
                   validator: MultiValidator([
-                    RequiredValidator(errorText: 'Required *'),
-                    EmailValidator(errorText: 'Not a valid Email *')
+                    RequiredValidator(errorText: 'مطلوب *'),
+                    EmailValidator(errorText: 'البريد الالكتروني غير صالح*')
                   ]),
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
                   style: TextStyle(
@@ -206,7 +206,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     prefixIcon: Icon(Icons.email),
                     iconColor: Colors.white,
-                    labelText: "Enter your Email address",
+                    labelText: "أدخل البريد الالكتروني",
                     labelStyle: TextStyle(
                         color: Color.fromARGB(236, 113, 113, 117)
                             .withOpacity(0.9)),
@@ -228,10 +228,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: _passController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: MultiValidator([
-                    RequiredValidator(errorText: 'Requiered *'),
+                    RequiredValidator(errorText: 'مطلوب *'),
                     PatternValidator(
                         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$',
-                        errorText: 'Invalid Password'),
+                        errorText: 'كلمة مرور غير صالحة'),
                   ]),
                   obscureText: true,
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
@@ -254,7 +254,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     prefixIcon: Icon(Icons.lock),
                     iconColor: Colors.white,
-                    labelText: "Enter your password",
+                    labelText: "أدخل كلمة المرور",
                     labelStyle: TextStyle(
                         color: Color.fromARGB(236, 113, 113, 117)
                             .withOpacity(0.9)),
@@ -274,9 +274,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   maxLengthEnforcement: MaxLengthEnforcement.enforced,
 
                   validator: MultiValidator([
-                    RequiredValidator(errorText: 'Required *'),
+                    RequiredValidator(errorText: 'مطلوب *'),
                     PatternValidator(r'^(?:[+0][1-9])?[0-9]{10,12}$',
-                        errorText: 'Enter a valid phone number')
+                        errorText: 'أدخل رقم هاتف صالح')
                   ]),
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
                   style: TextStyle(
@@ -299,7 +299,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     prefixIcon: Icon(Icons.phone),
                     iconColor: Colors.white,
-                    labelText: "Enter your Phone Number",
+                    labelText: "أدخل رقم الهاتف",
                     labelStyle: TextStyle(
                         color: Color.fromARGB(236, 113, 113, 117)
                             .withOpacity(0.9)),
@@ -320,7 +320,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     autovalidateMode: AutovalidateMode.onUserInteraction,
 
                     validator: MultiValidator([
-                      RequiredValidator(errorText: 'Required *'),
+                      RequiredValidator(errorText: 'مطلوب *'),
                     ]),
                     cursorColor: Color.fromARGB(255, 37, 43, 121),
                     style: TextStyle(
@@ -346,7 +346,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             const BorderSide(color: Colors.orange, width: 2.0),
                       ),
 
-                      labelText: "Enter Date Of Birth", //label text of field
+                      labelText: "أدخل تاريخ الميلاد", //label text of field
                     ),
                     readOnly:
                         true, //set it true, so that user will not able to edit text
@@ -371,7 +371,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               formattedDate; //set output date to TextField value.
                         });
                       } else {
-                        print("Date is not selected");
+                        print("لم يتم اختيار تاريخ");
                       }
                     },
                     //--------------------------------------
@@ -402,7 +402,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   _passController.text);
                             },
                             child: Text(
-                              'SIGN UP',
+                              'تسجيل',
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -439,7 +439,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Already have an account?",
+        const Text(" لديك حساب بالفعل؟",
             style: TextStyle(color: Color.fromARGB(255, 15, 53, 120))),
         GestureDetector(
           onTap: () {
@@ -450,7 +450,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ));
           },
           child: const Text(
-            "Log in",
+            "تسجيل دخول",
             style: TextStyle(
                 decoration: TextDecoration.underline,
                 color: Color.fromARGB(255, 15, 53, 120),
@@ -473,12 +473,12 @@ class _RegisterPageState extends State<RegisterPage> {
           context: context,
           builder: (context) {
             return AlertDialog(
-                content: Text('Account created sucessfully'),
+                content: Text('تم إنشاء الحساب بنجاح'),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context,
                         MaterialPageRoute(builder: (context) => LoginPage())),
-                    child: const Text('OK'),
+                    child: const Text('حسنًا'),
                   )
                 ]);
           });
@@ -489,8 +489,8 @@ class _RegisterPageState extends State<RegisterPage> {
           builder: (context) {
             return AlertDialog(content: Text(e.message.toString()), actions: [
               TextButton(
-                onPressed: () => Navigator.pop(context, 'OK'),
-                child: const Text('OK'),
+                onPressed: () => Navigator.pop(context, 'حسنًا'),
+                child: const Text('حسنًا'),
               )
             ]);
           });

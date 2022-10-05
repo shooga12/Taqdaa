@@ -23,7 +23,7 @@ class _shoppingCartState extends State<shoppingCart> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            EcommerceApp.storeName + " Shopping Cart",
+            EcommerceApp.storeName + " سلة التسوق",
             style: TextStyle(fontSize: 24),
           ),
           flexibleSpace: Container(
@@ -124,21 +124,25 @@ class _shoppingCartState extends State<shoppingCart> {
                               return showDialog(
                                   context: context,
                                   builder: (ctx) => AlertDialog(
-                                        title: Text("Please Confirm"),
+                                        title: Text("الرجاء التأكيد!"),
                                         content: Text(
-                                            "Are you sure you want to delete this item ?"),
+                                            "هل أنت متأكد من رغبتك في حذف هذا المنتج؟"),
                                         actions: [
                                           TextButton(
                                               onPressed: () {
                                                 Navigator.of(ctx).pop(false);
                                               },
-                                              child: Text("Cancel")),
+                                              child: Text("إلغاء")),
                                           ElevatedButton(
                                               //style: Color
                                               onPressed: () {
                                                 Navigator.of(ctx).pop(true);
                                               },
-                                              child: Text("Delete")),
+                                              child: Text(
+                                                "حذف",
+                                                style: TextStyle(
+                                                    color: Colors.red),
+                                              )),
                                         ],
                                       ));
                             },
@@ -183,13 +187,13 @@ class _shoppingCartState extends State<shoppingCart> {
                         if (EcommerceApp.finalTotal == 0) {
                           saveUserTotal(0);
                           EcommerceApp.finalTotal = -1;
-                          return 'Total: ' +
+                          return 'المجموع: ' +
                               EcommerceApp.finalTotal.toString() +
-                              ' SR\n';
+                              ' ريال\n';
                         } else {
-                          return 'Total: ' +
+                          return 'المجموع: ' +
                               EcommerceApp.total.toString() +
-                              ' SR\n';
+                              ' ريال\n';
                         }
                       }()))),
               Container(
@@ -200,7 +204,7 @@ class _shoppingCartState extends State<shoppingCart> {
                       _scan(context, "NewItem");
                     },
                     label: Text(
-                      'Continue Scanning',
+                      'إكمال المسح',
                       style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -231,7 +235,7 @@ class _shoppingCartState extends State<shoppingCart> {
                           context: context,
                           builder: (ctx) => AlertDialog(
                                 content: Text(
-                                  "Your Cart is empty!",
+                                  "لا يوجد منتجات!",
                                   style: TextStyle(fontSize: 18),
                                 ),
                                 actions: [
@@ -239,7 +243,7 @@ class _shoppingCartState extends State<shoppingCart> {
                                       onPressed: () {
                                         Navigator.of(ctx).pop(false);
                                       },
-                                      child: Text("Cancel")),
+                                      child: Text("إلغاء")),
                                 ],
                               ));
                     } else {
@@ -255,14 +259,14 @@ class _shoppingCartState extends State<shoppingCart> {
                                       onPressed: () {
                                         Navigator.of(ctx).pop(false);
                                       },
-                                      child: Text("Cancel")),
+                                      child: Text("إلغاء")),
                                   ElevatedButton(
                                       //style: Color
                                       onPressed: () {
                                         checkOut().payment(context);
                                         Navigator.of(ctx).pop(false);
                                       },
-                                      child: Text("Continue")),
+                                      child: Text("متابعة")),
                                 ],
                               ));
                       // Navigator.push(

@@ -1,12 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:either_dart/either.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:taqdaa_application/main.dart';
 import 'package:taqdaa_application/screens/home_page.dart';
 import '../confige/EcommerceApp.dart';
 import '../controller/BNBCustomePainter.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:taqdaa_application/screens/login_page.dart';
+import '../methods/authentication_services.dart';
 import '../model/user_model.dart';
 import '../screens/ShoppingCart.dart';
 import '../screens/list_of_stores.dart';
@@ -24,7 +27,7 @@ class _HomepprofileState extends State<Homepprofile> {
   UserModel loggedInUser = UserModel();
   bool isInsideHome = false;
   bool isInsideProfile = true;
-  bool isInsideSettings = false;
+  bool isInsidelogout = false;
 
   @override
   void initState() {
@@ -39,6 +42,7 @@ class _HomepprofileState extends State<Homepprofile> {
     });
   }
 
+  String CurrentUser = "";
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -46,7 +50,7 @@ class _HomepprofileState extends State<Homepprofile> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          "My Profile",
+          "حسابي",
           style: TextStyle(fontSize: 24),
         ),
         actions: <Widget>[
@@ -77,59 +81,228 @@ class _HomepprofileState extends State<Homepprofile> {
               padding: EdgeInsets.all(10),
               child: Column(
                 // mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  ListTile(
-                    title: Text(
-                      'Name',
-                      style: TextStyle(fontSize: 22),
-                    ),
-                    subtitle: Text(
-                      "${loggedInUser.firstName} ${loggedInUser.secondName}",
-                      style: TextStyle(fontSize: 22),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text.rich(
+                    TextSpan(
+                      style: TextStyle(
+                        fontSize: 22,
+                      ),
+                      children: [
+                        WidgetSpan(
+                          child: Icon(Icons.person),
+                        ),
+                        TextSpan(
+                          text:
+                              " ${loggedInUser.firstName} ${loggedInUser.secondName}",
+                        )
+                      ],
                     ),
                   ),
-                  ListTile(
-                    title: Text(
-                      'Email',
-                      style: TextStyle(fontSize: 22),
-                    ),
-                    subtitle: Text(
-                      "${loggedInUser.email}",
-                      style: TextStyle(fontSize: 22),
+
+                  // ListTile(
+                  //   title: Text(
+                  //     'Name',
+                  //     style: TextStyle(fontSize: 22),
+                  //   ),
+                  //   subtitle: Text(
+                  //     "${loggedInUser.firstName} ${loggedInUser.secondName}",
+                  //     style: TextStyle(fontSize: 22),
+                  //   ),
+                  // ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text.rich(
+                    TextSpan(
+                      style: TextStyle(
+                        fontSize: 22,
+                      ),
+                      children: [
+                        WidgetSpan(
+                          child: Icon(Icons.mail),
+                        ),
+                        TextSpan(
+                          text: " ${loggedInUser.email}",
+                        )
+                      ],
                     ),
                   ),
-                  ListTile(
-                    title: Text(
-                      'Phone Number',
-                      style: TextStyle(fontSize: 22),
-                    ),
-                    subtitle: Text(
-                      "${loggedInUser.phonenumber}",
-                      style: TextStyle(fontSize: 22),
+                  // ListTile(
+                  //   title: Text(
+                  //     'Email',
+                  //     style: TextStyle(fontSize: 22),
+                  //   ),
+                  //   subtitle: Text(
+                  //     "${loggedInUser.email}",
+                  //     style: TextStyle(fontSize: 22),
+                  //   ),
+                  // ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text.rich(
+                    TextSpan(
+                      style: TextStyle(
+                        fontSize: 22,
+                      ),
+                      children: [
+                        WidgetSpan(
+                          child: Icon(Icons.phone),
+                        ),
+                        TextSpan(
+                          text: " ${loggedInUser.phonenumber}",
+                        )
+                      ],
                     ),
                   ),
-                  ListTile(
-                    title: Text(
-                      'Date of Birth',
-                      style: TextStyle(fontSize: 22),
-                    ),
-                    subtitle: Text(
-                      "${loggedInUser.dateofbirth}",
-                      style: TextStyle(fontSize: 22),
+
+                  // ListTile(
+                  //   title: Text(
+                  //     'Phone Number',
+                  //     style: TextStyle(fontSize: 22),
+                  //   ),
+                  //   subtitle: Text(
+                  //     "${loggedInUser.phonenumber}",
+                  //     style: TextStyle(fontSize: 22),
+                  //   ),
+                  // ),
+                  SizedBox(
+                    height: 10,
+                  ),
+
+                  Text.rich(
+                    TextSpan(
+                      style: TextStyle(
+                        fontSize: 22,
+                      ),
+                      children: [
+                        WidgetSpan(
+                          child: Icon(Icons.calendar_month),
+                        ),
+                        TextSpan(
+                          text: " ${loggedInUser.dateofbirth}",
+                        )
+                      ],
                     ),
                   ),
+                  // ListTile(
+                  //   title: Text(
+                  //     'Date of Birth',
+                  //     style: TextStyle(fontSize: 22),
+                  //   ),
+                  //   subtitle: Text(
+                  //     "${loggedInUser.dateofbirth}",
+                  //     style: TextStyle(fontSize: 22),
+                  //   ),
+                  // ),
                   Padding(
-                    padding: EdgeInsets.only(top: 40.0),
+                    padding: EdgeInsets.only(top: 130.0, right: 45.0),
                     child: SizedBox(
                       width: 200,
                       height: 40,
                       child: ElevatedButton(
                         onPressed: () async {
-                          logout(context);
+                          showDialog(
+                              context: context,
+                              builder: ((context) {
+                                return AlertDialog(
+                                  title: Text("هل تريد حذف الحساب بالفعل؟"),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          deleteUser("${loggedInUser.uid}");
+                                          user!.delete();
+
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LoginPage(),
+                                              ));
+                                          Fluttertoast.showToast(
+                                              msg: "تم حذف الحساب بنجاح");
+                                        },
+                                        child: Text(
+                                          "حذف الحساب",
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        )),
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("إلغاء"))
+                                  ],
+                                );
+                              }));
                         },
                         child: Text(
-                          'Logout',
+                          "حذف الحساب",
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18),
+                        ),
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.resolveWith((states) {
+                              if (states.contains(MaterialState.pressed)) {
+                                return Colors.grey;
+                              }
+                              return Colors.red;
+                            }),
+                            shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30)))),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 20.0, right: 45.0),
+                    child: SizedBox(
+                      width: 200,
+                      height: 40,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          showDialog(
+                              context: context,
+                              builder: ((context) {
+                                return AlertDialog(
+                                  title: Text("هل تريد تسجيل الخروج؟"),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          FirebaseAuthMethods().signOut();
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LoginPage(),
+                                              ));
+                                        },
+                                        child: Text(
+                                          "تسجيل خروج",
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        )),
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("إلغاء"))
+                                  ],
+                                );
+                              }));
+                        },
+                        child: Text(
+                          'تسجيل الخروج',
                           style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -246,11 +419,37 @@ class _HomepprofileState extends State<Homepprofile> {
                                     : Colors.white,
                               )),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: ((context) {
+                                    return AlertDialog(
+                                      title: Text("هل تريد تسجيل الخروج؟"),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              FirebaseAuthMethods().signOut();
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        LoginPage(),
+                                                  ));
+                                            },
+                                            child: Text("تسجيل خروج")),
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text("إلغاء"))
+                                      ],
+                                    );
+                                  }));
+                            },
                             icon: Icon(
-                              Icons.settings,
+                              Icons.logout,
                               size: 30,
-                              color: isInsideSettings
+                              color: isInsidelogout
                                   ? Color.fromARGB(255, 254, 176, 60)
                                   : Colors.white,
                             ),
@@ -271,4 +470,9 @@ Future<void> logout(BuildContext context) async {
   await FirebaseAuth.instance.signOut();
   Navigator.of(context)
       .pushReplacement(MaterialPageRoute(builder: ((context) => LoginPage())));
+}
+
+Future<void> deleteUser(String uid) async {
+  final account =
+      await FirebaseFirestore.instance.collection("users").doc('$uid').delete();
 }

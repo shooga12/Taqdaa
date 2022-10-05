@@ -42,7 +42,7 @@ class checkOut {
           builder: (context) {
             return AlertDialog(
                 title: Text(
-                  "Your Payment completed succefully!\nThank you!",
+                  "شكرًا لك، تم الدفع بنجاح!",
                   style: TextStyle(fontSize: 18),
                 ),
                 actions: [
@@ -53,9 +53,9 @@ class checkOut {
                       await deleteCart();
                       await deleteCartDublicate();
                       await saveUserTotal(0);
-                      Navigator.pop(context, 'OK');
+                      Navigator.pop(context, 'حسنًا');
                     },
-                    child: const Text('OK'),
+                    child: const Text('حسنًا'),
                   )
                 ]);
           });
