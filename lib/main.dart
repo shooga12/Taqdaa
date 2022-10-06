@@ -1,18 +1,20 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_local_notifications_platform_interface/src/types.dart';
 import 'package:taqdaa_application/screens/list_of_stores.dart';
-import 'package:taqdaa_application/services/local_notification_service.dart';
-//import 'package:taqdaa_application/screens/storeDetails.dart';
 import '../methods/authentication_services.dart';
 import '../screens/home_page.dart';
 import 'package:flutter/foundation.dart';
-
 import '../screens/login_page.dart';
 import '../screens/register_page.dart';
 import '../confige/EcommerceApp.dart';
+import '../controller/Notification_api.dart';
+import 'package:timezone/data/latest.dart' as tz;
+
+import '../models/user_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +29,51 @@ void main() async {
   } else {
     await Firebase.initializeApp();
   }
+
+  tz.initializeTimeZones();
+
+  String closest = "";
+  String storeName = "";
+  int theIndex = -1;
+
+  Future readClosest() async {
+    String distance = "";
+    final QuerySnapshot result =
+        await FirebaseFirestore.instance.collection('Stores').get();
+    final List<DocumentSnapshot> documents = result.docs;
+    for (int i = 0; i < documents.length; i++) {
+      distance = documents[0].get("kilometers");
+      if (distance == "0.1") {
+        closest = documents[i].id;
+        theIndex = i;
+      }
+    }
+    storeName = documents[theIndex].get("StoreName");
+  }
+
+  await readClosest();
+
+  var collection = FirebaseFirestore.instance.collection('Stores');
+  QuerySnapshot result =
+      await FirebaseFirestore.instance.collection('Stores').get();
+  final List<DocumentSnapshot> documents = result.docs;
+  for (int i = 0; i < documents.length; i++) {
+    collection.doc("${documents[i].id}").snapshots().listen((docSnapshot) {
+      if (docSnapshot.exists) {
+        Map<String, dynamic> data = docSnapshot.data()!;
+        if (data["kilometers"] == "0.1") {
+          NotificationApi.showScheduledNotification(
+              title: 'Taqdaa is waiting for you!',
+              body: 'Hey, ' +
+                  EcommerceApp.userName +
+                  '\nyou\'re very close from ${data['StoreName']} come and shop with us now!', ////bug fixes StoreName
+              payload: 'paylod.nav',
+              scheduledDate: DateTime.now().add(Duration(seconds: 1)));
+        }
+      }
+    });
+  }
+
   runApp(const MyApp());
 }
 
@@ -66,27 +113,32 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
+  User? user = FirebaseAuth.instance.currentUser;
+  UserModel loggedInUser = UserModel();
 
-  late final LocalNotificationsService service;
-
-  @override
   void initState() {
-    service = LocalNotificationsService();
-    service.initialize();
-    listenToNotification();
     super.initState();
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(user!.uid)
+        .get()
+        .then((value) {
+      this.loggedInUser = UserModel.fromMap(value.data());
+      setState(() {});
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-        //   Text(
-        //     "Hey, Shoug",
-        //     style: TextStyle(fontSize: 25),
-        //   ),
-        // ]),
+        automaticallyImplyLeading: false,
+        title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+          Text(
+            "Hey, ${loggedInUser.firstName}",
+            style: TextStyle(fontSize: 24),
+          ),
+        ]),
         flexibleSpace: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
@@ -95,12 +147,30 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           IconButton(
             onPressed: () {
-              FirebaseAuthMethods().signOut();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LoginPage(),
-                  ));
+              showDialog(
+                  context: context,
+                  builder: ((context) {
+                    return AlertDialog(
+                      title: Text("Are you sure you want to Log out?"),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              FirebaseAuthMethods().signOut();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => LoginPage(),
+                                  ));
+                            },
+                            child: Text("Log out")),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text("cancel"))
+                      ],
+                    );
+                  }));
             },
             icon: Icon(
               Icons.logout,
@@ -120,13 +190,13 @@ class _MyHomePageState extends State<MyHomePage> {
             if (snapshot.hasData) {
               final stores = snapshot.data!;
               if (stores.isNotEmpty) {
-                service.showNotification(
-                    id: 0,
+                NotificationApi.showScheduledNotification(
                     title: 'Taqdaa is waiting for you!',
                     body: 'Hey, ' +
                         EcommerceApp.userName +
                         '\nyou\'re very close from ${stores.first.StoreName} come and shop with us now!',
-                    payload: 'payload nav');
+                    payload: 'paylod.nav',
+                    scheduledDate: DateTime.now().add(Duration(seconds: 3)));
               }
               return HomePage();
               //   }
@@ -137,26 +207,6 @@ class _MyHomePageState extends State<MyHomePage> {
               return Center(child: CircularProgressIndicator());
             }
           }),
-
-      //HomePage(),
-
-      //
-      // bottomNavigationBar: BottomNavigationBar(
-      //   onTap: (onTapTapped) {},
-      //   currentIndex: _currentIndex,
-      //   items: [
-      //     BottomNavigationBarItem(
-      //       label: Title(child: Text),
-      //       icon: new Icon(Icons.home),
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: new Icon(Icons.explore),
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: new Icon(Icons.account_circle),
-      //     )
-      //   ],
-      // ),
     );
   }
 
@@ -166,17 +216,4 @@ class _MyHomePageState extends State<MyHomePage> {
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Store.fromJson(doc.data())).toList());
-
-  void listenToNotification() =>
-      service.onNotificationClick.stream.listen(onNotificationListener);
-
-  void onNotificationListener(NotificationResponse? payload) {
-    if (payload != null) {
-      print('payload $payload');
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ListOfStores2()),
-      );
-    }
-  }
 }

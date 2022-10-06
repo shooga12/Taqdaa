@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
+import 'package:taqdaa_application/screens/ShoppingCart.dart';
 import 'package:taqdaa_application/screens/scanBarCode.dart';
-import '../controller/searchBar.dart';
-import 'scanBarCode.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 
 class ListOfStores2 extends StatefulWidget {
   const ListOfStores2({super.key});
@@ -17,6 +15,8 @@ class ListOfStores2 extends StatefulWidget {
 
 class _ListOfStores2State extends State<ListOfStores2> {
   final List<Store> Stores = [];
+  FirebaseDatabase database = FirebaseDatabase.instance;
+  String collectionName = EcommerceApp().getCurrentUser();
 
   String _counter = "";
 
@@ -28,12 +28,66 @@ class _ListOfStores2State extends State<ListOfStores2> {
       EcommerceApp.value = _counter;
     });
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => ScanPage()),
-    );
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('${EcommerceApp.uid}All')
+        .where("Item_number", isEqualTo: EcommerceApp.value.substring(1))
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
+    if (documents.length == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => shoppingCart()),
+      );
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                content: Text("Item already have been added."), ///////
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'OK'),
+                    child: const Text('OK'),
+                  )
+                ]);
+          });
+      return false;
+    }
+
+    Query dbref = FirebaseDatabase.instance
+        .ref()
+        .child(EcommerceApp.storeId) //Ecommerce.storeName
+        .child('store')
+        .orderByChild('Barcode')
+        .equalTo(EcommerceApp.value.substring(1));
+
+    final event = await dbref.once(DatabaseEventType.value);
+
+    if (event.snapshot.value != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ScanPage()),
+      );
+    } else if (_counter == "-1") {
+      return false;
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                content: Text("Sorry Item not found!"),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'OK'),
+                    child: const Text('OK'),
+                  )
+                ]);
+          });
+    }
   }
 
+  String SearchName = '';
+  bool flag = false;
+  int count = -1;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,13 +96,25 @@ class _ListOfStores2State extends State<ListOfStores2> {
           'Choose Store',
           style: TextStyle(fontSize: 24), //TextStyle(fontFamily: 'Cairo'),
         ),
-        actions: [
-          IconButton(
-              onPressed: () {
-                showSearch(context: context, delegate: MySearchDelegate());
-              },
-              icon: const Icon(Icons.search))
-        ],
+        bottom: PreferredSize(
+            child: Flexible(
+              child: Card(
+                child: SizedBox(
+                  width: 375,
+                  child: TextField(
+                    decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.search),
+                        hintText: 'Search for a store name..'),
+                    onChanged: (val) {
+                      setState(() {
+                        SearchName = val.replaceAll(' ', '');
+                      });
+                    },
+                  ),
+                ),
+              ),
+            ),
+            preferredSize: Size.zero),
         flexibleSpace: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
@@ -64,11 +130,35 @@ class _ListOfStores2State extends State<ListOfStores2> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final stores = snapshot.data!;
+              count = stores.length;
               return ListView.builder(
-                itemCount: stores.length,
-                itemBuilder: (BuildContext context, int index) =>
-                    buildStoresCards(stores[index], context),
-              );
+                  itemCount: stores.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    var data = stores[index];
+                    if (SearchName.isEmpty) {
+                      flag = false;
+                      return buildStoresCards(stores[index], context);
+                    } else if (SearchName.isNotEmpty &&
+                        data.StoreName.toString()
+                            .toLowerCase()
+                            .startsWith(SearchName.toLowerCase())) {
+                      flag = true;
+                      return buildStoresCards(stores[index], context);
+                    } else if (flag == false && index == count - 1) {
+                      return Container(
+                          child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'No Results',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ));
+                    }
+                    return nothing();
+                  });
             } else if (snapshot.hasError) {
               return Text("Some thing went wrong! ${snapshot.error}");
             } else {
@@ -76,6 +166,10 @@ class _ListOfStores2State extends State<ListOfStores2> {
             }
           }),
     );
+  }
+
+  nothing() {
+    return Container();
   }
 
   Stream<List<Store>> readStores() => FirebaseFirestore.instance
@@ -144,14 +238,71 @@ class _ListOfStores2State extends State<ListOfStores2> {
             ),
             onTap: () {
               EcommerceApp.storeId = store.StoreId;
-              EcommerceApp.storeName = store.StoreName;
-              _scan(context);
+              if (EcommerceApp.storeName == "") {
+                EcommerceApp.storeName = store.StoreName;
+                _scan(context);
+              } else if (EcommerceApp.storeName == store.StoreName) {
+                _scan(context);
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                          content: Text(
+                              "Sorry you already have an order in ${EcommerceApp.storeName}."),
+                          actions: [
+                            ElevatedButton(
+                                onPressed: () async {
+                                  EcommerceApp.storeName = "";
+                                  await deleteCart();
+                                  await deleteCartDublicate();
+                                  await saveUserTotal(0);
+                                  Navigator.pop(context, 'OK');
+                                }, /////add cancelation
+                                child: Text(
+                                    "Cancel ${EcommerceApp.storeName} order")),
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, 'OK'),
+                              child: const Text('OK'),
+                            ),
+                          ]);
+                    });
+              }
             },
           ),
           color: Color.fromARGB(243, 243, 239, 231),
         ),
       ),
     );
+  }
+
+  Future saveUserTotal(var total) async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('${collectionName}Total')
+        .get();
+    final DocumentSnapshot document = result.docs.first;
+    if (document.exists) {
+      document.reference.update({'Total': total});
+    }
+  }
+
+  Future deleteCart() async {
+    final QuerySnapshot result =
+        await FirebaseFirestore.instance.collection('${collectionName}').get();
+    final List<DocumentSnapshot> documents = result.docs;
+    for (int i = 0; i < documents.length; i++) {
+      documents[i].reference.delete();
+    }
+  }
+
+  Future deleteCartDublicate() async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('${collectionName}All')
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
+    for (int i = 0; i < documents.length; i++) {
+      documents[i].reference.delete();
+    }
   }
 }
 

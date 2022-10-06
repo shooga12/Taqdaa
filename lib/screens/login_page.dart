@@ -1,9 +1,5 @@
-//import 'dart:js';
-import '../methods/authentication_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'home_page.dart';
 import 'register_page.dart';
 import '../reusable_widget/reusable_widget.dart';
 import 'reset_page.dart';
@@ -21,7 +17,6 @@ class _LoginPageState extends State<LoginPage> {
   final _passController = TextEditingController();
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
 
-  ///User? user = FirebaseAuth.instance.currentUser;
   String errorMsg = '';
   bool isLoading = false;
 
@@ -47,8 +42,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Form(
-        //key: _key,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.fromLTRB(
@@ -66,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
                 //     "Enter Email Address", false, _emailController),
                 TextFormField(
                   controller: _emailController,
-
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: MultiValidator([
                     RequiredValidator(errorText: 'Required *'),
                     EmailValidator(errorText: 'Not a valid Email *')
@@ -112,6 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                 // reusableTextField("Enter your password", true, _passController),
                 TextFormField(
                   controller: _passController,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: MultiValidator([
                     RequiredValidator(errorText: 'Requiered *'),
                   ]),
@@ -172,30 +166,34 @@ class _LoginPageState extends State<LoginPage> {
                       ? Center(
                           child: CircularProgressIndicator(),
                         )
-                      : ElevatedButton(
-                          onPressed: () async {
-                            login();
-                          },
-                          child: Text(
-                            'LOG IN',
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16),
+                      : SizedBox(
+                          width: 200,
+                          height: 40,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              login();
+                            },
+                            child: Text(
+                              'LOG IN',
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18),
+                            ),
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.resolveWith((states) {
+                                  if (states.contains(MaterialState.pressed)) {
+                                    return Colors.grey;
+                                  }
+                                  return Colors.orange;
+                                }),
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(30)))),
                           ),
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.resolveWith((states) {
-                                if (states.contains(MaterialState.pressed)) {
-                                  return Colors.grey;
-                                }
-                                return Colors.orange;
-                              }),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(30)))),
                         ),
                 ),
 
@@ -213,7 +211,7 @@ class _LoginPageState extends State<LoginPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Don't have an account?",
+        const Text("Don't have an account? ",
             style: TextStyle(color: Color.fromARGB(255, 15, 53, 120))),
         GestureDetector(
           onTap: () {
@@ -224,8 +222,9 @@ class _LoginPageState extends State<LoginPage> {
                 ));
           },
           child: const Text(
-            "  SignUp",
+            "SignUp",
             style: TextStyle(
+                decoration: TextDecoration.underline,
                 color: Color.fromARGB(255, 15, 53, 120),
                 fontWeight: FontWeight.bold),
           ),
@@ -238,7 +237,7 @@ class _LoginPageState extends State<LoginPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Forgot password?",
+        const Text("Forgot password? ",
             style: TextStyle(color: Color.fromARGB(255, 15, 53, 120))),
         GestureDetector(
           onTap: () {
@@ -246,8 +245,9 @@ class _LoginPageState extends State<LoginPage> {
                 MaterialPageRoute(builder: (context) => ResetPassPage()));
           },
           child: const Text(
-            "  Reset Password",
+            "Reset Password",
             style: TextStyle(
+                decoration: TextDecoration.underline,
                 color: Color.fromARGB(255, 15, 53, 120),
                 fontWeight: FontWeight.bold),
           ),

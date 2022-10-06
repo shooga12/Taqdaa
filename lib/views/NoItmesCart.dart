@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:taqdaa_application/screens/list_of_stores.dart';
 
 class emptyCart extends StatelessWidget {
@@ -13,7 +11,7 @@ class emptyCart extends StatelessWidget {
           title: Text(
             //EcommerceApp.storeName +
             "Shopping Cart",
-            // style: TextStyle(fontFamily: 'Cairo'),
+            style: TextStyle(fontSize: 24),
           ),
           flexibleSpace: Container(
             decoration: BoxDecoration(
@@ -40,31 +38,37 @@ class emptyCart extends StatelessWidget {
                     style:
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                 Text(""),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ListOfStores2()),
-                    );
-                  },
-                  child: Text(
-                    'Start Shopping',
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16),
+                SizedBox(
+                  width: 200,
+                  height: 40,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ListOfStores2()),
+                      );
+                    },
+                    child: Text(
+                      'Start Shopping',
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18),
+                    ),
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith((states) {
+                          if (states.contains(MaterialState.pressed)) {
+                            return Colors.grey;
+                          }
+                          return Colors.orange;
+                        }),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30)))),
                   ),
-                  style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.resolveWith((states) {
-                        if (states.contains(MaterialState.pressed)) {
-                          return Colors.grey;
-                        }
-                        return Colors.orange;
-                      }),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30)))),
                 ),
               ],
             ),

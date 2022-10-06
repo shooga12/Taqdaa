@@ -1,11 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:taqdaa_application/screens/ShoppingCart.dart';
 import '../confige/EcommerceApp.dart';
-import 'list_of_stores.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 
@@ -31,10 +27,6 @@ class _ScanPageState extends State<ScanPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "",
-          // style: TextStyle(fontFamily: 'Cairo'),
-        ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
@@ -46,64 +38,18 @@ class _ScanPageState extends State<ScanPage> {
         elevation: 0,
       ),
       body: Container(
-        height: double.infinity,
-        child: FirebaseAnimatedList(
-            query: dbref,
-            itemBuilder: (BuildContext context, DataSnapshot snapshot,
-                Animation<double> animation, int index) {
-              //if (snapshot.hasChild('Barcode')) {
-              Map product = snapshot.value as Map;
-              product['key'] = snapshot.key;
-              if (EcommerceApp.storeName == product['StoreName']) {
-                return buildBeforeCart(product: product);
-              } else {
-                return AlertDialog(
-                    content: Text("Sorry you can only scan items from " +
-                        EcommerceApp.storeName +
-                        " store!"),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, 'OK'),
-                        child: const Text('OK'),
-                      )
-                    ]);
-              }
-              // } else {
-              //   return Center(child: CircularProgressIndicator());
-              // }
-            }),
-      ),
+          height: double.infinity,
+          child: FirebaseAnimatedList(
+              query: dbref,
+              itemBuilder: (BuildContext context, DataSnapshot snapshot,
+                  Animation<double> animation, int index) {
+                //if (snapshot.hasChild('Barcode')) {
+                Map product = snapshot.value as Map;
+                product['key'] = snapshot.key;
+                //return buildBeforeCart(product: product);
 
-      // StreamBuilder<List<Product>>(
-      //     stream: readItems(),
-      //     builder: (context, snapshot) {
-      //       if (snapshot.hasData) {
-      //         final products = snapshot.data!;
-      //         return ListView.builder(
-      //             itemCount: products.length,
-      //             itemBuilder: (BuildContext context, int index) {
-      //               if (EcommerceApp.storeName == products[index].Store) {
-      //                 return buildBeforeCart(products[index], context);
-      //               } else {
-      //                 return AlertDialog(
-      //                     content: Text(
-      //                         "Sorry you can only scan items from " +
-      //                             EcommerceApp.storeName +
-      //                             " store!"),
-      //                     actions: [
-      //                       TextButton(
-      //                         onPressed: () => Navigator.pop(context, 'OK'),
-      //                         child: const Text('OK'),
-      //                       )
-      //                     ]);
-      //               }
-      //             });
-      //       } else if (snapshot.hasError) {
-      //         return Text("Some thing went wrong! ${snapshot.error}");
-      //       } else {
-      //         return Center(child: CircularProgressIndicator());
-      //       }
-      //     }),
+                return buildBeforeCart(product: product);
+              })),
     );
   }
 
@@ -114,15 +60,22 @@ class _ScanPageState extends State<ScanPage> {
       "Price": product.Price,
       "Store": product.Store,
       "quantity": product.quantity,
+      "RFID": product.RFID,
+      "ProductImage": product.ProductImage,
     });
   }
 
-  // Stream<List<Product>> readCartItems() => FirebaseFirestore.instance
-  //     .collection(EcommerceApp.uid)
-  //     .where("Item_number", isEqualTo: EcommerceApp.value.substring(1))
-  //     .snapshots()
-  //     .map((snapshot) =>
-  //         snapshot.docs.map((doc) => Product.fromJson(doc.data())).toList());
+  Future saveUserItemsDublicate(Product product) async {
+    FirebaseFirestore.instance.collection('${collectionName}All').add({
+      "Category": product.Category,
+      "Item_number": product.Item_number,
+      "Price": product.Price,
+      "Store": product.Store,
+      "quantity": product.quantity,
+      "RFID": product.RFID,
+      "ProductImage": product.ProductImage,
+    });
+  }
 
   Widget buildBeforeCart({required Map product}) {
     return Container(
@@ -151,6 +104,25 @@ class _ScanPageState extends State<ScanPage> {
                                 fit: BoxFit.cover,
                               ),
                             ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 25, top: 5),
+                              child: Container(
+                                width: 70,
+                                margin: EdgeInsets.all(10),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Image(
+                                    image: NetworkImage(
+                                      product['ProductImage'],
+                                    ),
+                                  ),
+                                ),
+                                // Container(
+                                //   alignment: Alignment.bottomLeft, //اعدله
+                                //   child:
+                                // ),
+                              ),
+                            )
                             // Container(
                             //   alignment: Alignment.center, //اعدله
                             //   child:  photo*****
@@ -195,44 +167,57 @@ class _ScanPageState extends State<ScanPage> {
               Column(
                 children: [
                   Center(
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        EcommerceApp.haveItems = true; ////bug fixes
-                        if (await checkItemExist()) {
-                        } else {
-                          saveUserItems(Product(
-                              Category: product['Product Name'],
-                              Item_number: product['Barcode'],
-                              Price: product['Price'],
-                              Store: product['StoreName'],
-                              quantity: product['quantity']));
-                        }
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => shoppingCart()),
-                        );
-                      },
-                      child: Text(
-                        'Add to cart',
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16),
+                    child: SizedBox(
+                      width: 200,
+                      height: 40,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          EcommerceApp.haveItems = true; ////bug fixes
+                          EcommerceApp.productName = product['Product Name'];
+
+                          Product toBeSavedProduct = Product(
+                            Category: product['Product Name'],
+                            Item_number: product['Barcode'],
+                            Price: product['Price'],
+                            Store: product['StoreName'],
+                            quantity: product['quantity'],
+                            RFID: product['RFID'],
+                            ProductImage: product['ProductImage'],
+                          );
+
+                          if (await checkItemExist()) {
+                            saveUserItemsDublicate(toBeSavedProduct);
+                          } else {
+                            saveUserItemsDublicate(toBeSavedProduct);
+                            saveUserItems(toBeSavedProduct);
+                          }
+                          EcommerceApp.counter++;
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => shoppingCart()),
+                          );
+                        },
+                        child: Text(
+                          'Add to cart',
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18),
+                        ),
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.resolveWith((states) {
+                              if (states.contains(MaterialState.pressed)) {
+                                return Colors.grey;
+                              }
+                              return Colors.orange;
+                            }),
+                            shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30)))),
                       ),
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.resolveWith((states) {
-                            if (states.contains(MaterialState.pressed)) {
-                              return Colors.grey;
-                            }
-                            return Colors.orange;
-                          }),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(30)))),
                     ),
                   ),
                 ],
@@ -247,10 +232,10 @@ class _ScanPageState extends State<ScanPage> {
   Future<bool> checkItemExist() async {
     final QuerySnapshot result = await FirebaseFirestore.instance
         .collection('${collectionName}')
-        .where("Item_number", isEqualTo: EcommerceApp.value.substring(1))
+        .where("Category", isEqualTo: EcommerceApp.productName)
         .get();
     final List<DocumentSnapshot> documents = result.docs;
-    if (documents.length == 1) {
+    if (documents.length >= 1) {
       ///increment real time
       documents[0].reference.update({'quantity': FieldValue.increment(1)});
       return true;
@@ -266,13 +251,17 @@ class Product {
   final int Price;
   final String Store;
   final int quantity;
+  final String RFID;
+  final String ProductImage;
 
   Product(
       {required this.Category,
       required this.Item_number,
       required this.Price,
       required this.Store,
-      required this.quantity});
+      required this.quantity,
+      required this.RFID,
+      required this.ProductImage});
 
   Map<String, dynamic> toJson() => {
         'Category': Category,
@@ -280,6 +269,8 @@ class Product {
         'Price': Price,
         'Store': Store,
         'quantity': quantity,
+        'RFID': RFID,
+        'ProductImage': ProductImage,
       };
 
   static Product fromJson(Map<String, dynamic> json) => Product(
@@ -288,5 +279,7 @@ class Product {
         Price: json['Price'],
         Store: json['Store'],
         quantity: json['quantity'],
+        RFID: json['RFID'],
+        ProductImage: json['ProductImage'],
       );
 }
