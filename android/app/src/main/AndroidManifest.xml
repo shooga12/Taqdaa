@@ -9,7 +9,7 @@
     
 
    <application
-        android:label="Taqdaa"
+        android:label="تقضّى"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         tools:replace="android:label">

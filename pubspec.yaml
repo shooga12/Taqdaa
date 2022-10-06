@@ -68,7 +68,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  #flutter_native_splash: ^2.2.10+1
+    
 
 
   # The "flutter_lints" package below contains a set of recommended lints to

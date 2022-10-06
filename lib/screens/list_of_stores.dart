@@ -91,11 +91,12 @@ class _ListOfStores2State extends State<ListOfStores2> {
       showDialog(
           context: context,
           builder: (context) {
-            return AlertDialog(content: Text("تم إضافة المنتج مسبقًا!"), ///////
+            return AlertDialog(
+                content: Text("تم إضافة المنتج مسبقًا!"),
                 actions: [
                   TextButton(
-                    onPressed: () => Navigator.pop(context, 'OK'),
-                    child: const Text('OK'),
+                    onPressed: () => Navigator.pop(context, 'حسنًا'),
+                    child: const Text('حسنًا'),
                   )
                 ]);
           });

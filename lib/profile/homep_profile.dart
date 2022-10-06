@@ -436,7 +436,12 @@ class _HomepprofileState extends State<Homepprofile> {
                                                         LoginPage(),
                                                   ));
                                             },
-                                            child: Text("تسجيل خروج")),
+                                            child: Text(
+                                              "تسجيل خروج",
+                                              style: TextStyle(
+                                                color: Colors.red,
+                                              ),
+                                            )),
                                         TextButton(
                                             onPressed: () {
                                               Navigator.pop(context);
