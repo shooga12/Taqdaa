@@ -1,37 +1,53 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
 import 'package:taqdaa_application/screens/NoItmesCart.dart';
-import 'package:taqdaa_application/services/local_notification_service.dart';
+import '../controller/BNBCustomePainter.dart';
+import '../methods/authentication_services.dart';
 import 'ShoppingCart.dart';
 import 'list_of_stores.dart';
+import 'login_page.dart';
 import 'scanBarCode.dart';
+//import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import '../controller/NotificationApi.dart';
+import '../profile/homep_profile.dart';
+import 'package:taqdaa_application/model/user_model.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  // Future checkLocation() async {
-  //   final QuerySnapshot result = await FirebaseFirestore.instance
-  //       .collection('Stores')
-  //       .where('kilometers', isEqualTo: 0.1)
-  //       .get();
-  //   final List<DocumentSnapshot> documents = result.docs;
-  //   if (documents.length == 1) {
-  //     service.showNotification(
-  //         id: 0,
-  //         title: 'Taqdaa is waiting for you!',
-  //         body: 'Hey, ' +
-  //             EcommerceApp.userName +
-  //             '\nyou\'re very close from ${documents[0].get('StoreName')} come and shop with us now!');
-  //   }
-  // }
+class HomePageState extends State<HomePage> {
+  void initState() {
+    super.initState();
+    tz.initializeTimeZones();
+
+    //NotificationApi.init();
+    //listenNotifications();
+  }
+
+  // void listenNotifications() =>
+  //     NotificationApi.onNotification.stream.listen(onClickNotification);
+
+  // void onClickNotification(NotificationResponse? details) => Navigator.push(
+  //       context,
+  //       MaterialPageRoute(builder: (context) => ListOfStores2()),
+  //     );
+
+  @override
+  bool isInsideHome = true;
+  bool isInsideProfile = false;
+  bool isInsidelogout = false;
 
   @override
   Widget build(BuildContext context) {
@@ -85,9 +101,11 @@ class _HomePageState extends State<HomePage> {
                           IconButton(
                               onPressed: () {},
                               icon: Icon(
-                                Icons.home,
-                                size: 30,
-                                color: Colors.white,
+                                Icons.home_outlined,
+                                size: 35,
+                                color: isInsideHome
+                                    ? Color.fromARGB(255, 254, 176, 60)
+                                    : Colors.white,
                               )),
                           IconButton(
                               onPressed: () {
@@ -115,18 +133,59 @@ class _HomePageState extends State<HomePage> {
                             width: size.width * 0.20,
                           ),
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Homepprofile()),
+                                );
+                              },
                               icon: Icon(
                                 Icons.person,
                                 size: 30,
-                                color: Colors.white,
+                                color: isInsideProfile
+                                    ? Color.fromARGB(255, 254, 176, 60)
+                                    : Colors.white,
                               )),
                           IconButton(
-                            onPressed: () async {},
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: ((context) {
+                                    return AlertDialog(
+                                      title: Text("هل تريد تسجيل الخروج؟"),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              FirebaseAuthMethods().signOut();
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        LoginPage(),
+                                                  ));
+                                            },
+                                            child: Text(
+                                              "تسجيل خروج",
+                                              style: TextStyle(
+                                                color: Colors.red,
+                                              ),
+                                            )),
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text("إلغاء"))
+                                      ],
+                                    );
+                                  }));
+                            },
                             icon: Icon(
-                              Icons.settings,
+                              Icons.logout,
                               size: 30,
-                              color: Colors.white,
+                              color: isInsidelogout
+                                  ? Color.fromARGB(255, 254, 176, 60)
+                                  : Colors.white,
                             ),
                           ),
                         ]),
@@ -138,29 +197,5 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
-  }
-}
-
-class BNBCustomePainter extends CustomPainter {
-  void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()
-      ..color = Color.fromARGB(255, 32, 7, 121)
-      ..style = PaintingStyle.fill;
-    Path path = Path()..moveTo(0, 20);
-    path.quadraticBezierTo(size.width * 0.20, 0, size.width * 0.35, 0);
-    path.quadraticBezierTo(size.width * 0.40, 0, size.width * 0.40, 20);
-    path.arcToPoint(Offset(size.width * 0.60, 20),
-        radius: Radius.circular(10.0), clockwise: false);
-    path.quadraticBezierTo(size.width * 0.60, 0, size.width * 0.65, 0);
-    path.quadraticBezierTo(size.width * 0.80, 0, size.width, 20);
-    path.lineTo(size.width, size.height);
-    path.lineTo(0, size.height);
-    path.close();
-    canvas.drawShadow(path, Colors.black, 5, true);
-    canvas.drawPath(path, paint);
-  }
-
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
   }
 }

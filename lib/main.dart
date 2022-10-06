@@ -2,17 +2,18 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_local_notifications_platform_interface/src/types.dart';
 import 'package:taqdaa_application/screens/list_of_stores.dart';
-import 'package:taqdaa_application/services/local_notification_service.dart';
-//import 'package:taqdaa_application/screens/storeDetails.dart';
 import '../methods/authentication_services.dart';
 import '../screens/home_page.dart';
 import 'package:flutter/foundation.dart';
-
 import '../screens/login_page.dart';
 import '../screens/register_page.dart';
 import '../confige/EcommerceApp.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'controller/NotificationApi.dart';
+import 'model/user_model.dart';
+import 'dart:io';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +28,7 @@ void main() async {
   } else {
     await Firebase.initializeApp();
   }
+  tz.initializeTimeZones();
   runApp(const MyApp());
 }
 
@@ -36,6 +38,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Localizations Sample App',
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('ar', 'EN'), // English, no country code
+      ],
       debugShowCheckedModeBanner: false,
       home: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
@@ -66,51 +77,37 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
+  User? user = FirebaseAuth.instance.currentUser;
+  UserModel loggedInUser = UserModel();
 
-  late final LocalNotificationsService service;
-
-  @override
   void initState() {
-    service = LocalNotificationsService();
-    service.initialize();
-    listenToNotification();
     super.initState();
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(user!.uid)
+        .get()
+        .then((value) {
+      this.loggedInUser = UserModel.fromMap(value.data());
+      setState(() {});
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-        //   Text(
-        //     "Hey, Shoug",
-        //     style: TextStyle(fontSize: 25),
-        //   ),
-        // ]),
+        title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+          Text(
+            "مرحبًا، ${loggedInUser.firstName}",
+            style: TextStyle(fontSize: 25),
+          ),
+        ]),
         flexibleSpace: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
                   image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              FirebaseAuthMethods().signOut();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LoginPage(),
-                  ));
-            },
-            icon: Icon(
-              Icons.logout,
-              size: 35,
-              color: Color.fromARGB(255, 32, 7, 121),
-            ),
-          ),
-        ],
         toolbarHeight: 170,
-        //leading: BackButton(),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -119,44 +116,22 @@ class _MyHomePageState extends State<MyHomePage> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final stores = snapshot.data!;
-              if (stores.isNotEmpty) {
-                service.showNotification(
-                    id: 0,
-                    title: 'Taqdaa is waiting for you!',
-                    body: 'Hey, ' +
-                        EcommerceApp.userName +
-                        '\nyou\'re very close from ${stores.first.StoreName} come and shop with us now!',
-                    payload: 'payload nav');
-              }
+              // if (stores.isNotEmpty) {
+              //   NotificationApi.showScheduledNotification(
+              //       title: 'Taqdaa is waiting for you!',
+              //       body: 'Hey, ' +
+              //           EcommerceApp.userName +
+              //           '\nyou\'re very close from ${stores.first.StoreName} come and shop with us now!',
+              //       payload: 'paylod.nav',
+              //       scheduledDate: DateTime.now().add(Duration(seconds: 3)));
+              // }
               return HomePage();
-              //   }
-              // );
             } else if (snapshot.hasError) {
               return Text("Some thing went wrong! ${snapshot.error}");
             } else {
               return Center(child: CircularProgressIndicator());
             }
           }),
-
-      //HomePage(),
-
-      //
-      // bottomNavigationBar: BottomNavigationBar(
-      //   onTap: (onTapTapped) {},
-      //   currentIndex: _currentIndex,
-      //   items: [
-      //     BottomNavigationBarItem(
-      //       label: Title(child: Text),
-      //       icon: new Icon(Icons.home),
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: new Icon(Icons.explore),
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: new Icon(Icons.account_circle),
-      //     )
-      //   ],
-      // ),
     );
   }
 
@@ -166,17 +141,4 @@ class _MyHomePageState extends State<MyHomePage> {
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Store.fromJson(doc.data())).toList());
-
-  void listenToNotification() =>
-      service.onNotificationClick.stream.listen(onNotificationListener);
-
-  void onNotificationListener(NotificationResponse? payload) {
-    if (payload != null) {
-      print('payload $payload');
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ListOfStores2()),
-      );
-    }
-  }
 }
