@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './style.css';
 import {sendPasswordResetEmail} from 'firebase/auth';
+import parse from 'html-react-parser'
+import { confirmAlert } from 'react-confirm-alert'; 
 import Logo from '../../shared/Logo_Light.png';
 import auth from '../../shared/firebase';
 import {IoIosArrowBack} from 'react-icons/io';
@@ -22,7 +24,8 @@ function Reset(){
      });
      const reset = () => {sendPasswordResetEmail(auth, emailField)
         .then(() => {
-            alert("Email sent");
+            showAlert();
+            navigate('/');
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -34,6 +37,18 @@ function Reset(){
           // ..
         });
      }
+     const showAlert = () => {
+      var msg = parse('<span id="registration-msg">Email Sent Successfully</span>')
+      confirmAlert({
+      message: msg,
+      buttons: [
+          {
+          label: 'Ok',
+          //onClick: () => alert('Click No')
+          }
+      ]
+      });
+    }
       return(
         <div class='container w-100 vh-100 d-flex align-items-center'>
           <div id="Reset-box" class="col-11 col-md-10 col-lg-7">

@@ -5,10 +5,6 @@ import {FiEdit} from 'react-icons/fi';
 import {MdDelete} from 'react-icons/md';
 import {ref, set, child, get, push,update } from "firebase/database";
 import { async } from '@firebase/util';
-import img1 from'./243280_swatch.jpeg'
-import img2 from './sephora-brightening-hydrating-foundation-original-imaecf3t7vgdk9by.webp';
-import img3 from './458789.jpeg';
-import img4 from './s2497212-main-zoom.jpeg';
 import loading from './loading.gif';
 import { confirmAlert } from 'react-confirm-alert'; 
 

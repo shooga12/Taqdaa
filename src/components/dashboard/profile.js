@@ -17,7 +17,7 @@ function Profile(){
    },[done]);
 
    const getData = async ()=>{
-    const docRef = doc(db, "Requests", "APVleUPzQlCkOfzQU1e0");
+    const docRef = doc(db, "Stores", 'Store'+auth.currentUser.uid);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
         console.log("Document data:", docSnap.data());

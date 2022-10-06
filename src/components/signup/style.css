@@ -110,4 +110,14 @@ font-size: medium;
 .default-text{
     font-weight: 500;
 }
-  
+.select-file-labels{
+    background: #fda00b;
+    color: white;
+    padding: 0.5em 1em 0.5em 1em;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 18px;
+} 
+.select-file-labels:hover{
+    background: #c87b00;
+}

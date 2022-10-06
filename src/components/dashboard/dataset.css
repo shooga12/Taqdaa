@@ -137,4 +137,18 @@ h1{
 #file-name{
   font-size: 20px;
   margin-top: 1.5em;
+  color: #e08a00;
+}
+#done-uploading{
+  font-size: 130px;
+  color: rgb(82, 162, 82);
+}
+filename{
+  color: #161e58;
+}
+#dataset-error-msg{
+  color: rgb(183, 0, 0);
+}
+#dataset-success-msg{
+  color: rgb(37, 134, 37);
 }

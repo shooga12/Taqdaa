@@ -20,5 +20,5 @@ export const validEmail = (email)=>{
    return /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/.test(email)
 }
 export const validPhone = (phone)=> {
-    return /[0-9]{10}/.test(phone);
+    return /[0-9]{9}/.test(phone);
 }

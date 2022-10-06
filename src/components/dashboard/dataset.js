@@ -3,7 +3,8 @@ import "./dataset.css";
 
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
-
+import {IoCloudDoneOutline} from 'react-icons/io5'
+import parse from 'html-react-parser'
 import {BsCloudArrowUp} from 'react-icons/bs';
 import * as XLSX from 'xlsx';
 import { async } from '@firebase/util';
@@ -24,7 +25,7 @@ function Dataset(){
     
    
  const handleFile = async (e) => {
-    setFile(e.files[0]);
+    //setFile(e.files[0]);
     let fileType = e.files[0].type; 
     let validExtensions = ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv"]; //adding some valid image extensions in array
     if(!validExtensions.includes(fileType)){
@@ -38,15 +39,90 @@ function Dataset(){
         const workbook = XLSX.read(data);
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         setWork(worksheet);
-        setJsonData(XLSX.utils.sheet_to_json(worksheet));
-       
+        let js = XLSX.utils.sheet_to_json(worksheet)
+        setJsonData(js);
+        if(file.length == 0){
+            showAlertError("No File Selected!");
+            return;
+        }
+        if(js.length == 0){
+            showAlertError("Dataset is empty!")
+            setDone(0);
+            document.querySelector('#file-input').value = "";
+            setFileName('No File Selected')
+            return;
+        }
+        else{
+            let errorMsg = "";
+            
+            const header = XLSX.utils.sheet_to_json(worksheet,{header:1})[0];
+            const headerLower = header.map(element => {
+                return element.toLowerCase();
+            });
+            const jcc = require('json-case-convertor')
+           
+            const lowerCaseJsonData = jcc.lowerCaseKeys(js)
+
+            
+         
+            //1.columns validation
+            if(!headerLower.includes("price"))
+              errorMsg += "• Price column is missing!<br>"
+            if(!headerLower.includes("barcode"))
+              errorMsg += "• Barcode column is missing!<br>"
+            if(!headerLower.includes("product name"))
+              errorMsg += "• Product Name column is missing!<br>"
+            if(!headerLower.includes("photo"))
+              errorMsg += "• Photo column is missing!<br>"
+            if(!headerLower.includes("uid"))
+              errorMsg += "• UID column is missing!<br>"
+            //2.Empty Cell & wrong dta type Validation
+
+            
+            if(headerLower.includes("barcode") && headerLower.includes("price") && headerLower.includes("product name")){
+               for(var i = 0; i<lowerCaseJsonData.length; i++){
+                    if(typeof lowerCaseJsonData[i]["barcode"] == "undefined" || typeof lowerCaseJsonData[i]["price"] == "undefined" || typeof lowerCaseJsonData[i]["productname"] == "undefined")
+                        errorMsg += "• Some data is missing! All items should have barcode, product name, price, Photo, UID<br>";
+                }
+            }
+            if(headerLower.includes("price")){
+                for(var i = 0; i<lowerCaseJsonData.length; i++){
+                    if(typeof lowerCaseJsonData[i]["price"] != "number")
+                        errorMsg += "• Prices values should be numbers only!<br>";
+                }
+            }
+
+            
+            if(errorMsg){
+                document.querySelector('#file-input').value = "";
+                setFileName('No File Selected')
+                setDone(0);
+                showAlertError(errorMsg)
+                return;
+            }
+            
+        }
+        setDone(1);
+        setFileName(file["name"]);
+
+      }
     }
     
-
-}
-
+    const showAlertError = (msg) => {
+        var msg = parse('<span id="dataset-error-msg">'+msg+'</span>')
+        confirmAlert({
+        message: msg,
+        buttons: [
+           
+            {
+            label: 'OK',
+            //onClick: () => alert('Click No')
+            }
+        ]
+        });
+    }
     const showAlert = () => {
-
+        var msg = parse('<span id="registration-msg">Email Sent Successfully</span>')
         confirmAlert({
         message: 'Replace The Current Dataset?',
         buttons: [
@@ -54,6 +130,8 @@ function Dataset(){
             label: 'Replace',
             onClick: () => {set(ref(DB, 'Store'+auth.currentUser.uid), {
                             store: jsonData,
+                            }).then(()=>{
+                                showAlertSuccess();
                             })}
             },
             {
@@ -63,9 +141,21 @@ function Dataset(){
         ]
         });
     }
-
+    const showAlertSuccess = () => {
+        var msg = parse('<span style="" id="dataset-success-msg">Dataset Uploaded Successfully</span>');
+      
+        confirmAlert({
+        message: msg,
+        buttons: [
+            
+            {
+            label: 'OK',
+            //onClick: () => alert('Click No')
+            }
+        ]
+        });
+    }
     const handleDatasetFileChange = (file)=>{
-        alert("Here in handle")
         if(file.length == 0){
             alert("No File Selected!");
             return;
@@ -98,9 +188,9 @@ function Dataset(){
               errorMsg += "• Barcode column is missing!\n"
             if(!headerLower.includes("product name"))
               errorMsg += "• Product Name column is missing!\n"
-            if(!headerLower.includes("Photo"))
+            if(!headerLower.includes("photo"))
               errorMsg += "• Photo column is missing!\n"
-            if(!headerLower.includes("UID"))
+            if(!headerLower.includes("uid"))
               errorMsg += "• UID column is missing!\n"
             //2.Empty Cell & wrong dta type Validation
 
@@ -134,7 +224,10 @@ function Dataset(){
     
     function writeUserData() {
 
-            
+            if(file.length == 0){
+                showAlertError("No File Selected!");
+                return;
+            }
             const dbRef = ref(DB);
             get(child(dbRef, 'Store'+auth.currentUser.uid)).then((snapshot) => {
               if (snapshot.exists()) {
@@ -144,7 +237,7 @@ function Dataset(){
                 set(ref(DB, 'Store'+auth.currentUser.uid), {
                     store: jsonData,
                 }).then(()=>{
-                    alert("Dataset Uploaded Sucessfully");
+                    showAlertSuccess();
                 })
                 
               }
@@ -171,17 +264,12 @@ function Dataset(){
                         <p>Upload File</p>
                     </div> 
                      :
-                     <div>Done</div>
+                     <div id="done-uploading"><IoCloudDoneOutline/></div>
                     }
-                    <input id="file-input" className="ml-5 mb-3 mt-3" onClick={(e) =>  e.target.value = ''} onChange={(e) => {handleFile(e.target).then(()=>{
-                       
-                           handleDatasetFileChange(e.target.files[0]);
-            
-                          
-                        })}
+                    <input id="file-input" className="ml-5 mb-3 mt-3" onClick={(e) =>  e.target.value = ''} onChange={(e) => {handleFile(e.target)}
                     } type="file" accept=".xlsx, .xls, .csv" hidden/>
                     <label htmlFor="file-input" id="select-file">Select file</label>
-                    <p id="file-name"><strong>File Name:</strong> {fileName}</p>
+                    <p id="file-name"><strong>File Name: </strong><filename>{fileName}</filename> </p>
                 </div>
                 <button id="upload-btn" onClick={()=>writeUserData()}>Upload</button>
         </div> 

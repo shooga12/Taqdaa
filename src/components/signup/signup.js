@@ -33,6 +33,8 @@ function Signup(){
   const [phone, setPhone] = useState("");
   const [CommercialRegister, setCommercialRegister] = useState("");
   const [CommercialRegisterURL, setCommercialRegisterURL] = useState("");
+  const [CommercialRegisterfileName, setCommercialRegisterfileName] = useState("No File Selected");
+  const [BrandLogoFileName, setBrandLogoFileName] = useState("No File Selected");
   const [StoreLogo, setStoreLogo] = useState("");
   const [logoURL, setLogoURL] = useState("");
   const storage = getStorage();
@@ -101,8 +103,10 @@ function Signup(){
               Phone: phone,
               CommercialRegister: CommercialRegisterURL,
               StoreLogo: logoURL,
-              kilometers: 2.6,
-              StoreId:'Store'+userID
+              lat: pos["lat"],
+              lng: pos["lng"],
+              StoreId:'Store'+userID,
+              kilometers: "5.8"
         });
         
       })
@@ -140,6 +144,7 @@ function Signup(){
     }
 
     const handleLogo = (e)=>{
+      setBrandLogoFileName(e.target.files[0].name)
       let fileType = e.target.files[0].type; 
       fileType = fileType.toString().toLowerCase();
       let validExtensions = ["image/jpeg","image/png","image/jpg"]; //adding some valid image extensions in array
@@ -153,6 +158,7 @@ function Signup(){
     }
     
     const handleCommercialRegister = (e)=>{
+      setCommercialRegisterfileName(e.target.files[0].name)
       let fileType = e.target.files[0].type; 
       let validExtensions = ["application/pdf", "image/jpeg", "image/png", "image/jpg"]; //adding some valid image extensions in array
       if(!validExtensions.includes(fileType)){
@@ -456,6 +462,10 @@ function Signup(){
           document.querySelector('#error-msg-pn').innerHTML = 'Phone number must be 10 digits';
           document.querySelector('#error-msg-pn').style.visibility = "visible";
         }
+        if(!error){
+          document.querySelector('#error-msg-pn').innerHTML = '';
+          document.querySelector('#error-msg-pn').style.visibility = "hidden";
+        }
       }
       const [pos, setPos] = useState({
         lat: 24.725203,
@@ -512,19 +522,21 @@ function Signup(){
                   
                 </div>
 
-                <div className="d-flex flex-column flex-lg-row">
-                  <div>
+                <div className="col-9 d-flex flex-column flex-lg-row">
+                  <div className='col-6'>
                     <h5 className='mt-3 mb-3'>Commercial Register</h5> 
                     <p className="only mb-3">only:Pdf,jpeg,Png</p>
-                    <input type="file" accept="png,Pdf,jpeg" className="Upload-btn" id="com-btn" onChange={(e) => handleCommercialRegister(e)} required/> 
-                    
+                    <input type="file" accept="png,Pdf,jpeg" className="Upload-btn" id="com-btn" onChange={(e) => handleCommercialRegister(e)} hidden required/> 
+                    <label htmlFor='com-btn' className='select-file-labels'>Select File</label>
+                    <p className='mt-4'><strong>File Name: </strong>{CommercialRegisterfileName}</p>
                     <p className='error-msg' id="error-msg-cr"></p>
                   </div>
-                  <div>
+                  <div className='col-6'>
                     <h5 className='mt-3 mb-3'>Brand Logo</h5> 
                     <p className="only mb-3">only: jpeg,Png</p>
-                    <input type="file" accept="png,jpeg" className="Upload-btn" id="com-btn" onChange={(e) => handleLogo(e)} required/> 
-                    
+                    <input type="file" accept="png,jpeg" className="Upload-btn" id="brnd-btn" onChange={(e) => handleLogo(e)} hidden required/> 
+                    <label htmlFor='brnd-btn' className='select-file-labels'>Select File</label>
+                    <p className='mt-4'><strong>File Name: </strong>{BrandLogoFileName}</p>
                     <p className='error-msg' id="error-msg-sl"></p>
                   </div>
                 </div>

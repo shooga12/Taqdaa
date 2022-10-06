@@ -1,0 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+:root {
+  --main-color: #1E286D;
+  --main-color-dark: #2d3777;
+  --main-color-light: #1E286D;
+  --text-color: #cfcde7;
+  --orange: #faa213;
+  --orange-dark: #d88a0c;
+}
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+body{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+h1{
+  color: #1E286D;
+  padding-bottom: 1em;
+}
+.invoice-card{
+  border-radius: 30px;
+  width: 900px;
+  box-shadow: 1px 1px 15px 1px #ebebeb;
+  height: fit-content;
+  margin-bottom: 2em;
+}
+.invoice-card-header{
+  padding-right: 1.5em;
+  padding-left: 1.5em;
+  padding-top: 1.5em;
+  padding-bottom: 0.5em;
+}
+.invoice-card-header h5{
+  color:#1E286D;
+  font-weight: 600;
+}
+.invoice-card-header h6{
+  color: #7c7c7c;
+  margin-top: 0.6em;
+}
+.num-date-container{
+  height: 100%;
+}
+.invoice-card-header button{
+  border: none;
+  border-radius: 50px;
+  color: white;
+  background-color: #faa213;
+  padding: 0.5em 1em 0.5em 1em;
+}
+.invoice-card-header button:hover{
+  background-color: #e18b00;
+}
+.invoice-collapse-header{
+  cursor: pointer;
+  padding-bottom: 0.3em;
+  width: 100%;
+}
+.invoice-collapse-header div{
+  color: #696969;
+  font-weight: 500;
+  font-size: 16px;
+}
+.invoice-collapse-header{
+  color:#696969;
+  font-size: 26px;
+  border-bottom-right-radius: 30px;
+  border-bottom-left-radius: 30px;
+}
+.invoice-collapse-header:hover{
+  background-color: #ebebeb;
+}
+.invoice-card-body{
+  display: none;
+}
+.invoice-card-body h5{
+  color:#1E286D;
+  font-weight: 600;
+}
+.invoice-card-body hr{
+  padding-bottom: 1em;
+}
+.item{
+  width: 100%;
+  height: fit-content;
+  background-color: #f1f1f1;
+  margin-bottom: 0.2em;
+}
+.total{
+  width: 75%;
+}
+.item-first-part {
+  width: 40%;
+}
