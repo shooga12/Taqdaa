@@ -2,9 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:taqdaa_application/views/checkOut_view.dart';
+import '../controller/BNBCustomePainter.dart';
 import '../main.dart';
-import '../controller/checkout_Page.dart';
+import '../controller/checkout.dart';
 import '../confige/EcommerceApp.dart';
+import '../views/NoItmesCart.dart';
+import '../views/profile_View.dart';
+import 'list_of_stores.dart';
 import 'scanBarCode.dart';
 import 'dart:core';
 
@@ -17,9 +22,14 @@ class shoppingCart extends StatefulWidget {
 class _shoppingCartState extends State<shoppingCart> {
   _shoppingCartState();
   String collectionName = EcommerceApp().getCurrentUser();
+  bool isInsideHome = false;
+  bool isInsideProfile = false;
+  bool isInsideSettings = false;
+  bool isInsideCart = true;
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -32,23 +42,8 @@ class _shoppingCartState extends State<shoppingCart> {
                     image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
           ),
           toolbarHeight: 170,
-          //leading: BackButton(),
           backgroundColor: Colors.transparent,
           elevation: 0,
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyHomePage()),
-                );
-              },
-              icon: Icon(
-                Icons.home,
-                size: 30,
-              ),
-            )
-          ],
         ),
         body: StreamBuilder<List<Product>>(
             stream: readCartItems(),
@@ -151,7 +146,7 @@ class _shoppingCartState extends State<shoppingCart> {
                                 }
                               }
                             },
-                            child: buildSecondItmes(products[index], context));
+                            child: buildSecondItems(products[index], context));
                       }
                       return Center(child: CircularProgressIndicator());
                     });
@@ -162,127 +157,215 @@ class _shoppingCartState extends State<shoppingCart> {
               }
             }),
         bottomNavigationBar: SizedBox(
-          height: 170,
-          child: Container(
-              child: Column(
-            children: [
+            height: 250,
+            child: Stack(children: [
               Container(
-                  child: Text(
-                      style: TextStyle(
-                          color: Color.fromARGB(255, 32, 7, 121),
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
-                      (() {
-                        if (EcommerceApp.finalTotal == 0) {
-                          saveUserTotal(0);
-                          EcommerceApp.finalTotal = -1;
-                          return 'Total: ' +
-                              EcommerceApp.finalTotal.toString() +
-                              ' SR\n';
-                        } else {
-                          return 'Total: ' +
-                              EcommerceApp.total.toString() +
-                              ' SR\n';
-                        }
-                      }()))),
-              Container(
-                child: SizedBox(
-                  height: 40,
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      _scan(context, "NewItem");
-                    },
-                    label: Text(
-                      'Continue Scanning',
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18),
+                  child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0, left: 20),
+                    child: Container(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 32, 7, 121),
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
+                            (() {
+                              if (EcommerceApp.finalTotal == 0) {
+                                saveUserTotal(0);
+                                EcommerceApp.finalTotal = -1;
+                                return 'Total: ' +
+                                    EcommerceApp.finalTotal.toString() +
+                                    ' SR';
+                              } else {
+                                return 'Total: ' +
+                                    EcommerceApp.total.toString() +
+                                    ' SR';
+                              }
+                            }()))),
+                  ),
+                  Divider(
+                    color: Colors.grey,
+                    indent: 20,
+                    endIndent: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: SizedBox(
+                        width: 200,
+                        height: 40,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (EcommerceApp.total == 0 ||
+                                EcommerceApp.finalTotal == 0) {
+                              showDialog(
+                                  context: context,
+                                  builder: (ctx) => AlertDialog(
+                                        content: Text(
+                                          "Your Cart is empty!",
+                                          style: TextStyle(fontSize: 18),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.of(ctx).pop(false);
+                                              },
+                                              child: Text("Cancel")),
+                                        ],
+                                      ));
+                            } else {
+                              EcommerceApp.inDollars =
+                                  EcommerceApp.total / 3.75;
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CheckOutSummary()),
+                              );
+                            }
+                          },
+                          child: Text(
+                            'Checkout',
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18),
+                          ),
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.resolveWith((states) {
+                                if (states.contains(MaterialState.pressed)) {
+                                  return Colors.grey;
+                                }
+                                return Colors.orange;
+                              }),
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(30)))),
+                        ),
+                      ),
                     ),
-                    icon: Icon(Icons.document_scanner_outlined),
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.resolveWith((states) {
-                          if (states.contains(MaterialState.pressed)) {
-                            return Colors.grey;
-                          }
-                          return Colors.orange;
-                        }),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30)))),
                   ),
-                ),
-              ),
-              Container(
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (EcommerceApp.total == 0 ||
-                        EcommerceApp.finalTotal == 0) {
-                      showDialog(
-                          context: context,
-                          builder: (ctx) => AlertDialog(
-                                content: Text(
-                                  "Your Cart is empty!",
-                                  style: TextStyle(fontSize: 18),
+                ],
+              )),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                child: Container(
+                  width: size.width,
+                  height: 80,
+                  color: Colors.white,
+                  child: Stack(
+                    children: [
+                      CustomPaint(
+                        size: Size(size.width, 80),
+                        painter: BNBCustomePainter(),
+                      ),
+                      Center(
+                          heightFactor: 0.6,
+                          child: Container(
+                            width: 65,
+                            height: 65,
+                            child: FittedBox(
+                              child: FloatingActionButton(
+                                onPressed: () {
+                                  ////bug fixes **continue scan
+                                  _scan(context, "NewItem");
+                                },
+                                backgroundColor: Colors.orange,
+                                child: Icon(
+                                  Icons.document_scanner_outlined,
+                                  size: 27,
                                 ),
-                                actions: [
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.of(ctx).pop(false);
-                                      },
-                                      child: Text("Cancel")),
-                                ],
-                              ));
-                    } else {
-                      EcommerceApp.inDollars = EcommerceApp.total / 3.75;
-                      showDialog(
-                          context: context,
-                          builder: (ctx) => AlertDialog(
-                                title: Text("Please Note"),
-                                content: Text(
-                                    "Your total price will be in ${EcommerceApp.inDollars.toStringAsFixed(2)}\$."), ////Teacher note
-                                actions: [
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.of(ctx).pop(false);
-                                      },
-                                      child: Text("Cancel")),
-                                  ElevatedButton(
-                                      //style: Color
-                                      onPressed: () {
-                                        checkOut().payment(context);
-                                        Navigator.of(ctx).pop(false);
-                                      },
-                                      child: Text("Continue")),
-                                ],
-                              ));
-                    }
-                  },
-                  child: Text(
-                    'Checkout',
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18),
+                              ),
+                            ),
+                          )),
+                      Container(
+                        width: size.width,
+                        height: 80,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => MyHomePage()),
+                                    );
+                                  },
+                                  icon: Icon(
+                                    Icons.home_outlined,
+                                    size: 35,
+                                    color: isInsideHome
+                                        ? Color.fromARGB(255, 254, 176, 60)
+                                        : Colors.white,
+                                  )),
+                              IconButton(
+                                  onPressed: () {
+                                    if (EcommerceApp.haveItems) {
+                                      /////bug fixes
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                shoppingCart()),
+                                      );
+                                    } else {
+                                      ///bug fixes New "I don't think their will be a need for it"
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => emptyCart()),
+                                      );
+                                    }
+                                  },
+                                  icon: Icon(
+                                    Icons.shopping_cart,
+                                    size: 30,
+                                    color: isInsideCart
+                                        ? Color.fromARGB(255, 254, 176, 60)
+                                        : Colors.white,
+                                  )),
+                              Container(
+                                width: size.width * 0.20,
+                              ),
+                              IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Homepprofile()),
+                                    );
+                                  },
+                                  icon: Icon(
+                                    Icons.person,
+                                    size: 30,
+                                    color: isInsideProfile
+                                        ? Color.fromARGB(255, 254, 176, 60)
+                                        : Colors.white,
+                                  )),
+                              IconButton(
+                                onPressed: () {},
+                                icon: Icon(
+                                  Icons.settings,
+                                  size: 30,
+                                  color: isInsideSettings
+                                      ? Color.fromARGB(255, 254, 176, 60)
+                                      : Colors.white,
+                                ),
+                              ),
+                            ]),
+                      )
+                    ],
                   ),
-                  style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.resolveWith((states) {
-                        if (states.contains(MaterialState.pressed)) {
-                          return Colors.grey;
-                        }
-                        return Colors.orange;
-                      }),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30)))),
                 ),
-              ),
-            ],
-          )),
-        ));
+              )
+            ])));
   }
 
   Future<bool> checkItemExist(bool increment, String itemName) async {
@@ -308,25 +391,7 @@ class _shoppingCartState extends State<shoppingCart> {
       .map((snapshot) =>
           snapshot.docs.map((doc) => Product.fromJson(doc.data())).toList());
 
-  Widget bulidEmptyCart() {
-    return Center(
-      child: SizedBox(
-        height: 400,
-        child: Center(
-          child: Text(
-            "",
-            //"Your cart is empty!",
-            style: TextStyle(
-                fontWeight: FontWeight.normal,
-                fontSize: 23,
-                color: Color.fromARGB(255, 173, 173, 173)),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildSecondItmes(Product product, BuildContext context) {
+  Widget buildSecondItems(Product product, BuildContext context) {
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -418,8 +483,25 @@ class _shoppingCartState extends State<shoppingCart> {
                             icon: Icon(Icons.remove_circle,
                                 color: product.quantity == 1
                                     ? Color.fromARGB(255, 195, 195, 195)
-                                    : Color.fromARGB(255, 245, 161, 14))),
-                        Text(product.quantity.toString()),
+                                    : Color.fromARGB(255, 118, 171, 223))),
+                        //Text(product.quantity.toString()),
+                        Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+                              width: 35,
+                              height: 35,
+                              decoration: new BoxDecoration(
+                                color: Color.fromARGB(255, 245, 161, 14),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            Text(
+                              product.quantity.toString(),
+                              style: TextStyle(color: Colors.white),
+                            )
+                          ],
+                        ),
                         IconButton(
                             onPressed: () async {
                               EcommerceApp.productName = product.Category;
@@ -445,7 +527,7 @@ class _shoppingCartState extends State<shoppingCart> {
                               }
                             },
                             icon: Icon(Icons.add_circle,
-                                color: Color.fromARGB(255, 245, 161, 14))),
+                                color: Color.fromARGB(255, 118, 171, 223))),
                       ],
                     ),
                   ),

@@ -48,7 +48,7 @@ void main() async {
         theIndex = i;
       }
     }
-    storeName = documents[theIndex].get("StoreName");
+    // storeName = documents[theIndex].get("StoreName"); //bug fixes
   }
 
   await readClosest();

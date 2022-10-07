@@ -23,10 +23,11 @@ class checkOut {
     );
 
     BraintreeDropInResult? result = await BraintreeDropIn.start(request);
-    if (result != null) {
+    if (result != null) /*Successful Payment*/ {
       print(result.paymentMethodNonce.description);
       print(result.paymentMethodNonce.nonce);
 
+      double reward = (EcommerceApp.total * 2.5) / 100;
       EcommerceApp.storeName = "";
 
       String urli =
@@ -53,6 +54,7 @@ class checkOut {
                       await deleteCart();
                       await deleteCartDublicate();
                       await saveUserTotal(0);
+                      await saveUserRewards(reward);
                       Navigator.pop(context, 'OK');
                     },
                     child: const Text('OK'),
@@ -70,6 +72,13 @@ class checkOut {
     if (document.exists) {
       document.reference.update({'Total': total});
     }
+  }
+
+  Future saveUserRewards(var reward) async {
+    await FirebaseFirestore.instance
+        .collection('${collectionName}Total')
+        .doc("rewards")
+        .set({"Rewards": reward});
   }
 
   Future deleteCart() async {
@@ -98,6 +107,14 @@ class checkOut {
     final List<DocumentSnapshot> documents = result.docs;
     for (int i = 0; i < documents.length; i++) {
       RFIDs.add(documents[i].get("RFID"));
+
+      FirebaseFirestore.instance.collection('${collectionName}Invoices').add({
+        "Category": documents[i].get("Category"),
+        "Item_number": documents[i].get("Item_number"),
+        "Price": documents[i].get("Price"),
+        "Store": documents[i].get("Store"),
+        "ProductImage": documents[i].get("ProductImage"),
+      });
     }
   }
 
@@ -105,7 +122,6 @@ class checkOut {
     DatabaseReference dbref = FirebaseDatabase.instance.ref('Purchased');
 
     for (int i = 0; i < RFIDs.length; i++) {
-      //dbref.push().set({"$i": RFIDs[i]});
       dbref.update({"$collectionName$i": RFIDs[i]});
     }
   }
