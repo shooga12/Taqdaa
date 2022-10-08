@@ -11,6 +11,7 @@ import 'package:taqdaa_application/screens/NoItmesCart.dart';
 import '../controller/BNBCustomePainter.dart';
 import '../methods/authentication_services.dart';
 import 'ShoppingCart.dart';
+import 'insideMore.dart';
 import 'list_of_stores.dart';
 import 'login_page.dart';
 import 'scanBarCode.dart';
@@ -46,8 +47,8 @@ class HomePageState extends State<HomePage> {
 
   @override
   bool isInsideHome = true;
-  bool isInsideProfile = false;
-  bool isInsidelogout = false;
+  bool isInsideReceipt = false;
+  bool isInsideMore = false;
 
   @override
   Widget build(BuildContext context) {
@@ -134,56 +135,63 @@ class HomePageState extends State<HomePage> {
                           ),
                           IconButton(
                               onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Homepprofile()),
-                                );
+                                //here reem's page
+
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //       builder: (context) => Homepprofile()),
+                                // );
                               },
                               icon: Icon(
-                                Icons.person,
+                                Icons.receipt_long,
                                 size: 30,
-                                color: isInsideProfile
+                                color: isInsideReceipt
                                     ? Color.fromARGB(255, 254, 176, 60)
                                     : Colors.white,
                               )),
                           IconButton(
                             onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: ((context) {
-                                    return AlertDialog(
-                                      title: Text("هل تريد تسجيل الخروج؟"),
-                                      actions: [
-                                        TextButton(
-                                            onPressed: () {
-                                              FirebaseAuthMethods().signOut();
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        LoginPage(),
-                                                  ));
-                                            },
-                                            child: Text(
-                                              "تسجيل خروج",
-                                              style: TextStyle(
-                                                color: Colors.red,
-                                              ),
-                                            )),
-                                        TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text("إلغاء"))
-                                      ],
-                                    );
-                                  }));
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => More()),
+                              );
+
+                              // showDialog(
+                              //     context: context,
+                              //     builder: ((context) {
+                              //       return AlertDialog(
+                              //         title: Text("هل تريد تسجيل الخروج؟"),
+                              //         actions: [
+                              //           TextButton(
+                              //               onPressed: () {
+                              //                 FirebaseAuthMethods().signOut();
+                              //                 Navigator.push(
+                              //                     context,
+                              //                     MaterialPageRoute(
+                              //                       builder: (context) =>
+                              //                           LoginPage(),
+                              //                     ));
+                              //               },
+                              //               child: Text(
+                              //                 "تسجيل خروج",
+                              //                 style: TextStyle(
+                              //                   color: Colors.red,
+                              //                 ),
+                              //               )),
+                              //           TextButton(
+                              //               onPressed: () {
+                              //                 Navigator.pop(context);
+                              //               },
+                              //               child: Text("إلغاء"))
+                              //         ],
+                              //       );
+                              //     }));
                             },
                             icon: Icon(
-                              Icons.logout,
+                              Icons.more_horiz,
                               size: 30,
-                              color: isInsidelogout
+                              color: isInsideMore
                                   ? Color.fromARGB(255, 254, 176, 60)
                                   : Colors.white,
                             ),

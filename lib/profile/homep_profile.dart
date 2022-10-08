@@ -12,6 +12,7 @@ import 'package:taqdaa_application/screens/login_page.dart';
 import '../methods/authentication_services.dart';
 import '../model/user_model.dart';
 import '../screens/ShoppingCart.dart';
+import '../screens/insideMore.dart';
 import '../screens/list_of_stores.dart';
 import '../screens/NoItmesCart.dart';
 
@@ -26,8 +27,8 @@ class _HomepprofileState extends State<Homepprofile> {
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
   bool isInsideHome = false;
-  bool isInsideProfile = true;
-  bool isInsidelogout = false;
+  bool isInsideReceipt = false;
+  bool isInsideMore = true;
 
   @override
   void initState() {
@@ -48,7 +49,7 @@ class _HomepprofileState extends State<Homepprofile> {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         title: Text(
           "حسابي",
           style: TextStyle(fontSize: 24),
@@ -151,7 +152,7 @@ class _HomepprofileState extends State<Homepprofile> {
                       ),
                       children: [
                         WidgetSpan(
-                          child: Icon(Icons.phone),
+                          child: Icon(Icons.phone_enabled),
                         ),
                         TextSpan(
                           text: " ${loggedInUser.phonenumber}",
@@ -370,13 +371,7 @@ class _HomepprofileState extends State<Homepprofile> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MyHomePage()),
-                                );
-                              },
+                              onPressed: () {},
                               icon: Icon(
                                 Icons.home_outlined,
                                 size: 35,
@@ -410,51 +405,27 @@ class _HomepprofileState extends State<Homepprofile> {
                             width: size.width * 0.20,
                           ),
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                //here reem's page
+                              },
                               icon: Icon(
-                                Icons.person,
+                                Icons.receipt_long,
                                 size: 30,
-                                color: isInsideProfile
+                                color: isInsideReceipt
                                     ? Color.fromARGB(255, 254, 176, 60)
                                     : Colors.white,
                               )),
                           IconButton(
                             onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: ((context) {
-                                    return AlertDialog(
-                                      title: Text("هل تريد تسجيل الخروج؟"),
-                                      actions: [
-                                        TextButton(
-                                            onPressed: () {
-                                              FirebaseAuthMethods().signOut();
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        LoginPage(),
-                                                  ));
-                                            },
-                                            child: Text(
-                                              "تسجيل خروج",
-                                              style: TextStyle(
-                                                color: Colors.red,
-                                              ),
-                                            )),
-                                        TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text("إلغاء"))
-                                      ],
-                                    );
-                                  }));
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => More()),
+                              );
                             },
                             icon: Icon(
-                              Icons.logout,
+                              Icons.more_horiz,
                               size: 30,
-                              color: isInsidelogout
+                              color: isInsideMore
                                   ? Color.fromARGB(255, 254, 176, 60)
                                   : Colors.white,
                             ),
