@@ -13,6 +13,7 @@ import '../methods/authentication_services.dart';
 import '../model/user_model.dart';
 import '../screens/ShoppingCart.dart';
 import '../screens/insideMore.dart';
+import '../screens/invoices.dart';
 import '../screens/list_of_stores.dart';
 import '../screens/NoItmesCart.dart';
 
@@ -29,6 +30,7 @@ class _HomepprofileState extends State<Homepprofile> {
   bool isInsideHome = false;
   bool isInsideReceipt = false;
   bool isInsideMore = true;
+  bool isInsideCart = false;
 
   @override
   void initState() {
@@ -399,7 +401,9 @@ class _HomepprofileState extends State<Homepprofile> {
                               icon: Icon(
                                 Icons.shopping_cart,
                                 size: 30,
-                                color: Colors.white,
+                                color: isInsideCart
+                                    ? Color.fromARGB(255, 254, 176, 60)
+                                    : Colors.white,
                               )),
                           Container(
                             width: size.width * 0.20,
@@ -407,6 +411,11 @@ class _HomepprofileState extends State<Homepprofile> {
                           IconButton(
                               onPressed: () {
                                 //here reem's page
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => invoices(),
+                                    ));
                               },
                               icon: Icon(
                                 Icons.receipt_long,

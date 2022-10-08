@@ -12,6 +12,7 @@ import '../controller/BNBCustomePainter.dart';
 import '../methods/authentication_services.dart';
 import 'ShoppingCart.dart';
 import 'insideMore.dart';
+import 'invoices.dart';
 import 'list_of_stores.dart';
 import 'login_page.dart';
 import 'scanBarCode.dart';
@@ -135,13 +136,11 @@ class HomePageState extends State<HomePage> {
                           ),
                           IconButton(
                               onPressed: () {
-                                //here reem's page
-
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //       builder: (context) => Homepprofile()),
-                                // );
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => invoices(),
+                                    ));
                               },
                               icon: Icon(
                                 Icons.receipt_long,
