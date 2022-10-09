@@ -5,7 +5,33 @@ import {IoIosArrowDown} from 'react-icons/io'
 import img1 from './sephora-brightening-hydrating-foundation-original-imaecf3t7vgdk9by.webp';
 import img2 from './458789.jpeg';
 function Invoices(){
-        
+
+        const [data,setData] = useState();
+        const [done,setDone] = useState(0);
+
+        useEffect(() => {
+        getData();
+        console.log("Data:");
+        console.log(data);
+        },[done]);
+
+        const getData = async ()=>{
+        const docRef = doc(db, "Invoices");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            console.log("Document data:", docSnap.data());
+            let myDataArray = {};
+            for (var key in docSnap.data()) {
+                myDataArray[key] = docSnap.data()[key]
+            }
+            setData(myDataArray);
+            setDone(1);
+              
+          } 
+          else {
+            console.log("No such document!");
+          }
+        }
         const collapse = (id)=>{
             let invoice = document.querySelector('#invoice-'+id+'-body');
             let collapse_header = document.querySelector('#invoice'+id+'-collapse-header');

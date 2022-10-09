@@ -218,8 +218,8 @@ function Signup(){
       }
       if(storeName == ''){
         error = true;
-        document.querySelector('#error-msg-sn').innerHTML = 'Brand Name is required<br>';
-        document.querySelector('#error-msg-sn').style.visibility = "visible";
+        document.querySelector('#error-msg-bn').innerHTML = 'Brand Name is required<br>';
+        document.querySelector('#error-msg-bn').style.visibility = "visible";
       }
       if(emptyImage(StoreLogo)){
         error = true;
