@@ -59,7 +59,8 @@ class _HomepprofileState extends State<Homepprofile> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              /*
+              //start here
+
               Text(
                   "Name:  ${loggedInUser.firstName} ${loggedInUser.secondName}",
                   style: TextStyle(
@@ -108,7 +109,8 @@ class _HomepprofileState extends State<Homepprofile> {
               SizedBox(
                 height: 20,
               ),
-              */
+
+              //end here
 
               ActionChip(
                   label: Text("Logout"),
