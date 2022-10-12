@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../models/user_model.dart';
+
 class EcommerceApp {
   static bool haveItems = false; // if cart is empty
   static String storeName = '';
@@ -8,14 +10,16 @@ class EcommerceApp {
   static int quantity = 0;
   static int total = 0;
   static int finalTotal = -1;
-  static String userName = 'Shoug'; //bug fixes
+  static String userName = '';
   static String productName = '';
   static int counter = 0;
   static double inDollars = 0;
   static bool itsFirst = true;
+  static bool rewardsExchanged = false;
 
   static String uid = '';
   final FirebaseAuth auth = FirebaseAuth.instance;
+
   String getCurrentUser() {
     final User? user = auth.currentUser;
     uid = user!.uid;

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import '../views/rewards_view.dart';
 import '../confige/EcommerceApp.dart';
 import '../controller/checkout.dart';
-import '../screens/scanBarCode.dart';
 
 class CheckOutSummary extends StatefulWidget {
   const CheckOutSummary({super.key});
@@ -33,189 +33,306 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: StreamBuilder<List<Product>>(
-          stream: readCartItems(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              /// ماراح يدخل اصلا اذا مافيه ايتمز
-              final products = snapshot.data!;
-              return ListView.builder(
-                  itemCount: products.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return buildSecondItmes(products[index], context);
-                  });
-            } else if (snapshot.hasError) {
-              return Text("Some thing went wrong! ${snapshot.error}");
-            } else {
-              return Center(child: CircularProgressIndicator());
-            }
-          }),
-      bottomNavigationBar: SizedBox(
-        height: 300,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 5.0, left: 25, right: 25),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 6.0),
-                    child: Row(
-                      children: [
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: Text('Sub-Total',
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 32, 7, 121),
-                                fontSize: 15,
-                              )),
-                        ),
-                        Spacer(),
-                        Text(subTotal + ' SR',
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 32, 7, 121),
-                              fontSize: 15,
-                            )),
+      body: ListView(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 8,
+              bottom: 10.0,
+              left: 5,
+            ),
+            child: Container(
+              alignment: Alignment.centerLeft,
+              child: Text("My Cart",
+                  style: TextStyle(
+                      color: Color.fromARGB(255, 32, 7, 121),
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold)),
+            ),
+          ),
+          FutureBuilder<QuerySnapshot>(
+              future: FirebaseFirestore.instance
+                  .collection('${collectionName}')
+                  .get(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final documents = snapshot.data!;
+                  return SizedBox(
+                      height: 170,
+                      child: ListView.builder(
+                          itemCount: documents.size,
+                          itemBuilder: (BuildContext context, int index) {
+                            return buildSecondItmes(
+                                documents.docs[index], context);
+                          }));
+                } else if (snapshot.hasError) {
+                  return Text('Its Error!');
+                }
+                return Container(child: Text(""));
+              }),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12.0),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: InkWell(
+                child: Container(
+                  height: 90,
+                  width: 370,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.0),
+                    gradient: LinearGradient(
+                      colors: [
+                        Color.fromARGB(255, 46, 44, 99),
+                        Color.fromARGB(255, 83, 76, 162),
+                        Color.fromARGB(255, 149, 144, 232),
+                        // Color.fromARGB(255, 56, 54, 122),
+                        // Color.fromARGB(255, 103, 94, 198),
+                        // Color.fromARGB(255, 149, 144, 232),
                       ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 6.0),
-                    child: Row(
-                      children: [
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: Text('VAT 15%',
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 32, 7, 121),
-                                fontSize: 15,
-                              )),
-                        ),
-                        Spacer(),
-                        Text(vat.toString() + ' SR',
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 32, 7, 121),
-                              fontSize: 15,
-                            )),
-                      ],
-                    ),
-                  ),
-                  Row(
+                  child: Row(
                     children: [
-                      Container(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Total',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 32, 7, 121),
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold),
-                          )),
+                      Text(
+                        "   Exchange My Rewards",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 2),
+                      ),
                       Spacer(),
-                      Text(EcommerceApp.total.toString() + ' SR',
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 32, 7, 121),
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold)),
+                      Icon(
+                        Icons.arrow_forward_sharp,
+                        color: Colors.white,
+                      ),
+                      Text("   ")
                     ],
                   ),
-                ],
-              ),
-            ),
-            Divider(
-              color: Colors.grey,
-              indent: 20,
-              endIndent: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 5,
-                bottom: 10.0,
-                left: 25,
-              ),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: Text("Payment Method",
-                    style: TextStyle(
-                        color: Color.fromARGB(255, 32, 7, 121),
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold)),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 23, bottom: 23),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: new Image.asset(
-                  'assets/paypal.png',
-                  height: 45.0,
-                  fit: BoxFit.cover,
                 ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => rewards()),
+                  );
+                },
               ),
             ),
-            Container(
-              alignment: Alignment.center,
-              child: SizedBox(
-                width: 200,
-                height: 40,
-                child: ElevatedButton(
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (ctx) => AlertDialog(
-                              title: Text("Please Note"),
-                              content: Text(
-                                  "Your total price will be in ${EcommerceApp.inDollars.toStringAsFixed(2)}\$."), ////Teacher note
-                              actions: [
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.of(ctx).pop(false);
-                                    },
-                                    child: Text("Cancel")),
-                                ElevatedButton(
-                                    //style: Color
-                                    onPressed: () {
-                                      checkOut().payment(context);
-                                      Navigator.of(ctx).pop(false);
-                                    },
-                                    child: Text("Continue")),
-                              ],
-                            ));
-                  },
-                  child: Text(
-                    'Place Order',
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18),
+          ),
+          SizedBox(
+            height: 230, //313,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: 0, bottom: 5.0, left: 25, right: 25),
+                  child: Column(
+                    children: [
+                      Divider(
+                        color: Colors.grey,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 6.0),
+                        child: Row(
+                          children: [
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              child: Text('Sub-Total',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 32, 7, 121),
+                                    fontSize: 15,
+                                  )),
+                            ),
+                            Spacer(),
+                            Text(subTotal + ' SR',
+                                style: TextStyle(
+                                  color: Color.fromARGB(255, 32, 7, 121),
+                                  fontSize: 15,
+                                )),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 6.0),
+                        child: Row(
+                          children: [
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              child: Text('VAT 15%',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 32, 7, 121),
+                                    fontSize: 15,
+                                  )),
+                            ),
+                            Spacer(),
+                            Text(vat.toString() + ' SR',
+                                style: TextStyle(
+                                  color: Color.fromARGB(255, 32, 7, 121),
+                                  fontSize: 15,
+                                )),
+                          ],
+                        ),
+                      ),
+                      EcommerceApp.rewardsExchanged == true
+                          ? Padding(
+                              padding: const EdgeInsets.only(bottom: 6.0),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text('Rewards',
+                                        style: TextStyle(
+                                          color:
+                                              Color.fromARGB(255, 227, 45, 45),
+                                          fontSize: 15,
+                                        )),
+                                  ),
+                                  Spacer(),
+                                  Text('- 25 SR',
+                                      style: TextStyle(
+                                        color: Color.fromARGB(255, 227, 45, 45),
+                                        fontSize: 15,
+                                      )),
+                                ],
+                              ),
+                            )
+                          : Text(""),
+                      Row(
+                        children: [
+                          Container(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'Total',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 32, 7, 121),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
+                              )),
+                          Spacer(),
+                          Text(EcommerceApp.total.toString() + ' SR',
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 32, 7, 121),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    ],
                   ),
-                  style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.resolveWith((states) {
-                        if (states.contains(MaterialState.pressed)) {
-                          return Colors.grey;
-                        }
-                        return Colors.orange;
-                      }),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30)))),
                 ),
+                Divider(
+                  color: Colors.grey,
+                  indent: 20,
+                  endIndent: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 5,
+                    bottom: 10.0,
+                    left: 25,
+                  ),
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    child: Text("Payment Method",
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 32, 7, 121),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 23, bottom: 10),
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    child: new Image.asset(
+                      'assets/paypal.png',
+                      height: 45.0,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15),
+            child: Card(
+              color: Color.fromARGB(243, 243, 239, 231),
+              child: Container(
+                  alignment: Alignment.centerLeft,
+                  height: 70,
+                  width: 370,
+                  child: Row(
+                    children: [
+                      Text("  "),
+                      Icon(Icons.info_outline_rounded),
+                      Text(
+                          "  Please note Your total price will be in \n  ${EcommerceApp.inDollars.toStringAsFixed(2)}\$."),
+                    ],
+                  )),
+            ),
+          ),
+          Container(
+            alignment: Alignment.center,
+            child: SizedBox(
+              width: 200,
+              height: 40,
+              child: ElevatedButton(
+                onPressed: () {
+                  // showDialog(
+                  //     context: context,
+                  //     builder: (ctx) => AlertDialog(
+                  //           title: Text("Please Note"),
+                  //           content: Text(
+                  //               "Your total price will be in ${EcommerceApp.inDollars.toStringAsFixed(2)}\$."), ////Teacher note
+                  //           actions: [
+                  //             TextButton(
+                  //                 onPressed: () {
+                  //                   Navigator.of(ctx).pop(false);
+                  //                 },
+                  //                 child: Text("Cancel")),
+                  //             ElevatedButton(
+                  //                 //style: Color
+                  //                 onPressed: () {
+                  //                   checkOut().payment(context);
+                  //                   Navigator.of(ctx).pop(false);
+                  //                 },
+                  //                 child: Text("Continue")),
+                  //           ],
+                  //         ));
+                  checkOut().payment(context);
+                },
+                child: Text(
+                  'Place Order',
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18),
+                ),
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.resolveWith((states) {
+                      if (states.contains(MaterialState.pressed)) {
+                        return Colors.grey;
+                      }
+                      return Colors.orange;
+                    }),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)))),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Stream<List<Product>> readCartItems() => FirebaseFirestore.instance
-      .collection('${collectionName}')
-      .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => Product.fromJson(doc.data())).toList());
-
-  Widget buildSecondItmes(Product product, BuildContext context) {
+  Widget buildSecondItmes(
+      QueryDocumentSnapshot<Object?> product, BuildContext context) {
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -234,7 +351,7 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                             Container(
                               child: new Image.asset(
                                 'assets/Rectangle.png',
-                                height: 92.0,
+                                height: 70.0,
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -242,13 +359,13 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                               padding:
                                   const EdgeInsets.only(left: 25, top: 2.5),
                               child: Container(
-                                width: 65,
+                                width: 45,
                                 margin: EdgeInsets.all(10),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(50),
                                   child: Image(
                                     image: NetworkImage(
-                                      product.ProductImage,
+                                      product["ProductImage"],
                                     ),
                                   ),
                                 ),
@@ -259,18 +376,20 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                         Column(
                           children: <Widget>[
                             Text(
-                              "\n " + product.Category,
+                              " " + product["Category"],
                               style: new TextStyle(
-                                fontSize: 17,
+                                fontSize: 15,
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromARGB(255, 32, 7, 121),
                               ),
                             ),
                             Text(
-                              "   Price : " + product.Price.toString() + " SR",
+                              "   Price : " +
+                                  product["Price"].toString() +
+                                  " SR",
                               textAlign: TextAlign.center,
                               style: new TextStyle(
-                                fontSize: 15,
+                                fontSize: 13,
                                 color: Color.fromARGB(255, 77, 76, 76),
                               ),
                             ),
@@ -281,15 +400,15 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                           alignment: Alignment.center,
                           children: [
                             Container(
-                              width: 35,
-                              height: 35,
+                              width: 30,
+                              height: 30,
                               decoration: new BoxDecoration(
                                 color: Color.fromARGB(255, 245, 161, 14),
                                 shape: BoxShape.circle,
                               ),
                             ),
                             Text(
-                              product.quantity.toString(),
+                              product["quantity"].toString(),
                               style: TextStyle(color: Colors.white),
                             )
                           ],

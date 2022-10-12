@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
 import 'package:taqdaa_application/views/NoItmesCart.dart';
+import 'package:taqdaa_application/views/scanner.dart';
 import '../controller/BNBCustomePainter.dart';
-import '../controller/Notification_api.dart';
 import '../views/profile_view.dart';
 import 'ShoppingCart.dart';
 import 'list_of_stores.dart';
@@ -51,7 +50,8 @@ class _HomePageState extends State<HomePage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => ListOfStores2()),
+                                    builder: (context) =>
+                                        ListOfStores2()), //scanner()ListOfStores2()
                               );
                             },
                             backgroundColor: Colors.orange,

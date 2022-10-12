@@ -35,6 +35,7 @@ void main() async {
   String closest = "";
   String storeName = "";
   int theIndex = -1;
+  UserModel loggedInUser = UserModel();
 
   Future readClosest() async {
     String distance = "";
@@ -64,9 +65,8 @@ void main() async {
         if (data["kilometers"] == "0.1") {
           NotificationApi.showScheduledNotification(
               title: 'Taqdaa is waiting for you!',
-              body: 'Hey, ' +
-                  EcommerceApp.userName +
-                  '\nyou\'re very close from ${data['StoreName']} come and shop with us now!', ////bug fixes StoreName
+              body:
+                  'Hey, ${loggedInUser.firstName}\nyou\'re very close from ${data['StoreName']} come and shop with us now!', ////bug fixes StoreName
               payload: 'paylod.nav',
               scheduledDate: DateTime.now().add(Duration(seconds: 1)));
         }
@@ -199,8 +199,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     scheduledDate: DateTime.now().add(Duration(seconds: 3)));
               }
               return HomePage();
-              //   }
-              // );
             } else if (snapshot.hasError) {
               return Text("Some thing went wrong! ${snapshot.error}");
             } else {

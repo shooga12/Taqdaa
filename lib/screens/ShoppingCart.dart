@@ -5,11 +5,10 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:taqdaa_application/views/checkOut_view.dart';
 import '../controller/BNBCustomePainter.dart';
 import '../main.dart';
-import '../controller/checkout.dart';
 import '../confige/EcommerceApp.dart';
 import '../views/NoItmesCart.dart';
 import '../views/profile_View.dart';
-import 'list_of_stores.dart';
+import '../views/scanner.dart';
 import 'scanBarCode.dart';
 import 'dart:core';
 
@@ -273,8 +272,12 @@ class _shoppingCartState extends State<shoppingCart> {
                             child: FittedBox(
                               child: FloatingActionButton(
                                 onPressed: () {
-                                  ////bug fixes **continue scan
-                                  _scan(context, "NewItem");
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => scanner()),
+                                  );
+                                  //_scan(context, "NewItem");
                                 },
                                 backgroundColor: Colors.orange,
                                 child: Icon(
@@ -545,7 +548,7 @@ class _shoppingCartState extends State<shoppingCart> {
 
   Future<bool> _scan(BuildContext context, String action) async {
     _counter = await FlutterBarcodeScanner.scanBarcode(
-        "#004297", "Cancel", true, ScanMode.BARCODE);
+        "#FEB139", "Cancel", false, ScanMode.BARCODE);
 
     setState(() {
       EcommerceApp.value = _counter;

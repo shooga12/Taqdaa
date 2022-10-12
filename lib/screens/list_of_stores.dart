@@ -5,6 +5,7 @@ import 'package:taqdaa_application/confige/EcommerceApp.dart';
 import 'package:taqdaa_application/screens/ShoppingCart.dart';
 import 'package:taqdaa_application/screens/scanBarCode.dart';
 import 'package:firebase_database/firebase_database.dart';
+import '../views/scanner.dart';
 
 class ListOfStores2 extends StatefulWidget {
   const ListOfStores2({super.key});
@@ -240,9 +241,17 @@ class _ListOfStores2State extends State<ListOfStores2> {
               EcommerceApp.storeId = store.StoreId;
               if (EcommerceApp.storeName == "") {
                 EcommerceApp.storeName = store.StoreName;
-                _scan(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => scanner()),
+                );
+                //_scan(context);
               } else if (EcommerceApp.storeName == store.StoreName) {
-                _scan(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => scanner()),
+                );
+                //_scan(context);
               } else {
                 showDialog(
                     context: context,
