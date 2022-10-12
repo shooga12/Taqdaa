@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:taqdaa_application/main.dart';
+import 'package:taqdaa_application/profile/edit_profile.dart';
 import 'package:taqdaa_application/screens/home_page.dart';
 import '../confige/EcommerceApp.dart';
 import '../controller/BNBCustomePainter.dart';
@@ -60,8 +61,11 @@ class _HomepprofileState extends State<Homepprofile> {
               color: Colors.white,
             ),
             onPressed: () {
-              // do something
-            },
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Editprofile()),
+              );
+            }, // do something
           )
         ],
         flexibleSpace: Container(
