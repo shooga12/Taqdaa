@@ -45,6 +45,8 @@ class _EditprofileState extends State<Editprofile> {
   String errorMsg = '';
   bool isLoading = false;
 
+  static var usersRef;
+
   String? validateEmail(String? formEmail) {
     if (formEmail == null || formEmail.isEmpty)
       return 'البريد الالكتروني مطلوب';
@@ -393,6 +395,56 @@ class _EditprofileState extends State<Editprofile> {
                   //     style: TextStyle(fontSize: 22),
                   //   ),
                   // ),
+                  SizedBox(
+                    height: 10,
+                  ),
+
+//how to make save button ?
+// Input passed back via `pop(T)` can be retrieved via:
+                  //final signup() = await showDialog(MyAlertDialog());
+
+                  Padding(
+                    padding: EdgeInsets.only(top: 20.0, right: 45.0),
+                    child: isLoading == true
+                        ? Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : SizedBox(
+                            width: 200,
+                            height: 40,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Homepprofile()),
+                                );
+                              },
+                              child: Text(
+                                'حفظ',
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18),
+                              ),
+                              style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.resolveWith(
+                                          (states) {
+                                    if (states
+                                        .contains(MaterialState.pressed)) {
+                                      return Colors.grey;
+                                    }
+                                    return Colors.orange;
+                                  }),
+                                  shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(30)))),
+                            ),
+                          ),
+                  ),
                 ],
               ),
             ),
@@ -497,6 +549,106 @@ class _EditprofileState extends State<Editprofile> {
         ],
       ),
     );
+  }
+
+  Future signup() async {
+    try {
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: _emailController.text.trim(),
+              password: _passController.text)
+          .then((value) => Navigator.pop(
+              context, MaterialPageRoute(builder: (context) => LoginPage())));
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                content: Text('تم إنشاء الحساب بنجاح'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context,
+                        MaterialPageRoute(builder: (context) => LoginPage())),
+                    child: const Text('حسنًا'),
+                  )
+                ]);
+          });
+    } on FirebaseAuthException catch (e) {
+      print(e);
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(content: Text(e.message.toString()), actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, 'حسنًا'),
+                child: const Text('حسنًا'),
+              )
+            ]);
+          });
+    }
+  }
+
+  void register(String email, String password) async {
+    if (_key.currentState!.validate()) {
+      try {
+        await _auth
+            .createUserWithEmailAndPassword(email: email, password: password)
+            .then((value) => {postDetailsToFirestore()})
+            .catchError((e) {
+          Fluttertoast.showToast(msg: e!.message);
+        });
+      } on FirebaseAuthException catch (error) {
+        switch (error.code) {
+          case "invalid-email":
+            errorMsg = "Your email address appears to be malformed.";
+            break;
+          case "wrong-password":
+            errorMsg = "Your password is wrong.";
+            break;
+          case "user-not-found":
+            errorMsg = "User with this email doesn't exist.";
+            break;
+          case "user-disabled":
+            errorMsg = "User with this email has been disabled.";
+            break;
+          case "too-many-requests":
+            errorMsg = "Too many requests";
+            break;
+          case "operation-not-allowed":
+            errorMsg = "Signing in with Email and Password is not enabled.";
+            break;
+          default:
+            errorMsg = "An undefined Error happened.";
+        }
+        Fluttertoast.showToast(msg: errorMsg);
+        print(error.code);
+      }
+    }
+  }
+
+  postDetailsToFirestore() async {
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    User? user = _auth.currentUser;
+
+    UserModel userModel = UserModel();
+
+    // writing all the values
+    userModel.email = user!.email;
+    userModel.uid = user.uid;
+    userModel.firstName = firstnameController.text;
+    userModel.secondName = lastnameController.text;
+    userModel.phonenumber = phonenumberController.text;
+    userModel.dateofbirth = dateofbirthController.text;
+
+    await firebaseFirestore
+        .collection("users")
+        .doc(user.uid)
+        .set(userModel.toMap());
+    Fluttertoast.showToast(msg: "Editing Saved successfully :) ");
+
+    Navigator.pushAndRemoveUntil(
+        (context),
+        MaterialPageRoute(builder: (context) => Homepprofile()),
+        (route) => false);
   }
 }
 
