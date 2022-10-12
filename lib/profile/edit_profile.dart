@@ -82,6 +82,20 @@ class _EditprofileState extends State<Editprofile> {
           "حسابي",
           style: TextStyle(fontSize: 24),
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Homepprofile()),
+              );
+            }, // do something
+          )
+        ],
         flexibleSpace: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
@@ -104,13 +118,9 @@ class _EditprofileState extends State<Editprofile> {
                   SizedBox(
                     height: 10,
                   ),
-                  TextFormField(
+
+                  TextField(
                     controller: firstnameController,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: MultiValidator([
-                      PatternValidator(r'^[a-z A-Z]+$',
-                          errorText: 'يجب أن يتكون الأسم من حروف فقط')
-                    ]),
                     cursorColor: Color.fromARGB(255, 37, 43, 121),
                     style: TextStyle(
                         color:
@@ -399,10 +409,6 @@ class _EditprofileState extends State<Editprofile> {
                     height: 10,
                   ),
 
-//how to make save button ?
-// Input passed back via `pop(T)` can be retrieved via:
-                  //final signup() = await showDialog(MyAlertDialog());
-
                   Padding(
                     padding: EdgeInsets.only(top: 20.0, right: 45.0),
                     child: isLoading == true
@@ -413,12 +419,10 @@ class _EditprofileState extends State<Editprofile> {
                             width: 200,
                             height: 40,
                             child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Homepprofile()),
-                                );
+                              //make it save in firebase
+                              onPressed: () async {
+                                register(_emailController.text,
+                                    _passController.text);
                               },
                               child: Text(
                                 'حفظ',
