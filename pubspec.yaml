@@ -44,8 +44,15 @@ dependencies:
   mobile_scanner: ^2.0.0
   flutter_barcode_scanner: ^2.0.0
   either_dart: ^0.2.0
+  flutter_braintree: ^2.3.1
   form_field_validator: ^1.1.0
+  http_auth: ^1.0.1
   firebase_database: ^9.1.4
+  timezone: ^0.9.0
+  flutter_native_timezone: ^2.0.0
+  flutter_native_splash: ^2.2.9
+  flutter_local_notifications: ^11.0.0
+  rxdart: ^0.27.5
 
 dev_dependencies:
   flutter_test:

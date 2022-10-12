@@ -163,24 +163,24 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                     showDialog(
                         context: context,
                         builder: (ctx) => AlertDialog(
-                              title: Text("Please Note"),
-                              content: Text(
-                                  "Your total price will be in ${EcommerceApp.inDollars.toStringAsFixed(2)}\$."), ////Teacher note
-                              actions: [
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.of(ctx).pop(false);
-                                    },
-                                    child: Text("Cancel")),
-                                ElevatedButton(
-                                    //style: Color
-                                    onPressed: () {
-                                      checkOut().payment(context);
-                                      Navigator.of(ctx).pop(false);
-                                    },
-                                    child: Text("Continue")),
-                              ],
-                            ));
+                          title: Text("Please Note"),
+                          content: Text(
+                              "Your total price will be in ${EcommerceApp.inDollars.toStringAsFixed(2)}\$."), ////Teacher note
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(ctx).pop(false);
+                                },
+                                child: Text("Cancel")),
+                            ElevatedButton(
+                              //style: Color
+                                onPressed: () {
+                                  checkOut().payment(context);
+                                  Navigator.of(ctx).pop(false);
+                                },
+                                child: Text("Continue")),
+                          ],
+                        ));
                   },
                   child: Text(
                     'Place Order',
@@ -191,7 +191,7 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                   ),
                   style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.resolveWith((states) {
+                      MaterialStateProperty.resolveWith((states) {
                         if (states.contains(MaterialState.pressed)) {
                           return Colors.grey;
                         }
@@ -213,7 +213,7 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
       .collection('${collectionName}')
       .snapshots()
       .map((snapshot) =>
-          snapshot.docs.map((doc) => Product.fromJson(doc.data())).toList());
+      snapshot.docs.map((doc) => Product.fromJson(doc.data())).toList());
 
   Widget buildSecondItmes(Product product, BuildContext context) {
     return Container(
@@ -240,7 +240,7 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.only(left: 25, top: 2.5),
+                              const EdgeInsets.only(left: 25, top: 2.5),
                               child: Container(
                                 width: 65,
                                 margin: EdgeInsets.all(10),
