@@ -71,21 +71,25 @@ class _returnRequestState extends State<returnRequest> {
                       itemBuilder: (BuildContext context, int index) {
                         var data = invoice[index];
                         if (data.returnable == true) {
-                          return CheckboxListTile(
+                          return ListTile(
+                            leading: Checkbox(
+                              value: value,
+                              onChanged: (val) {
+                                setState(() {
+                                  value = val!;
+                                  storeRequests(data.barcode);
+                                  if (!value) {
+                                    value = false;
+                                  }
+                                });
+                              },
+                              activeColor: Colors.orange,
+                              checkColor: Colors.white,
+                            ),
                             title: Text(
                               data.barcode,
                               style: TextStyle(fontSize: 16),
                             ),
-                            controlAffinity: ListTileControlAffinity.leading,
-                            value: value,
-                            onChanged: (val) {
-                              setState(() {
-                                value = val!;
-                                storeRequests(data.barcode);
-                              });
-                            },
-                            activeColor: Colors.orange,
-                            checkColor: Colors.white,
                           );
                         } else if (data.returnable == false) {
                           return Row(

@@ -8,6 +8,7 @@ import '../main.dart';
 import '../profile/homep_profile.dart';
 import 'NoItmesCart.dart';
 import 'ShoppingCart.dart';
+import 'getHelp.dart';
 import 'home_page.dart';
 import 'invoices.dart';
 import 'list_of_stores.dart';
@@ -95,6 +96,40 @@ class _MoreState extends State<More> {
                             child: Row(children: <Widget>[
                               IconButton(
                                   onPressed: () {},
+                                  icon: Icon(Icons.receipt_long,
+                                      size: 30,
+                                      color:
+                                          Color.fromARGB(223, 134, 186, 243))),
+                              Column(children: <Widget>[
+                                Text(
+                                  "طلبات الاسترجاع",
+                                  style: new TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ]),
+                              Spacer(),
+                              Icon(Icons.arrow_forward,
+                                  color: Color.fromARGB(223, 134, 186, 243)),
+                            ]),
+                          ),
+                          onTap: () {
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) => Homepprofile()),
+                            // );
+                          }),
+                      color: Color.fromARGB(243, 243, 239, 231),
+                    ),
+                    Card(
+                      child: new InkWell(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 12, bottom: 12, left: 15, right: 12),
+                            child: Row(children: <Widget>[
+                              IconButton(
+                                  onPressed: () {},
                                   icon: Icon(Icons.contact_support,
                                       size: 30,
                                       color:
@@ -113,11 +148,11 @@ class _MoreState extends State<More> {
                             ]),
                           ),
                           onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) => Homepprofile()),
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => helpPage()),
+                            );
                           }),
                       color: Color.fromARGB(243, 243, 239, 231),
                     ),
@@ -155,40 +190,40 @@ class _MoreState extends State<More> {
                           }),
                       color: Color.fromARGB(243, 243, 239, 231),
                     ),
-                    Card(
-                      child: new InkWell(
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 12, bottom: 12, left: 15, right: 12),
-                            child: Row(children: <Widget>[
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.phone_enabled,
-                                      size: 30,
-                                      color:
-                                          Color.fromARGB(223, 134, 186, 243))),
-                              Column(children: <Widget>[
-                                Text(
-                                  "تواصل معنا",
-                                  style: new TextStyle(
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ]),
-                              Spacer(),
-                              Icon(Icons.arrow_forward,
-                                  color: Color.fromARGB(223, 134, 186, 243)),
-                            ]),
-                          ),
-                          onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) => Homepprofile()),
-                            // );
-                          }),
-                      color: Color.fromARGB(243, 243, 239, 231),
-                    ),
+                    // Card(
+                    //   child: new InkWell(
+                    //       child: Padding(
+                    //         padding: const EdgeInsets.only(
+                    //             top: 12, bottom: 12, left: 15, right: 12),
+                    //         child: Row(children: <Widget>[
+                    //           IconButton(
+                    //               onPressed: () {},
+                    //               icon: Icon(Icons.phone_enabled,
+                    //                   size: 30,
+                    //                   color:
+                    //                       Color.fromARGB(223, 134, 186, 243))),
+                    //           Column(children: <Widget>[
+                    //             Text(
+                    //               "تواصل معنا",
+                    //               style: new TextStyle(
+                    //                 fontSize: 18,
+                    //               ),
+                    //             ),
+                    //           ]),
+                    //           Spacer(),
+                    //           Icon(Icons.arrow_forward,
+                    //               color: Color.fromARGB(223, 134, 186, 243)),
+                    //         ]),
+                    //       ),
+                    //       onTap: () {
+                    //         // Navigator.push(
+                    //         //   context,
+                    //         //   MaterialPageRoute(
+                    //         //       builder: (context) => Homepprofile()),
+                    //         // );
+                    //       }),
+                    //   color: Color.fromARGB(243, 243, 239, 231),
+                    // ),
                   ],
                 )),
           ),

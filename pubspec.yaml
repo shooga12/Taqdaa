@@ -62,6 +62,8 @@ dependencies:
   webview_flutter: ^3.0.4
   flutter_braintree: ^2.3.1
   flutter_paypal: ^0.0.7
+  flutter_phone_direct_caller: ^2.1.1
+  url_launcher: ^6.1.6
   
 
 
