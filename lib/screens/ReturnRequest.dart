@@ -41,7 +41,7 @@ class _returnRequestState extends State<returnRequest> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         title: Text(
           "طلب الاسترجاع",
           style: TextStyle(fontSize: 24),
@@ -142,7 +142,7 @@ class _returnRequestState extends State<returnRequest> {
                 //   MaterialPageRoute(builder: (context) => returnRequest()),
                 // );
               },
-              child: Text('طلب استرجاع'),
+              child: Text('تقديم طلب الاسترجاع'),
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.resolveWith((states) {
                     if (states.contains(MaterialState.pressed)) {

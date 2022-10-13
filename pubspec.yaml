@@ -102,6 +102,9 @@ flutter:
     - assets/SignupGroup.png
     - assets/LoginGroup.png
     - assets/Rectangle.png
+    - assets/s2497212-main-zoom.jpeg
+    - assets/243280_swatch.jpeg
+    - assets/sephora_con.webp
     
     # To add assets to your application, add an assets section, like this:
     # assets:

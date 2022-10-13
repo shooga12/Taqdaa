@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
 import '../confige/EcommerceApp.dart';
 import '../controller/BNBCustomePainter.dart';
 import '../main.dart';
 import '../profile/homep_profile.dart';
 import 'NoItmesCart.dart';
-import 'ReturnRequest.dart';
 import 'ShoppingCart.dart';
 import 'home_page.dart';
 import 'insideMore.dart';
+import 'invoice_details.dart';
+import '../model/invoice.dart';
 import 'list_of_stores.dart';
-
 class invoices extends StatefulWidget {
   const invoices({super.key});
 
@@ -26,6 +26,13 @@ class _invoicesState extends State<invoices> {
   bool isInsideMore = false;
   bool isInsideCart = false;
 
+
+  Stream<List<Invoice>> readInvoices() => FirebaseFirestore.instance
+      .collection('All-Invoices')
+      .snapshots()
+      .map((snapshot) =>
+      snapshot.docs.map((doc) => Invoice.fromMap(doc.data())).toList());
+  int count = -1;
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
@@ -50,169 +57,30 @@ class _invoicesState extends State<invoices> {
         children: [
           Center(
             child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Card(
-                      child: new InkWell(
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 12, bottom: 12, left: 15, right: 12),
-                            child: Row(children: <Widget>[
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.receipt_long,
-                                      size: 30,
-                                      color:
-                                          Color.fromARGB(223, 134, 186, 243))),
-                              Column(children: <Widget>[
-                                Text(
-                                  "فاتورة 1",
-                                  style: new TextStyle(
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ]),
-                              Spacer(),
-                              Icon(
-                                Icons.arrow_forward,
-                                color: Color.fromARGB(223, 134, 186, 243),
-                              ),
-                            ]),
-                          ),
-                          onTap: () {
-                            // SizedBox(
-                            //   width: 400,
-                            //   height: 200,
-                            //   child: Row(
-                            //     children: [
-                            //       Text('123456789'),
-                            //       Text('987654321'),
-                            //       FloatingActionButton(
-                            //         onPressed: () {
-                            //           Navigator.push(
-                            //             context,
-                            //             MaterialPageRoute(
-                            //                 builder: (context) =>
-                            //                     returnRequest()),
-                            //           );
-                            //         },
-                            //         backgroundColor: Colors.orange,
-                            //         child: Text('Return request'),
-                            //       ),
-                            //     ],
-                            //   ),
-                            // );
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => returnRequest()),
-                            );
-                          }),
-                      color: Color.fromARGB(243, 243, 239, 231),
-                    ),
-                    // Card(
-                    //   child: new InkWell(
-                    //       child: Padding(
-                    //         padding: const EdgeInsets.only(
-                    //             top: 12, bottom: 12, left: 15, right: 12),
-                    //         child: Row(children: <Widget>[
-                    //           IconButton(
-                    //               onPressed: () {},
-                    //               icon: Icon(Icons.contact_support,
-                    //                   size: 30,
-                    //                   color:
-                    //                       Color.fromARGB(223, 134, 186, 243))),
-                    //           Column(children: <Widget>[
-                    //             Text(
-                    //               "أحصل على مساعدة",
-                    //               style: new TextStyle(
-                    //                 fontSize: 18,
-                    //               ),
-                    //             ),
-                    //           ]),
-                    //           Spacer(),
-                    //           Icon(Icons.arrow_forward),
-                    //         ]),
-                    //       ),
-                    //       onTap: () {
-                    //         // Navigator.push(
-                    //         //   context,
-                    //         //   MaterialPageRoute(
-                    //         //       builder: (context) => Homepprofile()),
-                    //         // );
-                    //       }),
-                    //   color: Color.fromARGB(243, 243, 239, 231),
-                    // ),
-                    // Card(
-                    //   child: new InkWell(
-                    //       child: Padding(
-                    //         padding: const EdgeInsets.only(
-                    //             top: 12, bottom: 12, left: 15, right: 12),
-                    //         child: Row(children: <Widget>[
-                    //           IconButton(
-                    //               onPressed: () {},
-                    //               icon: Icon(Icons.info,
-                    //                   size: 30,
-                    //                   color:
-                    //                       Color.fromARGB(223, 134, 186, 243))),
-                    //           Column(children: <Widget>[
-                    //             Text(
-                    //               "عن تقضّى",
-                    //               style: new TextStyle(
-                    //                 fontSize: 18,
-                    //               ),
-                    //             ),
-                    //           ]),
-                    //           Spacer(),
-                    //           Icon(Icons.arrow_forward),
-                    //         ]),
-                    //       ),
-                    //       onTap: () {
-                    //         // Navigator.push(
-                    //         //   context,
-                    //         //   MaterialPageRoute(
-                    //         //       builder: (context) => Homepprofile()),
-                    //         // );
-                    //       }),
-                    //   color: Color.fromARGB(243, 243, 239, 231),
-                    // ),
-                    // Card(
-                    //   child: new InkWell(
-                    //       child: Padding(
-                    //         padding: const EdgeInsets.only(
-                    //             top: 12, bottom: 12, left: 15, right: 12),
-                    //         child: Row(children: <Widget>[
-                    //           IconButton(
-                    //               onPressed: () {},
-                    //               icon: Icon(Icons.phone_enabled,
-                    //                   size: 30,
-                    //                   color:
-                    //                       Color.fromARGB(223, 134, 186, 243))),
-                    //           Column(children: <Widget>[
-                    //             Text(
-                    //               "تواصل معنا",
-                    //               style: new TextStyle(
-                    //                 fontSize: 18,
-                    //               ),
-                    //             ),
-                    //           ]),
-                    //           Spacer(),
-                    //           Icon(Icons.arrow_forward),
-                    //         ]),
-                    //       ),
-                    //       onTap: () {
-                    //         // Navigator.push(
-                    //         //   context,
-                    //         //   MaterialPageRoute(
-                    //         //       builder: (context) => Homepprofile()),
-                    //         // );
-                    //       }),
-                    //   color: Color.fromARGB(243, 243, 239, 231),
-                    // ),
-                  ],
-                )),
+                padding: const EdgeInsets.only(left:10,right:10,bottom:10,top:15),
+                child: StreamBuilder<List<Invoice>>(
+                    stream: readInvoices(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final invoices = snapshot.data!;
+                        count = invoices.length;
+                        return ListView.builder(
+                            itemCount: invoices.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              var data = invoices[index];
+
+                              if (invoices.length != 0) {
+                                return buildInvoiceCard(invoices[index], context);
+                              }
+                              return nothing();
+                            });
+                      } else if (snapshot.hasError) {
+                        return Text("Some thing went wrong! ${snapshot.error}");
+                      } else {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                    })
+            ),
           ),
           Positioned(
             bottom: 0,
@@ -333,5 +201,91 @@ class _invoicesState extends State<invoices> {
         ],
       ),
     );
+
+  }
+  nothing() {
+    return Container();
+  }
+  buildInvoiceCard(Invoice invoice, BuildContext context) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
+        child: Container(
+          child: new InkWell(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  top: 15, bottom: 15, left: 15, right: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.receipt_long,
+                      size: 40,
+                      color:
+                      Color.fromARGB(255, 254, 177, 57),
+                    ),
+                  ),
+                  SizedBox(width: 10.0,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        " رقم الفاتورة: ${invoice.id}",
+                        style: new TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                      SizedBox(height: 5.0,),
+                      Text(
+                        " المتجر: ${invoice.store}",
+                        style: new TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                      SizedBox(height: 5.0,),
+                      Text(
+                        "${invoice.date}",
+                        style: new TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
+                      ),
+
+                    ],
+                  ),
+                  Spacer(),
+                  Icon(
+                    Icons.arrow_back_ios_rounded,
+                    textDirection: TextDirection.ltr,
+                    color: Color.fromARGB(255, 254, 177, 57),
+                  ),
+                ],
+              ),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => invoice_details()),
+              );
+            },
+            highlightColor: Color.fromARGB(255, 255, 255, 255),
+          ),
+          decoration: BoxDecoration(
+            color: Color.fromARGB(255, 255, 255, 255) ,
+            borderRadius: BorderRadius.circular(20.0),
+            boxShadow: [
+              BoxShadow(
+                color: Color.fromARGB(255, 241, 241, 241),
+                offset: Offset.zero,
+                blurRadius: 20.0,
+                blurStyle: BlurStyle.normal,
+              ),
+            ],
+          ),
+
+        ),
+      );
+
   }
 }
