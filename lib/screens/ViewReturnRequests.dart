@@ -25,6 +25,28 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
   bool isInsideProfile = true;
   bool isInsideSettings = false;
 
+  List dataItem = [
+    {
+      "date": "10/10/2022",
+      "product": "Face Mask",
+      "brand": "SEPHORA",
+      "logo": "sephora.png",
+      //----comments? or reason?
+      "pic": "returnPic.png",
+    },
+    {
+      "date": "10/10/2022",
+      "product": "Tote bag",
+      "brand": "ZARA",
+      "logo": "zara.png",
+       //----comments? or reason?
+      "pic": "returnPic1.png",
+    }
+  ];
+
+
+
+
   @override
   void initState() {
     // TODO: implement initState
@@ -71,6 +93,177 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
+body: SingleChildScrollView(
+        physics: const ScrollPhysics(),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Text(
+                        'Recent Return Requests',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        'View all',
+                        style: TextStyle(
+                          color: Colors.indigo,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  //------------------------------------------------------------
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: dataItem.length, //--- how many return requests?
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          // Navigator.of(context).push(
+                          //   MaterialPageRoute(
+                          //     builder: (context) => RequestDetailsScreen( //--------------------------------?  do i need it?
+                          //       data: dataItem[index],
+                          //     ),
+                          //   ),
+                          // );
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Card(
+                            // color: Colors.indigo.shade100.withOpacity(0.1),
+                            elevation: 2,
+                            child: Container(
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                children: [
+                                  Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                dataItem[index]['date'],
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              Text(
+                                                dataItem[index]['product'],
+                                              ),
+                                            ],
+                                          ),
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            child: Image.asset(
+                                              dataItem[index]['logo'], //----- brand logo
+                                              width: 50,
+                                              height: 50,
+                                            ),
+                                            
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text('PENDING'),
+                                              Text('APPROVED'),
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const CircleAvatar(
+                                                backgroundColor: Colors.indigo,
+                                                radius: 8,
+                                              ),
+                                              Flexible(
+                                                flex: 1,
+                                                child: Container(
+                                                  margin: const EdgeInsets.only(
+                                                    left: 8,
+                                                    right: 8,
+                                                  ),
+                                                  color: Colors.indigo,
+                                                  height: 2,
+                                                ),
+                                              ),
+                                              const CircleAvatar(
+                                                backgroundColor: Color.fromARGB(
+                                                    255, 197, 202, 233),
+                                                radius: 14,
+                                                child: Icon(
+                                                  Icons.timelapse, //---------------------------------------
+                                                  size: 16,
+                                                ),
+                                              ),
+                                              Flexible(
+                                                flex: 1,
+                                                child: Container(
+                                                  margin: const EdgeInsets.only(
+                                                    left: 8,
+                                                    right: 8,
+                                                  ),
+                                                  color: const Color.fromARGB(
+                                                      255, 197, 202, 233),
+                                                  height: 2,
+                                                ),
+                                              ),
+                                              const CircleAvatar(
+                                                backgroundColor: Color.fromARGB(
+                                                    255, 197, 202, 233),
+                                                radius: 8,
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      
 
 
 
