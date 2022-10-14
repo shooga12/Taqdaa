@@ -27,7 +27,6 @@ class _invoicesDetailsState extends State<invoice_details> {
   bool isInsideMore = false;
   bool isInsideCart = false;
 
-
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
@@ -50,356 +49,356 @@ class _invoicesDetailsState extends State<invoice_details> {
       backgroundColor: Colors.white,
       body: Container(
         width: double.infinity,
-        child:
-        Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Text(
+                  "المنتجات",
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                    fontSize: 22,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Container(
+                    height: 1,
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: double.infinity,
+                  child: Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Text(
-                        "المنتجات",
-                        textAlign: TextAlign.right,
-                        style: TextStyle(
-                          fontSize: 22,
+                      Expanded(
+                        flex: 1,
+                        child: Image.asset(
+                          'assets/s2497212-main-zoom.jpeg',
+                          height: 50,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Container(
-                          height: 1,
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 20,),
-                      Container(
-                       width: double.infinity,
+                      SizedBox(width: 20),
+                      Expanded(
+                        flex: 3,
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
                               flex: 1,
-                              child: Image.asset(
-                                'assets/s2497212-main-zoom.jpeg',
-
-                                 height: 50,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "ماسكارا",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 5.0,
+                                  ),
+                                  Text(
+                                    "الكمية: 1",
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                           SizedBox(width: 20),
                             Expanded(
-                              flex: 3,
+                              flex: 1,
                               child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "ماسكارا",
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500,
-                                          ),
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "SR",
+                                        textDirection: TextDirection.rtl,
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600,
                                         ),
-                                        SizedBox(height: 5.0,),
-                                        Text(
-                                          "الكمية: 1",
-
-                                           style: TextStyle(
-                                             color: Colors.grey,
-                                           ),
-                                        ),
-
-                                      ],
-                                     ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "SR",
-                                                textDirection: TextDirection.rtl,
-                                                textAlign: TextAlign.end,
-                                                style: TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                              SizedBox(width: 5.0),
-                                              Text(
-                                                "100",
-                                                textDirection: TextDirection.rtl,
-                                                textAlign: TextAlign.end,
-                                                style: TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-
-                                        ],
                                       ),
-                                    )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 20,),
-                      Container(
-                        width: double.infinity,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Image.asset(
-                                'assets/243280_swatch.jpeg',
-
-                                height: 50,
-                              ),
-                            ),
-                            SizedBox(width: 20),
-                            Expanded(
-                              flex: 3,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "ماسكارا",
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500,
-                                          ),
+                                      SizedBox(width: 5.0),
+                                      Text(
+                                        "100",
+                                        textDirection: TextDirection.rtl,
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600,
                                         ),
-                                        SizedBox(height: 5.0,),
-                                        Text(
-                                          "الكمية: 1",
-
-                                          style: TextStyle(
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "SR",
-                                              textDirection: TextDirection.rtl,
-                                              textAlign: TextAlign.end,
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                            SizedBox(width: 5.0),
-                                            Text(
-                                              "100",
-                                              textDirection: TextDirection.rtl,
-                                              textAlign: TextAlign.end,
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-
-                                      ],
-                                    ),
-                                  )
                                 ],
                               ),
-                            ),
+                            )
                           ],
                         ),
-                      ),
-                      SizedBox(height: 20,),
-                      Container(
-                        width: double.infinity,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Image.asset(
-                                'assets/sephora_con.webp',
-
-                                height: 50,
-                              ),
-                            ),
-                            SizedBox(width: 20),
-                            Expanded(
-                              flex: 3,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "ماسكارا",
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        SizedBox(height: 5.0,),
-                                        Text(
-                                          "الكمية: 1",
-
-                                          style: TextStyle(
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-
-                                      ],
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "SR",
-                                              textDirection: TextDirection.rtl,
-                                              textAlign: TextAlign.end,
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                            SizedBox(width: 5.0),
-                                            Text(
-                                              "100",
-                                              textDirection: TextDirection.rtl,
-                                              textAlign: TextAlign.end,
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 20,),
-                  SizedBox(height: 20.0,),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Container(
-                          height: 1,
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "المجموع",
-                        style: TextStyle(
-                          fontSize: 18,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                              "SR "
-                          ),
-                          Text(
-                              "300"
-                          ),
-                        ],
                       ),
                     ],
                   ),
-                      SizedBox(height: 40.0,),
-                      Center(
-                        child: SizedBox(
-                          width: 200,
-                          height: 40,
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => returnRequest()),
-                              );
-                            },
-                            child: Text(
-                              'طلب استرجاع',
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18),
-                            ),
-                            style: ButtonStyle(
-                                backgroundColor:
-                                MaterialStateProperty.resolveWith((states) {
-                                  if (states.contains(MaterialState.pressed)) {
-                                    return Colors.grey;
-                                  }
-                                  return Colors.orange;
-                                }),
-                                shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                        borderRadius:
-                                        BorderRadius.circular(30)))),
-                          ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: double.infinity,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Image.asset(
+                          'assets/243280_swatch.jpeg',
+                          height: 50,
                         ),
                       ),
-                  ],
+                      SizedBox(width: 20),
+                      Expanded(
+                        flex: 3,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "ماسكارا",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 5.0,
+                                  ),
+                                  Text(
+                                    "الكمية: 1",
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "SR",
+                                        textDirection: TextDirection.rtl,
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      SizedBox(width: 5.0),
+                                      Text(
+                                        "100",
+                                        textDirection: TextDirection.rtl,
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-           ),
-
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: double.infinity,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Image.asset(
+                          'assets/sephora_con.webp',
+                          height: 50,
+                        ),
+                      ),
+                      SizedBox(width: 20),
+                      Expanded(
+                        flex: 3,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "ماسكارا",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 5.0,
+                                  ),
+                                  Text(
+                                    "الكمية: 1",
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "SR",
+                                        textDirection: TextDirection.rtl,
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      SizedBox(width: 5.0),
+                                      Text(
+                                        "100",
+                                        textDirection: TextDirection.rtl,
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Container(
+                    height: 1,
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "المجموع",
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Text("SR "),
+                        Text("300"),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 40.0,
+                ),
+                Center(
+                  child: SizedBox(
+                    width: 200,
+                    height: 40,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => returnRequest()),
+                        );
+                      },
+                      child: Text(
+                        'طلب استرجاع',
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                      ),
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.resolveWith((states) {
+                            if (states.contains(MaterialState.pressed)) {
+                              return Colors.grey;
+                            }
+                            return Colors.orange;
+                          }),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(30)))),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
