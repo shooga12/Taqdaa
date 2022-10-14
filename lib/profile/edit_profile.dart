@@ -45,8 +45,6 @@ class _EditprofileState extends State<Editprofile> {
   String errorMsg = '';
   bool isLoading = false;
 
-  static var usersRef;
-
   String? validateEmail(String? formEmail) {
     if (formEmail == null || formEmail.isEmpty)
       return 'البريد الالكتروني مطلوب';
@@ -70,6 +68,17 @@ class _EditprofileState extends State<Editprofile> {
       setState(() {});
     });
   }
+/*
+  Future<void> _Update({DocumentSnapshot? documentSnapshot}) async {
+    if (documentSnapshot != null) {
+      firstnameController.text = documentSnapshot['firstName'];
+      lastnameController.text = documentSnapshot['lastName'];
+      _emailController.text = documentSnapshot['email'];
+      phonenumberController.text = documentSnapshot['phoneNumber'];
+      dateofbirthController.text = documentSnapshot['dateofbirth'];
+    }
+  }
+  */
 
   String CurrentUser = "";
   @override
@@ -119,47 +128,6 @@ class _EditprofileState extends State<Editprofile> {
                     height: 10,
                   ),
 
-                  TextField(
-                    controller: firstnameController,
-                    cursorColor: Color.fromARGB(255, 37, 43, 121),
-                    style: TextStyle(
-                        color:
-                            Color.fromARGB(255, 15, 53, 120).withOpacity(0.9)),
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                          borderSide: const BorderSide(
-                              color: Colors.orange, width: 2.0)),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                        borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 15, 53, 120),
-                            width: 2.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                        borderSide:
-                            const BorderSide(color: Colors.orange, width: 2.0),
-                      ),
-                      prefixIcon: Icon(Icons.person),
-                      iconColor: Colors.white,
-                      labelText: " ${loggedInUser.firstName}",
-                      labelStyle: TextStyle(
-                          color: Color.fromARGB(236, 113, 113, 117)
-                              .withOpacity(0.9)),
-                      filled: true,
-
-                      fillColor: Colors.white.withOpacity(0.9),
-                      // border: OutlineInputBorder(
-                      //  borderRadius: BorderRadius.circular(30.0),),
-                    ),
-                    keyboardType: TextInputType.name,
-                  ),
-
-// last name
-                  SizedBox(
-                    height: 10,
-                  ),
                   TextFormField(
                     controller: firstnameController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -189,7 +157,53 @@ class _EditprofileState extends State<Editprofile> {
                       ),
                       prefixIcon: Icon(Icons.person),
                       iconColor: Colors.white,
-                      labelText: " ${loggedInUser.secondName}",
+                      hintText: " ${loggedInUser.firstName}",
+                      labelStyle: TextStyle(
+                          color: Color.fromARGB(236, 113, 113, 117)
+                              .withOpacity(0.9)),
+                      filled: true,
+
+                      fillColor: Colors.white.withOpacity(0.9),
+                      // border: OutlineInputBorder(
+                      //  borderRadius: BorderRadius.circular(30.0),),
+                    ),
+                    keyboardType: TextInputType.name,
+                  ),
+
+// last name
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    controller: lastnameController,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: MultiValidator([
+                      PatternValidator(r'^[a-z A-Z]+$',
+                          errorText: 'يجب أن يتكون الأسم من حروف فقط')
+                    ]),
+                    cursorColor: Color.fromARGB(255, 37, 43, 121),
+                    style: TextStyle(
+                        color:
+                            Color.fromARGB(255, 15, 53, 120).withOpacity(0.9)),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                          borderSide: const BorderSide(
+                              color: Colors.orange, width: 2.0)),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide: const BorderSide(
+                            color: Color.fromARGB(255, 15, 53, 120),
+                            width: 2.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide:
+                            const BorderSide(color: Colors.orange, width: 2.0),
+                      ),
+                      prefixIcon: Icon(Icons.person),
+                      iconColor: Colors.white,
+                      hintText: " ${loggedInUser.secondName}",
                       labelStyle: TextStyle(
                           color: Color.fromARGB(236, 113, 113, 117)
                               .withOpacity(0.9)),
@@ -246,7 +260,7 @@ class _EditprofileState extends State<Editprofile> {
                       ),
                       prefixIcon: Icon(Icons.email),
                       iconColor: Colors.white,
-                      labelText: "${loggedInUser.email}",
+                      hintText: "${loggedInUser.email}",
                       labelStyle: TextStyle(
                           color: Color.fromARGB(236, 113, 113, 117)
                               .withOpacity(0.9)),
@@ -306,7 +320,7 @@ class _EditprofileState extends State<Editprofile> {
                       ),
                       prefixIcon: Icon(Icons.phone),
                       iconColor: Colors.white,
-                      labelText: "${loggedInUser.phonenumber}",
+                      hintText: "${loggedInUser.phonenumber}",
                       labelStyle: TextStyle(
                           color: Color.fromARGB(236, 113, 113, 117)
                               .withOpacity(0.9)),
@@ -362,7 +376,7 @@ class _EditprofileState extends State<Editprofile> {
                               color: Colors.orange, width: 2.0),
                         ),
 
-                        labelText:
+                        hintText:
                             "${loggedInUser.dateofbirth}", //label text of field
                       ),
                       readOnly:
@@ -420,9 +434,54 @@ class _EditprofileState extends State<Editprofile> {
                             height: 40,
                             child: ElevatedButton(
                               //make it save in firebase
+
+                              /*
+                              {
+                                var user;
+                                final docuser = FirebaseFirestore.instance
+                                    .collection('users')
+                                    .doc(user.uid);
+                                docuser.update({
+                                  'firstName': 'alanoud',
+                                });
+                              },
+                              */
+
                               onPressed: () async {
-                                register(_emailController.text,
-                                    _passController.text);
+                                /*
+                                widget.db.update(
+                                    widget.user['user'],
+                                    firstnameController.text,
+                                    lastnameController.text,
+                                    _emailController.text,
+                                    phonenumberController.text,
+                                    dateofbirthController.text);
+*/
+                                signup();
+
+                                /*
+                                final String firstName =
+                                    firstnameController.text;
+                                final String lastName = lastnameController.text;
+                                final String email = _emailController.text;
+                                final String phoneNumber =
+                                    phonenumberController.text;
+                                final String Dateofbirth =
+                                    dateofbirthController.text;
+
+                                await user?.doc(DocumentSnapshot.id).update({
+                                  "firstName": firstName,
+                                  "lastName": lastName,
+                                  "email": email,
+                                  "phoneNumber": phoneNumber,
+                                  "dateofbirth": Dateofbirth,
+                                });
+                                firstnameController.text = '';
+                                lastnameController.text = '';
+                                _emailController.text = '';
+                                phonenumberController.text = '';
+                                dateofbirthController.text = '';
+                              */
                               },
                               child: Text(
                                 'حفظ',
@@ -544,6 +603,47 @@ class _EditprofileState extends State<Editprofile> {
                                     ? Color.fromARGB(255, 254, 176, 60)
                                     : Colors.white,
                               )),
+                          IconButton(
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: ((context) {
+                                    return AlertDialog(
+                                      title: Text("هل تريد تسجيل الخروج؟"),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              FirebaseAuthMethods().signOut();
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        LoginPage(),
+                                                  ));
+                                            },
+                                            child: Text(
+                                              "تسجيل خروج",
+                                              style: TextStyle(
+                                                color: Colors.red,
+                                              ),
+                                            )),
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text("إلغاء"))
+                                      ],
+                                    );
+                                  }));
+                            },
+                            icon: Icon(
+                              Icons.logout,
+                              size: 30,
+                              color: isInsidelogout
+                                  ? Color.fromARGB(255, 254, 176, 60)
+                                  : Colors.white,
+                            ),
+                          ),
                         ]),
                   )
                 ],
@@ -557,21 +657,17 @@ class _EditprofileState extends State<Editprofile> {
 
   Future signup() async {
     try {
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: _emailController.text.trim(),
-              password: _passController.text)
-          .then((value) => Navigator.pop(
-              context, MaterialPageRoute(builder: (context) => LoginPage())));
       showDialog(
           context: context,
           builder: (context) {
             return AlertDialog(
-                content: Text('تم إنشاء الحساب بنجاح'),
+                content: Text('تم تعديل الحساب بنجاح'),
                 actions: [
                   TextButton(
-                    onPressed: () => Navigator.pop(context,
-                        MaterialPageRoute(builder: (context) => LoginPage())),
+                    onPressed: () => Navigator.pop(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Homepprofile())),
                     child: const Text('حسنًا'),
                   )
                 ]);
@@ -588,44 +684,6 @@ class _EditprofileState extends State<Editprofile> {
               )
             ]);
           });
-    }
-  }
-
-  void register(String email, String password) async {
-    if (_key.currentState!.validate()) {
-      try {
-        await _auth
-            .createUserWithEmailAndPassword(email: email, password: password)
-            .then((value) => {postDetailsToFirestore()})
-            .catchError((e) {
-          Fluttertoast.showToast(msg: e!.message);
-        });
-      } on FirebaseAuthException catch (error) {
-        switch (error.code) {
-          case "invalid-email":
-            errorMsg = "Your email address appears to be malformed.";
-            break;
-          case "wrong-password":
-            errorMsg = "Your password is wrong.";
-            break;
-          case "user-not-found":
-            errorMsg = "User with this email doesn't exist.";
-            break;
-          case "user-disabled":
-            errorMsg = "User with this email has been disabled.";
-            break;
-          case "too-many-requests":
-            errorMsg = "Too many requests";
-            break;
-          case "operation-not-allowed":
-            errorMsg = "Signing in with Email and Password is not enabled.";
-            break;
-          default:
-            errorMsg = "An undefined Error happened.";
-        }
-        Fluttertoast.showToast(msg: errorMsg);
-        print(error.code);
-      }
     }
   }
 
@@ -654,6 +712,22 @@ class _EditprofileState extends State<Editprofile> {
         MaterialPageRoute(builder: (context) => Homepprofile()),
         (route) => false);
   }
+/*
+  Future<void> update(String uid, String firstName, String lastName,
+      String email, String phoneNumber, String dateofbirth) async {
+    try {
+      await Firebase.collection("users").doc(uid).update({
+        'firstName': firstName,
+        'lastName': lastName,
+        'email': email,
+        'phoneNumber': phoneNumber,
+        'dateofbirth': dateofbirth
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+  */
 }
 
 // ignore: non_constant_identifier_names
