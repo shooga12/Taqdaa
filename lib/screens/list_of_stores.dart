@@ -241,17 +241,17 @@ class _ListOfStores2State extends State<ListOfStores2> {
               EcommerceApp.storeId = store.StoreId;
               if (EcommerceApp.storeName == "") {
                 EcommerceApp.storeName = store.StoreName;
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => scanner()),
-                );
-                //_scan(context);
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => scanner()),
+                // );
+                _scan(context);
               } else if (EcommerceApp.storeName == store.StoreName) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => scanner()),
-                );
-                //_scan(context);
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => scanner()),
+                // );
+                _scan(context);
               } else {
                 showDialog(
                     context: context,

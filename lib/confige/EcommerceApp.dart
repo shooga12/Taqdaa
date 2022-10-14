@@ -16,6 +16,8 @@ class EcommerceApp {
   static double inDollars = 0;
   static bool itsFirst = true;
   static bool rewardsExchanged = false;
+  static int rewards = 0;
+  static int rewardsInput = 0;
 
   static String uid = '';
   final FirebaseAuth auth = FirebaseAuth.instance;

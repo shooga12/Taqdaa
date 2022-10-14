@@ -75,10 +75,17 @@ class checkOut {
   }
 
   Future saveUserRewards(var reward) async {
-    await FirebaseFirestore.instance
-        .collection('${collectionName}Total')
-        .doc("rewards")
-        .set({"Rewards": reward});
+    if (EcommerceApp.rewards == 0) {
+      await FirebaseFirestore.instance
+          .collection('${collectionName}Total')
+          .doc("rewards")
+          .set({"Rewards": reward});
+    } else {
+      await FirebaseFirestore.instance
+          .collection('${collectionName}Total')
+          .doc("rewards")
+          .update({"Rewards": FieldValue.increment(reward)});
+    }
   }
 
   Future deleteCart() async {
