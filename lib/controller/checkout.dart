@@ -27,7 +27,7 @@ class checkOut {
       print(result.paymentMethodNonce.description);
       print(result.paymentMethodNonce.nonce);
 
-      double reward = (EcommerceApp.total * 2.5) / 100;
+      int reward = ((EcommerceApp.total * 2) / 100) as int; //make sure works
       EcommerceApp.storeName = "";
 
       String urli =
@@ -81,6 +81,7 @@ class checkOut {
           .doc("rewards")
           .set({"Rewards": reward});
     } else {
+      ///write rewards
       await FirebaseFirestore.instance
           .collection('${collectionName}Total')
           .doc("rewards")
@@ -115,7 +116,15 @@ class checkOut {
     for (int i = 0; i < documents.length; i++) {
       RFIDs.add(documents[i].get("RFID"));
 
+      ///write invoices
       FirebaseFirestore.instance.collection('${collectionName}Invoices').add({
+        "Category": documents[i].get("Category"),
+        "Item_number": documents[i].get("Item_number"),
+        "Price": documents[i].get("Price"),
+        "Store": documents[i].get("Store"),
+        "ProductImage": documents[i].get("ProductImage"),
+      });
+      FirebaseFirestore.instance.collection('InvoicesManager').add({
         "Category": documents[i].get("Category"),
         "Item_number": documents[i].get("Item_number"),
         "Price": documents[i].get("Price"),

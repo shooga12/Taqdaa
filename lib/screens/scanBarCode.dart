@@ -192,6 +192,7 @@ class _ScanPageState extends State<ScanPage> {
                             saveUserItems(toBeSavedProduct);
                           }
                           EcommerceApp.counter++;
+                          EcommerceApp.NumOfItems++;
                           Navigator.push(
                             context,
                             MaterialPageRoute(

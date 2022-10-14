@@ -18,7 +18,7 @@ class _rewardsState extends State<rewards> {
   @override
   void initState() {
     super.initState();
-    _controller.text = "1"; // Setting the initial value for the field.
+    _controller.text = "10"; // Setting the initial value for the field.
   }
 
   @override
@@ -42,45 +42,105 @@ class _rewardsState extends State<rewards> {
       body: Column(children: [
         Card(
           child: Container(
-            height: 270,
+            height: 350,
             width: 400,
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 40, left: 15),
-                  child: Row(
+                  padding: const EdgeInsets.only(
+                    top: 40,
+                    left: 15,
+                  ),
+                  child: Column(
                     children: [
                       Text(
-                        " My rewards:    ", //bug fixes
+                        "   current points    ", //bug fixes
                         style: TextStyle(
-                          color: Color.fromARGB(255, 32, 7, 121),
-                          fontSize: 18,
-                        ),
+                            color: Color.fromARGB(255, 32, 7, 121),
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 0.5),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            height: 50,
-                            child: Text(
-                              "${EcommerceApp.rewards} ", //bug fixes
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 32, 7, 121),
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Container(
-                            height: 30,
-                            child: Text(
-                              "points",
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 32, 7, 121),
-                                fontSize: 18,
-                              ),
-                            ),
-                          ),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                                height: 100,
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      width: 170,
+                                      height: 80,
+                                      decoration: new BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(8.0),
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.5),
+                                            spreadRadius: 3,
+                                            blurRadius: 6,
+                                            offset: Offset(0, 3),
+                                          )
+                                        ],
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Color.fromARGB(255, 95, 137, 180),
+                                            Color.fromARGB(255, 118, 171, 223),
+                                            Color.fromARGB(255, 142, 195, 248)
+                                            // Color.fromARGB(255, 56, 54, 122),
+                                            // Color.fromARGB(255, 103, 94, 198),
+                                            // Color.fromARGB(255, 149, 144, 232),
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        ),
+                                        shape: BoxShape.rectangle,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 14, left: 8),
+                                      child: Container(
+                                        width: 50,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                              // opacity: 0.75,
+                                              image: AssetImage(
+                                                  "assets/rewards.png"),
+                                              fit: BoxFit.fill),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 17, left: 50),
+                                      child: Text(
+                                        "  ${EcommerceApp.rewards} ", //bug fixes
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold,
+                                            letterSpacing: 0.8),
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                            // Container(
+                            //   height: 30,
+                            //   child: Text(
+                            //     "points",
+                            //     style: TextStyle(
+                            //       color: Color.fromARGB(255, 32, 7, 121),
+                            //       fontSize: 18,
+                            //     ),
+                            //   ),
+                            // ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -101,7 +161,7 @@ class _rewardsState extends State<rewards> {
                                     //     int.parse(_controller.text);
                                     currentValue--;
                                     _controller.text =
-                                        (currentValue > 1 ? currentValue : 1)
+                                        (currentValue > 10 ? currentValue : 10)
                                             .toString();
                                   });
                                 },
@@ -156,21 +216,83 @@ class _rewardsState extends State<rewards> {
                     height: 40,
                     child: ElevatedButton(
                       onPressed: () {
-                        setState(() {
+                        if (int.parse(_controller.text) >= 10 &&
+                            int.parse(_controller.text) <=
+                                EcommerceApp.rewards) {
                           EcommerceApp.rewardsInput =
                               int.parse(_controller.text);
-                        });
-                        EcommerceApp.rewardsExchanged = true;
-                        EcommerceApp.total -=
-                            (EcommerceApp.rewardsInput / 10).toInt();
-                        saveUserTotal(EcommerceApp.total);
-                        //updateRewards(EcommerceApp.rewardsInput);
-                        //EcommerceApp.rewards -= EcommerceApp.rewardsInput;
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CheckOutSummary()),
-                        );
+                          EcommerceApp.rewardsExchanged = true;
+                          EcommerceApp.totalSummary =
+                              EcommerceApp.totalSummary -
+                                  (EcommerceApp.rewardsInput / 10).toInt();
+                          EcommerceApp.inDollars =
+                              EcommerceApp.totalSummary / 3.75;
+                          updateRewards();
+                          //saveUserTotal(EcommerceApp.total);
+                          EcommerceApp.rewards -= EcommerceApp.rewardsInput;
+                          EcommerceApp.discount +=
+                              EcommerceApp.rewardsInput / 10;
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            duration: const Duration(milliseconds: 1500),
+                            backgroundColor: Color.fromARGB(255, 135, 155, 190),
+                            content: Text(
+                              "Rewards exchanged succeffully",
+                              style:
+                                  TextStyle(fontSize: 17, letterSpacing: 0.8),
+                            ),
+                            action: null,
+                          ));
+                        } else if (int.parse(_controller.text) < 10) {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                    content: Text(
+                                        "Sorry, you can't exchange less than 10 points."),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context, 'OK');
+                                        },
+                                        child: const Text('OK'),
+                                      )
+                                    ]);
+                              });
+                        } else if (_controller.text == null) {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                    content: Text(
+                                        "Sorry, you have to indicate the number of points."),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context, 'OK');
+                                        },
+                                        child: const Text('OK'),
+                                      )
+                                    ]);
+                              });
+                        } else {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                    content: Text(
+                                      "Sorry, you can't exchange more than ${EcommerceApp.rewards} points.",
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context, 'OK');
+                                        },
+                                        child: const Text('OK'),
+                                      )
+                                    ]);
+                              });
+                        }
                       },
                       child: Text(
                         'Exchange',
@@ -202,7 +324,7 @@ class _rewardsState extends State<rewards> {
         Card(
           child: Container(
             alignment: Alignment.centerLeft,
-            height: 110,
+            height: 220,
             width: 400,
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -230,13 +352,91 @@ class _rewardsState extends State<rewards> {
                   ),
                   Text(
                     "  Every 10 reward points converts to 1 SR.",
-                    //+EcommerceApp.rewardsInput.toString(),
                     style: TextStyle(
                       color: Color.fromARGB(255, 32, 7, 121),
                       fontSize: 16,
                     ),
                   ),
                 ],
+              ),
+              Stack(
+                children: [
+                  Row(
+                    children: [
+                      Text("\n       "),
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: new BoxDecoration(
+                          color: Colors.black,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      Text(
+                        "  The least amount you can exchange is",
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 32, 7, 121),
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 32),
+                    child: Row(
+                      children: [
+                        Text(
+                          "          10 points.",
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 32, 7, 121),
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Stack(
+                  children: [
+                    Row(
+                      children: [
+                        Text("\n       "),
+                        Container(
+                          width: 8,
+                          height: 8,
+                          decoration: new BoxDecoration(
+                            color: Colors.black,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        Text(
+                          "  After each payment you will earn 2%",
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 32, 7, 121),
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 32),
+                      child: Row(
+                        children: [
+                          Text(
+                            "          as a reward points.",
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 32, 7, 121),
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               )
             ]),
           ),
@@ -245,14 +445,14 @@ class _rewardsState extends State<rewards> {
     );
   }
 
-  Future saveUserTotal(var total) async {
-    await FirebaseFirestore.instance
-        .collection('${collectionName}Total')
-        .doc("total")
-        .set({"Total": total});
-  }
+  // Future saveUserTotal(var total) async {
+  //   await FirebaseFirestore.instance
+  //       .collection('${collectionName}Total')
+  //       .doc("total")
+  //       .update({"Total": total});
+  // }
 
-  Future updateRewards(var total) async {
+  Future updateRewards() async {
     await FirebaseFirestore.instance
         .collection('${collectionName}Total')
         .doc("rewards")

@@ -15,7 +15,6 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
   String collectionName = EcommerceApp().getCurrentUser();
   double vat = (EcommerceApp.total * 15) / 100;
   bool pressAttention = false;
-  double discount = EcommerceApp.rewardsInput / 10;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +59,7 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                 if (snapshot.hasData) {
                   final documents = snapshot.data!;
                   return SizedBox(
-                      height: 170,
+                      height: 120.0 * EcommerceApp.NumOfItems,
                       child: ListView.builder(
                           itemCount: documents.size,
                           itemBuilder: (BuildContext context, int index) {
@@ -70,7 +69,10 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                 } else if (snapshot.hasError) {
                   return Text('Its Error!');
                 }
-                return Container(child: Text(""));
+                return Text(""
+                    // CircularProgressIndicator(
+                    //     semanticsLabel: 'Circular progress indicator')
+                    );
               }),
           Padding(
             padding: const EdgeInsets.only(bottom: 12.0),
@@ -194,7 +196,7 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                                     )),
                               ),
                               Spacer(),
-                              Text('- $discount SR',
+                              Text('- ${EcommerceApp.discount} SR',
                                   style: TextStyle(
                                     color: Color.fromARGB(255, 227, 45, 45),
                                     fontSize: 15,
@@ -215,7 +217,8 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                               )),
                           Spacer(),
                           Text(
-                              EcommerceApp.total.toString() +
+                              EcommerceApp.totalSummary.toString() +
+                                  '.0' +
                                   ' SR (' +
                                   EcommerceApp.inDollars.toStringAsFixed(2) +
                                   '\$)',
@@ -250,35 +253,31 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 23, bottom: 10),
-                  child:
-                      // SizedBox(
-                      //   width: 110,
-                      //   height: 45,
-                      //   child: ElevatedButton(
-                      //     child: new Image.asset(
-                      //       'assets/paypal.png',
-                      //       height: 45.0,
-                      //       fit: BoxFit.cover,
-                      //     ),
-                      //     style: ButtonStyle(
-                      //         shape: MaterialStateProperty
-                      //             .all<RoundedRectangleBorder>(
-                      //                 RoundedRectangleBorder(
-                      //                     side: BorderSide(
-                      //       width: 2,
-                      //       color: pressAttention ? Colors.blue : Colors.white,
-                      //     )))),
-                      //     onPressed: () =>
-                      //         setState(() => pressAttention = !pressAttention),
-                      //   ),
-                      // )
-                      Container(
-                    alignment: Alignment.centerLeft,
-                    child: new Image.asset(
-                      'assets/paypal.png',
-                      height: 45.0,
-                      fit: BoxFit.cover,
-                    ),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 3),
+                        child: Container(
+                          width: 83,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(3.0),
+                              ),
+                              border: Border.all(
+                                color: Color.fromARGB(255, 23, 124, 255),
+                                width: 4,
+                              )),
+                          alignment: Alignment.centerLeft,
+                          child: new Image.asset(
+                            'assets/paypal.png',
+
+                            ///change pic
+                            height: 40.0,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -294,12 +293,12 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                   width: 370,
                   child: Row(
                     children: [
-                      Text("  "),
+                      Text("   "),
                       Icon(Icons.info_outline_rounded),
                       Text(
-
-                          /// increase font size
-                          "  Please note Your total price will be in \n  ${EcommerceApp.inDollars.toStringAsFixed(2)}\$."),
+                        "  Please note Your total price will be in \n  ${EcommerceApp.inDollars.toStringAsFixed(2)}\$.",
+                        style: TextStyle(fontSize: 15, letterSpacing: 0.8),
+                      ),
                     ],
                   )),
             ),
@@ -311,6 +310,8 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
               height: 40,
               child: ElevatedButton(
                 onPressed: () {
+                  saveUserTotal(EcommerceApp
+                      .totalSummary); // bugg fixes (saves it then saves the original price)
                   checkOut().payment(context);
                 },
                 child: Text(
@@ -334,6 +335,21 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
               ),
             ),
           ),
+          Text("   "),
+          // mainAxisAlignment: MainAxisAlignment.start,
+          // children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                "     By placing your order you agree to our return\n       policies, 7 days max for returning an item.",
+                style: TextStyle(
+                    fontSize: 14,
+                    color: Color.fromARGB(255, 142, 142, 142),
+                    letterSpacing: 0.6),
+              ),
+            ],
+          )
         ],
       ),
     );
@@ -433,6 +449,13 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
         ],
       ),
     );
+  }
+
+  Future saveUserTotal(var total) async {
+    await FirebaseFirestore.instance
+        .collection('${collectionName}Total')
+        .doc("total")
+        .update({"Total": total});
   }
 
   Future getRewards() async {

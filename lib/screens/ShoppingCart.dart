@@ -130,6 +130,7 @@ class _shoppingCartState extends State<shoppingCart> {
                             onDismissed: (DismissDirection direction) {
                               if (direction == DismissDirection.endToStart) {
                                 EcommerceApp.counter--;
+                                EcommerceApp.NumOfItems--;
                                 if (products[index].quantity > 1) {
                                   for (int i = 0;
                                       i < products[index].quantity - 1;
@@ -216,6 +217,7 @@ class _shoppingCartState extends State<shoppingCart> {
                                         ],
                                       ));
                             } else {
+                              EcommerceApp.totalSummary = EcommerceApp.total;
                               EcommerceApp.inDollars =
                                   EcommerceApp.total / 3.75;
                               Navigator.push(
@@ -593,6 +595,13 @@ class _shoppingCartState extends State<shoppingCart> {
           event.snapshot.children.first.child('Product Name').value;
       var RFID = event.snapshot.children.first.child('RFID').value;
       saveUserItemsDublicate(barcode, productName, RFID);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        duration: const Duration(seconds: 2),
+        backgroundColor: Color.fromARGB(255, 135, 155, 190),
+        content: Text("Item added succeffully",
+            style: TextStyle(fontSize: 17, letterSpacing: 0.8)),
+        action: null,
+      ));
       return true;
     } else if (event.snapshot.exists &&
         action == "Decrement" &&
@@ -602,9 +611,10 @@ class _shoppingCartState extends State<shoppingCart> {
           event.snapshot.children.first.child('Barcode').value as String;
       deleteSingleItem(dat);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        duration: const Duration(seconds: 1),
+        duration: const Duration(seconds: 2),
         backgroundColor: Color.fromARGB(255, 135, 155, 190),
-        content: Text("Item deleted succeffully"),
+        content: Text("Item deleted succeffully",
+            style: TextStyle(fontSize: 17, letterSpacing: 0.8)),
         action: null,
       ));
       return true;
