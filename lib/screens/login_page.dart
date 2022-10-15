@@ -27,18 +27,18 @@ class _LoginPageState extends State<LoginPage> {
 
   String? validateEmail(String? formEmail) {
     if (formEmail == null || formEmail.isEmpty)
-      return 'Email address is required.';
+      return 'البريد الالكتروني مطلوب';
 
     String pattern = r'\w+@\w+\.\w+';
     RegExp regex = RegExp(pattern);
-    if (!regex.hasMatch(formEmail)) return 'Invalid E-mail Address format.';
+    if (!regex.hasMatch(formEmail)) return 'صيغة البريد الالكتروني غير صحيحة';
 
     return null;
   }
 
   String? validatePassword(String? formPassword) {
     if (formPassword == null || formPassword.isEmpty)
-      return 'Password is required.';
+      return "كلمة المرور مطلوبة";
 
     return null;
   }
@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Form(
         //key: _key,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
+        //autovalidateMode: AutovalidateMode.onUserInteraction,
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.fromLTRB(
@@ -66,10 +66,11 @@ class _LoginPageState extends State<LoginPage> {
                 //     "Enter Email Address", false, _emailController),
                 TextFormField(
                   controller: _emailController,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
 
                   validator: MultiValidator([
-                    RequiredValidator(errorText: 'Required *'),
-                    EmailValidator(errorText: 'Not a valid Email *')
+                    RequiredValidator(errorText: 'مطلوب*'),
+                    EmailValidator(errorText: 'البريد الالكتروني غير صالح*')
                   ]),
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
                   style: TextStyle(
@@ -92,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     prefixIcon: Icon(Icons.email),
                     iconColor: Colors.white,
-                    labelText: "Enter your Email address",
+                    labelText: "أدخل بريدك الالكتروني",
                     labelStyle: TextStyle(
                         color: Color.fromARGB(236, 113, 113, 117)
                             .withOpacity(0.9)),
@@ -112,8 +113,9 @@ class _LoginPageState extends State<LoginPage> {
                 // reusableTextField("Enter your password", true, _passController),
                 TextFormField(
                   controller: _passController,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: MultiValidator([
-                    RequiredValidator(errorText: 'Requiered *'),
+                    RequiredValidator(errorText: 'مطلوب*'),
                   ]),
                   obscureText: true,
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
@@ -136,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     prefixIcon: Icon(Icons.lock),
                     iconColor: Colors.white,
-                    labelText: "Enter your password",
+                    labelText: "أدخل كلمة المرور",
                     labelStyle: TextStyle(
                         color: Color.fromARGB(236, 113, 113, 117)
                             .withOpacity(0.9)),
@@ -172,30 +174,34 @@ class _LoginPageState extends State<LoginPage> {
                       ? Center(
                           child: CircularProgressIndicator(),
                         )
-                      : ElevatedButton(
-                          onPressed: () async {
-                            login();
-                          },
-                          child: Text(
-                            'LOG IN',
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16),
+                      : SizedBox(
+                          width: 200,
+                          height: 40,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              login();
+                            },
+                            child: Text(
+                              'تسجيل الدخول',
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18),
+                            ),
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.resolveWith((states) {
+                                  if (states.contains(MaterialState.pressed)) {
+                                    return Colors.grey;
+                                  }
+                                  return Colors.orange;
+                                }),
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(30)))),
                           ),
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.resolveWith((states) {
-                                if (states.contains(MaterialState.pressed)) {
-                                  return Colors.grey;
-                                }
-                                return Colors.orange;
-                              }),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(30)))),
                         ),
                 ),
 
@@ -213,7 +219,7 @@ class _LoginPageState extends State<LoginPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Don't have an account?",
+        const Text(" ليس لديك حساب؟",
             style: TextStyle(color: Color.fromARGB(255, 15, 53, 120))),
         GestureDetector(
           onTap: () {
@@ -224,8 +230,9 @@ class _LoginPageState extends State<LoginPage> {
                 ));
           },
           child: const Text(
-            "  SignUp",
+            "تسجيل جديد",
             style: TextStyle(
+                decoration: TextDecoration.underline,
                 color: Color.fromARGB(255, 15, 53, 120),
                 fontWeight: FontWeight.bold),
           ),
@@ -238,7 +245,7 @@ class _LoginPageState extends State<LoginPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Forgot password?",
+        const Text(" نسيت كلمة المرور؟ ",
             style: TextStyle(color: Color.fromARGB(255, 15, 53, 120))),
         GestureDetector(
           onTap: () {
@@ -246,8 +253,9 @@ class _LoginPageState extends State<LoginPage> {
                 MaterialPageRoute(builder: (context) => ResetPassPage()));
           },
           child: const Text(
-            "  Reset Password",
+            "إعادة تعيين كلمة المرور",
             style: TextStyle(
+                decoration: TextDecoration.underline,
                 color: Color.fromARGB(255, 15, 53, 120),
                 fontWeight: FontWeight.bold),
           ),
@@ -266,11 +274,11 @@ class _LoginPageState extends State<LoginPage> {
           context: context,
           builder: (context) {
             return AlertDialog(
-                content: Text('logged in sucessfully'),
+                content: Text('تم تسجيل الدخول بنجاح'),
                 actions: [
                   TextButton(
-                    onPressed: () => Navigator.pop(context, 'OK'),
-                    child: const Text('OK'),
+                    onPressed: () => Navigator.pop(context, 'حسنًا'),
+                    child: const Text('حسنًا'),
                   )
                 ]);
           });
@@ -281,8 +289,8 @@ class _LoginPageState extends State<LoginPage> {
           builder: (context) {
             return AlertDialog(content: Text(e.message.toString()), actions: [
               TextButton(
-                onPressed: () => Navigator.pop(context, 'OK'),
-                child: const Text('OK'),
+                onPressed: () => Navigator.pop(context, 'حسنًا'),
+                child: const Text('حسنًا'),
               )
             ]);
           });

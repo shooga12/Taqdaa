@@ -28,11 +28,11 @@ class _ResetPassPageState extends State<ResetPassPage> {
           builder: (context) {
             return AlertDialog(
                 content: Text(
-                    'We have sent you an email with a password reset link, Check your inbox'),
+                    "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني"),
                 actions: [
                   TextButton(
-                    onPressed: () => Navigator.pop(context, 'OK'),
-                    child: const Text('OK'),
+                    onPressed: () => Navigator.pop(context, 'حسنًا'),
+                    child: const Text('حسنًا'),
                   )
                 ]);
           });
@@ -43,8 +43,8 @@ class _ResetPassPageState extends State<ResetPassPage> {
           builder: (context) {
             return AlertDialog(content: Text(e.message.toString()), actions: [
               TextButton(
-                onPressed: () => Navigator.pop(context, 'OK'),
-                child: const Text('OK'),
+                onPressed: () => Navigator.pop(context, 'حسنًا'),
+                child: const Text('حسنًا'),
               )
             ]);
           });
@@ -56,7 +56,7 @@ class _ResetPassPageState extends State<ResetPassPage> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            'Reset Password',
+            'إعادة تعيين كلمة المرور',
             style: TextStyle(fontSize: 24), //TextStyle(fontFamily: 'Cairo'),
           ),
           flexibleSpace: Container(
@@ -79,7 +79,7 @@ class _ResetPassPageState extends State<ResetPassPage> {
                     20,
                     MediaQuery.of(context).size.height * 0.05),
                 child: Text(
-                  'Please enter your email to receive the password reset link : ',
+                  "لطفًا، أدخل بريدك الإلكتروني ليتم إرسال رابط إعادة تعيين كلمة المرور : ",
                   style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.bold,
@@ -93,8 +93,8 @@ class _ResetPassPageState extends State<ResetPassPage> {
                   controller: _emailController,
 
                   validator: MultiValidator([
-                    RequiredValidator(errorText: 'Required *'),
-                    EmailValidator(errorText: 'Not a valid Email *')
+                    RequiredValidator(errorText: 'مطلوب *'),
+                    EmailValidator(errorText: 'البريد الإلكتروني غير صالح*')
                   ]),
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
                   style: TextStyle(
@@ -117,7 +117,7 @@ class _ResetPassPageState extends State<ResetPassPage> {
                     ),
                     prefixIcon: Icon(Icons.email),
                     iconColor: Colors.white,
-                    labelText: "Enter your Email address",
+                    labelText: "أدخل بريدك الإلكتروني",
                     labelStyle: TextStyle(
                         color: Color.fromARGB(236, 113, 113, 117)
                             .withOpacity(0.9)),
@@ -141,7 +141,7 @@ class _ResetPassPageState extends State<ResetPassPage> {
                 },
                 //ButtonStyle: BorderRadius.circular(30),
                 child: Text(
-                  "Reset Password",
+                  "إعادة تعيين كلمة المرور",
                   style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

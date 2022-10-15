@@ -1,24 +1,55 @@
+import 'dart:math';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
-import 'package:taqdaa_application/views/NoItmesCart.dart';
+import 'package:taqdaa_application/screens/NoItmesCart.dart';
 import '../controller/BNBCustomePainter.dart';
-import '../controller/Notification_api.dart';
-import '../views/profile_view.dart';
+import '../methods/authentication_services.dart';
 import 'ShoppingCart.dart';
+import 'insideMore.dart';
+import 'invoices.dart';
 import 'list_of_stores.dart';
+import 'login_page.dart';
+import 'scanBarCode.dart';
+//import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import '../controller/NotificationApi.dart';
+import '../profile/homep_profile.dart';
+import 'package:taqdaa_application/model/user_model.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> {
+  void initState() {
+    super.initState();
+    tz.initializeTimeZones();
+
+    //NotificationApi.init();
+    //listenNotifications();
+  }
+
+  // void listenNotifications() =>
+  //     NotificationApi.onNotification.stream.listen(onClickNotification);
+
+  // void onClickNotification(NotificationResponse? details) => Navigator.push(
+  //       context,
+  //       MaterialPageRoute(builder: (context) => ListOfStores2()),
+  //     );
+
+  @override
   bool isInsideHome = true;
-  bool isInsideProfile = false;
-  bool isInsideSettings = false;
+  bool isInsideReceipt = false;
+  bool isInsideMore = false;
 
   @override
   Widget build(BuildContext context) {
@@ -106,24 +137,60 @@ class _HomePageState extends State<HomePage> {
                           IconButton(
                               onPressed: () {
                                 Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Homepprofile()),
-                                );
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => invoices(),
+                                    ));
                               },
                               icon: Icon(
-                                Icons.person,
+                                Icons.receipt_long,
                                 size: 30,
-                                color: isInsideProfile
+                                color: isInsideReceipt
                                     ? Color.fromARGB(255, 254, 176, 60)
                                     : Colors.white,
                               )),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => More()),
+                              );
+
+                              // showDialog(
+                              //     context: context,
+                              //     builder: ((context) {
+                              //       return AlertDialog(
+                              //         title: Text("هل تريد تسجيل الخروج؟"),
+                              //         actions: [
+                              //           TextButton(
+                              //               onPressed: () {
+                              //                 FirebaseAuthMethods().signOut();
+                              //                 Navigator.push(
+                              //                     context,
+                              //                     MaterialPageRoute(
+                              //                       builder: (context) =>
+                              //                           LoginPage(),
+                              //                     ));
+                              //               },
+                              //               child: Text(
+                              //                 "تسجيل خروج",
+                              //                 style: TextStyle(
+                              //                   color: Colors.red,
+                              //                 ),
+                              //               )),
+                              //           TextButton(
+                              //               onPressed: () {
+                              //                 Navigator.pop(context);
+                              //               },
+                              //               child: Text("إلغاء"))
+                              //         ],
+                              //       );
+                              //     }));
+                            },
                             icon: Icon(
-                              Icons.settings,
+                              Icons.more_horiz,
                               size: 30,
-                              color: isInsideSettings
+                              color: isInsideMore
                                   ? Color.fromARGB(255, 254, 176, 60)
                                   : Colors.white,
                             ),

@@ -8,7 +8,7 @@ class EcommerceApp {
   static int quantity = 0;
   static int total = 0;
   static int finalTotal = -1;
-  static String userName = 'Shoug'; //bug fixes
+  static String userName = ''; //bug fixes
   static String productName = '';
   static int counter = 0;
   static double inDollars = 0;

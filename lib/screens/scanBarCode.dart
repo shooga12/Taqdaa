@@ -86,7 +86,7 @@ class _ScanPageState extends State<ScanPage> {
             //upper part
             children: [
               Text('\n'),
-              Text("The product you Scanned is :\n",
+              Text("المنتج الذي تم مسحه هو: \n",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
               Card(
                 child: new InkWell(
@@ -140,9 +140,9 @@ class _ScanPageState extends State<ScanPage> {
                               ),
                             ),
                             Text(
-                              "   Price : " +
+                              "   السعر : " +
                                   product['Price'].toString() +
-                                  " SR",
+                                  " ريال",
                               textAlign: TextAlign.center,
                               style: new TextStyle(
                                 fontSize: 16,
@@ -192,6 +192,11 @@ class _ScanPageState extends State<ScanPage> {
                             saveUserItems(toBeSavedProduct);
                           }
                           EcommerceApp.counter++;
+                          // await FirebaseFirestore.instance
+                          //     .collection('total')
+                          //     .add({
+                          //   "Total": 0,
+                          // });
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -199,7 +204,7 @@ class _ScanPageState extends State<ScanPage> {
                           );
                         },
                         child: Text(
-                          'Add to cart',
+                          'إضافة للسلة',
                           style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -207,14 +212,14 @@ class _ScanPageState extends State<ScanPage> {
                         ),
                         style: ButtonStyle(
                             backgroundColor:
-                            MaterialStateProperty.resolveWith((states) {
+                                MaterialStateProperty.resolveWith((states) {
                               if (states.contains(MaterialState.pressed)) {
                                 return Colors.grey;
                               }
                               return Colors.orange;
                             }),
                             shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
+                                    RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30)))),
                       ),
@@ -256,30 +261,30 @@ class Product {
 
   Product(
       {required this.Category,
-        required this.Item_number,
-        required this.Price,
-        required this.Store,
-        required this.quantity,
-        required this.RFID,
-        required this.ProductImage});
+      required this.Item_number,
+      required this.Price,
+      required this.Store,
+      required this.quantity,
+      required this.RFID,
+      required this.ProductImage});
 
   Map<String, dynamic> toJson() => {
-    'Category': Category,
-    'Item_number': Item_number,
-    'Price': Price,
-    'Store': Store,
-    'quantity': quantity,
-    'RFID': RFID,
-    'ProductImage': ProductImage,
-  };
+        'Category': Category,
+        'Item_number': Item_number,
+        'Price': Price,
+        'Store': Store,
+        'quantity': quantity,
+        'RFID': RFID,
+        'ProductImage': ProductImage,
+      };
 
   static Product fromJson(Map<String, dynamic> json) => Product(
-    Category: json['Category'],
-    Item_number: json['Item_number'],
-    Price: json['Price'],
-    Store: json['Store'],
-    quantity: json['quantity'],
-    RFID: json['RFID'],
-    ProductImage: json['ProductImage'],
-  );
+        Category: json['Category'],
+        Item_number: json['Item_number'],
+        Price: json['Price'],
+        Store: json['Store'],
+        quantity: json['quantity'],
+        RFID: json['RFID'],
+        ProductImage: json['ProductImage'],
+      );
 }

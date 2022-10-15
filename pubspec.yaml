@@ -32,6 +32,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_localizations: # Add this line
+    sdk: flutter         # Add this line
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -44,19 +47,31 @@ dependencies:
   mobile_scanner: ^2.0.0
   flutter_barcode_scanner: ^2.0.0
   either_dart: ^0.2.0
-  flutter_braintree: ^2.3.1
   form_field_validator: ^1.1.0
-  http_auth: ^1.0.1
   firebase_database: ^9.1.4
-  timezone: ^0.9.0
-  flutter_native_timezone: ^2.0.0
-  flutter_native_splash: ^2.2.9
-  flutter_local_notifications: ^11.0.0
+  geolocator: ^9.0.2
+  geocoding: ^2.0.5
+  http: ^0.13.5
+  #flutter_local_notifications: ^11.0.1
   rxdart: ^0.27.5
+  timezone: ^0.9.0
+  fluttertoast: ^8.0.9
+  flutter_native_timezone: ^2.0.0
+  #flutter_native_splash: ^2.2.9
+  http_auth: ^1.0.1
+  webview_flutter: ^3.0.4
+  flutter_braintree: ^2.3.1
+  flutter_paypal: ^0.0.7
+  flutter_phone_direct_caller: ^2.1.1
+  url_launcher: ^6.1.6
+  
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_native_splash: ^2.2.10+1  
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -64,6 +79,12 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+
+flutter_native_splash: 
+    color: "1e285d"
+    image: assets/splash_400.png
+    android: true
+    ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -81,6 +102,11 @@ flutter:
     - assets/SignupGroup.png
     - assets/LoginGroup.png
     - assets/Rectangle.png
+    - assets/s2497212-main-zoom.jpeg
+    - assets/243280_swatch.jpeg
+    - assets/sephora_con.webp
+    - assets/empty_cart.png
+    
     # To add assets to your application, add an assets section, like this:
     # assets:
     #   - images/a_dot_burr.jpeg
