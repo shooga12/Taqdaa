@@ -5,6 +5,7 @@ class Item {
   num? quantity;
   num? price;
   bool? returnable;
+  bool? returnRequest;
 
   Item({
     this.barcode,
@@ -13,6 +14,7 @@ class Item {
     this.quantity,
     this.price,
     this.returnable,
+    this.returnRequest,
   });
 
   // receiving data from server
@@ -24,6 +26,7 @@ class Item {
       quantity: map['quantity'],
       price: map['price'],
       returnable: map['returnable'],
+      returnRequest: map['returnRequest'],
     );
   }
 
@@ -35,6 +38,7 @@ class Item {
       'quantity': quantity,
       'price': price,
       'returnable': returnable,
+      'returnRequest': returnRequest,
     };
   }
 }

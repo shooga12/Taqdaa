@@ -8,6 +8,8 @@ class Invoice {
   num? vat_total;
   num? sub_total;
   List<Item> items = [];
+  bool? HaveReturnReq;
+  String? status;
 
   Invoice(
     List items, {
@@ -17,6 +19,8 @@ class Invoice {
     this.total,
     this.vat_total,
     this.sub_total,
+    this.HaveReturnReq,
+    this.status,
   }) {
     items.forEach((e) => this.items.add(Item.fromMap(e)));
   }
@@ -31,6 +35,8 @@ class Invoice {
       total: map['Total'],
       sub_total: map['sub-total'],
       vat_total: map['vat-total'],
+      HaveReturnReq: map['HaveReturnReq'],
+      status: map['status'],
     );
   }
 
@@ -44,6 +50,8 @@ class Invoice {
       'sub_total': sub_total,
       'vat_total': vat_total,
       'items': items,
+      'HaveReturnReq': HaveReturnReq,
+      'status': status,
     };
   }
 }

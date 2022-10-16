@@ -75,18 +75,18 @@ class _invoicesDetailsState extends State<invoice_details> {
                       fontSize: 18,
                     ),
                   ),
-                  SizedBox(
-                    height: 5.0,
-                  ),
+                  // SizedBox(
+                  //   height: 5.0,
+                  // ),
                   Text(
                     " المتجر: ${invoice!.store}",
                     style: new TextStyle(
                       fontSize: 18,
                     ),
                   ),
-                  SizedBox(
-                    height: 5.0,
-                  ),
+                  // SizedBox(
+                  //   height: 5.0,
+                  // ),
                   Text(
                     "${invoice!.date}",
                     style: new TextStyle(
@@ -113,9 +113,9 @@ class _invoicesDetailsState extends State<invoice_details> {
                 ),
               ),
             ),
-            SizedBox(
-              height: 5,
-            ),
+            // SizedBox(
+            //   height: 5,
+            // ),
             Expanded(
               child: ListView.builder(
                   itemCount: invoice?.items.length,
@@ -171,9 +171,9 @@ class _invoicesDetailsState extends State<invoice_details> {
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
+                  // SizedBox(
+                  //   height: 10.0,
+                  // ),
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -199,43 +199,48 @@ class _invoicesDetailsState extends State<invoice_details> {
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 40.0,
-                  ),
-                  Center(
-                    child: SizedBox(
-                      width: 200,
-                      height: 40,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => returnRequest(invoice)),
-                          );
-                        },
-                        child: Text(
-                          'طلب استرجاع',
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
-                        ),
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith((states) {
-                              if (states.contains(MaterialState.pressed)) {
-                                return Colors.grey;
-                              }
-                              return Colors.orange;
-                            }),
-                            shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30)))),
-                      ),
-                    ),
-                  ),
+                  // SizedBox(
+                  //   height: 40.0,
+                  // ),
+                  returnButton(invoice)
+                  // Center(
+                  // child: SizedBox(
+                  //   width: 200,
+                  //   height: 40,
+                  //   child: ElevatedButton(
+                  //     onPressed: () async {
+                  //       if(invoice!.HaveReturnReq == false){
+                  //       Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //             builder: (context) => returnRequest(invoice)),
+                  //       );}
+                  //       else if(invoice!.HaveReturnReq == false){
+
+                  //       }
+                  //     },
+                  //     child: Text(
+                  //       'طلب استرجاع',
+                  //       style: const TextStyle(
+                  //           color: Colors.white,
+                  //           fontWeight: FontWeight.bold,
+                  //           fontSize: 18),
+                  //     ),
+                  //     style: ButtonStyle(
+                  //         backgroundColor:
+                  //             MaterialStateProperty.resolveWith((states) {
+                  //           if (states.contains(MaterialState.pressed)) {
+                  //             return Colors.grey;
+                  //           }
+                  //           return Colors.orange;
+                  //         }),
+                  //         shape: MaterialStateProperty.all<
+                  //                 RoundedRectangleBorder>(
+                  //             RoundedRectangleBorder(
+                  //                 borderRadius: BorderRadius.circular(30)))),
+                  //   ),
+                  // ),
+                  //),
                 ],
               ),
             ),
@@ -247,6 +252,90 @@ class _invoicesDetailsState extends State<invoice_details> {
 
   nothing() {
     return Container();
+  }
+
+  returnButton(invoice) {
+    if (invoice!.HaveReturnReq == false) {
+      return SizedBox(
+        width: 200,
+        height: 40,
+        child: ElevatedButton(
+          onPressed: () async {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => returnRequest(invoice)),
+            );
+          },
+          child: Text(
+            'طلب استرجاع',
+            style: const TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.resolveWith((states) {
+                if (states.contains(MaterialState.pressed)) {
+                  return Colors.grey;
+                }
+                return Colors.orange;
+              }),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)))),
+        ),
+      );
+    } else if (invoice!.HaveReturnReq == true) {
+      return Column(
+        children: [
+          SizedBox(
+            width: 200,
+            height: 40,
+            child: ElevatedButton(
+              onPressed: () {},
+              child: Text(
+                'طلب استرجاع',
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18),
+              ),
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith((states) {
+                    if (states.contains(MaterialState.pressed)) {
+                      return Colors.grey;
+                    }
+                    return Colors.grey;
+                  }),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)))),
+            ),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15),
+            child: Card(
+              color: Color.fromARGB(243, 243, 239, 231),
+              child: Container(
+                  alignment: Alignment.centerLeft,
+                  height: 40,
+                  width: 370,
+                  child: Row(
+                    children: [
+                      Text("   "),
+                      Icon(Icons.info_outline_rounded),
+                      Text(
+                        "لديك طلب ترجيع قيد الانتظار",
+                        style: TextStyle(fontSize: 15.5, letterSpacing: 0.8),
+                      ),
+                    ],
+                  )),
+            ),
+          )
+        ],
+      );
+    }
   }
 
   buildItemCard(dynamic item, BuildContext context) {
