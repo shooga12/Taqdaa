@@ -1,94 +1,76 @@
 import 'package:flutter/material.dart';
-import 'package:taqdaa_application/screens/list_of_stores.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
 import '../confige/EcommerceApp.dart';
 import '../controller/BNBCustomePainter.dart';
 import '../main.dart';
+import 'NoItmesCart.dart';
 import '../screens/ShoppingCart.dart';
 import '../screens/insideMore.dart';
-import 'invoices_view.dart';
+import '../screens/invoice_details.dart';
+import '../models/invoice.dart';
+import '../screens/list_of_stores.dart';
 
-class emptyCart extends StatelessWidget {
-  const emptyCart({super.key});
+class invoices extends StatefulWidget {
+  const invoices({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    bool isInsideHome = false;
-    bool isInsideReceipt = false;
-    bool isInsideMore = false;
-    bool isInsideCart = true;
+  State<invoices> createState() => _invoicesState();
+}
 
+class _invoicesState extends State<invoices> {
+  bool isInsideHome = false;
+  bool isInsideReceipt = true;
+  bool isInsideMore = false;
+  bool isInsideCart = false;
+  List<Invoice> invoices = [];
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    readInvoices();
+  }
+
+  Future readInvoices() async {
+    var data =
+        await FirebaseFirestore.instance.collection('All-Invoices').get();
+
+    setState(() {
+      invoices = List.from(data.docs.map((doc) => Invoice.fromMap(doc)));
+    });
+  }
+
+  int count = -1;
+  Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Text(
-            "سلة التسوق",
-            style: TextStyle(fontSize: 24),
-          ),
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
-          ),
-          centerTitle: true,
-          toolbarHeight: 170,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(
+          "فواتيري",
+          style: TextStyle(fontSize: 24),
         ),
-        body: Stack(children: [
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
+        ),
+        centerTitle: true,
+        toolbarHeight: 170,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      backgroundColor: Colors.white,
+      body: Stack(
+        children: [
           Center(
-              child: new InkWell(
             child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "لا يوجد منتجات!",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                  ),
-                  Text("ابدأ التسوق الآن!",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                  Text(""),
-                  SizedBox(
-                    width: 200,
-                    height: 40,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ListOfStores2()),
-                        );
-                      },
-                      child: Text(
-                        'ابدأ التسوق!',
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18),
-                      ),
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.resolveWith((states) {
-                            if (states.contains(MaterialState.pressed)) {
-                              return Colors.grey;
-                            }
-                            return Colors.orange;
-                          }),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(30)))),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )),
+                padding: const EdgeInsets.only(
+                    left: 10, right: 10, bottom: 10, top: 15),
+                child: ListView.builder(
+                    itemCount: invoices.length,
+                    itemBuilder: (context, index) {
+                      return buildInvoiceCard(invoices[index], context);
+                    })),
+          ),
           Positioned(
             bottom: 0,
             left: 0,
@@ -175,11 +157,7 @@ class emptyCart extends StatelessWidget {
                           ),
                           IconButton(
                               onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => invoices(),
-                                    ));
+                                //here reem's page
                               },
                               icon: Icon(
                                 Icons.receipt_long,
@@ -209,6 +187,99 @@ class emptyCart extends StatelessWidget {
               ),
             ),
           )
-        ]));
+        ],
+      ),
+    );
+  }
+
+  nothing() {
+    return Container();
+  }
+
+  buildInvoiceCard(Invoice invoice, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
+      child: Container(
+        child: new InkWell(
+          child: Padding(
+            padding:
+                const EdgeInsets.only(top: 15, bottom: 15, left: 15, right: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.receipt_long,
+                    size: 40,
+                    color: Color.fromARGB(255, 254, 177, 57),
+                  ),
+                ),
+                SizedBox(
+                  width: 10.0,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      " رقم الفاتورة: ${invoice.id}",
+                      style: new TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5.0,
+                    ),
+                    Text(
+                      " المتجر: ${invoice.store}",
+                      style: new TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5.0,
+                    ),
+                    Text(
+                      "${invoice.date}",
+                      style: new TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+                Spacer(),
+                Icon(
+                  Icons.arrow_back_ios_rounded,
+                  textDirection: TextDirection.ltr,
+                  color: Color.fromARGB(255, 254, 177, 57),
+                ),
+              ],
+            ),
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => invoice_details(invoice),
+              ),
+            );
+          },
+          highlightColor: Color.fromARGB(255, 255, 255, 255),
+        ),
+        decoration: BoxDecoration(
+          color: Color.fromARGB(255, 255, 255, 255),
+          borderRadius: BorderRadius.circular(20.0),
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromARGB(255, 241, 241, 241),
+              offset: Offset.zero,
+              blurRadius: 20.0,
+              blurStyle: BlurStyle.normal,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

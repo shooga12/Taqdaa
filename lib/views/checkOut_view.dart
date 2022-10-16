@@ -22,8 +22,8 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Review your order!",
-          style: TextStyle(fontSize: 24),
+          "مراجعة الطلب !",
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
         ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
@@ -40,15 +40,15 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
             padding: const EdgeInsets.only(
               top: 8,
               bottom: 10.0,
-              left: 5,
+              right: 5,
             ),
             child: Container(
-              alignment: Alignment.centerLeft,
-              child: Text("My Cart",
+              alignment: Alignment.centerRight,
+              child: Text("سلـتـي",
                   style: TextStyle(
                       color: Color.fromARGB(255, 32, 7, 121),
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold)),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600)),
             ),
           ),
           FutureBuilder<QuerySnapshot>(
@@ -91,9 +91,6 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                         Color.fromARGB(255, 46, 44, 99),
                         Color.fromARGB(255, 83, 76, 162),
                         Color.fromARGB(255, 149, 144, 232),
-                        // Color.fromARGB(255, 56, 54, 122),
-                        // Color.fromARGB(255, 103, 94, 198),
-                        // Color.fromARGB(255, 149, 144, 232),
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -102,7 +99,7 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                   child: Row(
                     children: [
                       Text(
-                        "   Exchange My Rewards",
+                        "   اسـتـخـدام نـقـاطـي",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 17,
@@ -118,8 +115,8 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                     ],
                   ),
                 ),
-                onTap: () {
-                  getRewards();
+                onTap: () async {
+                  await getRewards();
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => rewards()),
@@ -129,7 +126,7 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
             ),
           ),
           SizedBox(
-            height: 230, //313,
+            height: 250, //313,
             child: Column(
               children: [
                 Padding(
@@ -145,15 +142,14 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                         child: Row(
                           children: [
                             Container(
-                              alignment: Alignment.centerLeft,
-                              child: Text('Sub-Total',
+                              child: Text('المجموع الجزئي',
                                   style: TextStyle(
                                     color: Color.fromARGB(255, 32, 7, 121),
                                     fontSize: 15,
                                   )),
                             ),
                             Spacer(),
-                            Text(subTotal + ' SR',
+                            Text(subTotal + ' ريال',
                                 style: TextStyle(
                                   color: Color.fromARGB(255, 32, 7, 121),
                                   fontSize: 15,
@@ -167,14 +163,14 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                           children: [
                             Container(
                               alignment: Alignment.centerLeft,
-                              child: Text('VAT 15%',
+                              child: Text('الضريـبة',
                                   style: TextStyle(
                                     color: Color.fromARGB(255, 32, 7, 121),
                                     fontSize: 15,
                                   )),
                             ),
                             Spacer(),
-                            Text(vat.toString() + ' SR',
+                            Text(vat.toString() + ' ريال',
                                 style: TextStyle(
                                   color: Color.fromARGB(255, 32, 7, 121),
                                   fontSize: 15,
@@ -189,14 +185,14 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                             children: [
                               Container(
                                 alignment: Alignment.centerLeft,
-                                child: Text('Rewards',
+                                child: Text('نـقـاطـي',
                                     style: TextStyle(
                                       color: Color.fromARGB(255, 227, 45, 45),
                                       fontSize: 15,
                                     )),
                               ),
                               Spacer(),
-                              Text('- ${EcommerceApp.discount} SR',
+                              Text('- ${EcommerceApp.discount} ريال',
                                   style: TextStyle(
                                     color: Color.fromARGB(255, 227, 45, 45),
                                     fontSize: 15,
@@ -209,7 +205,7 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                           Container(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                'Total',
+                                'المجموع',
                                 style: TextStyle(
                                     color: Color.fromARGB(255, 32, 7, 121),
                                     fontSize: 16,
@@ -219,7 +215,7 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                           Text(
                               EcommerceApp.totalSummary.toString() +
                                   '.0' +
-                                  ' SR (' +
+                                  ' ريال (' +
                                   EcommerceApp.inDollars.toStringAsFixed(2) +
                                   '\$)',
                               style: TextStyle(
@@ -240,11 +236,11 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                   padding: const EdgeInsets.only(
                     top: 5,
                     bottom: 10.0,
-                    left: 25,
+                    right: 25,
                   ),
                   child: Container(
-                    alignment: Alignment.centerLeft,
-                    child: Text("Payment Method",
+                    alignment: Alignment.centerRight,
+                    child: Text("طرق الدفع",
                         style: TextStyle(
                             color: Color.fromARGB(255, 32, 7, 121),
                             fontSize: 16,
@@ -252,7 +248,7 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 23, bottom: 10),
+                  padding: const EdgeInsets.only(right: 23, bottom: 10),
                   child: Row(
                     children: [
                       Padding(
@@ -296,57 +292,64 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                       Text("   "),
                       Icon(Icons.info_outline_rounded),
                       Text(
-                        "  Please note Your total price will be in \n  ${EcommerceApp.inDollars.toStringAsFixed(2)}\$.",
+                        " يرجي الإنتباه أن المجموع النهائي سيكون بالدولار \n " +
+                            EcommerceApp.inDollars.toStringAsFixed(2) +
+                            "\$",
                         style: TextStyle(fontSize: 15, letterSpacing: 0.8),
                       ),
                     ],
                   )),
             ),
           ),
-          Container(
-            alignment: Alignment.center,
-            child: SizedBox(
-              width: 200,
-              height: 40,
-              child: ElevatedButton(
-                onPressed: () {
-                  saveUserTotal(EcommerceApp
-                      .totalSummary); // bugg fixes (saves it then saves the original price)
-                  checkOut().payment(context);
-                },
-                child: Text(
-                  'Place Order',
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18),
+          Padding(
+            padding: const EdgeInsets.only(top: 5),
+            child: Container(
+              alignment: Alignment.center,
+              child: SizedBox(
+                width: 200,
+                height: 40,
+                child: ElevatedButton(
+                  onPressed: () {
+                    saveUserTotal(EcommerceApp
+                        .totalSummary); // bugg fixes (saves it then saves the original price)
+                    checkOut().payment(context);
+                  },
+                  child: Text(
+                    'إتمام الطلب',
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18),
+                  ),
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.resolveWith((states) {
+                        if (states.contains(MaterialState.pressed)) {
+                          return Colors.grey;
+                        }
+                        return Colors.orange;
+                      }),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30)))),
                 ),
-                style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.resolveWith((states) {
-                      if (states.contains(MaterialState.pressed)) {
-                        return Colors.grey;
-                      }
-                      return Colors.orange;
-                    }),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)))),
               ),
             ),
           ),
           Text("   "),
-          // mainAxisAlignment: MainAxisAlignment.start,
-          // children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                "     By placing your order you agree to our return\n       policies, 7 days max for returning an item.",
+                "     بإتمامك للطلب فإنك تقوم بالموافقة على سياسة الترجيع لدينا،\n" +
+                    "                    ٧ أيام على الأكثر لترجيع منتج" +
+                    ".",
+                //"     By placing your order you agree to our return\n        policies, 7 days max for returning an item.",
                 style: TextStyle(
-                    fontSize: 14,
-                    color: Color.fromARGB(255, 142, 142, 142),
-                    letterSpacing: 0.6),
+                  fontSize: 14,
+                  color: Color.fromARGB(255, 142, 142, 142),
+                  letterSpacing: 0.6,
+                ),
               ),
             ],
           )
@@ -357,97 +360,79 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
 
   Widget buildSecondItmes(
       QueryDocumentSnapshot<Object?> product, BuildContext context) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Column(
-            children: [
-              Card(
-                child: new InkWell(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 0, bottom: 0, left: 0, right: 6),
-                    child: Row(
-                      children: <Widget>[
-                        new Container(
-                          child: Stack(children: <Widget>[
-                            Container(
-                              child: new Image.asset(
-                                'assets/Rectangle.png',
-                                height: 70.0,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 25, top: 2.5),
-                              child: Container(
-                                width: 45,
-                                margin: EdgeInsets.all(10),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(50),
-                                  child: Image(
-                                    image: NetworkImage(
-                                      product["ProductImage"],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )
-                          ]),
-                        ),
-                        Column(
-                          children: <Widget>[
-                            Text(
-                              " " + product["Category"],
-                              style: new TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 32, 7, 121),
-                              ),
-                            ),
-                            Text(
-                              "   Price : " +
-                                  product["Price"].toString() +
-                                  " SR",
-                              textAlign: TextAlign.center,
-                              style: new TextStyle(
-                                fontSize: 13,
-                                color: Color.fromARGB(255, 77, 76, 76),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Spacer(),
-                        Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Container(
-                              width: 30,
-                              height: 30,
-                              decoration: new BoxDecoration(
-                                color: Color.fromARGB(255, 245, 161, 14),
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            Text(
-                              product["quantity"].toString(),
-                              style: TextStyle(color: Colors.white),
-                            )
-                          ],
-                        ),
-                        Text("  "),
-                      ],
-                    ),
+    return Card(
+      child: new InkWell(
+        child: Row(
+          children: <Widget>[
+            new Container(
+              child: Stack(children: <Widget>[
+                Container(
+                  child: new Image.asset(
+                    'assets/Rectangle.png',
+                    height: 70.0,
+                    fit: BoxFit.cover,
                   ),
                 ),
-                color: Color.fromARGB(255, 248, 248, 246),
-              ),
-            ],
-          ),
-        ],
+                Padding(
+                  padding: const EdgeInsets.only(right: 25, top: 2.5),
+                  child: Container(
+                    width: 45,
+                    margin: EdgeInsets.all(10),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: Image(
+                        image: NetworkImage(
+                          product["ProductImage"],
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ]),
+            ),
+            Column(
+              children: <Widget>[
+                Text(
+                  " " + product["Category"],
+                  style: new TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 32, 7, 121),
+                  ),
+                ),
+                Text(
+                  "  السعر : " + product["Price"].toString() + ' ريال',
+                  textAlign: TextAlign.center,
+                  style: new TextStyle(
+                    fontSize: 13,
+                    color: Color.fromARGB(255, 77, 76, 76),
+                  ),
+                ),
+              ],
+            ),
+            Spacer(),
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  width: 30,
+                  height: 30,
+                  decoration: new BoxDecoration(
+                    color: Color.fromARGB(255, 245, 161, 14),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                Text(
+                  product["quantity"].toString(),
+                  style: TextStyle(color: Colors.white),
+                )
+              ],
+            ),
+            Text("  "),
+          ],
+        ),
       ),
+      color: Color.fromARGB(255, 248, 248, 246),
     );
   }
 

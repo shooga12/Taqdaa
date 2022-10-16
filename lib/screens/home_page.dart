@@ -3,9 +3,10 @@ import 'package:taqdaa_application/confige/EcommerceApp.dart';
 import 'package:taqdaa_application/views/NoItmesCart.dart';
 import 'package:taqdaa_application/views/scanner.dart';
 import '../controller/BNBCustomePainter.dart';
-import '../views/profile_view.dart';
 import 'ShoppingCart.dart';
+import '../views/invoices_view.dart';
 import 'list_of_stores.dart';
+import 'insideMore.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,8 +17,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool isInsideHome = true;
-  bool isInsideProfile = false;
-  bool isInsideSettings = false;
+  bool isInsideReceipt = false;
+  bool isInsideMore = false;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +60,6 @@ class _HomePageState extends State<HomePage> {
                               Icons.document_scanner_outlined,
                               size: 27,
                             ),
-                            //elevation: 0.1,
                           ),
                         ),
                       )),
@@ -106,24 +106,29 @@ class _HomePageState extends State<HomePage> {
                           IconButton(
                               onPressed: () {
                                 Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Homepprofile()),
-                                );
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => invoices(),
+                                    ));
                               },
                               icon: Icon(
-                                Icons.person,
+                                Icons.receipt_long,
                                 size: 30,
-                                color: isInsideProfile
+                                color: isInsideReceipt
                                     ? Color.fromARGB(255, 254, 176, 60)
                                     : Colors.white,
                               )),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => More()),
+                              );
+                            },
                             icon: Icon(
-                              Icons.settings,
+                              Icons.more_horiz,
                               size: 30,
-                              color: isInsideSettings
+                              color: isInsideMore
                                   ? Color.fromARGB(255, 254, 176, 60)
                                   : Colors.white,
                             ),

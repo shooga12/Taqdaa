@@ -1,94 +1,123 @@
 import 'package:flutter/material.dart';
-import 'package:taqdaa_application/screens/list_of_stores.dart';
-
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import '../confige/EcommerceApp.dart';
 import '../controller/BNBCustomePainter.dart';
 import '../main.dart';
-import '../screens/ShoppingCart.dart';
-import '../screens/insideMore.dart';
-import 'invoices_view.dart';
+import '../views/NoItmesCart.dart';
+import 'ShoppingCart.dart';
+import 'insideMore.dart';
+import '../views/invoices_view.dart';
+import 'list_of_stores.dart';
 
-class emptyCart extends StatelessWidget {
-  const emptyCart({super.key});
+class helpPage extends StatefulWidget {
+  const helpPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    bool isInsideHome = false;
-    bool isInsideReceipt = false;
-    bool isInsideMore = false;
-    bool isInsideCart = true;
+  State<helpPage> createState() => _helpPageState();
+}
 
+class _helpPageState extends State<helpPage> {
+  bool isInsideHome = false;
+  bool isInsideReceipt = false;
+  bool isInsideMore = true;
+  bool isInsideCart = false;
+  @override
+  Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Text(
-            "سلة التسوق",
-            style: TextStyle(fontSize: 24),
-          ),
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
-          ),
-          centerTitle: true,
-          toolbarHeight: 170,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        title: Text(
+          "أحصل على مساعدة",
+          style: TextStyle(fontSize: 24),
         ),
-        body: Stack(children: [
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
+        ),
+        centerTitle: true,
+        toolbarHeight: 170,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: Stack(
+        children: [
           Center(
-              child: new InkWell(
             child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "لا يوجد منتجات!",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                  ),
-                  Text("ابدأ التسوق الآن!",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                  Text(""),
-                  SizedBox(
-                    width: 200,
-                    height: 40,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ListOfStores2()),
-                        );
-                      },
-                      child: Text(
-                        'ابدأ التسوق!',
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18),
-                      ),
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.resolveWith((states) {
-                            if (states.contains(MaterialState.pressed)) {
-                              return Colors.grey;
-                            }
-                            return Colors.orange;
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Card(
+                      child: new InkWell(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 12, bottom: 12, left: 15, right: 12),
+                            child: Row(children: <Widget>[
+                              IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.phone_enabled,
+                                      size: 30,
+                                      color:
+                                          Color.fromARGB(223, 134, 186, 243))),
+                              Column(children: <Widget>[
+                                Text(
+                                  "أتصل علينا",
+                                  style: new TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ]),
+                              Spacer(),
+                              // Icon(Icons.arrow_forward,
+                              //     color: Color.fromARGB(223, 134, 186, 243)),
+                            ]),
+                          ),
+                          onTap: () async {
+                            await FlutterPhoneDirectCaller.callNumber(
+                                '+966509483390');
                           }),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(30)))),
+                      color: Color.fromARGB(243, 243, 239, 231),
                     ),
-                  ),
-                ],
-              ),
-            ),
-          )),
+                    Card(
+                      child: new InkWell(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 12, bottom: 12, left: 15, right: 12),
+                            child: Row(children: <Widget>[
+                              IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.mail_outline,
+                                      size: 30,
+                                      color:
+                                          Color.fromARGB(223, 134, 186, 243))),
+                              Column(children: <Widget>[
+                                Text(
+                                  "أرسل لنا إيميل",
+                                  style: new TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ]),
+                              Spacer(),
+                              // Icon(Icons.arrow_forward,
+                              //     color: Color.fromARGB(223, 134, 186, 243)),
+                            ]),
+                          ),
+                          onTap: () async {
+                            // String url = 'mailto:nouraalkho2@gmail.com';
+                            // await launchUrl(url);
+
+                            // if (await canLaunchUrl(url)) {
+                            //   await launchUrl(url);
+                            // }
+                          }),
+                      color: Color.fromARGB(243, 243, 239, 231),
+                    ),
+                  ],
+                )),
+          ),
           Positioned(
             bottom: 0,
             left: 0,
@@ -209,6 +238,8 @@ class emptyCart extends StatelessWidget {
               ),
             ),
           )
-        ]));
+        ],
+      ),
+    );
   }
 }

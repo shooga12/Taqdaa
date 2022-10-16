@@ -1,14 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:either_dart/either.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:taqdaa_application/main.dart';
 import 'package:taqdaa_application/screens/home_page.dart';
 import '../confige/EcommerceApp.dart';
 import '../controller/BNBCustomePainter.dart';
-import '../models/user_model.dart';
 import 'package:taqdaa_application/screens/login_page.dart';
-
+import '../methods/authentication_services.dart';
+import '../models/user_model.dart';
 import '../screens/ShoppingCart.dart';
+import '../screens/insideMore.dart';
+import 'invoices_view.dart';
 import '../screens/list_of_stores.dart';
 import 'NoItmesCart.dart';
 
@@ -21,32 +25,20 @@ class Homepprofile extends StatefulWidget {
 
 class _HomepprofileState extends State<Homepprofile> {
   User? user = FirebaseAuth.instance.currentUser;
-  UserModel loggedInUser = UserModel();
   bool isInsideHome = false;
-  bool isInsideProfile = true;
-  bool isInsideSettings = false;
+  bool isInsideReceipt = false;
+  bool isInsideMore = true;
+  bool isInsideCart = false;
 
-  @override
-  void initState() {
-    super.initState();
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(user!.uid)
-        .get()
-        .then((value) {
-      this.loggedInUser = UserModel.fromMap(value.data());
-      setState(() {});
-    });
-  }
-
+  String CurrentUser = "";
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         title: Text(
-          "My Profile",
+          "حسابي",
           style: TextStyle(fontSize: 24),
         ),
         actions: <Widget>[
@@ -76,60 +68,186 @@ class _HomepprofileState extends State<Homepprofile> {
             child: Padding(
               padding: EdgeInsets.all(10),
               child: Column(
-                // mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  ListTile(
-                    title: Text(
-                      'Name',
-                      style: TextStyle(fontSize: 22),
-                    ),
-                    subtitle: Text(
-                      "${loggedInUser.firstName} ${loggedInUser.secondName}",
-                      style: TextStyle(fontSize: 22),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text.rich(
+                    TextSpan(
+                      style: TextStyle(
+                        fontSize: 22,
+                      ),
+                      children: [
+                        WidgetSpan(
+                          child: Icon(Icons.person),
+                        ),
+                        TextSpan(
+                          text:
+                              " ${EcommerceApp.loggedInUser.firstName} ${EcommerceApp.loggedInUser.secondName}",
+                        )
+                      ],
                     ),
                   ),
-                  ListTile(
-                    title: Text(
-                      'Email',
-                      style: TextStyle(fontSize: 22),
-                    ),
-                    subtitle: Text(
-                      "${loggedInUser.email}",
-                      style: TextStyle(fontSize: 22),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text.rich(
+                    TextSpan(
+                      style: TextStyle(
+                        fontSize: 22,
+                      ),
+                      children: [
+                        WidgetSpan(
+                          child: Icon(Icons.mail),
+                        ),
+                        TextSpan(
+                          text: " ${EcommerceApp.loggedInUser.email}",
+                        )
+                      ],
                     ),
                   ),
-                  ListTile(
-                    title: Text(
-                      'Phone Number',
-                      style: TextStyle(fontSize: 22),
-                    ),
-                    subtitle: Text(
-                      "${loggedInUser.phonenumber}",
-                      style: TextStyle(fontSize: 22),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text.rich(
+                    TextSpan(
+                      style: TextStyle(
+                        fontSize: 22,
+                      ),
+                      children: [
+                        WidgetSpan(
+                          child: Icon(Icons.phone_enabled),
+                        ),
+                        TextSpan(
+                          text: " ${EcommerceApp.loggedInUser.phonenumber}",
+                        )
+                      ],
                     ),
                   ),
-                  ListTile(
-                    title: Text(
-                      'Date of Birth',
-                      style: TextStyle(fontSize: 22),
-                    ),
-                    subtitle: Text(
-                      "${loggedInUser.dateofbirth}",
-                      style: TextStyle(fontSize: 22),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text.rich(
+                    TextSpan(
+                      style: TextStyle(
+                        fontSize: 22,
+                      ),
+                      children: [
+                        WidgetSpan(
+                          child: Icon(Icons.calendar_month),
+                        ),
+                        TextSpan(
+                          text: " ${EcommerceApp.loggedInUser.dateofbirth}",
+                        )
+                      ],
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 40.0),
+                    padding: EdgeInsets.only(top: 130.0, right: 90.0),
                     child: SizedBox(
                       width: 200,
                       height: 40,
                       child: ElevatedButton(
                         onPressed: () async {
-                          logout(context);
+                          showDialog(
+                              context: context,
+                              builder: ((context) {
+                                return AlertDialog(
+                                  title: Text("هل تريد حذف الحساب بالفعل؟"),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          deleteUser(
+                                              "${EcommerceApp.loggedInUser.uid}");
+                                          user!.delete();
+
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LoginPage(),
+                                              ));
+                                          Fluttertoast.showToast(
+                                              msg: "تم حذف الحساب بنجاح");
+                                        },
+                                        child: Text(
+                                          "حذف الحساب",
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        )),
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("إلغاء"))
+                                  ],
+                                );
+                              }));
                         },
                         child: Text(
-                          'Logout',
+                          "حذف الحساب",
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18),
+                        ),
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.resolveWith((states) {
+                              if (states.contains(MaterialState.pressed)) {
+                                return Colors.grey;
+                              }
+                              return Colors.red;
+                            }),
+                            shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30)))),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 20.0, right: 90.0),
+                    child: SizedBox(
+                      width: 200,
+                      height: 40,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          showDialog(
+                              context: context,
+                              builder: ((context) {
+                                return AlertDialog(
+                                  title: Text("هل تريد تسجيل الخروج؟"),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          FirebaseAuthMethods().signOut();
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LoginPage(),
+                                              ));
+                                        },
+                                        child: Text(
+                                          "تسجيل خروج",
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        )),
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("إلغاء"))
+                                  ],
+                                );
+                              }));
+                        },
+                        child: Text(
+                          'تسجيل الخروج',
                           style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -149,7 +267,7 @@ class _HomepprofileState extends State<Homepprofile> {
                                     borderRadius: BorderRadius.circular(30)))),
                       ),
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
@@ -186,7 +304,6 @@ class _HomepprofileState extends State<Homepprofile> {
                               Icons.document_scanner_outlined,
                               size: 27,
                             ),
-                            //elevation: 0.1,
                           ),
                         ),
                       )),
@@ -231,26 +348,39 @@ class _HomepprofileState extends State<Homepprofile> {
                               icon: Icon(
                                 Icons.shopping_cart,
                                 size: 30,
-                                color: Colors.white,
+                                color: isInsideCart
+                                    ? Color.fromARGB(255, 254, 176, 60)
+                                    : Colors.white,
                               )),
                           Container(
                             width: size.width * 0.20,
                           ),
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => invoices(),
+                                    ));
+                              },
                               icon: Icon(
-                                Icons.person,
+                                Icons.receipt_long,
                                 size: 30,
-                                color: isInsideProfile
+                                color: isInsideReceipt
                                     ? Color.fromARGB(255, 254, 176, 60)
                                     : Colors.white,
                               )),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => More()),
+                              );
+                            },
                             icon: Icon(
-                              Icons.settings,
+                              Icons.more_horiz,
                               size: 30,
-                              color: isInsideSettings
+                              color: isInsideMore
                                   ? Color.fromARGB(255, 254, 176, 60)
                                   : Colors.white,
                             ),
@@ -271,4 +401,9 @@ Future<void> logout(BuildContext context) async {
   await FirebaseAuth.instance.signOut();
   Navigator.of(context)
       .pushReplacement(MaterialPageRoute(builder: ((context) => LoginPage())));
+}
+
+Future<void> deleteUser(String uid) async {
+  final account =
+      await FirebaseFirestore.instance.collection("users").doc('$uid').delete();
 }

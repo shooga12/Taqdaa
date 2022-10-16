@@ -24,9 +24,6 @@ class checkOut {
 
     BraintreeDropInResult? result = await BraintreeDropIn.start(request);
     if (result != null) /*Successful Payment*/ {
-      print(result.paymentMethodNonce.description);
-      print(result.paymentMethodNonce.nonce);
-
       int reward = ((EcommerceApp.total * 2) / 100) as int; //make sure works
       EcommerceApp.storeName = "";
 
@@ -43,7 +40,7 @@ class checkOut {
           builder: (context) {
             return AlertDialog(
                 title: Text(
-                  "Your Payment completed succefully!\nThank you!",
+                  "شكرًا لك، تم الدفع بنجاح!",
                   style: TextStyle(fontSize: 18),
                 ),
                 actions: [
@@ -55,9 +52,9 @@ class checkOut {
                       await deleteCartDublicate();
                       await saveUserTotal(0);
                       await saveUserRewards(reward);
-                      Navigator.pop(context, 'OK');
+                      Navigator.pop(context, 'حسنًا');
                     },
-                    child: const Text('OK'),
+                    child: const Text('حسنًا'),
                   )
                 ]);
           });
@@ -87,6 +84,12 @@ class checkOut {
           .doc("rewards")
           .update({"Rewards": FieldValue.increment(reward)});
     }
+
+    // ///update number of invoices
+    // FirebaseFirestore.instance
+    //     .collection('${collectionName}Total')
+    //     .doc("NumberOfInvoices")
+    //     .update({"NumberOfInvoices": FieldValue.increment(1)});
   }
 
   Future deleteCart() async {

@@ -16,7 +16,7 @@ class _ScanPageState extends State<ScanPage> {
 
   Query dbref = FirebaseDatabase.instance
       .ref()
-      .child(EcommerceApp.storeId) //Ecommerce.storeName
+      .child(EcommerceApp.storeId)
       .child('store')
       .orderByChild('Barcode')
       .equalTo(EcommerceApp.value.substring(1));
@@ -27,6 +27,10 @@ class _ScanPageState extends State<ScanPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text(
+          "المنتج الذي تم مسحه هو :",
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
+        ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
@@ -80,150 +84,119 @@ class _ScanPageState extends State<ScanPage> {
   Widget buildBeforeCart({required Map product}) {
     return Container(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Column(
-            //upper part
-            children: [
-              Text('\n'),
-              Text("The product you Scanned is :\n",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-              Card(
-                child: new InkWell(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 0, bottom: 0, left: 0, right: 6),
-                    child: Row(
-                      children: <Widget>[
-                        new Container(
-                          child: Stack(children: <Widget>[
-                            Container(
-                              child: new Image.asset(
-                                'assets/Rectangle.png',
-                                height: 100.0,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 25, top: 5),
-                              child: Container(
-                                width: 70,
-                                margin: EdgeInsets.all(10),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(50),
-                                  child: Image(
-                                    image: NetworkImage(
-                                      product['ProductImage'],
-                                    ),
-                                  ),
-                                ),
-                                // Container(
-                                //   alignment: Alignment.bottomLeft, //اعدله
-                                //   child:
-                                // ),
-                              ),
-                            )
-                            // Container(
-                            //   alignment: Alignment.center, //اعدله
-                            //   child:  photo*****
-                            // ),
-                          ]),
+          Text('\n\n\n'),
+          // Text("المنتج الذي تم مسحه هو: \n",
+          //     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+          Card(
+            child: new InkWell(
+              child: Row(
+                children: <Widget>[
+                  new Container(
+                    child: Stack(children: <Widget>[
+                      Container(
+                        child: new Image.asset(
+                          'assets/Rectangle.png',
+                          height: 100.0,
+                          fit: BoxFit.cover,
                         ),
-                        Column(
-                          children: <Widget>[
-                            Text(
-                              "\n " + product['Product Name'],
-                              style: new TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 32, 7, 121),
-                              ),
-                            ),
-                            Text(
-                              "   Price : " +
-                                  product['Price'].toString() +
-                                  " SR",
-                              textAlign: TextAlign.center,
-                              style: new TextStyle(
-                                fontSize: 16,
-                                color: Color.fromARGB(255, 77, 76, 76),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                color: Color.fromARGB(255, 248, 248, 246),
-              ),
-              Text('\n'),
-            ],
-          ),
-          //),
-          Column(
-            //lower part
-            children: [
-              Column(
-                children: [
-                  Center(
-                    child: SizedBox(
-                      width: 200,
-                      height: 40,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          EcommerceApp.haveItems = true; ////bug fixes
-                          EcommerceApp.productName = product['Product Name'];
-
-                          Product toBeSavedProduct = Product(
-                            Category: product['Product Name'],
-                            Item_number: product['Barcode'],
-                            Price: product['Price'],
-                            Store: product['StoreName'],
-                            quantity: product['quantity'],
-                            RFID: product['RFID'],
-                            ProductImage: product['ProductImage'],
-                          );
-
-                          if (await checkItemExist()) {
-                            saveUserItemsDublicate(toBeSavedProduct);
-                          } else {
-                            saveUserItemsDublicate(toBeSavedProduct);
-                            saveUserItems(toBeSavedProduct);
-                          }
-                          EcommerceApp.counter++;
-                          EcommerceApp.NumOfItems++;
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => shoppingCart()),
-                          );
-                        },
-                        child: Text(
-                          'Add to cart',
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
-                        ),
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith((states) {
-                              if (states.contains(MaterialState.pressed)) {
-                                return Colors.grey;
-                              }
-                              return Colors.orange;
-                            }),
-                            shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30)))),
                       ),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 28, top: 5),
+                        child: Container(
+                          width: 70,
+                          margin: EdgeInsets.all(10),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image(
+                              image: NetworkImage(
+                                product['ProductImage'],
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ]),
                   ),
+                  Column(
+                    children: <Widget>[
+                      Text(
+                        "\n " + product['Product Name'],
+                        style: new TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 32, 7, 121),
+                        ),
+                      ),
+                      Text(
+                        "   السعر : " + product['Price'].toString() + " ريال",
+                        textAlign: TextAlign.center,
+                        style: new TextStyle(
+                          fontSize: 16,
+                          color: Color.fromARGB(255, 77, 76, 76),
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               ),
-            ],
+            ),
+            color: Color.fromARGB(255, 248, 248, 246),
+          ),
+          Text('\n'),
+          //),
+          Center(
+            child: SizedBox(
+              width: 200,
+              height: 40,
+              child: ElevatedButton(
+                onPressed: () async {
+                  EcommerceApp.haveItems = true; ////bug fixes
+                  EcommerceApp.productName = product['Product Name'];
+
+                  Product toBeSavedProduct = Product(
+                    Category: product['Product Name'],
+                    Item_number: product['Barcode'],
+                    Price: product['Price'],
+                    Store: product['StoreName'],
+                    quantity: product['quantity'],
+                    RFID: product['RFID'],
+                    ProductImage: product['ProductImage'],
+                  );
+
+                  if (await checkItemExist()) {
+                    saveUserItemsDublicate(toBeSavedProduct);
+                  } else {
+                    saveUserItemsDublicate(toBeSavedProduct);
+                    saveUserItems(toBeSavedProduct);
+                  }
+                  EcommerceApp.counter++;
+                  EcommerceApp.NumOfItems++;
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => shoppingCart()),
+                  );
+                },
+                child: Text(
+                  'إضافة للسلة',
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18),
+                ),
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.resolveWith((states) {
+                      if (states.contains(MaterialState.pressed)) {
+                        return Colors.grey;
+                      }
+                      return Colors.orange;
+                    }),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)))),
+              ),
+            ),
           ),
         ],
       ),

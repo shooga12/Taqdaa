@@ -23,7 +23,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
 
   Future _scan(BuildContext context) async {
     _counter = await FlutterBarcodeScanner.scanBarcode(
-        "#004297", "Cancel", true, ScanMode.BARCODE);
+        "#FEB139", "Cancel", true, ScanMode.BARCODE);
 
     setState(() {
       EcommerceApp.value = _counter;
@@ -43,11 +43,11 @@ class _ListOfStores2State extends State<ListOfStores2> {
           context: context,
           builder: (context) {
             return AlertDialog(
-                content: Text("Item already have been added."), ///////
+                content: Text("تم إضافة المنتج مسبقًا!"),
                 actions: [
                   TextButton(
-                    onPressed: () => Navigator.pop(context, 'OK'),
-                    child: const Text('OK'),
+                    onPressed: () => Navigator.pop(context, 'حسنًا'),
+                    child: const Text('حسنًا'),
                   )
                 ]);
           });
@@ -56,7 +56,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
 
     Query dbref = FirebaseDatabase.instance
         .ref()
-        .child(EcommerceApp.storeId) //Ecommerce.storeName
+        .child(EcommerceApp.storeId)
         .child('store')
         .orderByChild('Barcode')
         .equalTo(EcommerceApp.value.substring(1));
@@ -75,11 +75,11 @@ class _ListOfStores2State extends State<ListOfStores2> {
           context: context,
           builder: (context) {
             return AlertDialog(
-                content: Text("Sorry Item not found!"),
+                content: Text("عذراً، المنتج غير موجود"),
                 actions: [
                   TextButton(
-                    onPressed: () => Navigator.pop(context, 'OK'),
-                    child: const Text('OK'),
+                    onPressed: () => Navigator.pop(context, 'حسنًا'),
+                    child: const Text('حسنًا'),
                   )
                 ]);
           });
@@ -94,8 +94,8 @@ class _ListOfStores2State extends State<ListOfStores2> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Choose Store',
-          style: TextStyle(fontSize: 24), //TextStyle(fontFamily: 'Cairo'),
+          'إختر متجرًا',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
         ),
         bottom: PreferredSize(
             child: Flexible(
@@ -105,7 +105,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
                   child: TextField(
                     decoration: InputDecoration(
                         prefixIcon: Icon(Icons.search),
-                        hintText: 'Search for a store name..'),
+                        hintText: 'إبحث عن إسم متجر محدد'),
                     onChanged: (val) {
                       setState(() {
                         SearchName = val.replaceAll(' ', '');
@@ -122,7 +122,6 @@ class _ListOfStores2State extends State<ListOfStores2> {
                   image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
         ),
         toolbarHeight: 170,
-        //leading: BackButton(),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -150,7 +149,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
                           child: Align(
                         alignment: Alignment.center,
                         child: Text(
-                          'No Results',
+                          'لا يوجد نتائج',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 20,
@@ -181,7 +180,6 @@ class _ListOfStores2State extends State<ListOfStores2> {
           snapshot.docs.map((doc) => Store.fromJson(doc.data())).toList());
 
   Widget buildStoresCards(Store store, BuildContext context) {
-    //{required Map store}
     return Container(
       child: Padding(
         padding: const EdgeInsets.only(
@@ -205,7 +203,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
                   Column(
                     children: <Widget>[
                       Text(
-                        store.StoreName,
+                        ' ' + store.StoreName,
                         style: new TextStyle(
                           fontSize: 18,
                         ),
@@ -213,14 +211,14 @@ class _ListOfStores2State extends State<ListOfStores2> {
                       Row(
                         children: <Widget>[
                           Text(
-                            store.kilometers.toString(),
+                            ' ' + store.kilometers.toString(),
                             style: new TextStyle(
                               fontSize: 12,
                               color: Color.fromARGB(255, 77, 76, 76),
                             ),
                           ),
                           Text(
-                            'Km  ',
+                            ' كم',
                             style: new TextStyle(
                               fontSize: 12,
                               color: Color.fromARGB(255, 77, 76, 76),
@@ -246,19 +244,14 @@ class _ListOfStores2State extends State<ListOfStores2> {
                 //   MaterialPageRoute(builder: (context) => scanner()),
                 // );
                 _scan(context);
-              } else if (EcommerceApp.storeName == store.StoreName) {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => scanner()),
-                // );
-                _scan(context);
-              } else {
+              } else if (EcommerceApp.haveItems &&
+                  EcommerceApp.storeName != store.StoreName) {
                 showDialog(
                     context: context,
                     builder: (context) {
                       return AlertDialog(
                           content: Text(
-                              "Sorry you already have an order in ${EcommerceApp.storeName}."),
+                              ".${EcommerceApp.storeName}عذرًا، لديك طلب بالفعل في"),
                           actions: [
                             ElevatedButton(
                                 onPressed: () async {
@@ -266,16 +259,23 @@ class _ListOfStores2State extends State<ListOfStores2> {
                                   await deleteCart();
                                   await deleteCartDublicate();
                                   await saveUserTotal(0);
-                                  Navigator.pop(context, 'OK');
-                                }, /////add cancelation
+                                  Navigator.pop(context, 'حسنًا');
+                                },
                                 child: Text(
-                                    "Cancel ${EcommerceApp.storeName} order")),
+                                    " ${EcommerceApp.storeName} إلغاء طلب")),
                             TextButton(
-                              onPressed: () => Navigator.pop(context, 'OK'),
-                              child: const Text('OK'),
+                              onPressed: () => Navigator.pop(context, 'حسنًا'),
+                              child: const Text('حسنًا'),
                             ),
                           ]);
                     });
+              } else {
+                EcommerceApp.storeName = store.StoreName;
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => scanner()),
+                // );
+                _scan(context);
               }
             },
           ),

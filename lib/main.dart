@@ -13,7 +13,7 @@ import '../screens/register_page.dart';
 import '../confige/EcommerceApp.dart';
 import '../controller/Notification_api.dart';
 import 'package:timezone/data/latest.dart' as tz;
-
+import 'package:flutter_localizations/flutter_localizations.dart';
 import '../models/user_model.dart';
 
 void main() async {
@@ -83,6 +83,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Localizations Sample App',
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('ar', 'EN'), // English, no country code
+      ],
       debugShowCheckedModeBanner: false,
       home: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
@@ -116,6 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
 
+  @override
   void initState() {
     super.initState();
     FirebaseFirestore.instance
@@ -123,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
         .doc(user!.uid)
         .get()
         .then((value) {
-      this.loggedInUser = UserModel.fromMap(value.data());
+      EcommerceApp.loggedInUser = UserModel.fromMap(value.data());
       setState(() {});
     });
   }
@@ -135,7 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
         automaticallyImplyLeading: false,
         title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
           Text(
-            "Hey, ${loggedInUser.firstName}",
+            "مرحبًا، ${EcommerceApp.loggedInUser.firstName}",
             style: TextStyle(fontSize: 24),
           ),
         ]),
@@ -144,43 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
               image: DecorationImage(
                   image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: ((context) {
-                    return AlertDialog(
-                      title: Text("Are you sure you want to Log out?"),
-                      actions: [
-                        TextButton(
-                            onPressed: () {
-                              FirebaseAuthMethods().signOut();
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => LoginPage(),
-                                  ));
-                            },
-                            child: Text("Log out")),
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text("cancel"))
-                      ],
-                    );
-                  }));
-            },
-            icon: Icon(
-              Icons.logout,
-              size: 35,
-              color: Color.fromARGB(255, 32, 7, 121),
-            ),
-          ),
-        ],
         toolbarHeight: 170,
-        //leading: BackButton(),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),

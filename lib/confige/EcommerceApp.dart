@@ -21,6 +21,7 @@ class EcommerceApp {
   static double discount = 0;
   static int NumOfItems = 0;
   static int totalSummary = 0;
+  static UserModel loggedInUser = UserModel();
 
   static String uid = '';
   final FirebaseAuth auth = FirebaseAuth.instance;
