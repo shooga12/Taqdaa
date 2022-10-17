@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
-//import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-//import 'package:flutter/src/widgets/container.dart';
-//import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/src/widgets/container.dart';
+import 'package:flutter/src/widgets/framework.dart';
 import '../model/invoice.dart';
 import '../model/item.dart';
 import 'invoices.dart';
 import '../confige/EcommerceApp.dart';
+import 'package:intl/intl.dart';
 
 class returnRequest extends StatefulWidget {
   final invoice;
@@ -22,23 +23,23 @@ class _returnRequestState extends State<returnRequest> {
   Invoice? invoice;
   FirebaseDatabase database = FirebaseDatabase.instance;
   String documentName = EcommerceApp().getCurrentUser();
-  TextEditingController? _controller;
+  //TextEditingController? _controller;
   //List thisInvoice [] = invoicesState.invoices ;
 
   _returnRequestState(invoice) {
     this.invoice = invoice;
   }
   @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController();
-  }
+  // void initState() {
+  //   super.initState();
+  //   _controller = TextEditingController();
+  // }
 
-  @override
-  void dispose() {
-    _controller!.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _controller!.dispose();
+  //   super.dispose();
+  // }
 
   //bool result = false;
 
@@ -231,8 +232,8 @@ class _returnRequestState extends State<returnRequest> {
                                             children: [
                                               Text(
                                                 "SR",
-                                                textDirection:
-                                                    TextDirection.rtl,
+                                                // textDirection:
+                                                //     TextDirection.rtl,
                                                 textAlign: TextAlign.end,
                                                 style: TextStyle(
                                                   fontSize: 18,
@@ -242,8 +243,8 @@ class _returnRequestState extends State<returnRequest> {
                                               SizedBox(width: 5.0),
                                               Text(
                                                 "${item.price}",
-                                                textDirection:
-                                                    TextDirection.rtl,
+                                                // textDirection:
+                                                //     TextDirection.rtl,
                                                 textAlign: TextAlign.end,
                                                 style: TextStyle(
                                                   fontSize: 18,
@@ -324,8 +325,8 @@ class _returnRequestState extends State<returnRequest> {
                                             children: [
                                               Text(
                                                 "SR",
-                                                textDirection:
-                                                    TextDirection.rtl,
+                                                // textDirection:
+                                                //     TextDirection.rtl,
                                                 textAlign: TextAlign.end,
                                                 style: TextStyle(
                                                   fontSize: 18,
@@ -335,8 +336,8 @@ class _returnRequestState extends State<returnRequest> {
                                               SizedBox(width: 5.0),
                                               Text(
                                                 "${item.price}",
-                                                textDirection:
-                                                    TextDirection.rtl,
+                                                // textDirection:
+                                                //     TextDirection.rtl,
                                                 textAlign: TextAlign.end,
                                                 style: TextStyle(
                                                   fontSize: 18,
@@ -541,6 +542,14 @@ class _returnRequestState extends State<returnRequest> {
 
   var i = 0;
   Map<String, String> userReq = {};
+
+  getDate() {
+    var now = new DateTime.now();
+    var formatter = new DateFormat('dd/MM/yyyy');
+    String date = formatter.format(now);
+    userReq['date'] = date;
+  }
+
   storeRequests(String? barcode) {
     userReq['product${i}'] = barcode!;
     i++;
@@ -559,40 +568,14 @@ class _returnRequestState extends State<returnRequest> {
     for (int i = 0; i < checkBoxList.length; i++) {
       if (checkBoxList[i] == true) {
         storeRequests(Barcodes[i]);
-        // addToInvoice.update({
-
-        //    'items[$i]':
-        //     {
-        //       '$i': {
-        //         'barcode': invoice?.items[i].barcode,
-        //         'name': invoice?.items[i].name,
-        //         'img': invoice?.items[i].img,
-        //         'price': invoice?.items[i].price,
-        //         'quantity': invoice?.items[i].quantity,
-        //         'returnRequest': true,
-        //         'returnable': invoice?.items[i].returnable,
-        //       }
-        //     }
-
-        // 'items': [
-        //   {
-        //     '$i': {
-        //       'barcode': invoice?.items[i].barcode,
-        //       'name': invoice?.items[i].name,
-        //       'img': invoice?.items[i].img,
-        //       'price': invoice?.items[i].price,
-        //       'quantity': invoice?.items[i].quantity,
-        //       'returnRequest': true,
-        //       'returnable': invoice?.items[i].returnable,
-        //     }
-        //   }
-        // ]
-
       }
     }
 
+    getDate();
     var collection = FirebaseFirestore.instance.collection('ReturnRequests');
     collection.doc('$storeName$documentName').set(userReq);
+    //collection.doc('$storeName$documentName').set({'date': date});
+
     return true;
   }
 }

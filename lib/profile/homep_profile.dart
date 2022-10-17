@@ -11,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:taqdaa_application/screens/login_page.dart';
 import '../methods/authentication_services.dart';
 import '../model/user_model.dart';
+import '../screens/EditProfile.dart';
 import '../screens/ShoppingCart.dart';
 import '../screens/insideMore.dart';
 import '../screens/invoices.dart';
@@ -63,7 +64,10 @@ class _HomepprofileState extends State<Homepprofile> {
               color: Colors.white,
             ),
             onPressed: () {
-              // do something
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Edit()),
+              );
             },
           )
         ],
@@ -89,22 +93,83 @@ class _HomepprofileState extends State<Homepprofile> {
                   SizedBox(
                     height: 10,
                   ),
-                  Text.rich(
-                    TextSpan(
-                      style: TextStyle(
-                        fontSize: 22,
-                      ),
-                      children: [
-                        WidgetSpan(
-                          child: Icon(Icons.person),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: Colors.orange, width: 2.0, //<-- SEE HERE
                         ),
-                        TextSpan(
-                          text:
-                              " ${loggedInUser.firstName} ${loggedInUser.secondName}",
-                        )
-                      ],
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      color: Colors.white,
+                      child: Container(
+                          alignment: Alignment.centerLeft,
+                          height: 60,
+                          width: 370,
+                          child: Row(
+                            children: [
+                              Text("   "),
+                              Icon(Icons.person),
+                              Text(
+                                " ${loggedInUser.firstName} ${loggedInUser.secondName}",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    letterSpacing: 0.8,
+                                    color: Colors.black),
+                              ),
+                            ],
+                          )),
                     ),
                   ),
+                  // SizedBox(
+                  //   height: 10,
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: Colors.orange, width: 2.0, //<-- SEE HERE
+                        ),
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      color: Colors.white,
+                      child: Container(
+                          alignment: Alignment.centerLeft,
+                          height: 60,
+                          width: 370,
+                          child: Row(
+                            children: [
+                              Text("   "),
+                              Icon(Icons.mail),
+                              Text(
+                                " ${loggedInUser.email}",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    letterSpacing: 0.8,
+                                    color: Colors.black),
+                              ),
+                            ],
+                          )),
+                    ),
+                  ),
+                  // Text.rich(
+                  //   TextSpan(
+                  //     style: TextStyle(
+                  //       fontSize: 22,
+                  //     ),
+                  //     children: [
+                  //       WidgetSpan(
+                  //         child: Icon(Icons.person),
+                  //       ),
+                  //       TextSpan(
+                  //         text:
+                  //             " ${loggedInUser.firstName} ${loggedInUser.secondName}",
+                  //       )
+                  //     ],
+                  //   ),
+                  // ),
 
                   // ListTile(
                   //   title: Text(
@@ -116,24 +181,24 @@ class _HomepprofileState extends State<Homepprofile> {
                   //     style: TextStyle(fontSize: 22),
                   //   ),
                   // ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text.rich(
-                    TextSpan(
-                      style: TextStyle(
-                        fontSize: 22,
-                      ),
-                      children: [
-                        WidgetSpan(
-                          child: Icon(Icons.mail),
-                        ),
-                        TextSpan(
-                          text: " ${loggedInUser.email}",
-                        )
-                      ],
-                    ),
-                  ),
+                  // SizedBox(
+                  //   height: 10,
+                  // ),
+                  // Text.rich(
+                  //   TextSpan(
+                  //     style: TextStyle(
+                  //       fontSize: 22,
+                  //     ),
+                  //     children: [
+                  //       WidgetSpan(
+                  //         child: Icon(Icons.mail),
+                  //       ),
+                  //       TextSpan(
+                  //         text: " ${loggedInUser.email}",
+                  //       )
+                  //     ],
+                  //   ),
+                  // ),
                   // ListTile(
                   //   title: Text(
                   //     'Email',
@@ -144,24 +209,53 @@ class _HomepprofileState extends State<Homepprofile> {
                   //     style: TextStyle(fontSize: 22),
                   //   ),
                   // ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text.rich(
-                    TextSpan(
-                      style: TextStyle(
-                        fontSize: 22,
-                      ),
-                      children: [
-                        WidgetSpan(
-                          child: Icon(Icons.phone_enabled),
+                  // SizedBox(
+                  //   height: 10,
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: Colors.orange, width: 2.0, //<-- SEE HERE
                         ),
-                        TextSpan(
-                          text: " ${loggedInUser.phonenumber}",
-                        )
-                      ],
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      color: Colors.white,
+                      child: Container(
+                          alignment: Alignment.centerLeft,
+                          height: 60,
+                          width: 370,
+                          child: Row(
+                            children: [
+                              Text("   "),
+                              Icon(Icons.phone_enabled),
+                              Text(
+                                " ${loggedInUser.phonenumber}",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    letterSpacing: 0.8,
+                                    color: Colors.black),
+                              ),
+                            ],
+                          )),
                     ),
                   ),
+                  // Text.rich(
+                  //   TextSpan(
+                  //     style: TextStyle(
+                  //       fontSize: 22,
+                  //     ),
+                  //     children: [
+                  //       WidgetSpan(
+                  //         child: Icon(Icons.phone_enabled),
+                  //       ),
+                  //       TextSpan(
+                  //         text: " ${loggedInUser.phonenumber}",
+                  //       )
+                  //     ],
+                  //   ),
+                  // ),
 
                   // ListTile(
                   //   title: Text(
@@ -173,25 +267,54 @@ class _HomepprofileState extends State<Homepprofile> {
                   //     style: TextStyle(fontSize: 22),
                   //   ),
                   // ),
-                  SizedBox(
-                    height: 10,
-                  ),
-
-                  Text.rich(
-                    TextSpan(
-                      style: TextStyle(
-                        fontSize: 22,
-                      ),
-                      children: [
-                        WidgetSpan(
-                          child: Icon(Icons.calendar_month),
+                  // SizedBox(
+                  //   height: 10,
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: Colors.orange, width: 2.0, //<-- SEE HERE
                         ),
-                        TextSpan(
-                          text: " ${loggedInUser.dateofbirth}",
-                        )
-                      ],
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      color: Colors.white,
+                      child: Container(
+                          alignment: Alignment.centerLeft,
+                          height: 60,
+                          width: 370,
+                          child: Row(
+                            children: [
+                              Text("   "),
+                              Icon(Icons.calendar_month),
+                              Text(
+                                " ${loggedInUser.dateofbirth}",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    letterSpacing: 0.8,
+                                    color: Colors.black),
+                              ),
+                            ],
+                          )),
                     ),
                   ),
+
+                  // Text.rich(
+                  //   TextSpan(
+                  //     style: TextStyle(
+                  //       fontSize: 22,
+                  //     ),
+                  //     children: [
+                  //       WidgetSpan(
+                  //         child: Icon(Icons.calendar_month),
+                  //       ),
+                  //       TextSpan(
+                  //         text: " ${loggedInUser.dateofbirth}",
+                  //       )
+                  //     ],
+                  //   ),
+                  // ),
                   // ListTile(
                   //   title: Text(
                   //     'Date of Birth',
@@ -203,7 +326,7 @@ class _HomepprofileState extends State<Homepprofile> {
                   //   ),
                   // ),
                   Padding(
-                    padding: EdgeInsets.only(top: 130.0, right: 45.0),
+                    padding: EdgeInsets.only(top: 10.0, right: 90.0),
                     child: SizedBox(
                       width: 200,
                       height: 40,
@@ -249,7 +372,7 @@ class _HomepprofileState extends State<Homepprofile> {
                           style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
-                              fontSize: 18),
+                              fontSize: 20),
                         ),
                         style: ButtonStyle(
                             backgroundColor:
@@ -267,7 +390,7 @@ class _HomepprofileState extends State<Homepprofile> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 20.0, right: 45.0),
+                    padding: EdgeInsets.only(top: 15.0, right: 90.0),
                     child: SizedBox(
                       width: 200,
                       height: 40,
@@ -309,7 +432,7 @@ class _HomepprofileState extends State<Homepprofile> {
                           style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
-                              fontSize: 18),
+                              fontSize: 20),
                         ),
                         style: ButtonStyle(
                             backgroundColor:
