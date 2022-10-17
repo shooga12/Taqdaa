@@ -72,12 +72,20 @@ class HomePageState extends State<HomePage> {
                     size: Size(size.width, 80),
                     painter: BNBCustomePainter(),
                   ),
+/*
+                  IconButton(
+                      onPressed: (() {}),
+                      icon: Icon(
+                        Icons.monetization_on,
+                        size: 40,
+                        color: Colors.yellow,
+                      )),
                   Container(
-                    width: 800,
-                    height: 200,
-                    padding: const EdgeInsets.all(0),
+                    width: 800 / 5,
+                    height: 500,
+                    padding: const EdgeInsets.all(15),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
                           "2.225 SR",
@@ -89,19 +97,8 @@ class HomePageState extends State<HomePage> {
                       ],
                     ),
                   ),
-/*
-                  Center(
-                    heightFactor: 50,
-                    child: Container(
-                      width: 65,
-                      height: 65,
-                     Icon: Icons.monetization_on
-                      
-                     // Text("2.225 SR /n مجموع النقاط"),
-                      color: Colors.yellow,
-                    ),
-                  ),
-*/
+                  */
+
                   Center(
                       heightFactor: 0.6,
                       child: Container(
@@ -231,4 +228,44 @@ class HomePageState extends State<HomePage> {
       ),
     );
   }
+}
+
+@override
+class rewards {
+  Widget reward(BuildContext context) {
+    return Scaffold(
+      body: Stack(children: [
+        IconButton(
+            onPressed: (() {}),
+            icon: Icon(
+              Icons.monetization_on,
+              size: 40,
+              color: Colors.yellow,
+            )),
+        Container(
+          width: 800 / 5,
+          height: 600,
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                "2.225 SR",
+                style: Theme.of(context)
+                    .textTheme
+                    .headline6
+                    ?.copyWith(color: Colors.black),
+              )
+            ],
+          ),
+        ),
+      ]),
+    );
+  }
+}
+
+@override
+State<StatefulWidget> createState() {
+  // TODO: implement createState
+  throw UnimplementedError();
 }

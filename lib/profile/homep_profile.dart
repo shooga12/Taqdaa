@@ -193,6 +193,29 @@ class _HomepprofileState extends State<Homepprofile> {
                       ],
                     ),
                   ),
+
+                  SizedBox(
+                    height: 25,
+                  ),
+
+                  Text.rich(
+                    TextSpan(
+                      style: TextStyle(
+                        fontSize: 22,
+                      ),
+                      children: [
+                        WidgetSpan(
+                          child: Icon(
+                            Icons.monetization_on,
+                            color: Colors.yellow,
+                          ),
+                        ),
+                        TextSpan(
+                          text: "  2.225 SR  ",
+                        ),
+                      ],
+                    ),
+                  ),
                   // ListTile(
                   //   title: Text(
                   //     'Date of Birth',
