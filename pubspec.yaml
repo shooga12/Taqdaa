@@ -62,7 +62,7 @@ dependencies:
   webview_flutter: ^3.0.4
   flutter_braintree: ^2.3.1
   flutter_paypal: ^0.0.7
-  
+  firebase_dynamic_links: ^4.0.5
 
 
 dev_dependencies:

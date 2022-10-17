@@ -92,8 +92,9 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+// make hi become under
   @override
-  Widget build(BuildContext context) {
+  Widget hello(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -107,6 +108,29 @@ class _MyHomePageState extends State<MyHomePage> {
               image: DecorationImage(
                   image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
         ),
+        toolbarHeight: 170,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(
+          "تقضى",
+          style: TextStyle(fontSize: 30),
+        ),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
+        ),
+        centerTitle: true,
         toolbarHeight: 170,
         backgroundColor: Colors.transparent,
         elevation: 0,

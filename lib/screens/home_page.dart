@@ -1,3 +1,4 @@
+import 'dart:html';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -49,6 +50,8 @@ class HomePageState extends State<HomePage> {
   bool isInsideProfile = false;
   bool isInsidelogout = false;
 
+//  "2.225 SR /n مجموع النقاط"
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -69,6 +72,36 @@ class HomePageState extends State<HomePage> {
                     size: Size(size.width, 80),
                     painter: BNBCustomePainter(),
                   ),
+                  Container(
+                    width: 800,
+                    height: 200,
+                    padding: const EdgeInsets.all(0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "2.225 SR",
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline6
+                              ?.copyWith(color: Colors.green),
+                        )
+                      ],
+                    ),
+                  ),
+/*
+                  Center(
+                    heightFactor: 50,
+                    child: Container(
+                      width: 65,
+                      height: 65,
+                     Icon: Icons.monetization_on
+                      
+                     // Text("2.225 SR /n مجموع النقاط"),
+                      color: Colors.yellow,
+                    ),
+                  ),
+*/
                   Center(
                       heightFactor: 0.6,
                       child: Container(

@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:either_dart/either.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -32,6 +35,9 @@ class _EditprofileState extends State<Editprofile> {
   bool isInsideProfile = true;
   bool isInsidelogout = false;
 
+// add it for edit
+  final refDatabase = FirebaseFirestore.instance;
+
   final firstnameController = TextEditingController();
   final lastnameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -45,6 +51,8 @@ class _EditprofileState extends State<Editprofile> {
   String errorMsg = '';
   bool isLoading = false;
 
+  static var _firestore;
+
   String? validateEmail(String? formEmail) {
     if (formEmail == null || formEmail.isEmpty)
       return 'البريد الالكتروني مطلوب';
@@ -55,6 +63,9 @@ class _EditprofileState extends State<Editprofile> {
 
     return null;
   }
+
+  // add for edit
+  final ref = FirebaseFirestore.instance;
 
   @override
   void initState() {
@@ -68,17 +79,6 @@ class _EditprofileState extends State<Editprofile> {
       setState(() {});
     });
   }
-/*
-  Future<void> _Update({DocumentSnapshot? documentSnapshot}) async {
-    if (documentSnapshot != null) {
-      firstnameController.text = documentSnapshot['firstName'];
-      lastnameController.text = documentSnapshot['lastName'];
-      _emailController.text = documentSnapshot['email'];
-      phonenumberController.text = documentSnapshot['phoneNumber'];
-      dateofbirthController.text = documentSnapshot['dateofbirth'];
-    }
-  }
-  */
 
   String CurrentUser = "";
   @override
@@ -457,9 +457,14 @@ class _EditprofileState extends State<Editprofile> {
                                     phonenumberController.text,
                                     dateofbirthController.text);
 */
-                                signup();
 
-                                /*
+/*
+                                update("${loggedInUser.uid}");
+                                user!.update();
+*/
+
+                                // signup();
+/*
                                 final String firstName =
                                     firstnameController.text;
                                 final String lastName = lastnameController.text;
@@ -481,7 +486,7 @@ class _EditprofileState extends State<Editprofile> {
                                 _emailController.text = '';
                                 phonenumberController.text = '';
                                 dateofbirthController.text = '';
-                              */
+                                */
                               },
                               child: Text(
                                 'حفظ',
@@ -655,38 +660,6 @@ class _EditprofileState extends State<Editprofile> {
     );
   }
 
-  Future signup() async {
-    try {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-                content: Text('تم تعديل الحساب بنجاح'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Homepprofile())),
-                    child: const Text('حسنًا'),
-                  )
-                ]);
-          });
-    } on FirebaseAuthException catch (e) {
-      print(e);
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(content: Text(e.message.toString()), actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, 'حسنًا'),
-                child: const Text('حسنًا'),
-              )
-            ]);
-          });
-    }
-  }
-
   postDetailsToFirestore() async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User? user = _auth.currentUser;
@@ -711,6 +684,52 @@ class _EditprofileState extends State<Editprofile> {
         (context),
         MaterialPageRoute(builder: (context) => Homepprofile()),
         (route) => false);
+  }
+
+  Future update() async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(content: Text('تم تعديل الحساب بنجاح'), actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context,
+                  MaterialPageRoute(builder: (context) => Homepprofile())),
+              child: const Text('حسنًا'),
+            )
+          ]);
+        });
+
+    /* 
+    on FirebaseAuthException catch (e) {
+      print(e);
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(content: Text(e.message.toString()), actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, 'حسنًا'),
+                child: const Text('حسنًا'),
+              )
+            ]);
+          });
+    }
+    */
+
+    FirebaseDatabase.instance.ref().child('users').child(user!.uid).update({
+      'firstName': firstnameController.text //yes I know.
+    });
+    FirebaseDatabase.instance.ref().child('users').child(user!.uid).update({
+      'lastName': lastnameController.text //yes I know.
+    });
+    FirebaseDatabase.instance.ref().child('users').child(user!.uid).update({
+      'email': _emailController.text //yes I know.
+    });
+    FirebaseDatabase.instance.ref().child('users').child(user!.uid).update({
+      'phoneNumber': phonenumberController.text //yes I know.
+    });
+    FirebaseDatabase.instance.ref().child('users').child(user!.uid).update({
+      'dateofbirth': dateofbirthController.text //yes I know.
+    });
   }
 /*
   Future<void> update(String uid, String firstName, String lastName,
