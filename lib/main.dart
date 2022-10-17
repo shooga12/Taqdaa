@@ -146,7 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
           Text(
             "مرحبًا، ${EcommerceApp.loggedInUser.firstName}",
-            style: TextStyle(fontSize: 24),
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
           ),
         ]),
         flexibleSpace: Container(

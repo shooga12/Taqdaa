@@ -2,9 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_braintree/flutter_braintree.dart';
+import 'package:taqdaa_application/screens/invoice_afterPayment.dart';
 import '../confige/EcommerceApp.dart';
 import '../main.dart';
 import 'package:http/http.dart' as http;
+import 'dart:math';
+import 'package:taqdaa_application/models/item.dart';
+import '../models/invoice.dart';
+import '../screens/invoice_details.dart';
+import 'package:intl/intl.dart';
 
 class checkOut {
   var url = 'https://us-central1-taqdaa-10e41.cloudfunctions.net/paypalPayment';
@@ -24,8 +30,10 @@ class checkOut {
 
     BraintreeDropInResult? result = await BraintreeDropIn.start(request);
     if (result != null) /*Successful Payment*/ {
-      int reward = ((EcommerceApp.total * 2) / 100) as int; //make sure works
-      EcommerceApp.storeName = "";
+      int reward = 0;
+      if (EcommerceApp.rewardsExchanged) {
+        reward = (EcommerceApp.total * 2) ~/ 100;
+      } //make sure works
 
       String urli =
           '$url?payment_method_nonce=${result.paymentMethodNonce.nonce}&device_data=${result.deviceData}';
@@ -35,6 +43,17 @@ class checkOut {
         context,
         MaterialPageRoute(builder: (context) => MyHomePage()),
       );
+      Invoice invoice = await writeInvoices();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => invoice_afterPayment(invoice),
+        ),
+      );
+      EcommerceApp.storeName = "";
+      EcommerceApp.haveItems = false;
+      EcommerceApp.NumOfItems = 0;
+      EcommerceApp.counter = 0;
       showDialog(
           context: context,
           builder: (context) {
@@ -46,18 +65,22 @@ class checkOut {
                 actions: [
                   TextButton(
                     onPressed: () async {
+                      Navigator.pop(context, 'حسنًا');
                       await readRFIDs();
                       await writeRFID();
                       await deleteCart();
                       await deleteCartDublicate();
                       await saveUserTotal(0);
-                      await saveUserRewards(reward);
-                      Navigator.pop(context, 'حسنًا');
+                      if (EcommerceApp.rewardsExchanged) {
+                        await saveUserRewards(
+                            reward); //bug fixes rewards not gained
+                      }
                     },
                     child: const Text('حسنًا'),
                   )
                 ]);
           });
+      EcommerceApp.rewardsExchanged = false;
     }
   }
 
@@ -84,12 +107,6 @@ class checkOut {
           .doc("rewards")
           .update({"Rewards": FieldValue.increment(reward)});
     }
-
-    // ///update number of invoices
-    // FirebaseFirestore.instance
-    //     .collection('${collectionName}Total')
-    //     .doc("NumberOfInvoices")
-    //     .update({"NumberOfInvoices": FieldValue.increment(1)});
   }
 
   Future deleteCart() async {
@@ -119,21 +136,13 @@ class checkOut {
     for (int i = 0; i < documents.length; i++) {
       RFIDs.add(documents[i].get("RFID"));
 
-      ///write invoices
-      FirebaseFirestore.instance.collection('${collectionName}Invoices').add({
-        "Category": documents[i].get("Category"),
-        "Item_number": documents[i].get("Item_number"),
-        "Price": documents[i].get("Price"),
-        "Store": documents[i].get("Store"),
-        "ProductImage": documents[i].get("ProductImage"),
-      });
-      FirebaseFirestore.instance.collection('InvoicesManager').add({
-        "Category": documents[i].get("Category"),
-        "Item_number": documents[i].get("Item_number"),
-        "Price": documents[i].get("Price"),
-        "Store": documents[i].get("Store"),
-        "ProductImage": documents[i].get("ProductImage"),
-      });
+      // FirebaseFirestore.instance.collection('InvoicesManager').add({
+      //   "Category": documents[i].get("Category"),
+      //   "Item_number": documents[i].get("Item_number"),
+      //   "Price": documents[i].get("Price"),
+      //   "Store": documents[i].get("Store"),
+      //   "ProductImage": documents[i].get("ProductImage"),
+      // });
     }
   }
 
@@ -143,5 +152,56 @@ class checkOut {
     for (int i = 0; i < RFIDs.length; i++) {
       dbref.update({"$collectionName$i": RFIDs[i]});
     }
+  }
+
+  Future<Invoice> writeInvoices() async {
+    var items = [];
+    Random random = new Random();
+    int randomNumber = random.nextInt(1000);
+    double vat = (EcommerceApp.total * 15) / 100;
+    int subTotal = EcommerceApp.total - vat.toInt();
+    var now = new DateTime.now();
+    var formatter = new DateFormat('dd/MM/yyyy');
+    String todayDate = formatter.format(now);
+
+    final QuerySnapshot result =
+        await FirebaseFirestore.instance.collection('${collectionName}').get();
+    final List<DocumentSnapshot> documents = result.docs;
+    for (int i = 0; i < documents.length; i++) {
+      items.add(Item(
+              barcode: documents[i].get("Item_number"),
+              name: documents[i].get("Category"),
+              img: documents[i].get("ProductImage"),
+              quantity: documents[i].get("quantity"),
+              price: documents[i].get("Price"),
+              returnable: true)
+
+          ///bug fixes returnable
+          .toMap());
+    }
+    FirebaseFirestore.instance.collection('${collectionName}Invoices').add({
+      "ID": randomNumber.toString(),
+      "Date": '20/10/2022',
+
+      ///bug fixes date should be generated
+      "Total": EcommerceApp.total - EcommerceApp.discount.toInt(),
+      "Store": EcommerceApp.storeName,
+      "items": items,
+      'sub-total': subTotal,
+      'vat-total': vat,
+      'rewardsDiscount': EcommerceApp.discount,
+      'HaveReturnReq': false,
+      'status': ""
+    }).catchError((onError) => print(onError));
+
+    Invoice invoice = new Invoice(items,
+        id: randomNumber.toString(),
+        date: todayDate,
+        total: EcommerceApp.total - EcommerceApp.discount.toInt(),
+        store: EcommerceApp.storeName,
+        sub_total: subTotal,
+        vat_total: vat,
+        rewardsDiscount: EcommerceApp.discount);
+    return invoice;
   }
 }

@@ -14,7 +14,6 @@ class CheckOutSummary extends StatefulWidget {
 class _CheckOutSummaryState extends State<CheckOutSummary> {
   String collectionName = EcommerceApp().getCurrentUser();
   double vat = (EcommerceApp.total * 15) / 100;
-  bool pressAttention = false;
 
   @override
   Widget build(BuildContext context) {

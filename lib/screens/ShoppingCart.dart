@@ -7,8 +7,9 @@ import '../controller/BNBCustomePainter.dart';
 import '../main.dart';
 import '../confige/EcommerceApp.dart';
 import '../views/NoItmesCart.dart';
-import '../views/profile_View.dart';
+import '../views/invoices_view.dart';
 import '../views/scanner.dart';
+import 'insideMore.dart';
 import 'scanBarCode.dart';
 import 'dart:core';
 
@@ -31,6 +32,7 @@ class _shoppingCartState extends State<shoppingCart> {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Text(
             "سلة التسوق " + EcommerceApp.storeName,
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
@@ -208,8 +210,8 @@ class _shoppingCartState extends State<shoppingCart> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
-                      width: 280,
-                      height: 45,
+                      width: 200,
+                      height: 40,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(
@@ -217,7 +219,7 @@ class _shoppingCartState extends State<shoppingCart> {
                           ),
                           border: Border.all(color: Colors.orange, width: 2)),
                       child: SizedBox(
-                        width: 280,
+                        width: 200,
                         height: 40,
                         child: ElevatedButton.icon(
                           onPressed: () {
@@ -404,22 +406,28 @@ class _shoppingCartState extends State<shoppingCart> {
                               IconButton(
                                   onPressed: () {
                                     Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Homepprofile()),
-                                    );
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => invoices(),
+                                        ));
                                   },
                                   icon: Icon(
-                                    Icons.person,
+                                    Icons.receipt_long,
                                     size: 30,
                                     color: isInsideProfile
                                         ? Color.fromARGB(255, 254, 176, 60)
                                         : Colors.white,
                                   )),
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => More()),
+                                  );
+                                },
                                 icon: Icon(
-                                  Icons.settings,
+                                  Icons.more_horiz,
                                   size: 30,
                                   color: isInsideSettings
                                       ? Color.fromARGB(255, 254, 176, 60)

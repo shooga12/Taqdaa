@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
+import '../confige/EcommerceApp.dart';
 import '../models/invoice.dart';
 import 'ReturnRequest.dart';
 
-class invoice_details extends StatefulWidget {
+class invoice_afterPayment extends StatefulWidget {
   final invoice;
-  const invoice_details(this.invoice, {super.key});
+  const invoice_afterPayment(this.invoice, {super.key});
   @override
-  State<invoice_details> createState() => _invoicesDetailsState(invoice);
+  State<invoice_afterPayment> createState() =>
+      _invoiceafterPaymentState(invoice);
 }
 
-class _invoicesDetailsState extends State<invoice_details> {
+class _invoiceafterPaymentState extends State<invoice_afterPayment> {
   Invoice? invoice;
   dynamic itemsList;
 
-  _invoicesDetailsState(invoice) {
+  _invoiceafterPaymentState(invoice) {
     this.invoice = invoice;
+    //this.itemsList = invoice?.items;
   }
 
   bool isInsideHome = false;
@@ -59,11 +62,17 @@ class _invoicesDetailsState extends State<invoice_details> {
                       fontSize: 18,
                     ),
                   ),
+                  SizedBox(
+                    height: 5.0,
+                  ),
                   Text(
                     "المتجر: ${invoice!.store}",
                     style: new TextStyle(
                       fontSize: 18,
                     ),
+                  ),
+                  SizedBox(
+                    height: 5.0,
                   ),
                   Text(
                     "${invoice!.date}",
@@ -76,7 +85,7 @@ class _invoicesDetailsState extends State<invoice_details> {
               ),
             ),
             SizedBox(
-              height: 10.0,
+              height: 10,
             ),
             Text(
               "المنتجات",
@@ -93,6 +102,9 @@ class _invoicesDetailsState extends State<invoice_details> {
                   color: Colors.grey,
                 ),
               ),
+            ),
+            SizedBox(
+              height: 5,
             ),
             Expanded(
               child: ListView.builder(
@@ -149,6 +161,32 @@ class _invoicesDetailsState extends State<invoice_details> {
                       ),
                     ],
                   ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  if (invoice!.rewardsDiscount != 0)
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: Text('نـقـاطـي',
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 227, 45, 45),
+                                fontSize: 15,
+                              )),
+                        ),
+                        Spacer(),
+                        Text('- ${invoice!.rewardsDiscount} ريال',
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 227, 45, 45),
+                              fontSize: 15,
+                            )),
+                      ],
+                    ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -174,10 +212,6 @@ class _invoicesDetailsState extends State<invoice_details> {
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 40.0,
-                  ),
-                  returnButton(invoice)
                 ],
               ),
             ),
@@ -189,90 +223,6 @@ class _invoicesDetailsState extends State<invoice_details> {
 
   nothing() {
     return Container();
-  }
-
-  returnButton(invoice) {
-    if (invoice!.HaveReturnReq == false) {
-      return SizedBox(
-        width: 200,
-        height: 40,
-        child: ElevatedButton(
-          onPressed: () async {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => returnRequest(invoice)),
-            );
-          },
-          child: Text(
-            'طلب استرجاع',
-            style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
-          ),
-          style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.resolveWith((states) {
-                if (states.contains(MaterialState.pressed)) {
-                  return Colors.grey;
-                }
-                return Colors.orange;
-              }),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30)))),
-        ),
-      );
-    } else if (invoice!.HaveReturnReq == true) {
-      return Column(
-        children: [
-          SizedBox(
-            width: 200,
-            height: 40,
-            child: ElevatedButton(
-              onPressed: () {},
-              child: Text(
-                'طلب استرجاع',
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18),
-              ),
-              style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith((states) {
-                    if (states.contains(MaterialState.pressed)) {
-                      return Colors.grey;
-                    }
-                    return Colors.grey;
-                  }),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30)))),
-            ),
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 15),
-            child: Card(
-              color: Color.fromARGB(243, 243, 239, 231),
-              child: Container(
-                  alignment: Alignment.centerLeft,
-                  height: 40,
-                  width: 370,
-                  child: Row(
-                    children: [
-                      Text("   "),
-                      Icon(Icons.info_outline_rounded),
-                      Text(
-                        " لديك طلب ترجيع قيد الانتظار",
-                        style: TextStyle(fontSize: 15.5, letterSpacing: 0.8),
-                      ),
-                    ],
-                  )),
-            ),
-          )
-        ],
-      );
-    }
   }
 
   Widget buildSecondItems(dynamic item, BuildContext context) {

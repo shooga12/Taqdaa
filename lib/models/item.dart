@@ -32,6 +32,7 @@ class Item {
     return {
       'barcode': barcode,
       'name': name,
+      'img': img,
       'quantity': quantity,
       'price': price,
       'returnable': returnable,

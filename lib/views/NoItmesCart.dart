@@ -24,7 +24,7 @@ class emptyCart extends StatelessWidget {
           automaticallyImplyLeading: false,
           title: Text(
             "سلة التسوق",
-            style: TextStyle(fontSize: 24),
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
           ),
           flexibleSpace: Container(
             decoration: BoxDecoration(
@@ -44,14 +44,28 @@ class emptyCart extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Image.asset(
+                    'assets/empty_cart.png',
+                    width: 170,
+                  ),
+                  SizedBox(
+                    height: 25,
+                  ),
                   Text(
-                    "لا يوجد منتجات!",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    "سـلتـك فـارغـة!",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Color(0x87666666)),
                   ),
                   Text("ابدأ التسوق الآن!",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                  Text(""),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Color(0x87909090))),
+                  SizedBox(
+                    height: 40,
+                  ),
                   SizedBox(
                     width: 200,
                     height: 40,

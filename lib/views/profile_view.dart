@@ -39,7 +39,7 @@ class _HomepprofileState extends State<Homepprofile> {
         automaticallyImplyLeading: true,
         title: Text(
           "حسابي",
-          style: TextStyle(fontSize: 24),
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
         ),
         actions: <Widget>[
           IconButton(
@@ -71,7 +71,7 @@ class _HomepprofileState extends State<Homepprofile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   SizedBox(
-                    height: 10,
+                    height: 30,
                   ),
                   Text.rich(
                     TextSpan(
@@ -90,7 +90,7 @@ class _HomepprofileState extends State<Homepprofile> {
                     ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
                   Text.rich(
                     TextSpan(
@@ -108,7 +108,7 @@ class _HomepprofileState extends State<Homepprofile> {
                     ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
                   Text.rich(
                     TextSpan(
@@ -126,7 +126,7 @@ class _HomepprofileState extends State<Homepprofile> {
                     ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
                   Text.rich(
                     TextSpan(

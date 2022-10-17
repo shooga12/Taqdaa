@@ -33,7 +33,7 @@ class _MoreState extends State<More> {
         automaticallyImplyLeading: false,
         title: Text(
           "المزيد",
-          style: TextStyle(fontSize: 24),
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
         ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
