@@ -421,7 +421,7 @@ class _returnRequestState extends State<returnRequest> {
                                         )
                                       ]);
                                 });
-                          } else if (added == true) {
+                          } else if (added == false) {
                             showDialog(
                                 context: context,
                                 builder: (context) {
