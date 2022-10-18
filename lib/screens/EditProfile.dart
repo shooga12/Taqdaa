@@ -1,39 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:either_dart/either.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:taqdaa_application/main.dart';
-import 'package:taqdaa_application/screens/home_page.dart';
 import '../confige/EcommerceApp.dart';
 import '../controller/BNBCustomePainter.dart';
-
-import 'package:taqdaa_application/screens/login_page.dart';
-import '../methods/authentication_services.dart';
 import '../model/user_model.dart';
 import '../screens/ShoppingCart.dart';
 import '../screens/insideMore.dart';
 import '../screens/invoices.dart';
 import '../screens/list_of_stores.dart';
 import '../screens/NoItmesCart.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'home_page.dart';
-import '../reusable_widget/reusable_widget.dart';
-import 'reset_page.dart';
-import 'package:form_field_validator/form_field_validator.dart';
-import 'login_page.dart';
-import 'package:intl/date_symbol_data_file.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/date_symbols.dart';
-import 'package:intl/date_symbol_data_custom.dart';
 import 'package:intl/intl.dart';
-import 'package:taqdaa_application/model/user_model.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import '../profile/homep_profile.dart';
 
 class Edit extends StatefulWidget {
@@ -84,6 +62,11 @@ class _EditState extends State<Edit> {
         .then((value) {
       this.loggedInUser = UserModel.fromMap(value.data());
       setState(() {});
+      firstnameController.text = loggedInUser.firstName!;
+      lastnameController.text = loggedInUser.secondName!;
+      emailController.text = loggedInUser.email!;
+      phonenumberController.text = loggedInUser.phonenumber!;
+      dateofbirthController.text = loggedInUser.dateofbirth!;
     });
   }
 
@@ -98,17 +81,6 @@ class _EditState extends State<Edit> {
           "تعديل الحساب",
           style: TextStyle(fontSize: 24),
         ),
-        // actions: <Widget>[
-        //   IconButton(
-        //     icon: Icon(
-        //       Icons.edit,
-        //       color: Colors.white,
-        //     ),
-        //     onPressed: () {
-        //       // do something
-        //     },
-        //   )
-        // ],
         flexibleSpace: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
@@ -138,18 +110,18 @@ class _EditState extends State<Edit> {
                             MediaQuery.of(context).size.height * 0.02),
                         child: Column(
                           children: <Widget>[
-                            // SignupcloudDcrWidget("assets/SignupGroup.png"),
-                            // const SizedBox(
-                            //   height: 20,
-                            // ),
                             TextFormField(
                               //enabled: false,
+                              // initialValue: loggedInUser.firstName,
                               controller: firstnameController,
+
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
                               validator: MultiValidator([
                                 RequiredValidator(errorText: 'مطلوب*'),
-                                PatternValidator(r'^[a-z A-Z]+$',
+                                PatternValidator(
+                                    r'^[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z]+[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z-_]*$',
+                                    //r'^[a-z A-Z]+$ || r^/[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FF]/',
                                     errorText: 'يجب أن يتكون الأسم من حروف فقط')
                               ]),
                               cursorColor: Color.fromARGB(255, 37, 43, 121),
@@ -177,12 +149,7 @@ class _EditState extends State<Edit> {
                                   color: Colors.black,
                                 ),
                                 iconColor: Colors.white,
-                                hintText: " ${loggedInUser.firstName}",
-                                hintStyle: TextStyle(
-                                    fontSize: 20, color: Colors.black),
-                                // labelStyle: TextStyle(
-                                //     color: Color.fromARGB(236, 113, 113, 117)
-                                //         .withOpacity(0.9)),
+                                labelText: "الاسم الاول",
                                 filled: true,
                                 fillColor: Colors.white.withOpacity(0.9),
                               ),
@@ -191,7 +158,7 @@ class _EditState extends State<Edit> {
                               //--------------------------------------
                             ),
                             const SizedBox(
-                              height: 10,
+                              height: 15,
                             ),
                             TextFormField(
                               controller: lastnameController,
@@ -200,7 +167,8 @@ class _EditState extends State<Edit> {
 
                               validator: MultiValidator([
                                 RequiredValidator(errorText: 'مطلوب *'),
-                                PatternValidator(r'^[a-z A-Z]+$',
+                                PatternValidator(
+                                    r'^[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z]+[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z-_]*$',
                                     errorText: 'يجب أن يتكون الأسم من حروف فقط')
                               ]),
                               cursorColor: Color.fromARGB(255, 37, 43, 121),
@@ -226,24 +194,16 @@ class _EditState extends State<Edit> {
                                 prefixIcon:
                                     Icon(Icons.person, color: Colors.black),
                                 iconColor: Colors.white,
-                                hintText: " ${loggedInUser.secondName}",
-                                hintStyle: TextStyle(
-                                    fontSize: 20, color: Colors.black),
-                                labelStyle: TextStyle(
-                                    color: Color.fromARGB(236, 113, 113, 117)
-                                        .withOpacity(0.9)),
+                                labelText: "الاسم الاخير",
                                 filled: true,
-
                                 fillColor: Colors.white.withOpacity(0.9),
-                                // border: OutlineInputBorder(
-                                //  borderRadius: BorderRadius.circular(30.0),),
                               ),
 
                               keyboardType: TextInputType.name,
                               //--------------------------------------
                             ),
                             const SizedBox(
-                              height: 10,
+                              height: 15,
                             ),
                             //email field
                             TextFormField(
@@ -279,27 +239,17 @@ class _EditState extends State<Edit> {
                                 prefixIcon:
                                     Icon(Icons.email, color: Colors.black),
                                 iconColor: Colors.white,
-                                hintText: " ${loggedInUser.email}",
-                                hintStyle: TextStyle(
-                                    fontSize: 20, color: Colors.black),
-                                labelStyle: TextStyle(
-                                    color: Color.fromARGB(236, 113, 113, 117)
-                                        .withOpacity(0.9)),
+                                labelText: "البريد الالكتروني",
                                 filled: true,
-
                                 fillColor: Colors.white.withOpacity(0.9),
-                                // border: OutlineInputBorder(
-                                //  borderRadius: BorderRadius.circular(30.0),),
                               ),
 
                               keyboardType: TextInputType.emailAddress,
                               //--------------------------------------
                             ),
 
-                            // reusableTextField("Enter your password", true, _passController),
-
                             const SizedBox(
-                              height: 10,
+                              height: 15,
                             ),
                             //----Phone Number Field----
                             TextFormField(
@@ -343,12 +293,7 @@ class _EditState extends State<Edit> {
                                 prefixIcon:
                                     Icon(Icons.phone, color: Colors.black),
                                 iconColor: Colors.white,
-                                hintText: " ${loggedInUser.phonenumber}",
-                                hintStyle: TextStyle(
-                                    fontSize: 20, color: Colors.black),
-                                labelStyle: TextStyle(
-                                    color: Color.fromARGB(236, 113, 113, 117)
-                                        .withOpacity(0.9)),
+                                labelText: "رقم الهاتف",
                                 filled: true,
                                 fillColor: Colors.white.withOpacity(0.9),
                               ),
@@ -392,12 +337,7 @@ class _EditState extends State<Edit> {
                                     borderSide: const BorderSide(
                                         color: Colors.orange, width: 2.0),
                                   ),
-
-                                  hintText: " ${loggedInUser.dateofbirth}",
-                                  hintStyle: TextStyle(
-                                      fontSize: 20,
-                                      color:
-                                          Colors.black), //label text of field
+                                  labelText: 'تاريخ الميلاد',
                                 ),
 
                                 readOnly:
@@ -430,16 +370,6 @@ class _EditState extends State<Edit> {
                                 //--------------------------------------
                               ),
                             ),
-                            // const SizedBox(
-                            //   height: 2,
-                            // ),
-                            // Padding(
-                            //   padding: const EdgeInsets.all(0.0),
-                            //   child: Text(
-                            //     errorMsg,
-                            //     style: TextStyle(color: Colors.red),
-                            //   ),
-                            // ),
                           ],
                         ),
                       ),
@@ -472,10 +402,10 @@ class _EditState extends State<Edit> {
                                     ],
                                   );
                                 }));
-                          } else if (isValidFName == true &&
-                              isValidLName == true &&
-                              isValidEmail == true &&
-                              isValidPhone == true) {
+                          } else if (isValidFName &&
+                              isValidLName &&
+                              isValidEmail &&
+                              isValidPhone) {
                             showDialog(
                                 context: context,
                                 builder: ((context) {
@@ -507,23 +437,6 @@ class _EditState extends State<Edit> {
                                   );
                                 }));
                           }
-                          // else {
-                          //    showDialog(
-                          //       context: context,
-                          //       builder: ((context) {
-                          //         return AlertDialog(
-                          //           title: Text(),
-                          //           actions: [
-                          //             TextButton(
-                          //                 onPressed: () {
-                          //                   Navigator.pop(context);
-                          //                 },
-                          //                 child: Text("حسنّا"))
-                          //           ],
-                          //         );
-                          //       }));
-
-                          // }
                         },
                         child: Text(
                           'حفظ التعديلات',
@@ -670,25 +583,32 @@ class _EditState extends State<Edit> {
       ),
     );
   }
-  // bool isFnameValid = true;
-  // bool isLnameValid = true;
-  // bool isEmailValid = true;
-  // bool isPhoneValid = true;
 
-  // checkValid(){
-  //   firstnameController.text.contains(other)
+  bool? isFnameValid;
+  bool? isLnameValid;
+  bool? isEmailValid;
+  bool? isPhoneValid;
 
-  // }
+  isValidFields() {
+    isValidFName ? isFnameValid = true : isFnameValid = false;
+    isValidLName ? isLnameValid = true : isLnameValid = false;
+    isValidEmail ? isEmailValid = true : isEmailValid = false;
+    isValidPhone ? isPhoneValid = true : isPhoneValid = false;
+
+    return isFnameValid! && isLnameValid! && isEmailValid! && isPhoneValid!;
+    //return isValidFName && isValidLName && isValidEmail && isValidPhone;
+  }
 
   bool get isValidFName {
-    final nameRegExp =
-        new RegExp(r"^\s*([A-Za-z]{1,}([\.,] |[-']| ))+[A-Za-z]+\.?\s*$");
+    final nameRegExp = RegExp(
+        r'^[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z]+[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z-_]*$');
     return nameRegExp.hasMatch(firstnameController.text);
   }
 
   bool get isValidLName {
-    final nameRegExp =
-        new RegExp(r"^\s*([A-Za-z]{1,}([\.,] |[-']| ))+[A-Za-z]+\.?\s*$");
+    final nameRegExp = RegExp(
+        r'^[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z]+[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z-_]*$');
+
     return nameRegExp.hasMatch(lastnameController.text);
   }
 
@@ -698,32 +618,30 @@ class _EditState extends State<Edit> {
   }
 
   bool get isValidPhone {
-    final phoneRegExp = RegExp(r"^\+?0[0-9]{10}$");
+    final phoneRegExp = RegExp(r'^(05)([0-9]{8})$');
     return phoneRegExp.hasMatch(phonenumberController.text);
   }
 
-  bool Fname = false;
-  bool Lname = false;
-  bool email = false;
-  bool phone = false;
-  bool date = false;
+  bool? Fname;
+  bool? Lname;
+  bool? email;
+  bool? phone;
+  bool? date;
 
   checkNull() {
-    if (firstnameController.text.isNotEmpty) {
-      Fname = true;
-    }
-    if (lastnameController.text.isNotEmpty) {
-      Lname = true;
-    }
-    if (emailController.text.isNotEmpty) {
-      email = true;
-    }
-    if (phonenumberController.text.isNotEmpty) {
-      phone = true;
-    }
-    if (phonenumberController.text.isNotEmpty) {
-      date = true;
-    }
+    firstnameController.text == loggedInUser.firstName!
+        ? Fname = false
+        : Fname = true;
+    lastnameController.text == loggedInUser.secondName!
+        ? Lname = false
+        : Lname = true;
+    emailController.text == loggedInUser.email! ? email = false : email = true;
+    phonenumberController.text == loggedInUser.phonenumber!
+        ? phone = false
+        : phone = true;
+    dateofbirthController.text == loggedInUser.dateofbirth!
+        ? date = false
+        : date = true;
   }
 
   saveChanges() {
@@ -750,111 +668,5 @@ class _EditState extends State<Edit> {
       date = true;
       saveUser.update({'dateofbirth': dateofbirthController.text});
     }
-    // if (Fname == false &&
-    //     Lname == false &&
-    //     email == false &&
-    //     phone == false &&
-    //     date == false) {
-    //   Padding(
-    //     padding: EdgeInsets.only(top: 20.0, right: 95.0),
-    //     child: SizedBox(
-    //       width: 200,
-    //       height: 40,
-    //       child: ElevatedButton(
-    //         onPressed: () async {
-    //           showDialog(
-    //               context: context,
-    //               builder: ((context) {
-    //                 return AlertDialog(
-    //                   title: Text('لم تجري أي تعديلات!'),
-    //                   actions: [
-    //                     TextButton(
-    //                         onPressed: () {
-    //                           Navigator.pop(context);
-    //                         },
-    //                         child: Text("حسنّا"))
-    //                   ],
-    //                 );
-    //               }));
-    //         },
-    //         child: Text(
-    //           'حفظ التعديلات',
-    //           style: const TextStyle(
-    //               color: Colors.white,
-    //               fontWeight: FontWeight.bold,
-    //               fontSize: 18),
-    //         ),
-    //         style: ButtonStyle(
-    //             backgroundColor: MaterialStateProperty.resolveWith((states) {
-    //               if (states.contains(MaterialState.pressed)) {
-    //                 return Colors.grey;
-    //               }
-    //               return Colors.orange;
-    //             }),
-    //             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-    //                 RoundedRectangleBorder(
-    //                     borderRadius: BorderRadius.circular(30)))),
-    //       ),
-    //     ),
-    //   );
-    // } else {
-    //   return Padding(
-    //     padding: EdgeInsets.only(top: 20.0, right: 95.0),
-    //     child: SizedBox(
-    //       width: 200,
-    //       height: 40,
-    //       child: ElevatedButton(
-    //         onPressed: () async {
-    //           showDialog(
-    //               context: context,
-    //               builder: ((context) {
-    //                 return AlertDialog(
-    //                   title: Text("هل تريد حفظ التعديلات؟"),
-    //                   actions: [
-    //                     TextButton(
-    //                         onPressed: () {
-    //                           saveChanges();
-    //                           Navigator.push(
-    //                               context,
-    //                               MaterialPageRoute(
-    //                                 builder: (context) => Homepprofile(),
-    //                               ));
-    //                         },
-    //                         child: Text(
-    //                           "نعم",
-    //                           style: TextStyle(
-    //                             color: Colors.red,
-    //                           ),
-    //                         )),
-    //                     TextButton(
-    //                         onPressed: () {
-    //                           Navigator.pop(context);
-    //                         },
-    //                         child: Text("إلغاء"))
-    //                   ],
-    //                 );
-    //               }));
-    //         },
-    //         child: Text(
-    //           'حفظ التعديلات',
-    //           style: const TextStyle(
-    //               color: Colors.white,
-    //               fontWeight: FontWeight.bold,
-    //               fontSize: 18),
-    //         ),
-    //         style: ButtonStyle(
-    //             backgroundColor: MaterialStateProperty.resolveWith((states) {
-    //               if (states.contains(MaterialState.pressed)) {
-    //                 return Colors.grey;
-    //               }
-    //               return Colors.orange;
-    //             }),
-    //             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-    //                 RoundedRectangleBorder(
-    //                     borderRadius: BorderRadius.circular(30)))),
-    //       ),
-    //     ),
-    //   );
-    // }
   }
 }

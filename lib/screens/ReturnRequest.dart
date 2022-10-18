@@ -23,26 +23,11 @@ class _returnRequestState extends State<returnRequest> {
   Invoice? invoice;
   FirebaseDatabase database = FirebaseDatabase.instance;
   String documentName = EcommerceApp().getCurrentUser();
-  //TextEditingController? _controller;
-  //List thisInvoice [] = invoicesState.invoices ;
 
   _returnRequestState(invoice) {
     this.invoice = invoice;
   }
   @override
-  // void initState() {
-  //   super.initState();
-  //   _controller = TextEditingController();
-  // }
-
-  // @override
-  // void dispose() {
-  //   _controller!.dispose();
-  //   super.dispose();
-  // }
-
-  //bool result = false;
-
   List Barcodes = [];
   List returnable = [];
   List checkBoxList = [];
@@ -100,38 +85,6 @@ class _returnRequestState extends State<returnRequest> {
                     )),
               ),
             ),
-            // Center(
-            //   child: Row(
-            //     crossAxisAlignment: CrossAxisAlignment.center,
-            //     children: <Widget>[
-            //       Text(
-            //         " رقم الفاتورة: ${invoice!.id}  ",
-            //         style: new TextStyle(
-            //           fontSize: 16,
-            //         ),
-            //       ),
-            //       SizedBox(
-            //         height: 5.0,
-            //       ),
-            //       Text(
-            //         " المتجر: ${invoice!.store}  ",
-            //         style: new TextStyle(
-            //           fontSize: 16,
-            //         ),
-            //       ),
-            //       SizedBox(
-            //         height: 5.0,
-            //       ),
-            //       Text(
-            //         "${invoice!.date}",
-            //         style: new TextStyle(
-            //           fontSize: 17,
-            //           color: Colors.black,
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
             Text(
               "المنتجات",
               textAlign: TextAlign.right,
@@ -148,9 +101,6 @@ class _returnRequestState extends State<returnRequest> {
                 ),
               ),
             ),
-            // SizedBox(
-            //   height: 5,
-            // ),
             Expanded(
               child: ListView.builder(
                   itemCount: invoice?.items.length,
@@ -176,7 +126,6 @@ class _returnRequestState extends State<returnRequest> {
                                   }
                                   setState(() {
                                     checkBoxList[index] = newValue;
-                                    //storeRequests(item.barcode);
                                   });
                                 },
                                 activeColor: Colors.orange,
@@ -233,8 +182,6 @@ class _returnRequestState extends State<returnRequest> {
                                             children: [
                                               Text(
                                                 "SR",
-                                                // textDirection:
-                                                //     TextDirection.rtl,
                                                 textAlign: TextAlign.end,
                                                 style: TextStyle(
                                                   fontSize: 18,
@@ -244,8 +191,6 @@ class _returnRequestState extends State<returnRequest> {
                                               SizedBox(width: 5.0),
                                               Text(
                                                 "${item.price}",
-                                                // textDirection:
-                                                //     TextDirection.rtl,
                                                 textAlign: TextAlign.end,
                                                 style: TextStyle(
                                                   fontSize: 18,
@@ -337,8 +282,6 @@ class _returnRequestState extends State<returnRequest> {
                                               SizedBox(width: 5.0),
                                               Text(
                                                 "${item.price}",
-                                                // textDirection:
-                                                //     TextDirection.rtl,
                                                 textAlign: TextAlign.end,
                                                 style: TextStyle(
                                                   fontSize: 18,
@@ -460,9 +403,6 @@ class _returnRequestState extends State<returnRequest> {
                       ),
                     ),
                   ),
-                  // SizedBox(
-                  //   height: 8,
-                  // ),
                 ],
               ),
             ),
@@ -479,7 +419,6 @@ class _returnRequestState extends State<returnRequest> {
   var items = [];
 
   AddToList(Item item) {
-    //items.add(item);
     items.add(Item(
             barcode: item.barcode,
             name: item.name,
@@ -493,21 +432,6 @@ class _returnRequestState extends State<returnRequest> {
     checkBoxList.add(false);
     price.add(item.price);
   }
-
-  // var i = 0;
-  // Map<String, String> userReq = {};
-
-  // getDate() {
-  //   var now = new DateTime.now();
-  //   var formatter = new DateFormat('dd/MM/yyyy');
-  //   String date = formatter.format(now);
-  //   userReq['date'] = date;
-  // }
-
-  //storeRequests(Item item) {
-  //   userReq['product${i}'] = barcode!;
-  //   i++;
-  // }
 
   bool addToDB() {
     var checkedItems = [];
@@ -530,30 +454,13 @@ class _returnRequestState extends State<returnRequest> {
     FirebaseFirestore.instance.collection('ReturnRequests${documentName}').add({
       "ID": invoice1.id,
       "Date": todayDate,
-
       "Total": total,
       "Store": invoice1.store,
       "items": checkedItems,
       'sub-total': subTotal,
       'vat-total': vat,
-      //'rewardsDiscount': EcommerceApp.discount,
-      //'HaveReturnReq': false,
       'status': "pending"
     }).catchError((onError) => print(onError));
-
-    // var addToInvoice =
-    //     FirebaseFirestore.instance.collection('All-Invoices').doc("Invoice1");
-
-    // /// "Invoice${invoice!.id}${EcommerceApp.uid}"
-    // addToInvoice.update({"HaveReturnReq": true});
-    // addToInvoice.update({'status': 'pending'});
-
-    // String? storeName = invoice!.store;
-
-    // getDate();
-    // var collection = FirebaseFirestore.instance.collection('ReturnRequests');
-    // collection.doc('$storeName$documentName').set(userReq);
-    //collection.doc('$storeName$documentName').set({'date': date});
 
     return true;
   }
