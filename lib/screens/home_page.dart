@@ -21,6 +21,9 @@ import '../profile/homep_profile.dart';
 import 'package:taqdaa_application/model/user_model.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
+//import 'package:carousel_slider/carousel_slider.dart';
+//import 'view_reward.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -59,6 +62,40 @@ class HomePageState extends State<HomePage> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
+          CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                expandedHeight: 135,
+                elevation: 0,
+                pinned: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  title: Text.rich(
+                    TextSpan(
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                      children: [
+                        WidgetSpan(
+                          child: Icon(
+                            Icons.monetization_on,
+                            color: Color.fromARGB(255, 229, 223, 181),
+                            size: 40,
+                          ),
+                        ),
+                        TextSpan(
+                          text: "  2.225 SR \n مجموع النقاط ",
+                        ),
+                      ],
+                    ),
+                  ),
+                  background: Image.asset(
+                    Assets.rewardbc,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ],
+          ),
           Positioned(
             bottom: 0,
             left: 0,
@@ -73,31 +110,99 @@ class HomePageState extends State<HomePage> {
                     painter: BNBCustomePainter(),
                   ),
 /*
-                  IconButton(
-                      onPressed: (() {}),
-                      icon: Icon(
-                        Icons.monetization_on,
-                        size: 40,
-                        color: Colors.yellow,
-                      )),
-                  Container(
-                    width: 800 / 5,
-                    height: 500,
-                    padding: const EdgeInsets.all(15),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          "2.225 SR",
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline6
-                              ?.copyWith(color: Colors.green),
-                        )
-                      ],
-                    ),
+                  CustomScrollView(
+                    slivers: [
+                      SliverAppBar(
+                        expandedHeight: 200,
+                        elevation: 0,
+                        pinned: true,
+                        flexibleSpace: FlexibleSpaceBar(
+                          title: Text.rich(
+                            TextSpan(
+                              style: TextStyle(
+                                fontSize: 22,
+                              ),
+                              children: [
+                                WidgetSpan(
+                                  child: Icon(
+                                    Icons.monetization_on,
+                                    color: Colors.yellow,
+                                    size: 30,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: "  2.225 SR \n مجموع النقاط ",
+                                ),
+                              ],
+                            ),
+                          ),
+                          background: Image.asset(
+                            Assets.rewardbc,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+*/
+                  /*
+                  Stack(
+                    children: [
+                      Container(
+                        child: Column(
+                          children: [
+                            Text.rich(
+                              TextSpan(
+                                style: TextStyle(
+                                  fontSize: 22,
+                                ),
+                                children: [
+                                  WidgetSpan(
+                                    child: Icon(
+                                      Icons.monetization_on,
+                                      color: Colors.yellow,
+                                      size: 30,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: "  2.225 SR \n مجموع النقاط ",
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                   */
+
+                  /*
+                      IconButton(
+                          onPressed: (() {}),
+                          icon: Icon(
+                            Icons.monetization_on,
+                            size: 40,
+                            color: Colors.yellow,
+                          )),
+                      Container(
+                        width: 800 / 5,
+                        height: 500,
+                        padding: const EdgeInsets.all(15),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              "2.225 SR",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  ?.copyWith(color: Colors.green),
+                            )
+                          ],
+                        ),
+                      ),
+                      */
 
                   Center(
                       heightFactor: 0.6,
@@ -262,6 +367,12 @@ class rewards {
       ]),
     );
   }
+}
+
+class Assets {
+  Assets._();
+  static String rewardbc = "assets/rewardbc.png";
+  static String rewardbg = "assets/reward_bg.jpg";
 }
 
 @override

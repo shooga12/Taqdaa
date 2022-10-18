@@ -14,6 +14,7 @@ import 'controller/NotificationApi.dart';
 import 'model/user_model.dart';
 import 'dart:io';
 import 'package:flutter_localizations/flutter_localizations.dart';
+//import '../screens/view_reward.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -80,6 +81,8 @@ class _MyHomePageState extends State<MyHomePage> {
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
 
+  var currentIndex;
+
   void initState() {
     super.initState();
     FirebaseFirestore.instance
@@ -92,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-// make hi become under
+/*
   @override
   Widget hello(BuildContext context) {
     return Scaffold(
@@ -114,6 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+  */
 
   @override
   Widget build(BuildContext context) {
@@ -122,40 +126,53 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          "تقضى",
-          style: TextStyle(fontSize: 30),
+          "مرحبًا، ${loggedInUser.firstName}",
+          style: TextStyle(fontSize: 25),
         ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
                   image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
         ),
-        centerTitle: true,
         toolbarHeight: 170,
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: StreamBuilder<List<Store>>(
-          stream: readStores(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              final stores = snapshot.data!;
-              // if (stores.isNotEmpty) {
-              //   NotificationApi.showScheduledNotification(
-              //       title: 'Taqdaa is waiting for you!',
-              //       body: 'Hey, ' +
-              //           EcommerceApp.userName +
-              //           '\nyou\'re very close from ${stores.first.StoreName} come and shop with us now!',
-              //       payload: 'paylod.nav',
-              //       scheduledDate: DateTime.now().add(Duration(seconds: 3)));
-              // }
-              return HomePage();
-            } else if (snapshot.hasError) {
-              return Text("Some thing went wrong! ${snapshot.error}");
-            } else {
-              return Center(child: CircularProgressIndicator());
-            }
-          }),
+      body:
+
+          /*
+       Center(
+        child: Container(
+          child: Column(
+            children: [
+              Text("مرحبًا، ${loggedInUser.firstName}"),
+            ],
+          ),
+        ),
+      ),
+  */
+
+          StreamBuilder<List<Store>>(
+              stream: readStores(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final stores = snapshot.data!;
+                  // if (stores.isNotEmpty) {
+                  //   NotificationApi.showScheduledNotification(
+                  //       title: 'Taqdaa is waiting for you!',
+                  //       body: 'Hey, ' +
+                  //           EcommerceApp.userName +
+                  //           '\nyou\'re very close from ${stores.first.StoreName} come and shop with us now!',
+                  //       payload: 'paylod.nav',
+                  //       scheduledDate: DateTime.now().add(Duration(seconds: 3)));
+                  // }
+                  return HomePage();
+                } else if (snapshot.hasError) {
+                  return Text("Some thing went wrong! ${snapshot.error}");
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              }),
     );
   }
 

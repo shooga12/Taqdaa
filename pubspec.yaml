@@ -63,6 +63,7 @@ dependencies:
   flutter_braintree: ^2.3.1
   flutter_paypal: ^0.0.7
   firebase_dynamic_links: ^4.0.5
+  carousel_slider: ^2.1.0
 
 
 dev_dependencies:
@@ -100,6 +101,11 @@ flutter:
     - assets/SignupGroup.png
     - assets/LoginGroup.png
     - assets/Rectangle.png
+    - assets/zara-store.jpg
+    - assets/H&M.jpg
+    - assets/sephora.jpg
+    - assets/rewardbc.png
+    - assets/reward_bg.jpg
     
     # To add assets to your application, add an assets section, like this:
     # assets:

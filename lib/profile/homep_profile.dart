@@ -193,7 +193,7 @@ class _HomepprofileState extends State<Homepprofile> {
                       ],
                     ),
                   ),
-
+/*
                   SizedBox(
                     height: 25,
                   ),
@@ -207,15 +207,16 @@ class _HomepprofileState extends State<Homepprofile> {
                         WidgetSpan(
                           child: Icon(
                             Icons.monetization_on,
-                            color: Colors.yellow,
+                            color: Color.fromARGB(255, 229, 223, 181),
                           ),
                         ),
                         TextSpan(
-                          text: "  2.225 SR  ",
+                          text: "  2.225 SR \n مجموع النقاط ",
                         ),
                       ],
                     ),
                   ),
+                  */
                   // ListTile(
                   //   title: Text(
                   //     'Date of Birth',
