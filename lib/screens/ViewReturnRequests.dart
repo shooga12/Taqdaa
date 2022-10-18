@@ -1,7 +1,11 @@
+//import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:taqdaa_application/main.dart';
+import 'package:taqdaa_application/model/invoice.dart';
+import 'package:taqdaa_application/screens/ReturnRequest.dart';
 import 'package:taqdaa_application/screens/home_page.dart';
 // import '../confige/EcommerceApp.dart';
 import '../controller/BNBCustomePainter.dart';
@@ -10,6 +14,12 @@ import '../controller/BNBCustomePainter.dart';
 // import '../screens/ShoppingCart.dart';
 // import '../screens/list_of_stores.dart';
 // import 'NoItmesCart.dart';
+import 'package:taqdaa_application/model/invoice.dart';
+import 'package:taqdaa_application/model/item.dart';
+import 'package:taqdaa_application/model/returnModel.dart';
+//import 'NoReturnReq.dart';
+
+import 'returnReqDetails.dart';
 
 class ViewReturnReq extends StatefulWidget {
   const ViewReturnReq({super.key});
@@ -20,80 +30,63 @@ class ViewReturnReq extends StatefulWidget {
 
 class _ViewReturnReqState extends State<ViewReturnReq> {
   User? user = FirebaseAuth.instance.currentUser;
-  // UserModel loggedInUser = UserModel(); ------------------------------------------
-  bool isInsideHome = false;
-  bool isInsideProfile = true;
-  bool isInsideSettings = false;
+  final CollectionReference UserInvoices =
+      FirebaseFirestore.instance.collection('ReturnRequests');
 
-  List dataItem = [
-    {
-      "date": "10/10/2022",
-      "product": "Face Mask",
-      "brand": "SEPHORA",
-      "logo": "sephora.png",
-      //----comments? or reason?
-      "pic": "returnPic.png",
-    },
-    {
-      "date": "10/10/2022",
-      "product": "Tote bag",
-      "brand": "ZARA",
-      "logo": "zara.png",
-       //----comments? or reason?
-      "pic": "returnPic1.png",
-    }
-  ];
+  List<returnInvoice> ReturnInvoices = [];
+  bool noReturnReq = false;
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    readInvoices();
+  }
 
+  Future readInvoices() async {
+    var data = await FirebaseFirestore.instance.collection(
+        //'ReturnRequestsSURodyNHPgXABPsE2GXlq2Lmnyh2') /////bug fixes-----------------------
+        'ReturnRequests${user!.uid}').get();
 
+    setState(() {
+      ReturnInvoices =
+          List.from(data.docs.map((doc) => returnInvoice.fromMap(doc)));
+
+      if (ReturnInvoices.length == 0) {
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => NoReturnReq()),
+        // );
+        noReturnReq = true;
+      }
+    });
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    FirebaseFirestore.instance
-        .collection("users") //------------------------------------------------------
-        .doc(user!.uid)
-        .get()
-        .then((value) {
-      // this.loggedInUser = UserModel.fromMap(value.data()); ------------------------
-      setState(() {});
-    });
   }
-
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         title: Text(
-          "My Return Requests",
+          "طلباتي",
           style: TextStyle(fontSize: 24),
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.edit,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              // do something
-            },
-          )
-        ],
         flexibleSpace: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
                   image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
         ),
-        centerTitle: true,
         toolbarHeight: 170,
+        //leading: BackButton(),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-body: SingleChildScrollView(
+      body: SingleChildScrollView(
         physics: const ScrollPhysics(),
         child: Column(
           children: [
@@ -105,32 +98,46 @@ body: SingleChildScrollView(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: const [
                       Text(
-                        'Recent Return Requests',
+                        'طلبات الإرجاع',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Text(
-                        'View all',
-                        style: TextStyle(
-                          color: Colors.indigo,
-                        ),
-                      ),
                     ],
                   ),
+
+                  if (noReturnReq == true)
+                    Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Padding(
+                            padding: EdgeInsets.only(top: 97),
+                            child: Text(
+                              ' لا يوجد لديك طلبات إرجاع حتى الآن.',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
 
                   //------------------------------------------------------------
                   ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: dataItem.length, //--- how many return requests?
+                    itemCount:
+                        ReturnInvoices.length, //--- how many return requests?
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
                           // Navigator.of(context).push(
                           //   MaterialPageRoute(
-                          //     builder: (context) => RequestDetailsScreen( //--------------------------------?  do i need it?
+                          //     builder: (context) => RequestDetailsScreen( //--------------------------------
                           //       data: dataItem[index],
                           //     ),
                           //   ),
@@ -156,7 +163,12 @@ body: SingleChildScrollView(
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                dataItem[index]['date'],
+                                                //'رقم الفاتورة: ' +
+                                                // dataItem[index]
+                                                //     ['requestNumber'],
+                                                " رقم الفاتورة: ${ReturnInvoices[index].id}",
+                                                //userReturnReqList[index]
+                                                //['ID'],
                                                 style: const TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold,
@@ -166,20 +178,32 @@ body: SingleChildScrollView(
                                                 height: 5,
                                               ),
                                               Text(
-                                                dataItem[index]['product'],
+                                                  'من متجر : ${ReturnInvoices[index].store}'
+                                                  // dataItem[index]['brand'],
+                                                  // userReturnReqList[index]
+                                                  //     ['Store'],
+                                                  ),
+                                              const SizedBox(
+                                                height: 5,
                                               ),
+                                              Text(
+                                                  'تاريخ تقديم الطلب:  ${ReturnInvoices[index].date}'
+                                                  // dataItem[index]['date'],
+                                                  // userReturnReqList[index]
+                                                  //     ['Date'],
+                                                  ),
                                             ],
                                           ),
-                                          ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                            child: Image.asset(
-                                              dataItem[index]['logo'], //----- brand logo
-                                              width: 50,
-                                              height: 50,
-                                            ),
-                                            
-                                          ),
+                                          // ClipRRect(
+                                          //   borderRadius:
+                                          //       BorderRadius.circular(15),
+                                          //   child: Image.asset(
+                                          //     dataItem[index]
+                                          //         ['logo'], //----- brand logo
+                                          //     width: 50,
+                                          //     height: 50,
+                                          //   ),
+                                          // ),
                                         ],
                                       ),
                                       const SizedBox(
@@ -191,8 +215,9 @@ body: SingleChildScrollView(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text('PENDING'),
-                                              Text('APPROVED'),
+                                              Text('تحت الدراسة'),
+                                              Text('جاهزة للاستلام'),
+                                              Text('تم استلام السلع'),
                                             ],
                                           ),
                                           const SizedBox(
@@ -203,8 +228,14 @@ body: SingleChildScrollView(
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               const CircleAvatar(
-                                                backgroundColor: Colors.indigo,
-                                                radius: 8,
+                                                backgroundColor: Color.fromARGB(
+                                                    255, 197, 202, 233),
+                                                radius: 14,
+                                                child: Icon(
+                                                  Icons
+                                                      .timelapse, //---------------------------------------
+                                                  size: 16,
+                                                ),
                                               ),
                                               Flexible(
                                                 flex: 1,
@@ -213,19 +244,40 @@ body: SingleChildScrollView(
                                                     left: 8,
                                                     right: 8,
                                                   ),
-                                                  color: Colors.indigo,
+                                                  color: const Color.fromARGB(
+                                                      255, 197, 202, 233),
                                                   height: 2,
                                                 ),
                                               ),
+                                              // const CircleAvatar(
+                                              //   backgroundColor: Colors.indigo,
+                                              //   radius: 8,
+                                              // ),
+                                              // Flexible(
+                                              //   flex: 1,
+                                              //   child: Container(
+                                              //     margin: const EdgeInsets.only(
+                                              //       left: 8,
+                                              //       right: 8,
+                                              //     ),
+                                              //     color: Colors.indigo,
+                                              //     height: 2,
+                                              //   ),
+                                              // ),
                                               const CircleAvatar(
                                                 backgroundColor: Color.fromARGB(
                                                     255, 197, 202, 233),
-                                                radius: 14,
-                                                child: Icon(
-                                                  Icons.timelapse, //---------------------------------------
-                                                  size: 16,
-                                                ),
+                                                radius: 8,
                                               ),
+                                              // const CircleAvatar(
+                                              //   backgroundColor: Color.fromARGB(
+                                              //       255, 197, 202, 233),
+                                              //   radius: 14,
+                                              //   child: Icon(
+                                              //     Icons.store_mall_directory, //---------------------------------------
+                                              //     size: 16,
+                                              //   ),
+                                              // ),
                                               Flexible(
                                                 flex: 1,
                                                 child: Container(
@@ -247,6 +299,61 @@ body: SingleChildScrollView(
                                           ),
                                         ],
                                       ),
+                                      // Divider(
+                                      //   height: 20,
+                                      //   thickness: 1,
+                                      //   color: Colors.grey,
+                                      // ),
+
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 6,
+                                            bottom: 0,
+                                            left: 0,
+                                            right: 0),
+                                        child: Card(
+                                          child: new InkWell(
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 6,
+                                                    bottom: 6,
+                                                    left: 10,
+                                                    right: 10),
+                                                child: Row(children: <Widget>[
+                                                  Column(children: <Widget>[
+                                                    Text(
+                                                      "تفاصيل الطلبية",
+                                                      style: new TextStyle(
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                  ]),
+                                                  Spacer(),
+                                                  Icon(Icons.arrow_forward,
+                                                      color: Color.fromARGB(
+                                                          223, 134, 186, 243)),
+                                                ]),
+                                              ),
+                                              onTap: () {
+                                                // Navigator.push(
+                                                //   context,
+                                                //   MaterialPageRoute(
+                                                //       builder: (context) => Homepprofile()),
+                                                // );
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        invoice_details(
+                                                            ReturnInvoices[
+                                                                index]),
+                                                  ),
+                                                );
+                                              }),
+                                          color: Color.fromARGB(
+                                              255, 255, 255, 255),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ],
@@ -258,26 +365,13 @@ body: SingleChildScrollView(
                     },
                   ),
                 ],
+
+                //if (ReturnInvoices.length == 0)
               ),
             ),
           ],
         ),
       ),
-      
-
-
-
-
-
-
-
-
-
-
-
-
-
-      
     );
   }
 }
