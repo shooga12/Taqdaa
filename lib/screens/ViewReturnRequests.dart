@@ -330,8 +330,7 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
                                                   ]),
                                                   Spacer(),
                                                   Icon(Icons.arrow_forward,
-                                                      color: Color.fromARGB(
-                                                          223, 134, 186, 243)),
+                                                      color: Color.fromARGB(255, 9, 53, 100)),
                                                 ]),
                                               ),
                                               onTap: () {
