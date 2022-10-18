@@ -46,6 +46,7 @@ class _returnRequestState extends State<returnRequest> {
   List Barcodes = [];
   List returnable = [];
   List checkBoxList = [];
+  List price = [];
   List<int> selectedItem = [];
   int n = -1;
 
@@ -371,70 +372,11 @@ class _returnRequestState extends State<returnRequest> {
                     //   ),
                     // ),
                   ),
-                  // Row(
-                  //   mainAxisSize: MainAxisSize.max,
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     Text(
-                  //       "المجموع",
-                  //       style: TextStyle(
-                  //         fontSize: 18,
-                  //       ),
-                  //     ),
-                  //     Row(
-                  //       children: [
-                  //         Text("SR "),
-                  //         Text("${invoice!.sub_total}"),
-                  //       ],
-                  //     ),
-                  //   ],
-                  // ),
-                  // Row(
-                  //   mainAxisSize: MainAxisSize.max,
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     Text(
-                  //       "الضريبة المضافة 15% ",
-                  //       style: TextStyle(
-                  //         fontSize: 18,
-                  //       ),
-                  //     ),
-                  //     Row(
-                  //       children: [
-                  //         Text("SR "),
-                  //         Text("${invoice!.vat_total}"),
-                  //       ],
-                  //     ),
-                  //   ],
-                  // ),
-                  // Row(
-                  //   mainAxisSize: MainAxisSize.max,
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     Text(
-                  //       "إجمالي الفاتورة",
-                  //       style: TextStyle(
-                  //           fontSize: 20, fontWeight: FontWeight.w500),
-                  //     ),
-                  //     Row(
-                  //       children: [
-                  //         Text(
-                  //           "SR ",
-                  //           style: TextStyle(
-                  //               fontSize: 20, fontWeight: FontWeight.w500),
-                  //         ),
-                  //         Text(
-                  //           "${invoice!.total}",
-                  //           style: TextStyle(
-                  //               fontSize: 20, fontWeight: FontWeight.w500),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ],
-                  // ),
+
                   SizedBox(
                     height: 10.0,
                   ),
+                  ////////////////////// Reason///////////////////////
                   // SizedBox(
                   //   width: 370,
                   //   height: 50,
@@ -534,46 +476,83 @@ class _returnRequestState extends State<returnRequest> {
     return Container();
   }
 
+  var items = [];
+
   AddToList(Item item) {
+    //items.add(item);
+    items.add(Item(
+            barcode: item.barcode,
+            name: item.name,
+            img: item.img,
+            quantity: item.quantity,
+            price: item.price,
+            returnable: true)
+        .toMap());
     Barcodes.add(item.barcode);
     returnable.add(item.returnable);
     checkBoxList.add(false);
+    price.add(item.price);
   }
 
-  var i = 0;
-  Map<String, String> userReq = {};
+  // var i = 0;
+  // Map<String, String> userReq = {};
 
-  getDate() {
-    var now = new DateTime.now();
-    var formatter = new DateFormat('dd/MM/yyyy');
-    String date = formatter.format(now);
-    userReq['date'] = date;
-  }
+  // getDate() {
+  //   var now = new DateTime.now();
+  //   var formatter = new DateFormat('dd/MM/yyyy');
+  //   String date = formatter.format(now);
+  //   userReq['date'] = date;
+  // }
 
-  storeRequests(String? barcode) {
-    userReq['product${i}'] = barcode!;
-    i++;
-  }
+  //storeRequests(Item item) {
+  //   userReq['product${i}'] = barcode!;
+  //   i++;
+  // }
 
   bool addToDB() {
-    var addToInvoice =
-        FirebaseFirestore.instance.collection('All-Invoices').doc("Invoice1");
-
-    /// "Invoice${invoice!.id}${EcommerceApp.uid}"
-    addToInvoice.update({"HaveReturnReq": true});
-    addToInvoice.update({'status': 'pending'});
-
-    String? storeName = invoice!.store;
+    var checkedItems = [];
+    num total = 0;
+    var now = new DateTime.now();
+    var formatter = new DateFormat('dd/MM/yyyy');
+    String todayDate = formatter.format(now);
 
     for (int i = 0; i < checkBoxList.length; i++) {
       if (checkBoxList[i] == true) {
-        storeRequests(Barcodes[i]);
+        checkedItems.add(items[i]);
+        total = total + price[i];
       }
     }
 
-    getDate();
-    var collection = FirebaseFirestore.instance.collection('ReturnRequests');
-    collection.doc('$storeName$documentName').set(userReq);
+    double vat = (total * 15) / 100;
+    num subTotal = total - vat.toInt();
+
+    Invoice? invoice1 = this.invoice!;
+    FirebaseFirestore.instance.collection('ReturnRequests${documentName}').add({
+      "ID": invoice1.id,
+      "Date": todayDate,
+
+      "Total": total,
+      "Store": invoice1.store,
+      "items": checkedItems,
+      'sub-total': subTotal,
+      'vat-total': vat,
+      //'rewardsDiscount': EcommerceApp.discount,
+      //'HaveReturnReq': false,
+      'status': "pending"
+    }).catchError((onError) => print(onError));
+
+    // var addToInvoice =
+    //     FirebaseFirestore.instance.collection('All-Invoices').doc("Invoice1");
+
+    // /// "Invoice${invoice!.id}${EcommerceApp.uid}"
+    // addToInvoice.update({"HaveReturnReq": true});
+    // addToInvoice.update({'status': 'pending'});
+
+    // String? storeName = invoice!.store;
+
+    // getDate();
+    // var collection = FirebaseFirestore.instance.collection('ReturnRequests');
+    // collection.doc('$storeName$documentName').set(userReq);
     //collection.doc('$storeName$documentName').set({'date': date});
 
     return true;
