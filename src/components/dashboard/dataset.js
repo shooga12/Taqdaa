@@ -192,13 +192,15 @@ function Dataset(){
               errorMsg += "• Photo column is missing!\n"
             if(!headerLower.includes("uid"))
               errorMsg += "• UID column is missing!\n"
-            //2.Empty Cell & wrong dta type Validation
+            if(!headerLower.includes("returnable"))
+              errorMsg += "• Returnable column is missing!\n"
 
-            
-            if(headerLower.includes("barcode") && headerLower.includes("price") && headerLower.includes("product name")){
+            //2.Empty Cell & wrong data type Validation
+
+            if(headerLower.includes("barcode") && headerLower.includes("price") && headerLower.includes("product name") && headerLower.includes("uid") && headerLower.includes("returnable")){
                for(var i = 0; i<lowerCaseJsonData.length; i++){
-                    if(typeof lowerCaseJsonData[i]["barcode"] == "undefined" || typeof lowerCaseJsonData[i]["price"] == "undefined" || typeof lowerCaseJsonData[i]["productname"] == "undefined")
-                        errorMsg += "• Some data is missing! All items should have barcode, product name, price, Photo, UID\n";
+                    if(typeof lowerCaseJsonData[i]["barcode"] == "undefined" || typeof lowerCaseJsonData[i]["price"] == "undefined" || typeof lowerCaseJsonData[i]["productname"] == "undefined" || lowerCaseJsonData[i]["uid"] == "undefined" || lowerCaseJsonData[i]["uid"] == "returnable")
+                        errorMsg += "• Some data is missing! All items should have barcode, product name, price, Photo, UID, Returnable\n";
                 }
             }
             if(headerLower.includes("price")){
@@ -208,7 +210,6 @@ function Dataset(){
                 }
             }
 
-            
             if(errorMsg){
                 document.querySelector('#file-input').value = "";
                 setFileName('No File Selected')
@@ -251,7 +252,7 @@ function Dataset(){
         <>
         <h1 className="mt-3">Products Dataset</h1>
         <p id="warning">Uploading a new dataset will replace the current one<br></br>
-         <span>Dataset must contain the following feilds with the same names: <strong>Barcode</strong>, <strong>Product Name</strong>, <strong>Price</strong>, <strong>Photo</strong>, <strong>UID</strong></span><br></br>
+         <span>Dataset must contain the following feilds with the same names: <strong>Barcode</strong>, <strong>Product Name</strong>, <strong>Price</strong>, <strong>Photo</strong>, <strong>UID</strong>, <strong>Returnable</strong> *Returnable should be True if the item is returnable and False otherwise</span><br></br>
          <span>Only .xlsx and .csv files are acceptable</span>
         </p>
         <div id="container">  

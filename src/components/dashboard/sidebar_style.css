@@ -392,6 +392,20 @@ body.shrink .tooltip {
 #save-changes-btn:hover{
   background-color: var(--orange-dark);
 }
+#delete-store-btn{
+  border:none;
+  background-color: rgb(187, 0, 0);
+  color: white;
+  border-radius: 30px;
+  padding: 0.6em;
+  font-size: 20px;
+}
+#delete-store-btn:hover{
+  background-color: rgb(121, 0, 0);
+}
+#saved-success-alert{
+  width: 550px !important;
+}
 #edit-logo-btn{
   border:none;
   border-radius: 50%;

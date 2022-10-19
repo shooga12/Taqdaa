@@ -126,21 +126,21 @@ function Signup(){
 
 
      const generateLogoURL = () => {
-        const imgRef = ref(storage,"images/"+CommercialRegister.name);
-        uploadBytes(imgRef,CommercialRegister).then(() => {
-            getDownloadURL(imgRef).then((url)=>{
-              setCommercialRegisterURL(url)
-            })
-        })
-     }
-
-     const generateCrURL = () => {
-        const imgRef = ref(storage,"images/"+StoreLogo.name);
+      const imgRef = ref(storage,"images/"+StoreLogo.name);
         uploadBytes(imgRef,StoreLogo).then(() => {
             getDownloadURL(imgRef).then((url)=>{
               setLogoURL(url)
             })
         })
+     }
+
+     const generateCrURL = () => {
+      const imgRef = ref(storage,"images/"+CommercialRegister.name);
+      uploadBytes(imgRef,CommercialRegister).then(() => {
+          getDownloadURL(imgRef).then((url)=>{
+            setCommercialRegisterURL(url)
+          })
+      })
     }
 
     const handleLogo = (e)=>{
