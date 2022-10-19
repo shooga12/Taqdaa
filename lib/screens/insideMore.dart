@@ -1,15 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../confige/EcommerceApp.dart';
 import '../controller/BNBCustomePainter.dart';
 import '../main.dart';
-import '../models/user_model.dart';
+import '../views/ViewReturnRequests.dart';
 import '../views/profile_view.dart';
 import '../views/NoItmesCart.dart';
 import 'ShoppingCart.dart';
 import 'getHelp.dart';
-import 'home_page.dart';
 import '../views/invoices_view.dart';
 import 'list_of_stores.dart';
 
@@ -54,142 +51,10 @@ class _MoreState extends State<More> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Card(
-                      child: new InkWell(
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 12, bottom: 12, left: 15, right: 12),
-                            child: Row(children: <Widget>[
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.person,
-                                      size: 30,
-                                      color:
-                                          Color.fromARGB(223, 134, 186, 243))),
-                              Column(children: <Widget>[
-                                Text(
-                                  "حسابي",
-                                  style: new TextStyle(
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ]),
-                              Spacer(),
-                              Icon(Icons.arrow_forward,
-                                  color: Color.fromARGB(223, 134, 186, 243)),
-                            ]),
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Homepprofile()),
-                            );
-                          }),
-                      color: Color.fromARGB(243, 243, 239, 231),
-                    ),
-                    Card(
-                      child: new InkWell(
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 12, bottom: 12, left: 15, right: 12),
-                            child: Row(children: <Widget>[
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.receipt_long,
-                                      size: 30,
-                                      color:
-                                          Color.fromARGB(223, 134, 186, 243))),
-                              Column(children: <Widget>[
-                                Text(
-                                  "طلبات الاسترجاع",
-                                  style: new TextStyle(
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ]),
-                              Spacer(),
-                              Icon(Icons.arrow_forward,
-                                  color: Color.fromARGB(223, 134, 186, 243)),
-                            ]),
-                          ),
-                          onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) => Homepprofile()),
-                            // );
-                          }),
-                      color: Color.fromARGB(243, 243, 239, 231),
-                    ),
-                    Card(
-                      child: new InkWell(
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 12, bottom: 12, left: 15, right: 12),
-                            child: Row(children: <Widget>[
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.contact_support,
-                                      size: 30,
-                                      color:
-                                          Color.fromARGB(223, 134, 186, 243))),
-                              Column(children: <Widget>[
-                                Text(
-                                  "أحصل على مساعدة",
-                                  style: new TextStyle(
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ]),
-                              Spacer(),
-                              Icon(Icons.arrow_forward,
-                                  color: Color.fromARGB(223, 134, 186, 243)),
-                            ]),
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => helpPage()),
-                            );
-                          }),
-                      color: Color.fromARGB(243, 243, 239, 231),
-                    ),
-                    Card(
-                      child: new InkWell(
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 12, bottom: 12, left: 15, right: 12),
-                            child: Row(children: <Widget>[
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.info,
-                                      size: 30,
-                                      color:
-                                          Color.fromARGB(223, 134, 186, 243))),
-                              Column(children: <Widget>[
-                                Text(
-                                  "عن تقضّى",
-                                  style: new TextStyle(
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ]),
-                              Spacer(),
-                              Icon(Icons.arrow_forward,
-                                  color: Color.fromARGB(223, 134, 186, 243)),
-                            ]),
-                          ),
-                          onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) => Homepprofile()),
-                            // );
-                          }),
-                      color: Color.fromARGB(243, 243, 239, 231),
-                    ),
+                    buildCards("حـسابي", context),
+                    buildCards("طلبات الاسترجاع", context),
+                    buildCards("أحصل على مساعدة", context),
+                    buildCards("عن تقضّى", context),
                   ],
                 )),
           ),
@@ -314,6 +179,107 @@ class _MoreState extends State<More> {
             ),
           )
         ],
+      ),
+    );
+  }
+
+  buildCards(String title, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
+      child: Container(
+        child: new InkWell(
+          child: Padding(
+            padding:
+                const EdgeInsets.only(top: 15, bottom: 15, left: 15, right: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                if (title == "حـسابي")
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.person,
+                      size: 40,
+                      color: Color.fromARGB(255, 254, 177, 57),
+                    ),
+                  ),
+                if (title == "طلبات الاسترجاع")
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.receipt_long,
+                      size: 40,
+                      color: Color.fromARGB(255, 254, 177, 57),
+                    ),
+                  ),
+                if (title == "أحصل على مساعدة")
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.contact_support,
+                      size: 40,
+                      color: Color.fromARGB(255, 254, 177, 57),
+                    ),
+                  ),
+                if (title == "عن تقضّى")
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.info,
+                      size: 40,
+                      color: Color.fromARGB(255, 254, 177, 57),
+                    ),
+                  ),
+                SizedBox(
+                  width: 10.0,
+                ),
+                Text(
+                  title,
+                  style: new TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                Spacer(),
+                Icon(
+                  Icons.arrow_back_ios_rounded,
+                  textDirection: TextDirection.ltr,
+                  color: Color.fromARGB(255, 254, 177, 57),
+                ),
+              ],
+            ),
+          ),
+          onTap: () async {
+            if (title == "حـسابي") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Homepprofile()),
+              );
+            } else if (title == "طلبات الاسترجاع") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ViewReturnReq()),
+              );
+            } else if (title == "أحصل على مساعدة") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => helpPage()),
+              );
+            } else {}
+          },
+          highlightColor: Color.fromARGB(255, 255, 255, 255),
+        ),
+        decoration: BoxDecoration(
+          color: Color.fromARGB(255, 255, 255, 255),
+          borderRadius: BorderRadius.circular(20.0),
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromARGB(255, 241, 241, 241),
+              offset: Offset.zero,
+              blurRadius: 20.0,
+              blurStyle: BlurStyle.normal,
+            ),
+          ],
+        ),
       ),
     );
   }

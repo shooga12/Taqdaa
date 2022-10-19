@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
-import '../models/invoice.dart';
+import '../models/returnModel.dart';
 
-class invoice_afterPayment extends StatefulWidget {
+class returnReq_details extends StatefulWidget {
   final invoice;
-  const invoice_afterPayment(this.invoice, {super.key});
+  const returnReq_details(this.invoice, {super.key});
   @override
-  State<invoice_afterPayment> createState() =>
-      _invoiceafterPaymentState(invoice);
+  State<returnReq_details> createState() => _returnReqDetailsState(invoice);
 }
 
-class _invoiceafterPaymentState extends State<invoice_afterPayment> {
-  Invoice? invoice;
+class _returnReqDetailsState extends State<returnReq_details> {
+  returnInvoice? invoice;
   dynamic itemsList;
 
-  _invoiceafterPaymentState(invoice) {
+  _returnReqDetailsState(invoice) {
     this.invoice = invoice;
-    //this.itemsList = invoice?.items;
   }
 
   bool isInsideHome = false;
@@ -30,7 +28,7 @@ class _invoiceafterPaymentState extends State<invoice_afterPayment> {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         title: Text(
-          "تفاصيل الفاتورة",
+          "طلبية الإرجاع",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
         ),
         flexibleSpace: Container(
@@ -60,20 +58,14 @@ class _invoiceafterPaymentState extends State<invoice_afterPayment> {
                       fontSize: 18,
                     ),
                   ),
-                  SizedBox(
-                    height: 5.0,
-                  ),
                   Text(
                     "المتجر: ${invoice!.store}",
                     style: new TextStyle(
                       fontSize: 18,
                     ),
                   ),
-                  SizedBox(
-                    height: 5.0,
-                  ),
                   Text(
-                    "${invoice!.date}",
+                    "تاريخ تقديم الطلب: ${invoice!.date}",
                     style: new TextStyle(
                       fontSize: 16,
                       color: Colors.grey,
@@ -82,9 +74,7 @@ class _invoiceafterPaymentState extends State<invoice_afterPayment> {
                 ],
               ),
             ),
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 10),
             Text(
               "المنتجات",
               textAlign: TextAlign.right,
@@ -100,9 +90,6 @@ class _invoiceafterPaymentState extends State<invoice_afterPayment> {
                   color: Colors.grey,
                 ),
               ),
-            ),
-            SizedBox(
-              height: 5,
             ),
             Expanded(
               child: ListView.builder(
@@ -158,32 +145,6 @@ class _invoiceafterPaymentState extends State<invoice_afterPayment> {
                         ],
                       ),
                     ],
-                  ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  if (invoice!.rewardsDiscount != 0)
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: Text('نـقـاطـي',
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 227, 45, 45),
-                                fontSize: 15,
-                              )),
-                        ),
-                        Spacer(),
-                        Text('- ${invoice!.rewardsDiscount} ريال',
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 227, 45, 45),
-                              fontSize: 15,
-                            )),
-                      ],
-                    ),
-                  SizedBox(
-                    height: 10.0,
                   ),
                   Row(
                     mainAxisSize: MainAxisSize.max,

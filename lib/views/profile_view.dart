@@ -3,13 +3,11 @@ import 'package:either_dart/either.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:taqdaa_application/main.dart';
-import 'package:taqdaa_application/screens/home_page.dart';
 import '../confige/EcommerceApp.dart';
 import '../controller/BNBCustomePainter.dart';
 import 'package:taqdaa_application/screens/login_page.dart';
 import '../methods/authentication_services.dart';
-import '../models/user_model.dart';
+import '../screens/EditProfile.dart';
 import '../screens/ShoppingCart.dart';
 import '../screens/insideMore.dart';
 import 'invoices_view.dart';
@@ -30,7 +28,6 @@ class _HomepprofileState extends State<Homepprofile> {
   bool isInsideMore = true;
   bool isInsideCart = false;
 
-  String CurrentUser = "";
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -48,7 +45,10 @@ class _HomepprofileState extends State<Homepprofile> {
               color: Colors.white,
             ),
             onPressed: () {
-              // do something
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Edit()),
+              );
             },
           )
         ],
@@ -68,83 +68,133 @@ class _HomepprofileState extends State<Homepprofile> {
             child: Padding(
               padding: EdgeInsets.all(10),
               child: Column(
+                // mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   SizedBox(
-                    height: 30,
+                    height: 10,
                   ),
-                  Text.rich(
-                    TextSpan(
-                      style: TextStyle(
-                        fontSize: 22,
-                      ),
-                      children: [
-                        WidgetSpan(
-                          child: Icon(Icons.person),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: Colors.orange, width: 2.0, //<-- SEE HERE
                         ),
-                        TextSpan(
-                          text:
-                              " ${EcommerceApp.loggedInUser.firstName} ${EcommerceApp.loggedInUser.secondName}",
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text.rich(
-                    TextSpan(
-                      style: TextStyle(
-                        fontSize: 22,
+                        borderRadius: BorderRadius.circular(30.0),
                       ),
-                      children: [
-                        WidgetSpan(
-                          child: Icon(Icons.mail),
-                        ),
-                        TextSpan(
-                          text: " ${EcommerceApp.loggedInUser.email}",
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text.rich(
-                    TextSpan(
-                      style: TextStyle(
-                        fontSize: 22,
-                      ),
-                      children: [
-                        WidgetSpan(
-                          child: Icon(Icons.phone_enabled),
-                        ),
-                        TextSpan(
-                          text: " ${EcommerceApp.loggedInUser.phonenumber}",
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text.rich(
-                    TextSpan(
-                      style: TextStyle(
-                        fontSize: 22,
-                      ),
-                      children: [
-                        WidgetSpan(
-                          child: Icon(Icons.calendar_month),
-                        ),
-                        TextSpan(
-                          text: " ${EcommerceApp.loggedInUser.dateofbirth}",
-                        )
-                      ],
+                      color: Colors.white,
+                      child: Container(
+                          alignment: Alignment.centerLeft,
+                          height: 60,
+                          width: 370,
+                          child: Row(
+                            children: [
+                              Text("   "),
+                              Icon(Icons.person),
+                              Text(
+                                " ${EcommerceApp.loggedInUser.firstName} ${EcommerceApp.loggedInUser.secondName}",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    letterSpacing: 0.8,
+                                    color: Colors.black),
+                              ),
+                            ],
+                          )),
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 130.0, right: 90.0),
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: Colors.orange, width: 2.0, //<-- SEE HERE
+                        ),
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      color: Colors.white,
+                      child: Container(
+                          alignment: Alignment.centerLeft,
+                          height: 60,
+                          width: 370,
+                          child: Row(
+                            children: [
+                              Text("   "),
+                              Icon(Icons.mail),
+                              Text(
+                                " ${EcommerceApp.loggedInUser.email}",
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    letterSpacing: 0.8,
+                                    color: Colors.black),
+                              ),
+                            ],
+                          )),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: Colors.orange, width: 2.0, //<-- SEE HERE
+                        ),
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      color: Colors.white,
+                      child: Container(
+                          alignment: Alignment.centerLeft,
+                          height: 60,
+                          width: 370,
+                          child: Row(
+                            children: [
+                              Text("   "),
+                              Icon(Icons.phone_enabled),
+                              Text(
+                                " ${EcommerceApp.loggedInUser.phonenumber}",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    letterSpacing: 0.8,
+                                    color: Colors.black),
+                              ),
+                            ],
+                          )),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: Colors.orange, width: 2.0, //<-- SEE HERE
+                        ),
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      color: Colors.white,
+                      child: Container(
+                          alignment: Alignment.centerLeft,
+                          height: 60,
+                          width: 370,
+                          child: Row(
+                            children: [
+                              Text("   "),
+                              Icon(Icons.calendar_month),
+                              Text(
+                                " ${EcommerceApp.loggedInUser.dateofbirth}",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    letterSpacing: 0.8,
+                                    color: Colors.black),
+                              ),
+                            ],
+                          )),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10.0, right: 90.0),
                     child: SizedBox(
                       width: 200,
                       height: 40,
@@ -191,7 +241,7 @@ class _HomepprofileState extends State<Homepprofile> {
                           style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
-                              fontSize: 18),
+                              fontSize: 20),
                         ),
                         style: ButtonStyle(
                             backgroundColor:
@@ -209,7 +259,7 @@ class _HomepprofileState extends State<Homepprofile> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 20.0, right: 90.0),
+                    padding: EdgeInsets.only(top: 15.0, right: 90.0),
                     child: SizedBox(
                       width: 200,
                       height: 40,
@@ -223,6 +273,7 @@ class _HomepprofileState extends State<Homepprofile> {
                                   actions: [
                                     TextButton(
                                         onPressed: () {
+                                          Navigator.pop(context);
                                           FirebaseAuthMethods().signOut();
                                           Navigator.push(
                                               context,
@@ -251,7 +302,7 @@ class _HomepprofileState extends State<Homepprofile> {
                           style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
-                              fontSize: 18),
+                              fontSize: 20),
                         ),
                         style: ButtonStyle(
                             backgroundColor:
@@ -267,7 +318,7 @@ class _HomepprofileState extends State<Homepprofile> {
                                     borderRadius: BorderRadius.circular(30)))),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -304,6 +355,7 @@ class _HomepprofileState extends State<Homepprofile> {
                               Icons.document_scanner_outlined,
                               size: 27,
                             ),
+                            //elevation: 0.1,
                           ),
                         ),
                       )),
@@ -314,13 +366,7 @@ class _HomepprofileState extends State<Homepprofile> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MyHomePage()),
-                                );
-                              },
+                              onPressed: () {},
                               icon: Icon(
                                 Icons.home_outlined,
                                 size: 35,
@@ -357,6 +403,7 @@ class _HomepprofileState extends State<Homepprofile> {
                           ),
                           IconButton(
                               onPressed: () {
+                                //here reem's page
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(

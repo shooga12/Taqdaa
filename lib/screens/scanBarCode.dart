@@ -66,6 +66,7 @@ class _ScanPageState extends State<ScanPage> {
       "quantity": product.quantity,
       "RFID": product.RFID,
       "ProductImage": product.ProductImage,
+      "returnable": product.returnable,
     });
   }
 
@@ -77,7 +78,7 @@ class _ScanPageState extends State<ScanPage> {
       "Store": product.Store,
       "quantity": product.quantity,
       "RFID": product.RFID,
-      "ProductImage": product.ProductImage,
+      "returnable": product.returnable,
     });
   }
 
@@ -162,6 +163,7 @@ class _ScanPageState extends State<ScanPage> {
                     quantity: product['quantity'],
                     RFID: product['RFID'],
                     ProductImage: product['ProductImage'],
+                    returnable: product['returnable'],
                   );
 
                   if (await checkItemExist()) {
@@ -227,6 +229,7 @@ class Product {
   final int quantity;
   final String RFID;
   final String ProductImage;
+  final bool returnable;
 
   Product(
       {required this.Category,
@@ -235,7 +238,8 @@ class Product {
       required this.Store,
       required this.quantity,
       required this.RFID,
-      required this.ProductImage});
+      required this.ProductImage,
+      required this.returnable});
 
   Map<String, dynamic> toJson() => {
         'Category': Category,
@@ -245,6 +249,7 @@ class Product {
         'quantity': quantity,
         'RFID': RFID,
         'ProductImage': ProductImage,
+        'returnable': returnable,
       };
 
   static Product fromJson(Map<String, dynamic> json) => Product(
@@ -255,5 +260,6 @@ class Product {
         quantity: json['quantity'],
         RFID: json['RFID'],
         ProductImage: json['ProductImage'],
+        returnable: json['returnable'],
       );
 }

@@ -125,8 +125,8 @@ class _invoicesDetailsState extends State<invoice_details> {
                       ),
                       Row(
                         children: [
-                          Text("SR "),
                           Text("${invoice!.sub_total}"),
+                          Text(' ريال')
                         ],
                       ),
                     ],
@@ -143,8 +143,10 @@ class _invoicesDetailsState extends State<invoice_details> {
                       ),
                       Row(
                         children: [
-                          Text("SR "),
                           Text("${invoice!.vat_total}"),
+                          Text(
+                            ' ريال',
+                          )
                         ],
                       ),
                     ],
@@ -161,15 +163,15 @@ class _invoicesDetailsState extends State<invoice_details> {
                       Row(
                         children: [
                           Text(
-                            "SR ",
-                            style: TextStyle(
-                                fontSize: 22, fontWeight: FontWeight.w500),
-                          ),
-                          Text(
                             "${invoice!.total}",
                             style: TextStyle(
                                 fontSize: 22, fontWeight: FontWeight.w500),
                           ),
+                          Text(
+                            ' ريال',
+                            style: TextStyle(
+                                fontSize: 22, fontWeight: FontWeight.w500),
+                          )
                         ],
                       ),
                     ],
@@ -192,7 +194,7 @@ class _invoicesDetailsState extends State<invoice_details> {
   }
 
   returnButton(invoice) {
-    if (invoice!.HaveReturnReq == false) {
+    if (invoice!.HaveReturnReq == false && !invoice.isExpired) {
       return SizedBox(
         width: 200,
         height: 40,
@@ -220,7 +222,7 @@ class _invoicesDetailsState extends State<invoice_details> {
                       borderRadius: BorderRadius.circular(30)))),
         ),
       );
-    } else if (invoice!.HaveReturnReq == true) {
+    } else if (invoice!.HaveReturnReq == true || invoice.isExpired) {
       return Column(
         children: [
           SizedBox(
@@ -262,10 +264,16 @@ class _invoicesDetailsState extends State<invoice_details> {
                     children: [
                       Text("   "),
                       Icon(Icons.info_outline_rounded),
-                      Text(
-                        " لديك طلب ترجيع قيد الانتظار",
-                        style: TextStyle(fontSize: 15.5, letterSpacing: 0.8),
-                      ),
+                      if (invoice.isExpired)
+                        Text(
+                          " لقد انتهت مهلة الترجيع لطلبك ",
+                          style: TextStyle(fontSize: 15.5, letterSpacing: 0.8),
+                        ),
+                      if (!invoice.isExpired)
+                        Text(
+                          " لديك طلب ترجيع قيد الانتظار",
+                          style: TextStyle(fontSize: 15.5, letterSpacing: 0.8),
+                        ),
                     ],
                   )),
             ),
@@ -276,79 +284,82 @@ class _invoicesDetailsState extends State<invoice_details> {
   }
 
   Widget buildSecondItems(dynamic item, BuildContext context) {
-    return Container(
-      child: new InkWell(
-        child: Row(
-          children: <Widget>[
-            new Container(
-              child: Stack(children: <Widget>[
-                Container(
-                  child: new Image.asset(
-                    'assets/Rectangle.png',
-                    height: 82.0,
-                    fit: BoxFit.cover,
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: Container(
+        child: new InkWell(
+          child: Row(
+            children: <Widget>[
+              new Container(
+                child: Stack(children: <Widget>[
+                  Container(
+                    child: new Image.asset(
+                      'assets/Rectangle.png',
+                      height: 82.0,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 25, top: 2.5),
-                  child: Container(
-                    width: 55,
-                    margin: EdgeInsets.all(10),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Image(
-                        image: NetworkImage(
-                          item.img,
+                  Padding(
+                    padding: const EdgeInsets.only(right: 25, top: 2.5),
+                    child: Container(
+                      width: 55,
+                      margin: EdgeInsets.all(10),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image(
+                          image: NetworkImage(
+                            item.img,
+                          ),
                         ),
                       ),
                     ),
+                  )
+                ]),
+              ),
+              Column(
+                children: <Widget>[
+                  Text(
+                    " " + item.name,
+                    style: new TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 32, 7, 121),
+                    ),
                   ),
-                )
-              ]),
-            ),
-            Column(
-              children: <Widget>[
-                Text(
-                  " " + item.name,
-                  style: new TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 32, 7, 121),
+                  Text(
+                    "  السعر : " + item.price.toString() + ' ريال',
+                    textAlign: TextAlign.center,
+                    style: new TextStyle(
+                      fontSize: 15,
+                      color: Color.fromARGB(255, 77, 76, 76),
+                    ),
                   ),
-                ),
-                Text(
-                  "  السعر : " + item.price.toString() + ' ريال',
-                  textAlign: TextAlign.center,
-                  style: new TextStyle(
-                    fontSize: 15,
-                    color: Color.fromARGB(255, 77, 76, 76),
+                ],
+              ),
+              Spacer(),
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    width: 35,
+                    height: 35,
+                    decoration: new BoxDecoration(
+                      color: Color.fromARGB(255, 245, 161, 14),
+                      shape: BoxShape.circle,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            Spacer(),
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  width: 35,
-                  height: 35,
-                  decoration: new BoxDecoration(
-                    color: Color.fromARGB(255, 245, 161, 14),
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                Text(
-                  item.quantity.toString(),
-                  style: TextStyle(color: Colors.white),
-                )
-              ],
-            ),
-            Text("  "),
-          ],
+                  Text(
+                    item.quantity.toString(),
+                    style: TextStyle(color: Colors.white),
+                  )
+                ],
+              ),
+              Text("  "),
+            ],
+          ),
         ),
+        color: Color.fromARGB(255, 248, 248, 246),
       ),
-      color: Color.fromARGB(255, 248, 248, 246),
     );
   }
 }

@@ -9,7 +9,7 @@ class Invoice {
   num? sub_total;
   num? rewardsDiscount;
   bool? HaveReturnReq;
-  String? status;
+  bool? isExpired;
   List<Item> items = [];
 
   Invoice(List items,
@@ -21,7 +21,7 @@ class Invoice {
       this.sub_total,
       this.rewardsDiscount,
       this.HaveReturnReq,
-      this.status}) {
+      this.isExpired}) {
     items.forEach((e) => this.items.add(Item.fromMap(e)));
   }
 
@@ -36,7 +36,7 @@ class Invoice {
         vat_total: map['vat-total'],
         rewardsDiscount: map['rewardsDiscount'],
         HaveReturnReq: map['HaveReturnReq'],
-        status: map['status']);
+        isExpired: map['isExpired']);
   }
 
   // sending data to our server
@@ -50,7 +50,7 @@ class Invoice {
       'vat_total': vat_total,
       'rewardsDiscount': rewardsDiscount,
       'HaveReturnReq': HaveReturnReq,
-      'status': status,
+      'isExpired': isExpired,
       'items': items,
     };
   }

@@ -128,7 +128,8 @@ class _shoppingCartState extends State<shoppingCart> {
                                               child: Text(
                                                 "حذف",
                                                 style: TextStyle(
-                                                    color: Colors.red),
+                                                    color: Color.fromARGB(
+                                                        255, 250, 249, 249)),
                                               )),
                                         ],
                                       ));

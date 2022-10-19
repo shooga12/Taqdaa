@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import '../main.dart';
+import 'package:intl/intl.dart';
+import 'package:taqdaa_application/main.dart';
 import '../models/invoice.dart';
 import '../models/item.dart';
-import 'invoice_details.dart';
+import '../views/ViewReturnRequests.dart';
 import '../confige/EcommerceApp.dart';
 
 class returnRequest extends StatefulWidget {
@@ -29,6 +30,7 @@ class _returnRequestState extends State<returnRequest> {
   List Barcodes = [];
   List returnable = [];
   List checkBoxList = [];
+  List price = [];
   List<int> selectedItem = [];
   int n = -1;
 
@@ -235,15 +237,33 @@ class _returnRequestState extends State<returnRequest> {
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
                               children: [
-                                SizedBox(
-                                  width: 46,
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Image.network(
-                                    '${item.img}',
-                                    height: 60,
-                                  ),
+                                Container(
+                                  child: Stack(children: <Widget>[
+                                    Container(
+                                      child: new Image.asset(
+                                        'assets/Rectangle.png',
+                                        height: 82.0,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 35, top: 2.5),
+                                      child: Container(
+                                        width: 55,
+                                        margin: EdgeInsets.all(10),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          child: Image(
+                                            image: NetworkImage(
+                                              '${item.img}',
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ]),
                                 ),
                                 SizedBox(width: 20),
                                 Expanded(
@@ -253,63 +273,49 @@ class _returnRequestState extends State<returnRequest> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Expanded(
-                                        flex: 1,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "${item.name}",
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w500,
-                                              ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "${item.name}",
+                                            style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 32, 7, 121),
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
                                             ),
-                                            SizedBox(
-                                              height: 5.0,
-                                            ),
-                                            Text(
-                                              " الكمية: ${item.quantity}",
-                                              style: TextStyle(
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                          ),
+                                          SizedBox(
+                                            height: 5.0,
+                                          ),
+                                          Text(
+                                            "السعر : " +
+                                                item.price.toString() +
+                                                ' ريال',
+                                          ),
+                                        ],
                                       ),
+                                      SizedBox(width: 80),
                                       Expanded(
                                         flex: 1,
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
+                                        child: Stack(
+                                          alignment: Alignment.center,
                                           children: [
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  "SR",
-                                                  textDirection:
-                                                      TextDirection.rtl,
-                                                  textAlign: TextAlign.end,
-                                                  style: TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                                SizedBox(width: 5.0),
-                                                Text(
-                                                  "${item.price}",
-                                                  textDirection:
-                                                      TextDirection.rtl,
-                                                  textAlign: TextAlign.end,
-                                                  style: TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                              ],
+                                            Container(
+                                              width: 35,
+                                              height: 35,
+                                              decoration: new BoxDecoration(
+                                                color: Color.fromARGB(
+                                                    255, 245, 161, 14),
+                                                shape: BoxShape.circle,
+                                              ),
                                             ),
+                                            Text(
+                                              item.quantity.toString(),
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            )
                                           ],
                                         ),
                                       )
@@ -343,13 +349,20 @@ class _returnRequestState extends State<returnRequest> {
                       height: 40,
                       child: ElevatedButton(
                         onPressed: () async {
+                          added = await addToDB();
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => MyHomePage()),
+                              builder: (context) => MyHomePage(),
+                            ),
                           );
-                          added = await addToDB(invoice!.id);
                           if (added == true) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ViewReturnReq(),
+                              ),
+                            );
                             showDialog(
                                 context: context,
                                 builder: (context) {
@@ -364,8 +377,7 @@ class _returnRequestState extends State<returnRequest> {
                                         )
                                       ]);
                                 });
-                          } else if (added == true) {
-                            ///bug fixes شنو هذا
+                          } else if (added == false) {
                             showDialog(
                                 context: context,
                                 builder: (context) {
@@ -417,42 +429,62 @@ class _returnRequestState extends State<returnRequest> {
     return Container();
   }
 
+  var items = [];
   AddToList(Item item) {
+    items.add(Item(
+            barcode: item.barcode,
+            name: item.name,
+            img: item.img,
+            quantity: item.quantity,
+            price: item.price,
+            returnable: true)
+        .toMap());
+
     Barcodes.add(item.barcode);
     returnable.add(item.returnable);
     checkBoxList.add(false);
+    price.add(item.price);
   }
 
-  var i = 0;
-  Map<String, String> userReq = {};
-  storeRequests(String? barcode) {
-    userReq['product${i}'] = barcode!;
-    i++;
-  }
+  Future<bool> addToDB() async {
+    var checkedItems = [];
+    num total = 0;
+    var now = new DateTime.now();
+    var formatter = new DateFormat('dd/MM/yyyy');
+    String todayDate = formatter.format(now);
 
-  Future<bool> addToDB(String? id) async {
+    for (int i = 0; i < checkBoxList.length; i++) {
+      if (checkBoxList[i] == true) {
+        checkedItems.add(items[i]);
+        total = total + price[i];
+      }
+    }
+
+    double vat = (total * 15) / 100;
+    num subTotal = total - vat.toInt();
+
+    Invoice? invoice1 = this.invoice!;
+    FirebaseFirestore.instance.collection('ReturnRequests${documentName}').add({
+      "ID": invoice1.id,
+      "Date": todayDate,
+      "Total": total,
+      "Store": invoice1.store,
+      "items": checkedItems,
+      'sub-total': subTotal,
+      'vat-total': vat,
+      'status': "pending"
+    }).catchError((onError) => print(onError));
+
     var addToInvoice = await FirebaseFirestore.instance
         .collection('${documentName}Invoices')
-        .where("ID", isEqualTo: id)
+        .where("ID", isEqualTo: invoice1.id)
         .get();
     var documentId = addToInvoice.docs.first.id;
     var document = FirebaseFirestore.instance
         .collection('${documentName}Invoices')
         .doc(documentId);
     document.update({"HaveReturnReq": true});
-    document.update({'status': 'pending'});
 
-    String? storeName = invoice!.store;
-
-    for (int i = 0; i < checkBoxList.length; i++) {
-      if (checkBoxList[i] == true) {
-        storeRequests(Barcodes[i]);
-      }
-    }
-
-    var collection = FirebaseFirestore.instance
-        .collection('ReturnRequests'); ////bug fixes should be atomic
-    collection.doc('$storeName$documentName').set(userReq);
     return true;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_braintree/flutter_braintree.dart';
@@ -9,12 +10,12 @@ import 'package:http/http.dart' as http;
 import 'dart:math';
 import 'package:taqdaa_application/models/item.dart';
 import '../models/invoice.dart';
-import '../screens/invoice_details.dart';
 import 'package:intl/intl.dart';
 
 class checkOut {
   var url = 'https://us-central1-taqdaa-10e41.cloudfunctions.net/paypalPayment';
 
+  User? user = FirebaseAuth.instance.currentUser;
   String collectionName = EcommerceApp().getCurrentUser();
   final RFIDs = [];
   String data1 = "";
@@ -135,14 +136,6 @@ class checkOut {
     final List<DocumentSnapshot> documents = result.docs;
     for (int i = 0; i < documents.length; i++) {
       RFIDs.add(documents[i].get("RFID"));
-
-      // FirebaseFirestore.instance.collection('InvoicesManager').add({
-      //   "Category": documents[i].get("Category"),
-      //   "Item_number": documents[i].get("Item_number"),
-      //   "Price": documents[i].get("Price"),
-      //   "Store": documents[i].get("Store"),
-      //   "ProductImage": documents[i].get("ProductImage"),
-      // });
     }
   }
 
@@ -169,21 +162,17 @@ class checkOut {
     final List<DocumentSnapshot> documents = result.docs;
     for (int i = 0; i < documents.length; i++) {
       items.add(Item(
-              barcode: documents[i].get("Item_number"),
-              name: documents[i].get("Category"),
-              img: documents[i].get("ProductImage"),
-              quantity: documents[i].get("quantity"),
-              price: documents[i].get("Price"),
-              returnable: true)
-
-          ///bug fixes returnable
-          .toMap());
+        barcode: documents[i].get("Item_number"),
+        name: documents[i].get("Category"),
+        img: documents[i].get("ProductImage"),
+        quantity: documents[i].get("quantity"),
+        price: documents[i].get("Price"),
+        returnable: documents[i].get("returnable"),
+      ).toMap());
     }
     FirebaseFirestore.instance.collection('${collectionName}Invoices').add({
       "ID": randomNumber.toString(),
-      "Date": '20/10/2022',
-
-      ///bug fixes date should be generated
+      "Date": todayDate,
       "Total": EcommerceApp.total - EcommerceApp.discount.toInt(),
       "Store": EcommerceApp.storeName,
       "items": items,
@@ -191,8 +180,27 @@ class checkOut {
       'vat-total': vat,
       'rewardsDiscount': EcommerceApp.discount,
       'HaveReturnReq': false,
-      'status': ""
-    }).catchError((onError) => print(onError));
+      'isExpired': false
+    });
+
+    ///write manger invoices
+    FirebaseFirestore.instance
+        .collection('InvoicesManager${EcommerceApp.storeName}')
+        .add({
+      "ID": randomNumber.toString(),
+      "Date": todayDate,
+      "Total": EcommerceApp.total - EcommerceApp.discount.toInt(),
+      "Store": EcommerceApp.storeName,
+      "items": items,
+      'sub-total': subTotal,
+      'vat-total': vat,
+      'rewardsDiscount': EcommerceApp.discount,
+      'HaveReturnReq': false,
+      'status': '',
+      'cutomerphone': EcommerceApp.loggedInUser.phonenumber
+
+      ///bug fixes make sure works
+    });
 
     Invoice invoice = new Invoice(items,
         id: randomNumber.toString(),
@@ -201,7 +209,8 @@ class checkOut {
         store: EcommerceApp.storeName,
         sub_total: subTotal,
         vat_total: vat,
-        rewardsDiscount: EcommerceApp.discount);
+        rewardsDiscount: EcommerceApp.discount,
+        isExpired: false);
     return invoice;
   }
 }

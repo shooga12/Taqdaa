@@ -58,7 +58,7 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                 if (snapshot.hasData) {
                   final documents = snapshot.data!;
                   return SizedBox(
-                      height: 120.0 * EcommerceApp.NumOfItems,
+                      height: 100.0 * EcommerceApp.NumOfItems,
                       child: ListView.builder(
                           itemCount: documents.size,
                           itemBuilder: (BuildContext context, int index) {
