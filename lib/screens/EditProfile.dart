@@ -58,6 +58,7 @@ class _EditState extends State<Edit> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         automaticallyImplyLeading: true,
         title: Text(
@@ -398,6 +399,20 @@ class _EditState extends State<Edit> {
                                     actions: [
                                       TextButton(
                                           onPressed: () {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                              duration:
+                                                  const Duration(seconds: 2),
+                                              backgroundColor: Color.fromARGB(
+                                                  255, 135, 155, 190),
+                                              content: Text(
+                                                  "تم حفظ التعديلات بنجاح",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      fontSize: 17,
+                                                      letterSpacing: 0.8)),
+                                              action: null,
+                                            ));
                                             saveChanges();
                                             Navigator.push(
                                                 context,
@@ -408,9 +423,6 @@ class _EditState extends State<Edit> {
                                           },
                                           child: Text(
                                             "نعم",
-                                            style: TextStyle(
-                                              color: Colors.red,
-                                            ),
                                           )),
                                       TextButton(
                                           onPressed: () {

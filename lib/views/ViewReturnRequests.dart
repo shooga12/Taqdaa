@@ -51,7 +51,7 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "طلبات الإرجاع",
+          "طلبات الاسترجاع",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
         ),
         flexibleSpace: Container(
@@ -154,8 +154,8 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text('تحت الدراسة'),
-                                              Text('جاهزة للاستلام'),
-                                              Text('تم استلام السلع'),
+                                              // Text('جاهزة للاستلام'),
+                                              // Text('تم الإسترجاع'),
                                             ],
                                           ),
                                           const SizedBox(

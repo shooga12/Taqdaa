@@ -32,9 +32,8 @@ class checkOut {
     BraintreeDropInResult? result = await BraintreeDropIn.start(request);
     if (result != null) /*Successful Payment*/ {
       int reward = 0;
-      if (EcommerceApp.rewardsExchanged) {
-        reward = (EcommerceApp.total * 2) ~/ 100;
-      } //make sure works
+      reward = (EcommerceApp.total * 2) ~/ 100;
+      //make sure works
 
       String urli =
           '$url?payment_method_nonce=${result.paymentMethodNonce.nonce}&device_data=${result.deviceData}';
@@ -59,9 +58,28 @@ class checkOut {
           context: context,
           builder: (context) {
             return AlertDialog(
-                title: Text(
-                  "شكرًا لك، تم الدفع بنجاح!",
-                  style: TextStyle(fontSize: 18),
+                content: Container(
+                  height: 280,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image.asset(
+                          "assets/successfull_payment.png",
+                          height: 200,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "شكرًا لك، تم الدفع بنجاح !",
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Color.fromARGB(255, 98, 160, 100)),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 actions: [
                   TextButton(
@@ -72,10 +90,8 @@ class checkOut {
                       await deleteCart();
                       await deleteCartDublicate();
                       await saveUserTotal(0);
-                      if (EcommerceApp.rewardsExchanged) {
-                        await saveUserRewards(
-                            reward); //bug fixes rewards not gained
-                      }
+                      await saveUserRewards(
+                          reward); //bug fixes rewards not gained
                     },
                     child: const Text('حسنًا'),
                   )

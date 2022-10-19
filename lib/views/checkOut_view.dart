@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../views/rewards_view.dart';
+import 'rewardsExchange_view.dart';
 import '../confige/EcommerceApp.dart';
 import '../controller/checkout.dart';
 
@@ -115,7 +115,6 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                   ),
                 ),
                 onTap: () async {
-                  await getRewards();
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => rewards()),
@@ -440,19 +439,5 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
         .collection('${collectionName}Total')
         .doc("total")
         .update({"Total": total});
-  }
-
-  Future getRewards() async {
-    var collection =
-        FirebaseFirestore.instance.collection('${collectionName}Total');
-    collection.doc('rewards').snapshots().listen((docSnapshot) {
-      if (docSnapshot.exists) {
-        Map<String, dynamic> data = docSnapshot.data()!;
-
-        setState(() {
-          EcommerceApp.rewards = data['Rewards'];
-        });
-      }
-    });
   }
 }

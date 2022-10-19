@@ -172,6 +172,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     payload: 'paylod.nav',
                     scheduledDate: DateTime.now().add(Duration(seconds: 3)));
               }
+              getRewards();
               return HomePage();
             } else if (snapshot.hasError) {
               return Text("Some thing went wrong! ${snapshot.error}");
@@ -180,6 +181,25 @@ class _MyHomePageState extends State<MyHomePage> {
             }
           }),
     );
+  }
+
+  Future getRewards() async {
+    var collection = FirebaseFirestore.instance
+        .collection('${EcommerceApp.loggedInUser.uid}Total');
+    collection.doc('rewards').snapshots().listen((docSnapshot) {
+      if (docSnapshot.exists) {
+        Map<String, dynamic> data = docSnapshot.data()!;
+
+        // setState(() {
+        //   EcommerceApp.rewards = data['Rewards'];
+        // });
+        if (mounted) {
+          setState(() {
+            EcommerceApp.rewards = data['Rewards'];
+          });
+        }
+      }
+    });
   }
 
   Stream<List<Store>> readStores() => FirebaseFirestore.instance

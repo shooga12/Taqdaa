@@ -657,7 +657,7 @@ class _shoppingCartState extends State<shoppingCart> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         duration: const Duration(seconds: 2),
         backgroundColor: Color.fromARGB(255, 135, 155, 190),
-        content: Text("Item added succeffully",
+        content: Text("تم إضافة المنتج بنجاح",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 17, letterSpacing: 0.8)),
         action: null,
@@ -673,7 +673,7 @@ class _shoppingCartState extends State<shoppingCart> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         duration: const Duration(seconds: 2),
         backgroundColor: Color.fromARGB(255, 135, 155, 190),
-        content: Text("Item deleted succeffully",
+        content: Text("تم حذف المنتج بنجاح",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 17, letterSpacing: 0.8)),
         action: null,

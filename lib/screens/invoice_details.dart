@@ -151,6 +151,32 @@ class _invoicesDetailsState extends State<invoice_details> {
                       ),
                     ],
                   ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  if (invoice!.rewardsDiscount != 0)
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: Text('نـقـاطـي',
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 227, 45, 45),
+                                fontSize: 15,
+                              )),
+                        ),
+                        Spacer(),
+                        Text('- ${invoice!.rewardsDiscount} ريال',
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 227, 45, 45),
+                              fontSize: 15,
+                            )),
+                      ],
+                    ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -6,7 +6,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../confige/EcommerceApp.dart';
 import '../controller/BNBCustomePainter.dart';
 import 'package:taqdaa_application/screens/login_page.dart';
+import '../main.dart';
 import '../methods/authentication_services.dart';
+import '../models/user_model.dart';
 import '../screens/EditProfile.dart';
 import '../screens/ShoppingCart.dart';
 import '../screens/insideMore.dart';
@@ -23,10 +25,24 @@ class Homepprofile extends StatefulWidget {
 
 class _HomepprofileState extends State<Homepprofile> {
   User? user = FirebaseAuth.instance.currentUser;
+  //UserModel loggedInUser = UserModel();
   bool isInsideHome = false;
   bool isInsideReceipt = false;
   bool isInsideMore = true;
   bool isInsideCart = false;
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(user!.uid)
+        .get()
+        .then((value) {
+      EcommerceApp.loggedInUser = UserModel.fromMap(value.data());
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -269,6 +285,30 @@ class _HomepprofileState extends State<Homepprofile> {
                               context: context,
                               builder: ((context) {
                                 return AlertDialog(
+                                  // content: Container(
+                                  //   height: 280,
+                                  //   child: Column(
+                                  //     children: [
+                                  //       Padding(
+                                  //         padding: const EdgeInsets.all(8.0),
+                                  //         child: Image.asset(
+                                  //           "assets/successfull_payment.png",
+                                  //           height: 200,
+                                  //         ),
+                                  //       ),
+                                  //       Padding(
+                                  //         padding: const EdgeInsets.all(8.0),
+                                  //         child: Text(
+                                  //           "شكرًا لك، تم الدفع بنجاح !",
+                                  //           style: TextStyle(
+                                  //               fontSize: 20,
+                                  //               color: Color.fromARGB(
+                                  //                   255, 98, 160, 100)),
+                                  //         ),
+                                  //       ),
+                                  //     ],
+                                  //   ),
+                                  // ),
                                   title: Text("هل تريد تسجيل الخروج؟"),
                                   actions: [
                                     TextButton(
@@ -366,7 +406,13 @@ class _HomepprofileState extends State<Homepprofile> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MyHomePage()),
+                                );
+                              },
                               icon: Icon(
                                 Icons.home_outlined,
                                 size: 35,

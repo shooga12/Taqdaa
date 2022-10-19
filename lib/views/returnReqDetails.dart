@@ -28,7 +28,7 @@ class _returnReqDetailsState extends State<returnReq_details> {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         title: Text(
-          "طلبية الإرجاع",
+          "طلب الاسترجاع",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
         ),
         flexibleSpace: Container(
