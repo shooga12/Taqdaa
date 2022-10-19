@@ -494,7 +494,7 @@ function Profile(){
                 </div>
               </div>
              </div>
-             <div className='mt-4 d-flex justify-content-center'>
+             <div className='mt-2 d-flex justify-content-center'>
               <div className='col-4 d-flex justify-content-around'>
                 <button id="save-changes-btn" onClick={()=>showAlert('Do You Want to Save Your Changes?',()=>addData(),'Save')}>Save Changes</button>
                 <button id="delete-store-btn" onClick={()=>showAlert('Delete Store?',()=>deleteStore(),'Delete')}>Delete Store</button>

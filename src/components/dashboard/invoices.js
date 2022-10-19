@@ -6,6 +6,8 @@ import {ref, set, child, get, push,update } from "firebase/database";
 import { async } from '@firebase/util';
 import {MdPhone, MdPhoneInTalk} from 'react-icons/md'
 import {IoIosArrowDown} from 'react-icons/io'
+import {HiFilter} from 'react-icons/hi'
+import {FiSearch} from 'react-icons/fi'
 import img1 from './sephora-brightening-hydrating-foundation-original-imaecf3t7vgdk9by.webp';
 import img2 from './458789.jpeg';
 import loading from './loading.gif';
@@ -13,7 +15,11 @@ import loading from './loading.gif';
 function InvoiceCard({ invoices }) {
   
   const [invoicesList, setInvoicesList] = useState(invoices);
-
+  let date = new Date();
+  const [today, setToday] = useState(date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate());
+  const [startDate, setStartDate] = useState(today);
+  const [filterApplied, setFilterApplied] = useState(false);
+  const [endDate, setEndDate] = useState(today);
 
   const collapse = (id)=>{
     let invoice = document.querySelector('#invoice-'+id+'-body');
@@ -29,82 +35,137 @@ function InvoiceCard({ invoices }) {
         invoice.style.display = 'block';
     }
   }
-
+  
   const filterInvoices = ()=>{
-    setInvoicesList([]);
+    let tmpArray = [];
+    let start = new Date(startDate);
+    let end = new Date(endDate);
+    Object.keys(invoices).map(key=>{
+      let date = invoices[key]['Date'].split('/');
+      date = date[2] + '-' + date[1] + '-' + date[0]
+      date = new Date(date);
+      if(date >= start && date <= end){
+        tmpArray.push(invoices[key]);
+      }
+    });
+    setInvoicesList(tmpArray);
+    setFilterApplied(true);
+    document.querySelector('#filter-box').style.display = 'none';
+  }
+
+  const removeFilter = ()=>{
+    setInvoicesList(invoices);
+    setFilterApplied(false);
+    document.querySelector('#filter-box').style.display = 'none';
+  }
+  
+  const handleStartDateChange = (date) =>{
+
+  }
+  
+  const filterCollapse = ()=>{
+    let filterBox = document.querySelector('#filter-box');
+    if(filterBox.style.display == 'block'){
+      filterBox.style.display = 'none';
+    }
+    else{
+      filterBox.style.display = 'block';
+    }
   }
 
   return(
     <>
-    {
-    invoicesList && invoicesList.map ?
-    invoicesList.map(invoice => (
-              <div className='invoice-card'>
-              <div className='invoice-card-header'>
-               <div className='d-flex align-items-center justify-content-between'>
-                <div className='num-date-container d-flex flex-column align-items-between'>
-                    <h5>Invoice#: {invoice.ID}</h5>
-                    <h6>Date: {invoice.Date}</h6>
-                </div>
-                <a href={'tel:'+invoice.cutomerphone}>
-                    <button><MdPhone/> Contact Customer</button>
-                </a>
-               </div>
-              </div>
-              <hr></hr>
-              <div className='d-flex flex-column justify-content-center align-items-center'>
-                <div className='invoice-collapse-header d-flex justify-content-center align-items-center' id='invoice1-collapse-header' onClick={()=> collapse(1)}>
-                    <div>View more</div>
-                    &nbsp;
-                    <IoIosArrowDown/>
-                </div>
-              </div>
-              <div className='invoice-card-body' id='invoice-1-body'>
-                <div className='p-5'>
-                    <h5>Items</h5>
-                    <div>
-                        <div className='item'>
-                          <div className='w-100 p-3 mt-3 d-flex justify-content-between align-items-center'>
-                            <div className='item-first-part justify-content-between d-flex align-items-center'>
-                                <h6><strong>1</strong></h6>
-                                <img src={img1} height='100'></img>
-                                <div>
-                                    <p><strong>Concealer</strong></p>
-                                    <p><strong>Barcode: </strong>07348B634</p>
-                                </div>
-                            </div>
-                            <div>
-                              <span>100 SR</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className='item'>
-                          <div className='w-100 p-3 mt-3 d-flex justify-content-between align-items-center'>
-                            <div className='item-first-part justify-content-between d-flex align-items-center'>
-                                <h6><strong>2</strong></h6>
-                                <img src={img2} height='100'></img>
-                                <div>
-                                    <p><strong>Silicon Spong</strong></p>
-                                    <p><strong>Barcode: </strong>5687GLO878</p>
-                                </div>
-                            </div>
-                            <div>
-                              <span>200 SR</span>
-                            </div>
-                          </div>
-                        </div>
-                        <hr className='mt-5'></hr>
-                        <div className='total d-flex justify-content-between'>
-                            <h6>Total</h6>
-                            <h6>300 SR</h6>
-                        </div>
-                    </div>
+      <div className='p-2 mb-4 d-flex justify-content-between' style={{width: '900px'}}>
+          <div className='justify-self-start'>
+            <input type={'text'} id='search-bar' placeholder='Search by invoice number'></input>
+            <button id='search-btn'><FiSearch /></button>
+          </div>
+          <div className='d-flex flex-column align-items-end'>
+            <button id='filter-btn' onClick={()=>filterCollapse()}><HiFilter/> Filter {filterApplied === true?  <span id='filterApplied'>&#9679;</span> : null}</button>
+            <div id='filter-box' className='p-4'>
+              <div className='d-flex flex-column align-items-start'>
+                <label htmlFor='start-date'>Start Date</label>
+                <input type={'date'} name='start-date' min={'2020-01-01'} max={today} value={startDate} className='date-fields' onChange={(e)=>{setStartDate(e.target.value)}}></input>
+                <label htmlFor='end-date' className='mt-3'>End Date</label>
+                <input type={'date'} name='end-date' min={'2020-01-01'} max={today} value={endDate} className='date-fields' onChange={(e)=>{setEndDate(e.target.value)}}></input>
+                <p id="error-msg" className='mt-3'>Start date should be a date before end date</p>
+                <div className='d-flex w-100 justify-content-center'>
+                  <button id='apply-filter-btn' className='mt-1' onClick={()=>filterInvoices()}>Apply</button>
+                  {filterApplied === true ?
+                    <button id='remove-filter-btn' className='mt-1' onClick={()=>removeFilter()}>Remove Filter</button>
+                    :
+                    null
+                  }
                 </div>
               </div>
             </div>
-      
-          )) : null
-          }
+          </div>
+      </div>
+      {
+      invoicesList && invoicesList.map ?
+      Object.keys(invoicesList).map(key => (
+                <div className='invoice-card'>
+                <div className='invoice-card-header'>
+                <div className='d-flex align-items-center justify-content-between'>
+                  <div className='num-date-container d-flex flex-column align-items-between'>
+                      <h5>Invoice#: {invoicesList[key]['ID']}</h5>
+                      <h6>Date: {invoicesList[key]['Date']}</h6>
+                  </div>
+                  <a href={'tel:'+invoicesList[key]['customerphone']}>
+                      <button><MdPhone/> Contact Customer</button>
+                  </a>
+                </div>
+                </div>
+                <hr></hr>
+                <div className='d-flex flex-column justify-content-center align-items-center'>
+                  <div className='invoice-collapse-header d-flex justify-content-center align-items-center' id={'invoice'+key+'-collapse-header'} onClick={()=> collapse(key)}>
+                      <div>View more</div>
+                      &nbsp;
+                      <IoIosArrowDown/>
+                  </div>
+                </div>
+                <div className='invoice-card-body' id={'invoice-'+key+'-body'}>
+                  <div className='p-5'>
+                      <h5>Items</h5>
+                      <div>
+                        { 
+                          Object.keys(invoicesList[key].items).map(key => (
+                            <div className='item'>
+                              <div className='w-100 p-3 mt-3 d-flex justify-content-between align-items-center'>
+                                <div className='item-first-part justify-content-between d-flex align-items-center'>
+                                    <h6><strong>{parseInt(key)+1}</strong></h6>
+                                    <img src={invoicesList[key].items[key]['img']} height='100'></img>
+                                    <div>
+                                        <p><strong>{invoicesList[key].items[key]['name']}</strong></p>
+                                        <p><strong>Barcode: </strong>{invoicesList[key].items[key]['barcode']}</p>
+                                    </div>
+                                </div>
+                                <div>
+                                  <span>{invoicesList[key].items[key]['price']} SR</span>
+                                </div>
+                              </div>
+                            </div>
+                          ))   
+                        }
+                          <hr className='mt-5'></hr>
+                          <div className='total d-flex justify-content-between'>
+                              <h6>Vat 15%</h6>
+                              <h6>{invoicesList[key]['vat-total']} SR</h6>
+                          </div>
+                          <div className='total d-flex justify-content-between'>
+                              <h6>Sub Total</h6>
+                              <h6>{invoicesList[key]['sub-total']} SR</h6>
+                          </div>
+                          <div className='total d-flex justify-content-between'>
+                              <h6><strong>Total</strong></h6>
+                              <h6>{invoicesList[key]['Total']} SR</h6>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+
+          )) : null}
           </>
      )  
 }
@@ -139,25 +200,8 @@ function Invoices(){
             querySnapshot.forEach((doc) => {
               tempArr.push(doc.data());
             }) 
-            setInvoices(tempArr);
+            setInvoices(tempArr); 
           })
-          
-          //docSnap = await get(docRef);
-          /*
-          if (docSnap.exists()) {
-              console.log("Document data:", docSnap.data());
-              let myDataArray = {};
-              for (var key in docSnap.data()) {
-                  myDataArray[key] = docSnap.data()[key]
-              }
-              setData(myDataArray);
-              setDone(1);
-                
-          } 
-          else {
-            console.log("No such document!");
-          }
-          */
         }
 
         

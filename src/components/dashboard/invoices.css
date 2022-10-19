@@ -98,3 +98,76 @@ h1{
 .item-first-part {
   width: 40%;
 }
+#filter-btn{
+  border: none;
+  background-color:#ebebeb;
+  color: #3d3d3d;
+  border-radius: 50px;
+  padding: 0.5em 1em 0.5em 1em;
+  font-size: 18px;
+}
+#filter-btn:hover{
+  background-color:#d2d2d2;
+}
+#filter-box{
+  position: absolute;
+  border-radius: 5px;
+  background-color: white;
+  box-shadow: 1px 1px 15px 1px #ebebeb;
+  z-index: 2;
+  margin-top: 3em;
+  display: none;
+}
+#apply-filter-btn{
+  border:none;
+  background-color:#ebebeb;
+  color: #3d3d3d;
+  border-radius: 50px;
+  padding: 0.2em 1em 0.2em 1em;
+}
+#apply-filter-btn:hover{
+  background-color:#d2d2d2;
+}
+#remove-filter-btn{
+  border:none;
+  background-color:#a60000;
+  color: #ffffff;
+  border-radius: 50px;
+  padding: 0.2em 1em 0.2em 1em;
+  margin-left: 0.4em;
+}
+#remove-filter-btn:hover{
+  background-color:#770000;
+}
+#search-bar{
+  border-radius: 30px;
+  border: 1px solid #878787;
+  padding: 0.3em 0em 0.3em 0.3em;
+  width: 350px;
+}
+#search-btn{
+  border: none;
+  background-color: #faa213;
+  color: white;
+  border-radius: 50px;
+  margin-left: 0.5em;
+  width: 40px;
+  height: 40px;
+}
+#search-btn:hover{
+  background-color: #d88500;
+}
+.date-fields{
+  border-radius: 50px;
+  border: 1px solid #878787;
+  padding: 0.2em 0.3em 0.2em 0.3em;
+  margin-top: 0.3em;
+}
+#error-msg{
+  color: #b30000;
+}
+#filterApplied{
+  color: green;
+  margin-left: 0.3em;
+  font-size: 22px;
+}
