@@ -2,9 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:taqdaa_application/views/checkOut_view.dart';
+import '../controller/BNBCustomePainter.dart';
 import '../main.dart';
-import '../screens/checkout_Page.dart';
 import '../confige/EcommerceApp.dart';
+import '../views/NoItmesCart.dart';
+import '../views/invoices_view.dart';
+import '../views/scanner.dart';
+import 'insideMore.dart';
 import 'scanBarCode.dart';
 import 'dart:core';
 
@@ -17,14 +22,20 @@ class shoppingCart extends StatefulWidget {
 class _shoppingCartState extends State<shoppingCart> {
   _shoppingCartState();
   String collectionName = EcommerceApp().getCurrentUser();
+  bool isInsideHome = false;
+  bool isInsideProfile = false;
+  bool isInsideSettings = false;
+  bool isInsideCart = true;
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Text(
-            EcommerceApp.storeName + " سلة التسوق",
-            style: TextStyle(fontSize: 24),
+            "سلة التسوق " + EcommerceApp.storeName,
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
           ),
           flexibleSpace: Container(
             decoration: BoxDecoration(
@@ -32,32 +43,12 @@ class _shoppingCartState extends State<shoppingCart> {
                     image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
           ),
           toolbarHeight: 170,
-          //leading: BackButton(),
           backgroundColor: Colors.transparent,
           elevation: 0,
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyHomePage()),
-                );
-              },
-              icon: Icon(
-                Icons.home,
-                size: 30,
-              ),
-            )
-          ],
         ),
         body: StreamBuilder<List<Product>>(
             stream: readCartItems(),
             builder: (context, snapshot) {
-              // if (!snapshot.hasData) {
-              //   return Center(
-              //     child: Text("Your cart is empty!"),
-              //   );
-              // }
               if (snapshot.hasData) {
                 /// ماراح يدخل اصلا اذا مافيه ايتمز
                 final products = snapshot.data!;
@@ -80,20 +71,17 @@ class _shoppingCartState extends State<shoppingCart> {
                             ),
                           ),
                         );
-                      } //else if (EcommerceApp.counter != 0) {
-                      ///else
+                      }
                       EcommerceApp.total = products
                           .map<int>((e) => e.Price * e.quantity)
                           .reduce((value, element) => value + element);
                       if (products.isEmpty) {
-                        ///////
                         saveUserTotal(0);
                       }
                       if (previousTotal != EcommerceApp.total &&
                           products.isNotEmpty) {
                         saveUserTotal(EcommerceApp.total);
                       }
-                      //getUserTotal();
                       if (products[index].quantity == 0) {
                         deleteItem(products[index].Category);
                         products.removeAt(index);
@@ -134,14 +122,14 @@ class _shoppingCartState extends State<shoppingCart> {
                                               },
                                               child: Text("إلغاء")),
                                           ElevatedButton(
-                                              //style: Color
                                               onPressed: () {
                                                 Navigator.of(ctx).pop(true);
                                               },
                                               child: Text(
                                                 "حذف",
                                                 style: TextStyle(
-                                                    color: Colors.red),
+                                                    color: Color.fromARGB(
+                                                        255, 250, 249, 249)),
                                               )),
                                         ],
                                       ));
@@ -149,21 +137,24 @@ class _shoppingCartState extends State<shoppingCart> {
                             onDismissed: (DismissDirection direction) {
                               if (direction == DismissDirection.endToStart) {
                                 EcommerceApp.counter--;
+                                EcommerceApp.NumOfItems--;
+                                if (products[index].quantity > 1) {
+                                  for (int i = 0;
+                                      i < products[index].quantity - 1;
+                                      i++) {
+                                    EcommerceApp.counter--;
+                                  }
+                                }
                                 deleteItemGroup(products[index].Category);
                                 deleteItem(products[index].Category);
-                                products.removeAt(index); ////bug fixes
-                                if (EcommerceApp.counter == 0) {
+                                products.removeAt(index);
+                                if (EcommerceApp.counter < 1) {
                                   saveUserTotal(0);
                                 }
-                                // if (products.length == 0) {
-                                //   EcommerceApp.finalTotal = 0;
-                                //   saveUserTotal(0);
-                                // }
                               }
                             },
-                            child: buildSecondItmes(products[index], context));
+                            child: buildSecondItems(products[index], context));
                       }
-                      //}
                       return Center(child: CircularProgressIndicator());
                     });
               } else if (snapshot.hasError) {
@@ -173,131 +164,284 @@ class _shoppingCartState extends State<shoppingCart> {
               }
             }),
         bottomNavigationBar: SizedBox(
-          height: 170,
-          child: Container(
-              child: Column(
-            children: [
+            height: 300,
+            child: Stack(children: [
               Container(
-                  child: Text(
-                      style: TextStyle(
-                          color: Color.fromARGB(255, 32, 7, 121),
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
-                      (() {
-                        if (EcommerceApp.finalTotal == 0) {
-                          saveUserTotal(0);
-                          EcommerceApp.finalTotal = -1;
-                          return 'المجموع: ' +
-                              EcommerceApp.finalTotal.toString() +
-                              ' ريال\n';
-                        } else {
-                          return 'المجموع: ' +
-                              EcommerceApp.total.toString() +
-                              ' ريال\n';
-                        }
-                      }()))),
-              Container(
-                child: SizedBox(
-                  height: 40,
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      _scan(context, "NewItem");
-                    },
-                    label: Text(
-                      'إكمال المسح',
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18),
+                  child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        bottom: 10.0, right: 20, left: 21),
+                    child: Container(
+                        alignment: Alignment.centerRight,
+                        child: Row(
+                          children: [
+                            Text(
+                              'المجموع : ',
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 32, 7, 121),
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Spacer(),
+                            Text(
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 32, 7, 121),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold),
+                                (() {
+                                  if (EcommerceApp.finalTotal == 0) {
+                                    saveUserTotal(0);
+                                    EcommerceApp.finalTotal = -1;
+                                    return EcommerceApp.finalTotal.toString() +
+                                        ' ريال';
+                                  } else {
+                                    return EcommerceApp.total.toString() +
+                                        ' ريال';
+                                  }
+                                }())),
+                          ],
+                        )),
+                  ),
+                  Divider(
+                    color: Colors.grey,
+                    indent: 20,
+                    endIndent: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      width: 200,
+                      height: 40,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(30.0),
+                          ),
+                          border: Border.all(color: Colors.orange, width: 2)),
+                      child: SizedBox(
+                        width: 200,
+                        height: 40,
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            _scan(context, "NewItem");
+                          },
+                          label: Text(
+                            ' إكـمـال المـسـح',
+                            style: const TextStyle(
+                                color: Colors.orange,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18),
+                          ),
+                          icon: Icon(
+                            Icons.document_scanner_outlined,
+                            color: Colors.orange,
+                          ),
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.resolveWith((states) {
+                                if (states.contains(MaterialState.pressed)) {
+                                  return Colors.grey;
+                                }
+                                return Colors.white;
+                              }),
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(30)))),
+                        ),
+                      ),
                     ),
-                    icon: Icon(Icons.document_scanner_outlined),
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.resolveWith((states) {
-                          if (states.contains(MaterialState.pressed)) {
-                            return Colors.grey;
-                          }
-                          return Colors.orange;
-                        }),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30)))),
                   ),
-                ),
-              ),
-              Container(
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (EcommerceApp.total == 0 ||
-                        EcommerceApp.finalTotal == 0) {
-                      showDialog(
-                          context: context,
-                          builder: (ctx) => AlertDialog(
-                                content: Text(
-                                  "لا يوجد منتجات!",
-                                  style: TextStyle(fontSize: 18),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0, bottom: 10),
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: SizedBox(
+                        width: 200,
+                        height: 40,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (EcommerceApp.total == 0 ||
+                                EcommerceApp.finalTotal == 0) {
+                              showDialog(
+                                  context: context,
+                                  builder: (ctx) => AlertDialog(
+                                        content: Text(
+                                          "لا يوجد منتجات!",
+                                          style: TextStyle(fontSize: 18),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.of(ctx).pop(false);
+                                              },
+                                              child: Text("إلغاء")),
+                                        ],
+                                      ));
+                            } else {
+                              EcommerceApp.totalSummary = EcommerceApp.total;
+                              EcommerceApp.inDollars =
+                                  EcommerceApp.total / 3.75;
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CheckOutSummary()),
+                              );
+                            }
+                          },
+                          child: Text(
+                            'الـدفـع',
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                letterSpacing: 1),
+                          ),
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.resolveWith((states) {
+                                if (states.contains(MaterialState.pressed)) {
+                                  return Colors.grey;
+                                }
+                                return Colors.orange;
+                              }),
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(30)))),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                child: Container(
+                  width: size.width,
+                  height: 80,
+                  color: Colors.white,
+                  child: Stack(
+                    children: [
+                      CustomPaint(
+                        size: Size(size.width, 80),
+                        painter: BNBCustomePainter(),
+                      ),
+                      Center(
+                          heightFactor: 0.6,
+                          child: Container(
+                            width: 65,
+                            height: 65,
+                            child: FittedBox(
+                              child: FloatingActionButton(
+                                onPressed: () {
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //       builder: (context) => scanner()),
+                                  // );
+                                  _scan(context, "NewItem");
+                                },
+                                backgroundColor: Colors.orange,
+                                child: Icon(
+                                  Icons.document_scanner_outlined,
+                                  size: 27,
                                 ),
-                                actions: [
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.of(ctx).pop(false);
-                                      },
-                                      child: Text("إلغاء")),
-                                ],
-                              ));
-                    } else {
-                      EcommerceApp.inDollars = EcommerceApp.total / 3.75;
-                      showDialog(
-                          context: context,
-                          builder: (ctx) => AlertDialog(
-                                title: Text("Please Note"),
-                                content: Text(
-                                    "Your total price will be in ${EcommerceApp.inDollars.toStringAsFixed(2)}\$."),
-                                actions: [
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.of(ctx).pop(false);
-                                      },
-                                      child: Text("إلغاء")),
-                                  ElevatedButton(
-                                      //style: Color
-                                      onPressed: () {
-                                        checkOut().payment(context);
-                                        Navigator.of(ctx).pop(false);
-                                      },
-                                      child: Text("متابعة")),
-                                ],
-                              ));
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => CheckOut()),
-                      // );
-                    }
-                  },
-                  child: Text(
-                    'Checkout',
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18),
+                              ),
+                            ),
+                          )),
+                      Container(
+                        width: size.width,
+                        height: 80,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => MyHomePage()),
+                                    );
+                                  },
+                                  icon: Icon(
+                                    Icons.home_outlined,
+                                    size: 35,
+                                    color: isInsideHome
+                                        ? Color.fromARGB(255, 254, 176, 60)
+                                        : Colors.white,
+                                  )),
+                              IconButton(
+                                  onPressed: () {
+                                    if (EcommerceApp.haveItems) {
+                                      /////bug fixes
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                shoppingCart()),
+                                      );
+                                    } else {
+                                      ///bug fixes New "I don't think their will be a need for it"
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => emptyCart()),
+                                      );
+                                    }
+                                  },
+                                  icon: Icon(
+                                    Icons.shopping_cart,
+                                    size: 30,
+                                    color: isInsideCart
+                                        ? Color.fromARGB(255, 254, 176, 60)
+                                        : Colors.white,
+                                  )),
+                              Container(
+                                width: size.width * 0.20,
+                              ),
+                              IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => invoices(),
+                                        ));
+                                  },
+                                  icon: Icon(
+                                    Icons.receipt_long,
+                                    size: 30,
+                                    color: isInsideProfile
+                                        ? Color.fromARGB(255, 254, 176, 60)
+                                        : Colors.white,
+                                  )),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => More()),
+                                  );
+                                },
+                                icon: Icon(
+                                  Icons.more_horiz,
+                                  size: 30,
+                                  color: isInsideSettings
+                                      ? Color.fromARGB(255, 254, 176, 60)
+                                      : Colors.white,
+                                ),
+                              ),
+                            ]),
+                      )
+                    ],
                   ),
-                  style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.resolveWith((states) {
-                        if (states.contains(MaterialState.pressed)) {
-                          return Colors.grey;
-                        }
-                        return Colors.orange;
-                      }),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30)))),
                 ),
-              ),
-            ],
-          )),
-        ));
+              )
+            ])));
   }
 
   Future<bool> checkItemExist(bool increment, String itemName) async {
@@ -323,169 +467,141 @@ class _shoppingCartState extends State<shoppingCart> {
       .map((snapshot) =>
           snapshot.docs.map((doc) => Product.fromJson(doc.data())).toList());
 
-  Widget bulidEmptyCart() {
-    return Center(
-      child: SizedBox(
-        height: 400,
-        child: Center(
-          child: Text(
-            "",
-            //"Your cart is empty!",
-            style: TextStyle(
-                fontWeight: FontWeight.normal,
-                fontSize: 23,
-                color: Color.fromARGB(255, 173, 173, 173)),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildSecondItmes(Product product, BuildContext context) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Column(
-            //upper part
-            children: [
-              Card(
-                child: new InkWell(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 0, bottom: 0, left: 0, right: 6),
-                    child: Row(
-                      children: <Widget>[
-                        new Container(
-                          child: Stack(children: <Widget>[
-                            Container(
-                              child: new Image.asset(
-                                'assets/Rectangle.png',
-                                height: 92.0,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 25, top: 2.5),
-                              child: Container(
-                                width: 65,
-                                margin: EdgeInsets.all(10),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(50),
-                                  child: Image(
-                                    image: NetworkImage(
-                                      product.ProductImage,
-                                    ),
-                                  ),
-                                ),
-                                // Container(
-                                //   alignment: Alignment.bottomLeft, //اعدله
-                                //   child:
-                                // ),
-                              ),
-                            )
-                          ]),
-                        ),
-                        Column(
-                          children: <Widget>[
-                            Text(
-                              "\n " + product.Category,
-                              style: new TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 32, 7, 121),
-                              ),
-                            ),
-                            Text(
-                              "   Price : " + product.Price.toString() + " SR",
-                              textAlign: TextAlign.center,
-                              style: new TextStyle(
-                                fontSize: 15,
-                                color: Color.fromARGB(255, 77, 76, 76),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Spacer(),
-                        IconButton(
-                            onPressed: () async {
-                              if (product.quantity == 1) {
-                                null;
-                              } else {
-                                EcommerceApp.productName = product.Category;
-                                await showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                          title: Text("Please note that :"),
-                                          content: Text(
-                                              "You have to scan the barcode of the removed Item."),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context, 'OK');
-                                              },
-                                              child: const Text('OK'),
-                                            )
-                                          ]);
-                                    });
-                                if (await _scan(context, "Decrement")) {
-                                  checkItemExist(false, product.Category);
-                                }
-                                // ScaffoldMessenger.of(context)
-                                //     .showSnackBar(SnackBar(
-                                //   duration: const Duration(seconds: 1),
-                                //   backgroundColor:
-                                //       Color.fromARGB(255, 135, 155, 190),
-                                //   content: Text(
-                                //       "${product.Category} deleted succeffully"),
-                                //   action: null,
-                                // ));
-                              }
-                            },
-                            icon: Icon(Icons.remove_circle,
-                                color: product.quantity == 1
-                                    ? Color.fromARGB(255, 195, 195, 195)
-                                    : Color.fromARGB(255, 245, 161, 14))),
-                        //Text('$quantity'),
-                        Text(product.quantity.toString()),
-                        IconButton(
-                            onPressed: () async {
-                              EcommerceApp.productName = product.Category;
-                              await showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                        title: Text("Please note that :"),
-                                        content: Text(
-                                            "You have to scan the barcode of the added Item."),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context, 'OK');
-                                            },
-                                            child: const Text('OK'),
-                                          )
-                                        ]);
-                                  });
-                              if (await _scan(context, "Increment")) {
-                                checkItemExist(true, product.Category);
-                              }
-                            },
-                            icon: Icon(Icons.add_circle,
-                                color: Color.fromARGB(255, 245, 161, 14))),
-                      ],
-                    ),
+  Widget buildSecondItems(Product product, BuildContext context) {
+    return Card(
+      child: new InkWell(
+        child: Row(
+          children: <Widget>[
+            new Container(
+              child: Stack(children: <Widget>[
+                Container(
+                  child: new Image.asset(
+                    'assets/Rectangle.png',
+                    height: 92.0,
+                    fit: BoxFit.cover,
                   ),
                 ),
-                color: Color.fromARGB(255, 248, 248, 246),
-              ),
-            ],
-          ),
-          //),
-        ],
+                Padding(
+                  padding: const EdgeInsets.only(right: 28, top: 2.5),
+                  child: Container(
+                    width: 65,
+                    margin: EdgeInsets.all(10),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: Image(
+                        image: NetworkImage(
+                          product.ProductImage,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ]),
+            ),
+            Column(
+              children: <Widget>[
+                Text(
+                  "\n " + product.Category,
+                  style: new TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 32, 7, 121),
+                  ),
+                ),
+                Text(
+                  "  السعر : " + product.Price.toString() + ' ريال',
+                  textAlign: TextAlign.center,
+                  style: new TextStyle(
+                    fontSize: 15,
+                    color: Color.fromARGB(255, 77, 76, 76),
+                  ),
+                ),
+              ],
+            ),
+            Spacer(),
+            IconButton(
+                onPressed: () async {
+                  if (product.quantity == 1) {
+                    null;
+                  } else {
+                    EcommerceApp.productName = product.Category;
+                    await showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                              title: Text(
+                                "ملاحظة :",
+                                style: TextStyle(fontWeight: FontWeight.w500),
+                              ),
+                              content: Text(
+                                  "يجب عليك مسح الباركود للمنتج المراد حذفه مرة أخرى."),
+                              actions: [
+                                TextButton(
+                                  onPressed: () async {
+                                    Navigator.pop(context, 'حسناً');
+                                    if (await _scan(context, "Decrement")) {
+                                      checkItemExist(false, product.Category);
+                                    }
+                                  },
+                                  child: const Text('حسناً'),
+                                )
+                              ]);
+                        });
+                  }
+                },
+                icon: Icon(Icons.remove_circle,
+                    color: product.quantity == 1
+                        ? Color.fromARGB(255, 195, 195, 195)
+                        : Color.fromARGB(255, 118, 171, 223))),
+            //Text(product.quantity.toString()),
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  width: 35,
+                  height: 35,
+                  decoration: new BoxDecoration(
+                    color: Color.fromARGB(255, 245, 161, 14),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                Text(
+                  product.quantity.toString(),
+                  style: TextStyle(color: Colors.white),
+                )
+              ],
+            ),
+            IconButton(
+                onPressed: () async {
+                  EcommerceApp.productName = product.Category;
+                  await showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                            title: Text("ملاحظة :",
+                                style: TextStyle(fontWeight: FontWeight.w500)),
+                            content: Text(
+                                "يجب عليك مسح الباركود للمنتج المراد إضافته."),
+                            actions: [
+                              TextButton(
+                                onPressed: () async {
+                                  Navigator.pop(context, 'حسناً');
+                                  if (await _scan(context, "Increment")) {
+                                    checkItemExist(true, product.Category);
+                                    EcommerceApp.counter++;
+                                  }
+                                },
+                                child: const Text('حسناً'),
+                              )
+                            ]);
+                      });
+                },
+                icon: Icon(Icons.add_circle,
+                    color: Color.fromARGB(255, 118, 171, 223))),
+          ],
+        ),
       ),
+      color: Color.fromARGB(255, 248, 248, 246),
     );
   }
 
@@ -493,7 +609,7 @@ class _shoppingCartState extends State<shoppingCart> {
 
   Future<bool> _scan(BuildContext context, String action) async {
     _counter = await FlutterBarcodeScanner.scanBarcode(
-        "#004297", "Cancel", true, ScanMode.BARCODE);
+        "#FEB139", "Cancel", false, ScanMode.BARCODE);
 
     setState(() {
       EcommerceApp.value = _counter;
@@ -509,7 +625,7 @@ class _shoppingCartState extends State<shoppingCart> {
           context: context,
           builder: (context) {
             return AlertDialog(
-                content: Text("Item already have been added."), ///////
+                content: Text("Item already have been added."),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'OK'),
@@ -538,6 +654,14 @@ class _shoppingCartState extends State<shoppingCart> {
           event.snapshot.children.first.child('Product Name').value;
       var RFID = event.snapshot.children.first.child('RFID').value;
       saveUserItemsDublicate(barcode, productName, RFID);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        duration: const Duration(seconds: 2),
+        backgroundColor: Color.fromARGB(255, 135, 155, 190),
+        content: Text("تم إضافة المنتج بنجاح",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 17, letterSpacing: 0.8)),
+        action: null,
+      ));
       return true;
     } else if (event.snapshot.exists &&
         action == "Decrement" &&
@@ -547,9 +671,11 @@ class _shoppingCartState extends State<shoppingCart> {
           event.snapshot.children.first.child('Barcode').value as String;
       deleteSingleItem(dat);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        duration: const Duration(seconds: 1),
+        duration: const Duration(seconds: 2),
         backgroundColor: Color.fromARGB(255, 135, 155, 190),
-        content: Text("Item deleted succeffully"),
+        content: Text("تم حذف المنتج بنجاح",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 17, letterSpacing: 0.8)),
         action: null,
       ));
       return true;
@@ -558,8 +684,8 @@ class _shoppingCartState extends State<shoppingCart> {
           context: context,
           builder: (context) {
             return AlertDialog(
-                content: Text(
-                    "Sorry, this is not a ${EcommerceApp.productName}."), ///////
+                content:
+                    Text("Sorry, this is not a ${EcommerceApp.productName}."),
                 actions: [
                   ElevatedButton(
                       onPressed: () {
@@ -582,8 +708,8 @@ class _shoppingCartState extends State<shoppingCart> {
           context: context,
           builder: (context) {
             return AlertDialog(
-                content: Text(
-                    "Sorry, this is not a ${EcommerceApp.productName}."), ///////
+                content:
+                    Text("Sorry, this is not a ${EcommerceApp.productName}."),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'OK'),
@@ -618,6 +744,7 @@ class _shoppingCartState extends State<shoppingCart> {
   }
 
   ///End of _scan()
+
   Future saveUserItemsDublicate(var barcode, var productName, var RFID) async {
     FirebaseFirestore.instance.collection('${collectionName}All').add({
       "Category": productName,
@@ -631,22 +758,10 @@ class _shoppingCartState extends State<shoppingCart> {
   }
 
   Future saveUserTotal(var total) async {
-    if (EcommerceApp.itsFirst) {
-      EcommerceApp.itsFirst = false;
-      await FirebaseFirestore.instance
-          .collection('${collectionName}Total')
-          .doc("total")
-          .set({"Total": total});
-      EcommerceApp.itsFirst = false;
-    } else {
-      final QuerySnapshot result = await FirebaseFirestore.instance
-          .collection('${collectionName}Total')
-          .get();
-      final List<QueryDocumentSnapshot<Object?>> document = result.docs;
-      if (document.length == 1) {
-        document[0].reference.update({'Total': total});
-      }
-    }
+    await FirebaseFirestore.instance
+        .collection('${collectionName}Total')
+        .doc("total")
+        .set({"Total": total});
   }
 
   Future getUserTotal() async {

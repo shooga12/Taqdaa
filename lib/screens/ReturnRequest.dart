@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import '../model/invoice.dart';
-import '../model/item.dart';
-import 'invoices.dart';
-import '../confige/EcommerceApp.dart';
 import 'package:intl/intl.dart';
+import 'package:taqdaa_application/main.dart';
+import '../model/invoice.dart';
+// import '../models/invoice.dart';
+// import '../models/item.dart';
+import '../model/item.dart';
+import '../views/ViewReturnRequests.dart';
+import '../confige/EcommerceApp.dart';
 
 class returnRequest extends StatefulWidget {
   final invoice;
@@ -19,7 +19,6 @@ class returnRequest extends StatefulWidget {
 }
 
 class _returnRequestState extends State<returnRequest> {
-  String user = EcommerceApp().getCurrentUser();
   Invoice? invoice;
   FirebaseDatabase database = FirebaseDatabase.instance;
   String documentName = EcommerceApp().getCurrentUser();
@@ -27,7 +26,9 @@ class _returnRequestState extends State<returnRequest> {
   _returnRequestState(invoice) {
     this.invoice = invoice;
   }
-  @override
+
+  //bool result = false;
+
   List Barcodes = [];
   List returnable = [];
   List checkBoxList = [];
@@ -44,7 +45,7 @@ class _returnRequestState extends State<returnRequest> {
         automaticallyImplyLeading: true,
         title: Text(
           "طلب الاسترجاع",
-          style: TextStyle(fontSize: 24),
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
         ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
@@ -68,20 +69,25 @@ class _returnRequestState extends State<returnRequest> {
             Padding(
               padding: const EdgeInsets.only(bottom: 15),
               child: Card(
+                margin: EdgeInsets.all(5),
                 color: Color.fromARGB(243, 243, 239, 231),
                 child: Container(
                     alignment: Alignment.centerLeft,
-                    height: 50,
+                    height: 60,
                     width: 370,
-                    child: Row(
-                      children: [
-                        Text("   "),
-                        Icon(Icons.info_outline_rounded),
-                        Text(
-                          " يمكنك اختيار المنتجات التي يسمح بترجيعها فقط ",
-                          style: TextStyle(fontSize: 15.5, letterSpacing: 0.8),
-                        ),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Text(" "),
+                          Icon(Icons.info_outline_rounded),
+                          Text(
+                            " يمكنك اختيار المنتجات التي يسمح بترجيعها فقط.",
+                            style:
+                                TextStyle(fontSize: 14.5, letterSpacing: 0.8),
+                          ),
+                        ],
+                      ),
                     )),
               ),
             ),
@@ -102,245 +108,242 @@ class _returnRequestState extends State<returnRequest> {
               ),
             ),
             Expanded(
-              child: ListView.builder(
-                  itemCount: invoice?.items.length,
-                  itemBuilder: (context, index) {
-                    var item = invoice?.items[index];
-                    AddToList(item!);
-                    if (item.returnable == true) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Container(
-                          width: double.infinity,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Checkbox(
-                                value:
-                                    selectedItem.contains(index) ? true : false,
-                                onChanged: (newValue) {
-                                  if (selectedItem.contains(index)) {
-                                    selectedItem.remove(index);
-                                  } else {
-                                    selectedItem.add(index);
-                                  }
-                                  setState(() {
-                                    checkBoxList[index] = newValue;
-                                  });
-                                },
-                                activeColor: Colors.orange,
-                                checkColor: Colors.white,
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Image.network(
-                                  '${item.img}',
-                                  height: 60,
+                child: ListView.builder(
+                    itemCount: invoice?.items.length,
+                    itemBuilder: (context, index) {
+                      var item = invoice?.items[index];
+                      AddToList(item!);
+                      if (item.returnable == true) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Container(
+                            width: double.infinity,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Container(
+                                  child: Stack(children: <Widget>[
+                                    Container(
+                                      child: new Image.asset(
+                                        'assets/Rectangle.png',
+                                        height: 82.0,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 17.0),
+                                      child: Checkbox(
+                                        value: selectedItem.contains(index)
+                                            ? true
+                                            : false,
+                                        onChanged: (newValue) {
+                                          if (selectedItem.contains(index)) {
+                                            selectedItem.remove(index);
+                                          } else {
+                                            selectedItem.add(index);
+                                          }
+                                          setState(() {
+                                            checkBoxList[index] = newValue;
+                                          });
+                                        },
+                                        activeColor:
+                                            Color.fromARGB(255, 0, 38, 255),
+                                        checkColor: Colors.white,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 35, top: 2.5),
+                                      child: Container(
+                                        width: 55,
+                                        margin: EdgeInsets.all(10),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          child: Image(
+                                            image: NetworkImage(
+                                              '${item.img}',
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ]),
                                 ),
-                              ),
-                              SizedBox(width: 20),
-                              Expanded(
-                                flex: 3,
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: Column(
+                                SizedBox(width: 20),
+                                Expanded(
+                                  flex: 3,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             "${item.name}",
                                             style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 32, 7, 121),
                                               fontSize: 18,
-                                              fontWeight: FontWeight.w500,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                           SizedBox(
                                             height: 5.0,
                                           ),
                                           Text(
-                                            " الكمية: ${item.quantity}",
-                                            style: TextStyle(
-                                              color: Colors.grey,
-                                            ),
+                                            "السعر : " +
+                                                item.price.toString() +
+                                                ' ريال',
                                           ),
                                         ],
+                                      ),
+                                      SizedBox(width: 80),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Stack(
+                                          alignment: Alignment.center,
+                                          children: [
+                                            Container(
+                                              width: 35,
+                                              height: 35,
+                                              decoration: new BoxDecoration(
+                                                color: Color.fromARGB(
+                                                    255, 245, 161, 14),
+                                                shape: BoxShape.circle,
+                                              ),
+                                            ),
+                                            Text(
+                                              item.quantity.toString(),
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Container(
+                            width: double.infinity,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Container(
+                                  child: Stack(children: <Widget>[
+                                    Container(
+                                      child: new Image.asset(
+                                        'assets/Rectangle.png',
+                                        height: 82.0,
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "SR",
-                                                textAlign: TextAlign.end,
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                              SizedBox(width: 5.0),
-                                              Text(
-                                                "${item.price}",
-                                                textAlign: TextAlign.end,
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ],
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 35, top: 2.5),
+                                      child: Container(
+                                        width: 55,
+                                        margin: EdgeInsets.all(10),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          child: Image(
+                                            image: NetworkImage(
+                                              '${item.img}',
+                                            ),
                                           ),
-                                        ],
+                                        ),
                                       ),
                                     )
-                                  ],
+                                  ]),
                                 ),
-                              )
-                            ],
-                          ),
-                        ),
-                      );
-                    } else {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Container(
-                          width: double.infinity,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              SizedBox(
-                                width: 46,
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Image.network(
-                                  '${item.img}',
-                                  height: 60,
-                                ),
-                              ),
-                              SizedBox(width: 20),
-                              Expanded(
-                                flex: 3,
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: Column(
+                                SizedBox(width: 20),
+                                Expanded(
+                                  flex: 3,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             "${item.name}",
                                             style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 32, 7, 121),
                                               fontSize: 18,
-                                              fontWeight: FontWeight.w500,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                           SizedBox(
                                             height: 5.0,
                                           ),
                                           Text(
-                                            " الكمية: ${item.quantity}",
-                                            style: TextStyle(
-                                              color: Colors.grey,
+                                            "السعر : " +
+                                                item.price.toString() +
+                                                ' ريال',
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(width: 80),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Stack(
+                                          alignment: Alignment.center,
+                                          children: [
+                                            Container(
+                                              width: 35,
+                                              height: 35,
+                                              decoration: new BoxDecoration(
+                                                color: Color.fromARGB(
+                                                    255, 245, 161, 14),
+                                                shape: BoxShape.circle,
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "SR",
-                                                // textDirection:
-                                                //     TextDirection.rtl,
-                                                textAlign: TextAlign.end,
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                              SizedBox(width: 5.0),
-                                              Text(
-                                                "${item.price}",
-                                                textAlign: TextAlign.end,
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
+                                            Text(
+                                              item.quantity.toString(),
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    }
-                  }),
+                        );
+                      }
+                    })),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Container(
+                height: 1,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                ),
+              ),
             ),
             Expanded(
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 5.0),
-                    // child: Container(
-                    //   height: 1,
-                    //   decoration: BoxDecoration(
-                    //     color: Colors.grey,
-                    //   ),
-                    // ),
-                  ),
-
                   SizedBox(
-                    height: 10.0,
-                  ),
-                  ////////////////////// Reason///////////////////////
-                  // SizedBox(
-                  //   width: 370,
-                  //   height: 50,
-                  //   child: TextField(
-                  //     controller: _controller,
-                  //     cursorColor: Color.fromARGB(255, 37, 43, 121),
-                  //     style: TextStyle(
-                  //         color: Color.fromARGB(255, 15, 53, 120)
-                  //             .withOpacity(0.9)),
-                  //     decoration: InputDecoration(
-                  //       border: OutlineInputBorder(),
-                  //       filled: true, //<-- SEE HERE
-                  //       fillColor:
-                  //           Color.fromARGB(243, 243, 239, 231), //<-- SEE HERE
-
-                  //       labelText: ' لطفًا زودنا بسبب الترجيع ',
-                  //     ),
-                  //   ),
-                  // ),
-                  SizedBox(
-                    height: 15.0,
+                    height: 25.0,
                   ),
                   Center(
                     child: SizedBox(
@@ -348,8 +351,20 @@ class _returnRequestState extends State<returnRequest> {
                       height: 40,
                       child: ElevatedButton(
                         onPressed: () async {
-                          added = addToDB();
+                          added = await addToDB();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MyHomePage(),
+                            ),
+                          );
                           if (added == true) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ViewReturnReq(),
+                              ),
+                            );
                             showDialog(
                                 context: context,
                                 builder: (context) {
@@ -417,7 +432,6 @@ class _returnRequestState extends State<returnRequest> {
   }
 
   var items = [];
-
   AddToList(Item item) {
     items.add(Item(
             barcode: item.barcode,
@@ -427,13 +441,14 @@ class _returnRequestState extends State<returnRequest> {
             price: item.price,
             returnable: true)
         .toMap());
+
     Barcodes.add(item.barcode);
     returnable.add(item.returnable);
     checkBoxList.add(false);
     price.add(item.price);
   }
 
-  bool addToDB() {
+  Future<bool> addToDB() async {
     var checkedItems = [];
     num total = 0;
     var now = new DateTime.now();
@@ -461,6 +476,16 @@ class _returnRequestState extends State<returnRequest> {
       'vat-total': vat,
       'status': "pending"
     }).catchError((onError) => print(onError));
+
+    var addToInvoice = await FirebaseFirestore.instance
+        .collection('${documentName}Invoices')
+        .where("ID", isEqualTo: invoice1.id)
+        .get();
+    var documentId = addToInvoice.docs.first.id;
+    var document = FirebaseFirestore.instance
+        .collection('${documentName}Invoices')
+        .doc(documentId);
+    document.update({"HaveReturnReq": true});
 
     return true;
   }

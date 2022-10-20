@@ -3,16 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:taqdaa_application/screens/insideMore.dart';
 import '../confige/EcommerceApp.dart';
-import '../controller/BNBCustomePainter.dart';
-import '../model/user_model.dart';
-import '../screens/ShoppingCart.dart';
-import '../screens/insideMore.dart';
-import '../screens/invoices.dart';
-import '../screens/list_of_stores.dart';
-import '../screens/NoItmesCart.dart';
 import 'package:intl/intl.dart';
-import '../profile/homep_profile.dart';
+import '../views/profile_view.dart';
 
 class Edit extends StatefulWidget {
   const Edit({Key? key}) : super(key: key);
@@ -22,8 +16,6 @@ class Edit extends StatefulWidget {
 }
 
 class _EditState extends State<Edit> {
-  User? user = FirebaseAuth.instance.currentUser;
-  UserModel loggedInUser = UserModel();
   bool isInsideHome = false;
   bool isInsideReceipt = false;
   bool isInsideMore = true;
@@ -55,19 +47,11 @@ class _EditState extends State<Edit> {
   @override
   void initState() {
     super.initState();
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(user!.uid)
-        .get()
-        .then((value) {
-      this.loggedInUser = UserModel.fromMap(value.data());
-      setState(() {});
-      firstnameController.text = loggedInUser.firstName!;
-      lastnameController.text = loggedInUser.secondName!;
-      emailController.text = loggedInUser.email!;
-      phonenumberController.text = loggedInUser.phonenumber!;
-      dateofbirthController.text = loggedInUser.dateofbirth!;
-    });
+    firstnameController.text = EcommerceApp.loggedInUser.firstName!;
+    lastnameController.text = EcommerceApp.loggedInUser.secondName!;
+    emailController.text = EcommerceApp.loggedInUser.email!;
+    phonenumberController.text = EcommerceApp.loggedInUser.phonenumber!;
+    dateofbirthController.text = EcommerceApp.loggedInUser.dateofbirth!;
   }
 
   String CurrentUser = "";
@@ -75,11 +59,12 @@ class _EditState extends State<Edit> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         automaticallyImplyLeading: true,
         title: Text(
           "تعديل الحساب",
-          style: TextStyle(fontSize: 24),
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
         ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
@@ -263,8 +248,6 @@ class _EditState extends State<Edit> {
                               validator: MultiValidator([
                                 RequiredValidator(errorText: 'مطلوب *'),
                                 PatternValidator(
-                                  //r'^(?:[+0][1-9])?[0-9]{10,12}$',
-                                  //r"^\+?0[0-9]{10}$",
                                   r'^(05)([0-9]{8})$',
                                   errorText:
                                       " أدخل رقم هاتف يبدأ بمفتاح الدولة و يحتوي على 10 ارقام",
@@ -375,6 +358,9 @@ class _EditState extends State<Edit> {
                       ),
                     ),
                   ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
                   Padding(
                     padding: EdgeInsets.only(top: 10.0, right: 90.0),
                     child: SizedBox(
@@ -414,7 +400,26 @@ class _EditState extends State<Edit> {
                                     actions: [
                                       TextButton(
                                           onPressed: () {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                              duration:
+                                                  const Duration(seconds: 2),
+                                              backgroundColor: Color.fromARGB(
+                                                  255, 135, 155, 190),
+                                              content: Text(
+                                                  "تم حفظ التعديلات بنجاح",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      fontSize: 17,
+                                                      letterSpacing: 0.8)),
+                                              action: null,
+                                            ));
                                             saveChanges();
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => More(),
+                                                ));
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
@@ -425,7 +430,7 @@ class _EditState extends State<Edit> {
                                           child: Text(
                                             "نعم",
                                             style: TextStyle(
-                                              color: Colors.red,
+                                              color: Colors.green,
                                             ),
                                           )),
                                       TextButton(
@@ -464,121 +469,6 @@ class _EditState extends State<Edit> {
               ),
             ),
           ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            child: Container(
-              width: size.width,
-              height: 80,
-              color: Colors.white,
-              child: Stack(
-                children: [
-                  CustomPaint(
-                    size: Size(size.width, 80),
-                    painter: BNBCustomePainter(),
-                  ),
-                  Center(
-                      heightFactor: 0.6,
-                      child: Container(
-                        width: 65,
-                        height: 65,
-                        child: FittedBox(
-                          child: FloatingActionButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ListOfStores2()),
-                              );
-                            },
-                            backgroundColor: Colors.orange,
-                            child: Icon(
-                              Icons.document_scanner_outlined,
-                              size: 27,
-                            ),
-                            //elevation: 0.1,
-                          ),
-                        ),
-                      )),
-                  Container(
-                    width: size.width,
-                    height: 80,
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.home_outlined,
-                                size: 35,
-                                color: isInsideHome
-                                    ? Color.fromARGB(255, 254, 176, 60)
-                                    : Colors.white,
-                              )),
-                          IconButton(
-                              onPressed: () {
-                                if (EcommerceApp.haveItems) {
-                                  /////bug fixes
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => shoppingCart()),
-                                  );
-                                } else {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => emptyCart()),
-                                  );
-                                }
-                              },
-                              icon: Icon(
-                                Icons.shopping_cart,
-                                size: 30,
-                                color: isInsideCart
-                                    ? Color.fromARGB(255, 254, 176, 60)
-                                    : Colors.white,
-                              )),
-                          Container(
-                            width: size.width * 0.20,
-                          ),
-                          IconButton(
-                              onPressed: () {
-                                //here reem's page
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => invoices(),
-                                    ));
-                              },
-                              icon: Icon(
-                                Icons.receipt_long,
-                                size: 30,
-                                color: isInsideReceipt
-                                    ? Color.fromARGB(255, 254, 176, 60)
-                                    : Colors.white,
-                              )),
-                          IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => More()),
-                              );
-                            },
-                            icon: Icon(
-                              Icons.more_horiz,
-                              size: 30,
-                              color: isInsideMore
-                                  ? Color.fromARGB(255, 254, 176, 60)
-                                  : Colors.white,
-                            ),
-                          ),
-                        ]),
-                  )
-                ],
-              ),
-            ),
-          )
         ],
       ),
     );
@@ -629,17 +519,19 @@ class _EditState extends State<Edit> {
   bool? date;
 
   checkNull() {
-    firstnameController.text == loggedInUser.firstName!
+    firstnameController.text == EcommerceApp.loggedInUser.firstName!
         ? Fname = false
         : Fname = true;
-    lastnameController.text == loggedInUser.secondName!
+    lastnameController.text == EcommerceApp.loggedInUser.secondName!
         ? Lname = false
         : Lname = true;
-    emailController.text == loggedInUser.email! ? email = false : email = true;
-    phonenumberController.text == loggedInUser.phonenumber!
+    emailController.text == EcommerceApp.loggedInUser.email!
+        ? email = false
+        : email = true;
+    phonenumberController.text == EcommerceApp.loggedInUser.phonenumber!
         ? phone = false
         : phone = true;
-    dateofbirthController.text == loggedInUser.dateofbirth!
+    dateofbirthController.text == EcommerceApp.loggedInUser.dateofbirth!
         ? date = false
         : date = true;
   }

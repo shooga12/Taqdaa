@@ -6,14 +6,18 @@ import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
 import '../confige/EcommerceApp.dart';
 import '../controller/BNBCustomePainter.dart';
 import '../main.dart';
-import '../profile/homep_profile.dart';
+// import '../profile/homep_profile.dart';
+import '../screens/ShoppingCart.dart';
+import '../screens/insideMore.dart';
+import '../screens/invoice_details.dart';
+import '../screens/list_of_stores.dart';
 import 'NoItmesCart.dart';
-import 'ShoppingCart.dart';
-import 'home_page.dart';
-import 'insideMore.dart';
-import 'invoice_details.dart';
+// import 'ShoppingCart.dart';
+// import 'home_page.dart';
+// import 'insideMore.dart';
+// import 'invoice_details.dart';
 import '../model/invoice.dart';
-import 'list_of_stores.dart';
+// import 'list_of_stores.dart';
 
 class invoices extends StatefulWidget {
   const invoices({super.key});
@@ -23,10 +27,12 @@ class invoices extends StatefulWidget {
 }
 
 class _invoicesState extends State<invoices> {
+  String collectionName = EcommerceApp().getCurrentUser();
   bool isInsideHome = false;
   bool isInsideReceipt = true;
   bool isInsideMore = false;
   bool isInsideCart = false;
+  bool noinvoices = false;
   List<Invoice> invoices = [];
   @override
   void didChangeDependencies() {
@@ -35,11 +41,15 @@ class _invoicesState extends State<invoices> {
   }
 
   Future readInvoices() async {
-    var data =
-        await FirebaseFirestore.instance.collection('All-Invoices').get();
+    var data = await FirebaseFirestore.instance
+        .collection('${collectionName}Invoices')
+        .get();
 
     setState(() {
       invoices = List.from(data.docs.map((doc) => Invoice.fromMap(doc)));
+      if (invoices.length == 0) {
+        noinvoices = true;
+      }
     });
   }
 
@@ -66,6 +76,24 @@ class _invoicesState extends State<invoices> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
+          if (noinvoices == true)
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 70),
+                    child: Text(
+                      ' لا يوجد لديك فواتير حتى الآن.',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           Center(
             child: Padding(
                 padding: const EdgeInsets.only(

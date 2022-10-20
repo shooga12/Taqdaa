@@ -7,37 +7,36 @@ class Invoice {
   num? total;
   num? vat_total;
   num? sub_total;
-  List<Item> items = [];
+  num? rewardsDiscount;
   bool? HaveReturnReq;
-  String? status;
+  bool? isExpired;
+  List<Item> items = [];
 
-  Invoice(
-    List items, {
-    this.id,
-    this.store,
-    this.date,
-    this.total,
-    this.vat_total,
-    this.sub_total,
-    this.HaveReturnReq,
-    this.status,
-  }) {
+  Invoice(List items,
+      {this.id,
+      this.store,
+      this.date,
+      this.total,
+      this.vat_total,
+      this.sub_total,
+      this.rewardsDiscount,
+      this.HaveReturnReq,
+      this.isExpired}) {
     items.forEach((e) => this.items.add(Item.fromMap(e)));
   }
 
   // receiving data from server
   factory Invoice.fromMap(map) {
-    return Invoice(
-      map['items'],
-      id: map['ID'],
-      store: map['Store'],
-      date: map['Date'],
-      total: map['Total'],
-      sub_total: map['sub-total'],
-      vat_total: map['vat-total'],
-      HaveReturnReq: map['HaveReturnReq'],
-      status: map['status'],
-    );
+    return Invoice(map['items'],
+        id: map['ID'],
+        store: map['Store'],
+        date: map['Date'],
+        total: map['Total'],
+        sub_total: map['sub-total'],
+        vat_total: map['vat-total'],
+        rewardsDiscount: map['rewardsDiscount'],
+        HaveReturnReq: map['HaveReturnReq'],
+        isExpired: map['isExpired']);
   }
 
   // sending data to our server
@@ -49,9 +48,10 @@ class Invoice {
       'total': total,
       'sub_total': sub_total,
       'vat_total': vat_total,
-      'items': items,
+      'rewardsDiscount': rewardsDiscount,
       'HaveReturnReq': HaveReturnReq,
-      'status': status,
+      'isExpired': isExpired,
+      'items': items,
     };
   }
 }

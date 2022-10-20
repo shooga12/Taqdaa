@@ -1,14 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-
-import '../methods/authentication_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'home_page.dart';
-//import 'package:loginlogout_resetpass/register_page.dart';
+import '../model/user_model.dart';
 import '../reusable_widget/reusable_widget.dart';
-import 'reset_page.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'login_page.dart';
 import 'package:intl/date_symbol_data_file.dart';
@@ -16,9 +11,8 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/date_symbols.dart';
 import 'package:intl/date_symbol_data_custom.dart';
 import 'package:intl/intl.dart';
-import 'package:taqdaa_application/model/user_model.dart';
+// import '../models/user_model.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../profile/homep_profile.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});

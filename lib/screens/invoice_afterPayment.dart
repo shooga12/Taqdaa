@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import '../model/invoice.dart';
 // import '../models/invoice.dart';
-import 'ReturnRequest.dart';
 
-class invoice_details extends StatefulWidget {
+class invoice_afterPayment extends StatefulWidget {
   final invoice;
-  const invoice_details(this.invoice, {super.key});
+  const invoice_afterPayment(this.invoice, {super.key});
   @override
-  State<invoice_details> createState() => _invoicesDetailsState(invoice);
+  State<invoice_afterPayment> createState() =>
+      _invoiceafterPaymentState(invoice);
 }
 
-class _invoicesDetailsState extends State<invoice_details> {
+class _invoiceafterPaymentState extends State<invoice_afterPayment> {
   Invoice? invoice;
   dynamic itemsList;
 
-  _invoicesDetailsState(invoice) {
+  _invoiceafterPaymentState(invoice) {
     this.invoice = invoice;
+    //this.itemsList = invoice?.items;
   }
 
   bool isInsideHome = false;
@@ -60,11 +61,17 @@ class _invoicesDetailsState extends State<invoice_details> {
                       fontSize: 18,
                     ),
                   ),
+                  SizedBox(
+                    height: 5.0,
+                  ),
                   Text(
                     "المتجر: ${invoice!.store}",
                     style: new TextStyle(
                       fontSize: 18,
                     ),
+                  ),
+                  SizedBox(
+                    height: 5.0,
                   ),
                   Text(
                     "${invoice!.date}",
@@ -77,7 +84,7 @@ class _invoicesDetailsState extends State<invoice_details> {
               ),
             ),
             SizedBox(
-              height: 10.0,
+              height: 10,
             ),
             Text(
               "المنتجات",
@@ -94,6 +101,9 @@ class _invoicesDetailsState extends State<invoice_details> {
                   color: Colors.grey,
                 ),
               ),
+            ),
+            SizedBox(
+              height: 5,
             ),
             Expanded(
               child: ListView.builder(
@@ -126,8 +136,8 @@ class _invoicesDetailsState extends State<invoice_details> {
                       ),
                       Row(
                         children: [
+                          Text("SR "),
                           Text("${invoice!.sub_total}"),
-                          Text(' ريال')
                         ],
                       ),
                     ],
@@ -144,10 +154,8 @@ class _invoicesDetailsState extends State<invoice_details> {
                       ),
                       Row(
                         children: [
+                          Text("SR "),
                           Text("${invoice!.vat_total}"),
-                          Text(
-                            ' ريال',
-                          )
                         ],
                       ),
                     ],
@@ -190,23 +198,19 @@ class _invoicesDetailsState extends State<invoice_details> {
                       Row(
                         children: [
                           Text(
-                            "${invoice!.total}",
+                            "SR ",
                             style: TextStyle(
                                 fontSize: 22, fontWeight: FontWeight.w500),
                           ),
                           Text(
-                            ' ريال',
+                            "${invoice!.total}",
                             style: TextStyle(
                                 fontSize: 22, fontWeight: FontWeight.w500),
-                          )
+                          ),
                         ],
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 40.0,
-                  ),
-                  returnButton(invoice)
                 ],
               ),
             ),
@@ -220,173 +224,80 @@ class _invoicesDetailsState extends State<invoice_details> {
     return Container();
   }
 
-  returnButton(invoice) {
-    if (invoice!.HaveReturnReq == false && !invoice.isExpired) {
-      return SizedBox(
-        width: 200,
-        height: 40,
-        child: ElevatedButton(
-          onPressed: () async {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => returnRequest(invoice)),
-            );
-          },
-          child: Text(
-            'طلب استرجاع',
-            style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
-          ),
-          style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.resolveWith((states) {
-                if (states.contains(MaterialState.pressed)) {
-                  return Colors.grey;
-                }
-                return Colors.orange;
-              }),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30)))),
-        ),
-      );
-    } else if (invoice!.HaveReturnReq == true || invoice.isExpired) {
-      return Column(
-        children: [
-          SizedBox(
-            width: 200,
-            height: 40,
-            child: ElevatedButton(
-              onPressed: () {},
-              child: Text(
-                'طلب استرجاع',
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18),
-              ),
-              style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith((states) {
-                    if (states.contains(MaterialState.pressed)) {
-                      return Colors.grey;
-                    }
-                    return Colors.grey;
-                  }),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30)))),
-            ),
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 15),
-            child: Card(
-              color: Color.fromARGB(243, 243, 239, 231),
-              child: Container(
-                  alignment: Alignment.centerLeft,
-                  height: 40,
-                  width: 370,
-                  child: Row(
-                    children: [
-                      Text("   "),
-                      Icon(Icons.info_outline_rounded),
-                      if (invoice.isExpired)
-                        Text(
-                          " لقد انتهت مهلة الترجيع لطلبك ",
-                          style: TextStyle(fontSize: 15.5, letterSpacing: 0.8),
-                        ),
-                      if (!invoice.isExpired)
-                        Text(
-                          " لديك طلب ترجيع قيد الانتظار",
-                          style: TextStyle(fontSize: 15.5, letterSpacing: 0.8),
-                        ),
-                    ],
-                  )),
-            ),
-          )
-        ],
-      );
-    }
-  }
-
   Widget buildSecondItems(dynamic item, BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
-      child: Container(
-        child: new InkWell(
-          child: Row(
-            children: <Widget>[
-              new Container(
-                child: Stack(children: <Widget>[
-                  Container(
-                    child: new Image.asset(
-                      'assets/Rectangle.png',
-                      height: 82.0,
-                      fit: BoxFit.cover,
-                    ),
+    return Container(
+      child: new InkWell(
+        child: Row(
+          children: <Widget>[
+            new Container(
+              child: Stack(children: <Widget>[
+                Container(
+                  child: new Image.asset(
+                    'assets/Rectangle.png',
+                    height: 82.0,
+                    fit: BoxFit.cover,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 25, top: 2.5),
-                    child: Container(
-                      width: 55,
-                      margin: EdgeInsets.all(10),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: Image(
-                          image: NetworkImage(
-                            item.img,
-                          ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 25, top: 2.5),
+                  child: Container(
+                    width: 55,
+                    margin: EdgeInsets.all(10),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: Image(
+                        image: NetworkImage(
+                          item.img,
                         ),
                       ),
                     ),
-                  )
-                ]),
-              ),
-              Column(
-                children: <Widget>[
-                  Text(
-                    " " + item.name,
-                    style: new TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 32, 7, 121),
-                    ),
                   ),
-                  Text(
-                    "  السعر : " + item.price.toString() + ' ريال',
-                    textAlign: TextAlign.center,
-                    style: new TextStyle(
-                      fontSize: 15,
-                      color: Color.fromARGB(255, 77, 76, 76),
-                    ),
+                )
+              ]),
+            ),
+            Column(
+              children: <Widget>[
+                Text(
+                  " " + item.name,
+                  style: new TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 32, 7, 121),
                   ),
-                ],
-              ),
-              Spacer(),
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    width: 35,
-                    height: 35,
-                    decoration: new BoxDecoration(
-                      color: Color.fromARGB(255, 245, 161, 14),
-                      shape: BoxShape.circle,
-                    ),
+                ),
+                Text(
+                  "  السعر : " + item.price.toString() + ' ريال',
+                  textAlign: TextAlign.center,
+                  style: new TextStyle(
+                    fontSize: 15,
+                    color: Color.fromARGB(255, 77, 76, 76),
                   ),
-                  Text(
-                    item.quantity.toString(),
-                    style: TextStyle(color: Colors.white),
-                  )
-                ],
-              ),
-              Text("  "),
-            ],
-          ),
+                ),
+              ],
+            ),
+            Spacer(),
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  width: 35,
+                  height: 35,
+                  decoration: new BoxDecoration(
+                    color: Color.fromARGB(255, 245, 161, 14),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                Text(
+                  item.quantity.toString(),
+                  style: TextStyle(color: Colors.white),
+                )
+              ],
+            ),
+            Text("  "),
+          ],
         ),
-        color: Color.fromARGB(255, 248, 248, 246),
       ),
+      color: Color.fromARGB(255, 248, 248, 246),
     );
   }
 }

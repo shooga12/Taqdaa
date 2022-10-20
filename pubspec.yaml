@@ -52,7 +52,7 @@ dependencies:
   geolocator: ^9.0.2
   geocoding: ^2.0.5
   http: ^0.13.5
-  #flutter_local_notifications: ^11.0.1
+  flutter_local_notifications: ^11.0.1
   rxdart: ^0.27.5
   timezone: ^0.9.0
   fluttertoast: ^8.0.9
@@ -106,6 +106,9 @@ flutter:
     - assets/s2497212-main-zoom.jpeg
     - assets/243280_swatch.jpeg
     - assets/sephora_con.webp
+    - assets/rewards.png
+    - assets/empty_cart.png
+    - assets/successfull_payment.png
     
     # To add assets to your application, add an assets section, like this:
     # assets:

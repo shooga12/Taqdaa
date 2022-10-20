@@ -4,9 +4,10 @@ import 'package:taqdaa_application/screens/list_of_stores.dart';
 import '../confige/EcommerceApp.dart';
 import '../controller/BNBCustomePainter.dart';
 import '../main.dart';
-import 'ShoppingCart.dart';
-import 'insideMore.dart';
-import 'invoices.dart';
+import '../screens/ShoppingCart.dart';
+import '../screens/insideMore.dart';
+import 'invoices_view.dart';
+//import '../screens/invoices.dart';
 
 class emptyCart extends StatelessWidget {
   const emptyCart({super.key});

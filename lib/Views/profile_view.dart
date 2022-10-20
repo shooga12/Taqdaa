@@ -3,20 +3,19 @@ import 'package:either_dart/either.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:taqdaa_application/main.dart';
-import 'package:taqdaa_application/screens/home_page.dart';
 import '../confige/EcommerceApp.dart';
 import '../controller/BNBCustomePainter.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:taqdaa_application/screens/login_page.dart';
+import '../main.dart';
 import '../methods/authentication_services.dart';
+// import '../models/user_model.dart';
 import '../model/user_model.dart';
 import '../screens/EditProfile.dart';
 import '../screens/ShoppingCart.dart';
 import '../screens/insideMore.dart';
-import '../screens/invoices.dart';
+import 'invoices_view.dart';
 import '../screens/list_of_stores.dart';
-import '../screens/NoItmesCart.dart';
+import 'NoItmesCart.dart';
 
 class Homepprofile extends StatefulWidget {
   const Homepprofile({Key? key}) : super(key: key);
@@ -27,7 +26,7 @@ class Homepprofile extends StatefulWidget {
 
 class _HomepprofileState extends State<Homepprofile> {
   User? user = FirebaseAuth.instance.currentUser;
-  UserModel loggedInUser = UserModel();
+  //UserModel loggedInUser = UserModel();
   bool isInsideHome = false;
   bool isInsideReceipt = false;
   bool isInsideMore = true;
@@ -41,12 +40,11 @@ class _HomepprofileState extends State<Homepprofile> {
         .doc(user!.uid)
         .get()
         .then((value) {
-      this.loggedInUser = UserModel.fromMap(value.data());
+      EcommerceApp.loggedInUser = UserModel.fromMap(value.data());
       setState(() {});
     });
   }
 
-  String CurrentUser = "";
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -55,7 +53,7 @@ class _HomepprofileState extends State<Homepprofile> {
         automaticallyImplyLeading: true,
         title: Text(
           "حسابي",
-          style: TextStyle(fontSize: 24),
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
         ),
         actions: <Widget>[
           IconButton(
@@ -112,7 +110,7 @@ class _HomepprofileState extends State<Homepprofile> {
                               Text("   "),
                               Icon(Icons.person),
                               Text(
-                                " ${loggedInUser.firstName} ${loggedInUser.secondName}",
+                                " ${EcommerceApp.loggedInUser.firstName} ${EcommerceApp.loggedInUser.secondName}",
                                 style: TextStyle(
                                     fontSize: 20,
                                     letterSpacing: 0.8,
@@ -122,9 +120,6 @@ class _HomepprofileState extends State<Homepprofile> {
                           )),
                     ),
                   ),
-                  // SizedBox(
-                  //   height: 10,
-                  // ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Card(
@@ -144,9 +139,9 @@ class _HomepprofileState extends State<Homepprofile> {
                               Text("   "),
                               Icon(Icons.mail),
                               Text(
-                                " ${loggedInUser.email}",
+                                " ${EcommerceApp.loggedInUser.email}",
                                 style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 18,
                                     letterSpacing: 0.8,
                                     color: Colors.black),
                               ),
@@ -154,64 +149,6 @@ class _HomepprofileState extends State<Homepprofile> {
                           )),
                     ),
                   ),
-                  // Text.rich(
-                  //   TextSpan(
-                  //     style: TextStyle(
-                  //       fontSize: 22,
-                  //     ),
-                  //     children: [
-                  //       WidgetSpan(
-                  //         child: Icon(Icons.person),
-                  //       ),
-                  //       TextSpan(
-                  //         text:
-                  //             " ${loggedInUser.firstName} ${loggedInUser.secondName}",
-                  //       )
-                  //     ],
-                  //   ),
-                  // ),
-
-                  // ListTile(
-                  //   title: Text(
-                  //     'Name',
-                  //     style: TextStyle(fontSize: 22),
-                  //   ),
-                  //   subtitle: Text(
-                  //     "${loggedInUser.firstName} ${loggedInUser.secondName}",
-                  //     style: TextStyle(fontSize: 22),
-                  //   ),
-                  // ),
-                  // SizedBox(
-                  //   height: 10,
-                  // ),
-                  // Text.rich(
-                  //   TextSpan(
-                  //     style: TextStyle(
-                  //       fontSize: 22,
-                  //     ),
-                  //     children: [
-                  //       WidgetSpan(
-                  //         child: Icon(Icons.mail),
-                  //       ),
-                  //       TextSpan(
-                  //         text: " ${loggedInUser.email}",
-                  //       )
-                  //     ],
-                  //   ),
-                  // ),
-                  // ListTile(
-                  //   title: Text(
-                  //     'Email',
-                  //     style: TextStyle(fontSize: 22),
-                  //   ),
-                  //   subtitle: Text(
-                  //     "${loggedInUser.email}",
-                  //     style: TextStyle(fontSize: 22),
-                  //   ),
-                  // ),
-                  // SizedBox(
-                  //   height: 10,
-                  // ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Card(
@@ -231,7 +168,7 @@ class _HomepprofileState extends State<Homepprofile> {
                               Text("   "),
                               Icon(Icons.phone_enabled),
                               Text(
-                                " ${loggedInUser.phonenumber}",
+                                " ${EcommerceApp.loggedInUser.phonenumber}",
                                 style: TextStyle(
                                     fontSize: 20,
                                     letterSpacing: 0.8,
@@ -241,35 +178,6 @@ class _HomepprofileState extends State<Homepprofile> {
                           )),
                     ),
                   ),
-                  // Text.rich(
-                  //   TextSpan(
-                  //     style: TextStyle(
-                  //       fontSize: 22,
-                  //     ),
-                  //     children: [
-                  //       WidgetSpan(
-                  //         child: Icon(Icons.phone_enabled),
-                  //       ),
-                  //       TextSpan(
-                  //         text: " ${loggedInUser.phonenumber}",
-                  //       )
-                  //     ],
-                  //   ),
-                  // ),
-
-                  // ListTile(
-                  //   title: Text(
-                  //     'Phone Number',
-                  //     style: TextStyle(fontSize: 22),
-                  //   ),
-                  //   subtitle: Text(
-                  //     "${loggedInUser.phonenumber}",
-                  //     style: TextStyle(fontSize: 22),
-                  //   ),
-                  // ),
-                  // SizedBox(
-                  //   height: 10,
-                  // ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Card(
@@ -289,7 +197,7 @@ class _HomepprofileState extends State<Homepprofile> {
                               Text("   "),
                               Icon(Icons.calendar_month),
                               Text(
-                                " ${loggedInUser.dateofbirth}",
+                                " ${EcommerceApp.loggedInUser.dateofbirth}",
                                 style: TextStyle(
                                     fontSize: 20,
                                     letterSpacing: 0.8,
@@ -299,32 +207,9 @@ class _HomepprofileState extends State<Homepprofile> {
                           )),
                     ),
                   ),
-
-                  // Text.rich(
-                  //   TextSpan(
-                  //     style: TextStyle(
-                  //       fontSize: 22,
-                  //     ),
-                  //     children: [
-                  //       WidgetSpan(
-                  //         child: Icon(Icons.calendar_month),
-                  //       ),
-                  //       TextSpan(
-                  //         text: " ${loggedInUser.dateofbirth}",
-                  //       )
-                  //     ],
-                  //   ),
-                  // ),
-                  // ListTile(
-                  //   title: Text(
-                  //     'Date of Birth',
-                  //     style: TextStyle(fontSize: 22),
-                  //   ),
-                  //   subtitle: Text(
-                  //     "${loggedInUser.dateofbirth}",
-                  //     style: TextStyle(fontSize: 22),
-                  //   ),
-                  // ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
                   Padding(
                     padding: EdgeInsets.only(top: 10.0, right: 90.0),
                     child: SizedBox(
@@ -340,7 +225,8 @@ class _HomepprofileState extends State<Homepprofile> {
                                   actions: [
                                     TextButton(
                                         onPressed: () {
-                                          deleteUser("${loggedInUser.uid}");
+                                          deleteUser(
+                                              "${EcommerceApp.loggedInUser.uid}");
                                           user!.delete();
 
                                           Navigator.push(
@@ -400,10 +286,35 @@ class _HomepprofileState extends State<Homepprofile> {
                               context: context,
                               builder: ((context) {
                                 return AlertDialog(
+                                  // content: Container(
+                                  //   height: 280,
+                                  //   child: Column(
+                                  //     children: [
+                                  //       Padding(
+                                  //         padding: const EdgeInsets.all(8.0),
+                                  //         child: Image.asset(
+                                  //           "assets/successfull_payment.png",
+                                  //           height: 200,
+                                  //         ),
+                                  //       ),
+                                  //       Padding(
+                                  //         padding: const EdgeInsets.all(8.0),
+                                  //         child: Text(
+                                  //           "شكرًا لك، تم الدفع بنجاح !",
+                                  //           style: TextStyle(
+                                  //               fontSize: 20,
+                                  //               color: Color.fromARGB(
+                                  //                   255, 98, 160, 100)),
+                                  //         ),
+                                  //       ),
+                                  //     ],
+                                  //   ),
+                                  // ),
                                   title: Text("هل تريد تسجيل الخروج؟"),
                                   actions: [
                                     TextButton(
                                         onPressed: () {
+                                          Navigator.pop(context);
                                           FirebaseAuthMethods().signOut();
                                           Navigator.push(
                                               context,
@@ -496,7 +407,13 @@ class _HomepprofileState extends State<Homepprofile> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MyHomePage()),
+                                );
+                              },
                               icon: Icon(
                                 Icons.home_outlined,
                                 size: 35,
