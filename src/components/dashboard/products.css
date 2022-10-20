@@ -106,5 +106,11 @@ td:first-child{
     font-weight: 600;
     color: var(--main-color);
 }
+.close-edit-item-popup{
+    border: none;
+    background-color: transparent;
+    color: #575757;
+    font-size: 1.3em;
+}
   
 

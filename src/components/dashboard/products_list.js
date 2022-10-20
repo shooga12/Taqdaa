@@ -14,11 +14,13 @@ import 'reactjs-popup/dist/index.css';
 import {MdModeEditOutline} from 'react-icons/md';
 import { extend } from 'jquery';
 import img2 from './458789.jpeg';
+import pageNum from './reload';
 
 
 
 function Child({ datum }) {
   
+  const [itemsSet, setItemsSet] = useState(datum);
   const [barcode, setBarcode] = useState("");
   const [pname, setPName] = useState("");
   const [price, setPrice] = useState("");
@@ -33,6 +35,7 @@ function Child({ datum }) {
   const [priceInErrorState, setPriceInErrorState] = useState(false);
   const [uidInErrorState, setUidInErrorState] = useState(false);
   const [photoInErrorState, setPhotoInErrorState] = useState(false);
+  const [popupIsOpen, setPopupIsOpen] = useState(false);
   const storage = getStorage();
   let PhotoFileName = "";
   
@@ -41,6 +44,8 @@ function Child({ datum }) {
     let Ref = dRef(DB)
     let item = child(Ref, 'Store'+auth.currentUser.uid+'/store/'+itemKey);
     remove(item);
+    updateDateSet();
+    document.querySelector('#saved-success-alert').innerHTML = '<div class="alert alert-success" role="alert">Item Deleted Successfully</div>';
   }
   
   const saveChanges = async (itemKey) =>{
@@ -69,9 +74,11 @@ function Child({ datum }) {
             Returnable: returnable === 'true'? true : false,
           }).then(response => {
             document.querySelector('#saved-success-alert').innerHTML = '<div class="alert alert-success" role="alert">Changes Saved Successfully</div>';
+            updateDateSet();
           }).catch(error =>{
             console.log(error.message)
           });
+
         }
 
         else{
@@ -84,6 +91,7 @@ function Child({ datum }) {
               Photo: photoURL
           }).then(response => {
             document.querySelector('#saved-success-alert').innerHTML = '<div class="alert alert-success" role="alert">Changes Saved Successfully</div>'; 
+            updateDateSet();
           }).catch(error =>{
             console.log(error.message)
           });
@@ -91,7 +99,29 @@ function Child({ datum }) {
     }
   }
   
-  
+  const updateDateSet = ()=>{
+    const dbRef = dRef(DB);
+    get(child(dbRef, 'Store'+auth.currentUser?.uid)).then(snapshot  => {
+      if (snapshot.exists()) {
+        var pro = snapshot.val();
+    
+        let myDataArray = []
+        let store = pro["store"];
+
+        Object.keys(store).map(key => {
+          console.log(key); 
+          console.log(store[key]); 
+          myDataArray.push({"Key" : key, "Barcode" : store[key]["Barcode"], "Price" : store[key]['Price'], "Name" : store[key]["Product Name"], "UID" : store[key]["RFID"], "Photo" : store[key]["ProductImage"], "Returnable" : store[key]["Returnable"] == true? "True" : "False"})
+        });
+        setItemsSet(myDataArray);
+
+      } else {
+          console.log("No data available");       
+      }
+     }).catch((error) => {
+      console.error(error);
+     }); 
+  }
   const setItemData = (photo, barcode, name, price, uid, returnable)=>{
      setBarcode(barcode);
      setPName(name);
@@ -99,6 +129,7 @@ function Child({ datum }) {
      setUID(uid);
      setReturnable(returnable);
      setPhotoUpdated(photo);
+     document.querySelector('#saved-success-alert').innerHTML = '';
   }
 
   const showAlert = (msg, func, actionName)=>{   
@@ -261,6 +292,7 @@ function Child({ datum }) {
     
 
   return (
+    itemsSet?
     <>
      <div id="products-container">
       <table id="products-box" className='col-12'>
@@ -277,8 +309,8 @@ function Child({ datum }) {
           </thead>
           <tbody>
             {
-            datum && datum.map ?
-            datum.map(item => (
+            itemsSet && itemsSet.map ?
+            itemsSet.map(item => (
               <tr>
                    <td>
                     <img src={item["Photo"]} className="product-img"></img>
@@ -289,9 +321,10 @@ function Child({ datum }) {
                    <td>{item["UID"]}</td>
                    <td>{item["Returnable"]}</td>
                    <td>
-                    <Popup trigger={<span className='edit-icons'><FiEdit /></span>} position="left center" contentStyle={{ width: '800px' }} onOpen={()=>setItemData(item["Photo"],item["Barcode"],item["Name"],item["Price"],item["UID"],item["Returnable"])}>
+                    <Popup open={popupIsOpen} trigger={<span className='edit-icons'><FiEdit /></span>} position="left center" contentStyle={{ width: '800px' }} onOpen={()=>setItemData(item["Photo"],item["Barcode"],item["Name"],item["Price"],item["UID"],item["Returnable"])}>
                       <div id='prompt-back-layer'>
                         <div id='edit-item-prompt'>
+                          <div className='w-100 d-flex p-3 justify-content-end'><button className='close-edit-item-popup'>x</button></div>
                           <div className='p-4'>
                             <div className='w-100 d-flex justify-content-around'>
                               <div className=''>
@@ -367,6 +400,8 @@ function Child({ datum }) {
       </table>
      </div>
     </>
+    :
+    null
   );
 }
 
@@ -396,7 +431,7 @@ function Products_List(){
               Object.keys(store).map(key => {
                 console.log(key); 
                 console.log(store[key]); 
-                myDataArray.push({"Key" : key, "Barcode" : store[key]["Barcode"], "Price" : store[key]['Price'], "Name" : store[key]["Product Name"], "UID" : store[key]["UID"], "Photo" : store[key]["Photo"], "Returnable" : store[key]["Returnable"] == true? "True" : "False"})
+                myDataArray.push({"Key" : key, "Barcode" : store[key]["Barcode"], "Price" : store[key]['Price'], "Name" : store[key]["Product Name"], "UID" : store[key]["RFID"], "Photo" : store[key]["ProductImage"], "Returnable" : store[key]["Returnable"] == true? "True" : "False"})
               });
               /*
               store.map(doc =>{
@@ -421,6 +456,7 @@ function Products_List(){
         return(   
             <>
             <h1 className="mt-3" id='l'>Products List</h1>
+            <span id='saved-success-alert'></span>
              {
               items?
               <Child datum={items}/> 

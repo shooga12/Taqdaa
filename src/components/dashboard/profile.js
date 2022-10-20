@@ -8,7 +8,7 @@ import {useNavigate} from 'react-router-dom';
 import parse from 'html-react-parser'
 import {ref as dRef,child, get, remove} from "firebase/database";
 import {validEmail,validName,emptyImage,validPhone, validNameWithDigits} from '../../shared/validations';
-import {ref as sRef, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
+import {ref as sRef, getStorage, uploadBytes, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import {MdModeEditOutline} from 'react-icons/md';
 import { confirmAlert } from 'react-confirm-alert'; 
 import { render } from '@testing-library/react';
@@ -67,13 +67,14 @@ function Profile(){
    }
 
    const generateLogoURL = () => {
-    console.log(BrandLogoFileName)
+    console.log("Logo: "+StoreLogo)
     const imgRef = sRef(storage,"images/"+BrandLogoFileName);
-      uploadBytes(imgRef,StoreLogo).then(() => {
+    uploadBytesResumable(imgRef,StoreLogo).then(() => {
           getDownloadURL(imgRef).then((url)=>{
             setLogoURL(url)
+            console.log("Logo URL: "+logoURL)
           })
-      })
+      }) 
    }
 
   const handleLogo = (e)=>{
@@ -431,11 +432,6 @@ function Profile(){
      }, false)
 
 
-  
-        
- 
-    
-    
      /*
      reauthenticateWithCredential(user, credential).then(() => {
       user.delete().then(async () => {
@@ -552,7 +548,7 @@ function Profile(){
                 </div>
                 <div className='row'>
                   <label htmlFor='phone'>Phone Number</label>
-                  <input type='tel' name='phone' onChange={(e) => handlePhoneChange(e.target.value)} value={data? phone : ''}></input>
+                  <input type='tel' name='phone' onChange={(e) => handlePhoneChange(e.target.value)} value={data? phone : ''} maxLength={10}></input>
                   <p className='error-msg' id="error-msg-pn"></p>
                 </div>
               </div>

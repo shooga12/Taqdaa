@@ -8,6 +8,7 @@ import {MdPhone, MdPhoneInTalk} from 'react-icons/md'
 import {IoIosArrowDown} from 'react-icons/io'
 import {HiFilter} from 'react-icons/hi'
 import {FiSearch} from 'react-icons/fi'
+import {TbFileInvoice} from 'react-icons/tb'
 import img1 from './sephora-brightening-hydrating-foundation-original-imaecf3t7vgdk9by.webp';
 import img2 from './458789.jpeg';
 import loading from './loading.gif';
@@ -21,6 +22,7 @@ function InvoiceCard({ invoices }) {
   const [filterApplied, setFilterApplied] = useState(false);
   const [endDate, setEndDate] = useState(today);
   const [errorState, setErrorState] = useState(false);
+  const [noInvoices, setNoInvoices] = useState(false);
 
   const collapse = (id)=>{
     let invoice = document.querySelector('#invoice-'+id+'-body');
@@ -52,6 +54,9 @@ function InvoiceCard({ invoices }) {
       });
       setInvoicesList(tmpArray);
       setFilterApplied(true);
+      if(tmpArray.length == 0){
+        setNoInvoices(true);
+      }
       document.querySelector('#filter-box').style.display = 'none';
     }
   }
@@ -59,6 +64,7 @@ function InvoiceCard({ invoices }) {
   const removeFilter = ()=>{
     setInvoicesList(invoices);
     setFilterApplied(false);
+    setNoInvoices(false);
     document.querySelector('#filter-box').style.display = 'none';
   }
   
@@ -139,6 +145,14 @@ function InvoiceCard({ invoices }) {
           </div>
       </div>
       {
+      noInvoices === true? 
+      <div className='w-100 h-100 d-flex justify-content-center'>
+        <div className='d-flex flex-column p-5 justify-content-center align-items-center'>
+          <TbFileInvoice style={{fontSize: '150px', color: '#d2d2d2'}}/>
+          <p style={{fontSize: '40px', color: '#d2d2d2'}}>No Invoices</p>
+        </div>
+      </div> 
+      :
       invoicesList && invoicesList.map ?
       Object.keys(invoicesList).map(key => (
                 <div className='invoice-card'>
@@ -166,19 +180,19 @@ function InvoiceCard({ invoices }) {
                       <h5>Items</h5>
                       <div>
                         { 
-                          Object.keys(invoicesList[key].items).map(key => (
+                          Object.keys(invoicesList[key].items).map(itemKey => (
                             <div className='item'>
                               <div className='w-100 p-3 mt-3 d-flex justify-content-between align-items-center'>
                                 <div className='item-first-part justify-content-between d-flex align-items-center'>
-                                    <h6><strong>{parseInt(key)+1}</strong></h6>
-                                    <img src={invoicesList[key].items[key]['img']} height='100'></img>
+                                    <h6><strong>{parseInt(itemKey)+1}</strong></h6>
+                                    <img src={invoicesList[key].items[itemKey]['img']} height='100'/>
                                     <div>
-                                        <p><strong>{invoicesList[key].items[key]['name']}</strong></p>
-                                        <p><strong>Barcode: </strong>{invoicesList[key].items[key]['barcode']}</p>
+                                        <p><strong>{invoicesList[key].items[itemKey]['name']}</strong></p>
+                                        <p><strong>Barcode: </strong>{invoicesList[key].items[itemKey]['barcode']}</p>
                                     </div>
                                 </div>
                                 <div>
-                                  <span>{invoicesList[key].items[key]['price']} SR</span>
+                                  <span>{invoicesList[key].items[itemKey]['price']} SR</span>
                                 </div>
                               </div>
                             </div>

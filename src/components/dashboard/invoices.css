@@ -173,3 +173,7 @@ h1{
   margin-left: 0.3em;
   font-size: 22px;
 }
+.item img{
+  padding-left: 2em;
+  padding-right: 2em;
+}
