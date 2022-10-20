@@ -20,6 +20,7 @@ function InvoiceCard({ invoices }) {
   const [startDate, setStartDate] = useState(today);
   const [filterApplied, setFilterApplied] = useState(false);
   const [endDate, setEndDate] = useState(today);
+  const [errorState, setErrorState] = useState(false);
 
   const collapse = (id)=>{
     let invoice = document.querySelector('#invoice-'+id+'-body');
@@ -37,20 +38,22 @@ function InvoiceCard({ invoices }) {
   }
   
   const filterInvoices = ()=>{
-    let tmpArray = [];
-    let start = new Date(startDate);
-    let end = new Date(endDate);
-    Object.keys(invoices).map(key=>{
-      let date = invoices[key]['Date'].split('/');
-      date = date[2] + '-' + date[1] + '-' + date[0]
-      date = new Date(date);
-      if(date >= start && date <= end){
-        tmpArray.push(invoices[key]);
-      }
-    });
-    setInvoicesList(tmpArray);
-    setFilterApplied(true);
-    document.querySelector('#filter-box').style.display = 'none';
+    if(errorState === false){
+      let tmpArray = [];
+      let start = new Date(startDate);
+      let end = new Date(endDate);
+      Object.keys(invoices).map(key=>{
+        let date = invoices[key]['Date'].split('/');
+        date = date[2] + '-' + date[1] + '-' + date[0]
+        date = new Date(date);
+        if(date >= start && date <= end){
+          tmpArray.push(invoices[key]);
+        }
+      });
+      setInvoicesList(tmpArray);
+      setFilterApplied(true);
+      document.querySelector('#filter-box').style.display = 'none';
+    }
   }
 
   const removeFilter = ()=>{
@@ -60,9 +63,43 @@ function InvoiceCard({ invoices }) {
   }
   
   const handleStartDateChange = (date) =>{
-
+     setStartDate(date);
+     let start = new Date(date);
+     let end = document.querySelector('#end-date').value;
+     end = new Date(end);
+     if(start > end){
+      setErrorState(true);
+      let errorMSG = document.querySelector('#error-msg');
+      errorMSG.innerHTML = 'Start date must not be a date after end date';
+      errorMSG.style.display = 'visibile';
+     }
+     else{
+      setErrorState(false);
+      let errorMSG = document.querySelector('#error-msg');
+      errorMSG.innerHTML = '';
+      errorMSG.style.display = 'hidden';
+     }
   }
-  
+
+  const handleEndDateChange = (date) =>{
+     setEndDate(date);
+     let end = new Date(date);
+     let start = document.querySelector('#start-date').value;
+     start = new Date(start);
+     if(start > end){
+      setErrorState(true);
+      let errorMSG = document.querySelector('#error-msg');
+      errorMSG.innerHTML = 'Start date must not be a date after end date';
+      errorMSG.style.display = 'visibile';
+     }
+     else{
+      setErrorState(false);
+      let errorMSG = document.querySelector('#error-msg');
+      errorMSG.innerHTML = '';
+      errorMSG.style.display = 'hidden';
+     }
+  }
+
   const filterCollapse = ()=>{
     let filterBox = document.querySelector('#filter-box');
     if(filterBox.style.display == 'block'){
@@ -85,10 +122,10 @@ function InvoiceCard({ invoices }) {
             <div id='filter-box' className='p-4'>
               <div className='d-flex flex-column align-items-start'>
                 <label htmlFor='start-date'>Start Date</label>
-                <input type={'date'} name='start-date' min={'2020-01-01'} max={today} value={startDate} className='date-fields' onChange={(e)=>{setStartDate(e.target.value)}}></input>
+                <input type={'date'} name='start-date' min={'2020-01-01'} max={today} value={startDate} className='date-fields' id='start-date' onChange={(e)=>{handleStartDateChange(e.target.value)}}></input>
                 <label htmlFor='end-date' className='mt-3'>End Date</label>
-                <input type={'date'} name='end-date' min={'2020-01-01'} max={today} value={endDate} className='date-fields' onChange={(e)=>{setEndDate(e.target.value)}}></input>
-                <p id="error-msg" className='mt-3'>Start date should be a date before end date</p>
+                <input type={'date'} name='end-date' min={'2020-01-01'} max={today} value={endDate} className='date-fields' id='end-date' onChange={(e)=>{handleEndDateChange(e.target.value)}}></input>
+                <p id="error-msg" className='mt-3'></p>
                 <div className='d-flex w-100 justify-content-center'>
                   <button id='apply-filter-btn' className='mt-1' onClick={()=>filterInvoices()}>Apply</button>
                   {filterApplied === true ?

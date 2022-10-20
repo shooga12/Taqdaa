@@ -117,6 +117,7 @@ h1{
   z-index: 2;
   margin-top: 3em;
   display: none;
+  width: 300px;
 }
 #apply-filter-btn{
   border:none;
@@ -162,6 +163,7 @@ h1{
   border: 1px solid #878787;
   padding: 0.2em 0.3em 0.2em 0.3em;
   margin-top: 0.3em;
+  width: 200px;
 }
 #error-msg{
   color: #b30000;

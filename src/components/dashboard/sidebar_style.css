@@ -431,3 +431,55 @@ body.shrink .tooltip {
 #edit-btn-container{
   margin-top: -0.8em;
 }
+#password-prompt{
+  padding: 1.2em;
+  background-color: white;
+  box-shadow: 1px 1px 15px 1px #ebebeb;
+  width: max-content;
+  position: absolute;
+  z-index: 2;
+  top: 30%;
+  left: 40%;
+}
+#password-prompt span button{
+  border: none;
+  background-color: transparent;
+}
+#password-prompt input{
+  border-radius: 50px;
+  border: 1px solid #898989;
+  padding: 0.3em 0.8em 0.3em 0.8em;
+  width: 250px;
+}
+#password-prompt #submit{
+  border: none;
+  padding: 0.3em 0.8em 0.3em 0.8em;
+  border-radius: 50px;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  background-color: var(--orange);
+  color: white;
+}
+#password-prompt #submit:hover{
+  background-color: var(--orange-dark);
+}
+#dark-layer{
+  background-color: #101010;
+  opacity: 30%;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+}
+#wrong-pass-error-msg{
+  color: rgb(187, 0, 0);
+  visibility: hidden;
+}
+#pass-error-msg{
+  color: rgb(187, 0, 0);
+  visibility: hidden;
+}
+#password-prompt-container{
+  display: none;
+}

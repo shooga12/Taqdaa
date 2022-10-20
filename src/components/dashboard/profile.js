@@ -1,6 +1,7 @@
-import React,{useEffect,useState} from 'react';
+import React,{useEffect,useState, Fragment} from 'react';
 import auth,{DB,db} from '../../shared/firebase';
-import {reauthenticateWithPopup,reauthenticateWithCredential,reauthenticateWithRedirect, fetchSignInMethodsForEmail, deleteUser, GoogleAuthProvider} from 'firebase/auth';
+import ReactDOM from "react-dom";
+import {reauthenticateWithPopup,reauthenticateWithCredential, fetchSignInMethodsForEmail, deleteUser, EmailAuthProvider} from 'firebase/auth';
 import { doc, getDoc, updateDoc,deleteDoc } from "firebase/firestore";
 import { async } from '@firebase/util';
 import {useNavigate} from 'react-router-dom';
@@ -10,6 +11,7 @@ import {validEmail,validName,emptyImage,validPhone, validNameWithDigits} from '.
 import {ref as sRef, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
 import {MdModeEditOutline} from 'react-icons/md';
 import { confirmAlert } from 'react-confirm-alert'; 
+import { render } from '@testing-library/react';
 
 function Profile(){
    
@@ -26,6 +28,8 @@ function Profile(){
    const [isLogoUpdated, setIsLogoUpdated] = useState(false);
    const [logoUpdated, setLogoUpdated] = useState(""); 
    const [logoURL, setLogoURL] = useState("");
+   let password = "";
+   const [passwordErrorState, setPasswordErrorState] = useState(false);
    let BrandLogoFileName = "";
    const storage = getStorage();
    const navigate = useNavigate();
@@ -246,8 +250,32 @@ function Profile(){
     }
   }
 
+  const handlePassword = (val) =>{
+     let error = false;
+     val = val.trim();
+     password = val;
+     console.log(password);
+     //Remove wrong password error msg
+     let errorMSG = document.querySelector('#wrong-pass-error-msg');
+     errorMSG.innerHTML = '';
+     errorMSG.style.visibility = 'hidden';
+
+     if(val == ''){
+        error = true;
+        setPasswordErrorState(true);
+        document.querySelector('#pass-error-msg').innerHTML = 'Password is required';
+        document.querySelector('#pass-error-msg').style.visibility = 'visible';
+     }
+     if(!error){
+        setPasswordErrorState(false);
+        document.querySelector('#pass-error-msg').innerHTML = '';
+        document.querySelector('#pass-error-msg').style.visibility = 'hidden';
+     }
+  }
+  
+
  
-   const showAlert = (msg, func, actionName) => {
+  const showAlert = (msg, func, actionName) => {
 
     confirmAlert({
     message: msg,
@@ -385,19 +413,29 @@ function Profile(){
     }
   }
    
-   const deleteStore = async ()=>{
-     const user = auth.currentUser;
-     const userID = user.uid;
+   const deleteStore = (password)=>{
+     let errorState = false;
 
-     user.reauthenticateWithPopup(auth.GoogleAuthProvider)
-     .then(function(userCredential) {
-       // You can now delete the user:
-       return user.delete();
-     })
-     .catch(function(error) {
-       // Credential mismatch or some other error.
-     });
-      
+     document.querySelector('#password-input').value = '';
+     document.querySelector('#pass-error-msg').innerHTML = '';
+     document.querySelector('#pass-error-msg').style.visibility = 'hidden';
+     //Remove Error MSG
+     let errorMSG = document.querySelector('#wrong-pass-error-msg');
+     errorMSG.innerHTML = '';
+     errorMSG.style.visibility = 'hidden';
+
+     //Display Prompt
+     document.querySelector('#password-prompt-container').style.display = 'block';
+     document.querySelector('#close-prompt-btn').addEventListener('click', ()=>{
+       document.querySelector('#password-prompt-container').style.display = 'none';
+     }, false)
+
+
+  
+        
+ 
+    
+    
      /*
      reauthenticateWithCredential(user, credential).then(() => {
       user.delete().then(async () => {
@@ -415,6 +453,43 @@ function Profile(){
       */
    
   }
+
+  const submitCredentials = ()=>{
+
+    const user = auth.currentUser;
+    const userID = user.uid;
+    if(passwordErrorState === false){
+      console.log("Password: " + password);
+      //Assign Credentials
+      const credential = EmailAuthProvider.credential(
+        user.email, 
+        password
+      );
+      
+      reauthenticateWithCredential(user, credential).then(() => {
+        // User re-authenticated.
+        console.log('authenticated');
+        user.delete().then(async () => {
+          const storeSetRef = await dRef(DB, 'Store'+userID)
+          await remove(storeSetRef);
+          await deleteDoc(doc(db, "Stores", 'Store'+userID));
+          showAlertSuccess();
+         }).catch((error) => {
+           console.log(error);
+         });
+      })
+      .catch(function(error) {
+        // Credential mismatch or some other error.
+        if(error.code == 'auth/wrong-password'){
+          let errorMSG = document.querySelector('#wrong-pass-error-msg');
+          errorMSG.innerHTML = 'Wrong Password';
+          errorMSG.style.visibility = 'visible';
+        }
+      });
+    }
+   }
+
+
 
    auth.onAuthStateChanged(function(user) {
     if (user) {
@@ -497,11 +572,31 @@ function Profile(){
              <div className='mt-2 d-flex justify-content-center'>
               <div className='col-4 d-flex justify-content-around'>
                 <button id="save-changes-btn" onClick={()=>showAlert('Do You Want to Save Your Changes?',()=>addData(),'Save')}>Save Changes</button>
-                <button id="delete-store-btn" onClick={()=>showAlert('Delete Store?',()=>deleteStore(),'Delete')}>Delete Store</button>
+                <button id="delete-store-btn" onClick={()=>showAlert('Delete Store?',()=>deleteStore(password),'Delete') }>Delete Store</button>
               </div>
             </div>
-            </div>
-            </>     
+            </div> 
+            {
+            <div className='w-100' id='password-prompt-container'>
+              <div id='dark-layer'></div>
+                <div id='password-prompt'>
+                  <div>
+                    <div className='w-100 d-flex justify-content-end'><span id='close-prompt-btn'><button>x</button></span></div>
+                    <p id='wrong-pass-error-msg'></p>
+                    <div className='mt-3 d-flex flex-column align-items-center'>
+                      <div className='d-flex flex-column'>
+                        <label htmlFor='password' className='mb-2'>Password</label>
+                        <input type={'password'} name='password' id='password-input' onChange={(e)=>handlePassword(e.target.value)}></input>
+                        <p id='pass-error-msg' className='mt-1'></p>
+                      </div>
+                      <button id='submit' onClick={()=>submitCredentials()}>Submit</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            } 
+            </>  
+              
         )
     
 }
