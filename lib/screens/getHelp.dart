@@ -51,74 +51,7 @@ class _helpPageState extends State<helpPage> {
                 padding: const EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Card(
-                      child: new InkWell(
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 12, bottom: 12, left: 15, right: 12),
-                            child: Row(children: <Widget>[
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.phone_enabled,
-                                      size: 30,
-                                      color:
-                                          Color.fromARGB(223, 134, 186, 243))),
-                              Column(children: <Widget>[
-                                Text(
-                                  "أتصل علينا",
-                                  style: new TextStyle(
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ]),
-                              Spacer(),
-                              // Icon(Icons.arrow_forward,
-                              //     color: Color.fromARGB(223, 134, 186, 243)),
-                            ]),
-                          ),
-                          onTap: () async {
-                            await FlutterPhoneDirectCaller.callNumber(
-                                '+966509483390');
-                          }),
-                      color: Color.fromARGB(243, 243, 239, 231),
-                    ),
-                    Card(
-                      child: new InkWell(
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 12, bottom: 12, left: 15, right: 12),
-                            child: Row(children: <Widget>[
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.mail_outline,
-                                      size: 30,
-                                      color:
-                                          Color.fromARGB(223, 134, 186, 243))),
-                              Column(children: <Widget>[
-                                Text(
-                                  "أرسل لنا إيميل",
-                                  style: new TextStyle(
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ]),
-                              Spacer(),
-                              // Icon(Icons.arrow_forward,
-                              //     color: Color.fromARGB(223, 134, 186, 243)),
-                            ]),
-                          ),
-                          onTap: () async {
-                            // String url = 'mailto:nouraalkho2@gmail.com';
-                            // await launchUrl(url);
-
-                            // if (await canLaunchUrl(url)) {
-                            //   await launchUrl(url);
-                            // }
-                          }),
-                      color: Color.fromARGB(243, 243, 239, 231),
-                    ),
-                  ],
+                  children: [],
                 )),
           ),
           Positioned(
