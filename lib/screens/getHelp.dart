@@ -51,9 +51,87 @@ class _helpPageState extends State<helpPage> {
                 padding: const EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [],
+                  children: [
+                    buildCards("تواصل معنا عبر الهاتف", context),
+                    buildCards("تواصل معنا عبر الايميل", context),
+                  ],
                 )),
           ),
+          // Center(
+          //   child: Padding(
+          //       padding: const EdgeInsets.all(10),
+          //       child: Column(
+          //         crossAxisAlignment: CrossAxisAlignment.start,
+          //         children: [
+          //           Card(
+          //             child: new InkWell(
+          //                 child: Padding(
+          //                   padding: const EdgeInsets.only(
+          //                       top: 12, bottom: 12, left: 15, right: 12),
+          //                   child: Row(children: <Widget>[
+          //                     IconButton(
+          //                         onPressed: () {},
+          //                         icon: Icon(Icons.phone_enabled,
+          //                             size: 30,
+          //                             color:
+          //                                 Color.fromARGB(223, 134, 186, 243))),
+          //                     Column(children: <Widget>[
+          //                       Text(
+          //                         "تواصل معنا عبر الهاتف",
+          //                         style: new TextStyle(
+          //                           fontSize: 18,
+          //                         ),
+          //                       ),
+          //                     ]),
+          //                     Spacer(),
+          //                     // Icon(Icons.arrow_forward,
+          //                     //     color: Color.fromARGB(223, 134, 186, 243)),
+          //                   ]),
+          //                 ),
+          //                 onTap: () async {
+          //                   await FlutterPhoneDirectCaller.callNumber(
+          //                       '+966509483390');
+          //                 }),
+          //             color: Color.fromARGB(243, 243, 239, 231),
+          //           ),
+          //           Card(
+          //             child: new InkWell(
+          //                 child: Padding(
+          //                   padding: const EdgeInsets.only(
+          //                       top: 12, bottom: 12, left: 15, right: 12),
+          //                   child: Row(children: <Widget>[
+          //                     IconButton(
+          //                         onPressed: () {},
+          //                         icon: Icon(Icons.mail_outline,
+          //                             size: 30,
+          //                             color:
+          //                                 Color.fromARGB(223, 134, 186, 243))),
+          //                     Column(children: <Widget>[
+          //                       Text(
+          //                         "تواصل معنا عبر الايميل",
+          //                         style: new TextStyle(
+          //                           fontSize: 18,
+          //                         ),
+          //                       ),
+          //                     ]),
+          //                     Spacer(),
+          //                     // Icon(Icons.arrow_forward,
+          //                     //     color: Color.fromARGB(223, 134, 186, 243)),
+          //                   ]),
+          //                 ),
+          //                 onTap: () async {
+          //                   // String url = 'mailto:nouraalkho2@gmail.com';
+          //                   // await launchUrl(url);
+
+          //                   // if (await canLaunchUrl(url)) {
+          //                   //   await launchUrl(url);
+          //                   // }
+          //                 }),
+          //             color: Color.fromARGB(243, 243, 239, 231),
+          //           ),
+          //         ],
+          //       )),
+          // ),
           Positioned(
             bottom: 0,
             left: 0,
@@ -175,6 +253,81 @@ class _helpPageState extends State<helpPage> {
             ),
           )
         ],
+      ),
+    );
+  }
+
+  buildCards(String title, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
+      child: Container(
+        child: new InkWell(
+          child: Padding(
+            padding:
+                const EdgeInsets.only(top: 15, bottom: 15, left: 15, right: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                if (title == "تواصل معنا عبر الهاتف")
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.phone_enabled,
+                      size: 40,
+                      color: Color.fromARGB(255, 254, 177, 57),
+                    ),
+                  ),
+                if (title == "تواصل معنا عبر الايميل")
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.mail_outline,
+                      size: 40,
+                      color: Color.fromARGB(255, 254, 177, 57),
+                    ),
+                  ),
+                SizedBox(
+                  width: 10.0,
+                ),
+                Text(
+                  title,
+                  style: new TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                Spacer(),
+                Icon(
+                  Icons.arrow_back_ios_rounded,
+                  textDirection: TextDirection.ltr,
+                  color: Color.fromARGB(255, 254, 177, 57),
+                ),
+              ],
+            ),
+          ),
+          onTap: () async {
+            if (title == "تواصل معنا عبر الهاتف") {
+              await FlutterPhoneDirectCaller.callNumber('+966509483390');
+            } else if (title == "تواصل معنا عبر الايميل") {
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => ViewReturnReq()),
+              // );
+            } else {}
+          },
+          highlightColor: Color.fromARGB(255, 255, 255, 255),
+        ),
+        decoration: BoxDecoration(
+          color: Color.fromARGB(255, 255, 255, 255),
+          borderRadius: BorderRadius.circular(20.0),
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromARGB(255, 241, 241, 241),
+              offset: Offset.zero,
+              blurRadius: 20.0,
+              blurStyle: BlurStyle.normal,
+            ),
+          ],
+        ),
       ),
     );
   }

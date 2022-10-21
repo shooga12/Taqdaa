@@ -7,7 +7,6 @@ import '../main.dart';
 import '../screens/ShoppingCart.dart';
 import '../screens/insideMore.dart';
 import 'invoices_view.dart';
-//import '../screens/invoices.dart';
 
 class emptyCart extends StatelessWidget {
   const emptyCart({super.key});
@@ -25,7 +24,7 @@ class emptyCart extends StatelessWidget {
           automaticallyImplyLeading: false,
           title: Text(
             "سلة التسوق",
-            style: TextStyle(fontSize: 24),
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
           ),
           flexibleSpace: Container(
             decoration: BoxDecoration(
@@ -45,14 +44,28 @@ class emptyCart extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Image.asset(
+                    'assets/empty_cart.png',
+                    width: 170,
+                  ),
+                  SizedBox(
+                    height: 25,
+                  ),
                   Text(
-                    "لا يوجد منتجات!",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    "سـلتـك فـارغـة!",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Color(0x87666666)),
                   ),
                   Text("ابدأ التسوق الآن!",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                  Text(""),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Color(0x87909090))),
+                  SizedBox(
+                    height: 40,
+                  ),
                   SizedBox(
                     width: 200,
                     height: 40,
@@ -210,58 +223,6 @@ class emptyCart extends StatelessWidget {
               ),
             ),
           )
-        ])
-        //     child: new InkWell(
-        //   child: Padding(
-        //     padding: const EdgeInsets.only(bottom: 10),
-        //     child: Column(
-        //       mainAxisAlignment: MainAxisAlignment.center,
-        //       children: [
-        //         Text(
-        //           "لا يوجد منتجات!",
-        //           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-        //         ),
-        //         Text("ابدأ التسوق الآن!",
-        //             style:
-        //                 TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-        //         Text(""),
-        //         SizedBox(
-        //           width: 200,
-        //           height: 40,
-        //           child: ElevatedButton(
-        //             onPressed: () {
-        //               Navigator.push(
-        //                 context,
-        //                 MaterialPageRoute(
-        //                     builder: (context) => ListOfStores2()),
-        //               );
-        //             },
-        //             child: Text(
-        //               'ابدأ التسوق!',
-        //               style: const TextStyle(
-        //                   color: Colors.white,
-        //                   fontWeight: FontWeight.bold,
-        //                   fontSize: 18),
-        //             ),
-        //             style: ButtonStyle(
-        //                 backgroundColor:
-        //                     MaterialStateProperty.resolveWith((states) {
-        //                   if (states.contains(MaterialState.pressed)) {
-        //                     return Colors.grey;
-        //                   }
-        //                   return Colors.orange;
-        //                 }),
-        //                 shape:
-        //                     MaterialStateProperty.all<RoundedRectangleBorder>(
-        //                         RoundedRectangleBorder(
-        //                             borderRadius: BorderRadius.circular(30)))),
-        //           ),
-        //         ),
-
-        //       ],
-        //     ),
-        //   ),
-        // ))
-        );
+        ]));
   }
 }

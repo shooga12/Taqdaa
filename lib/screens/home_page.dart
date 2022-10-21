@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
                   Padding(
                     padding: const EdgeInsets.only(left: 232.0),
                     child: Text(
-                      "    نقاطـي الحـالـيـة :  ",
+                      "    نقاطـي الحالية :  ",
                       style: TextStyle(
                           color: Color.fromARGB(255, 95, 137, 180),
                           fontSize: 19.5,

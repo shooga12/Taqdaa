@@ -60,6 +60,7 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
               image: DecorationImage(
                   image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
         ),
+        centerTitle: true,
         toolbarHeight: 170,
         backgroundColor: Colors.transparent,
         elevation: 0,
