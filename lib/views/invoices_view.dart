@@ -21,11 +21,6 @@ class invoices extends StatefulWidget {
 
 class _invoicesState extends State<invoices> {
   String collectionName = EcommerceApp().getCurrentUser();
-
-  bool isInsideHome = false;
-  bool isInsideReceipt = true;
-  bool isInsideMore = false;
-  bool isInsideCart = false;
   List<Invoice> invoices = [];
   @override
   void didChangeDependencies() {
@@ -45,155 +40,15 @@ class _invoicesState extends State<invoices> {
 
   int count = -1;
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(
-          "فواتيري",
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
-        ),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
-        ),
-        centerTitle: true,
-        toolbarHeight: 170,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          Center(
-            child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 10, right: 10, bottom: 10, top: 15),
-                child: ListView.builder(
-                    itemCount: invoices.length,
-                    itemBuilder: (context, index) {
-                      return buildInvoiceCard(invoices[index], context);
-                    })),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            child: Container(
-              width: size.width,
-              height: 80,
-              color: Colors.white,
-              child: Stack(
-                children: [
-                  CustomPaint(
-                    size: Size(size.width, 80),
-                    painter: BNBCustomePainter(),
-                  ),
-                  Center(
-                      heightFactor: 0.6,
-                      child: Container(
-                        width: 65,
-                        height: 65,
-                        child: FittedBox(
-                          child: FloatingActionButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ListOfStores2()),
-                              );
-                            },
-                            backgroundColor: Colors.orange,
-                            child: Icon(
-                              Icons.document_scanner_outlined,
-                              size: 27,
-                            ),
-                            //elevation: 0.1,
-                          ),
-                        ),
-                      )),
-                  Container(
-                    width: size.width,
-                    height: 80,
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MyHomePage()),
-                                );
-                              },
-                              icon: Icon(
-                                Icons.home_outlined,
-                                size: 35,
-                                color: isInsideHome
-                                    ? Color.fromARGB(255, 254, 176, 60)
-                                    : Colors.white,
-                              )),
-                          IconButton(
-                              onPressed: () {
-                                if (EcommerceApp.haveItems) {
-                                  /////bug fixes
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => shoppingCart()),
-                                  );
-                                } else {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => emptyCart()),
-                                  );
-                                }
-                              },
-                              icon: Icon(
-                                Icons.shopping_cart,
-                                size: 30,
-                                color: isInsideCart
-                                    ? Color.fromARGB(255, 254, 176, 60)
-                                    : Colors.white,
-                              )),
-                          Container(
-                            width: size.width * 0.20,
-                          ),
-                          IconButton(
-                              onPressed: () {
-                                //here reem's page
-                              },
-                              icon: Icon(
-                                Icons.receipt_long,
-                                size: 30,
-                                color: isInsideReceipt
-                                    ? Color.fromARGB(255, 254, 176, 60)
-                                    : Colors.white,
-                              )),
-                          IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => More()),
-                              );
-                            },
-                            icon: Icon(
-                              Icons.more_horiz,
-                              size: 30,
-                              color: isInsideMore
-                                  ? Color.fromARGB(255, 254, 176, 60)
-                                  : Colors.white,
-                            ),
-                          ),
-                        ]),
-                  )
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
+    return Center(
+      child: Padding(
+          padding:
+              const EdgeInsets.only(left: 10, right: 10, bottom: 10, top: 15),
+          child: ListView.builder(
+              itemCount: invoices.length,
+              itemBuilder: (context, index) {
+                return buildInvoiceCard(invoices[index], context);
+              })),
     );
   }
 

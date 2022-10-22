@@ -75,7 +75,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
           context: context,
           builder: (context) {
             return AlertDialog(
-                content: Text("عذراً، المنتج غير موجود"),
+                content: Text("عذراً، لم يتم العثور على المنتج"),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'حسنًا'),

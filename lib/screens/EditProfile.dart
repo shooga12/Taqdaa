@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:taqdaa_application/screens/insideMore.dart';
 import '../confige/EcommerceApp.dart';
 import 'package:intl/intl.dart';
 import '../views/profile_view.dart';
@@ -417,12 +418,20 @@ class _EditState extends State<Edit> {
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
+                                                  builder: (context) => More(),
+                                                ));
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
                                                   builder: (context) =>
                                                       Homepprofile(),
                                                 ));
                                           },
                                           child: Text(
                                             "نعم",
+                                            style: TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 96, 183, 99)),
                                           )),
                                       TextButton(
                                           onPressed: () {
