@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:either_dart/either.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -210,6 +212,41 @@ class _HomepprofileState extends State<Homepprofile> {
                   SizedBox(
                     height: 20.0,
                   ),
+
+                  //--------------------------------------------------------------------------
+                  Padding(
+                      padding: EdgeInsets.only(top: 15.0, right: 90.0),
+                      child: SizedBox(
+                        width: 200,
+                        height: 40,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            formDialog(context);
+                          },
+                          child: Text(
+                            'تغيير كلمة المرور',
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20),
+                          ),
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.resolveWith((states) {
+                                if (states.contains(MaterialState.pressed)) {
+                                  return Colors.grey;
+                                }
+                                return Colors.orange;
+                              }),
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(30)))),
+                        ),
+                      )),
+
+                  //---------------------------------------------------------------------------------------------------------
                   Padding(
                     padding: EdgeInsets.only(top: 10.0, right: 90.0),
                     child: SizedBox(
@@ -286,30 +323,6 @@ class _HomepprofileState extends State<Homepprofile> {
                               context: context,
                               builder: ((context) {
                                 return AlertDialog(
-                                  // content: Container(
-                                  //   height: 280,
-                                  //   child: Column(
-                                  //     children: [
-                                  //       Padding(
-                                  //         padding: const EdgeInsets.all(8.0),
-                                  //         child: Image.asset(
-                                  //           "assets/successfull_payment.png",
-                                  //           height: 200,
-                                  //         ),
-                                  //       ),
-                                  //       Padding(
-                                  //         padding: const EdgeInsets.all(8.0),
-                                  //         child: Text(
-                                  //           "شكرًا لك، تم الدفع بنجاح !",
-                                  //           style: TextStyle(
-                                  //               fontSize: 20,
-                                  //               color: Color.fromARGB(
-                                  //                   255, 98, 160, 100)),
-                                  //         ),
-                                  //       ),
-                                  //     ],
-                                  //   ),
-                                  // ),
                                   title: Text("هل تريد تسجيل الخروج؟"),
                                   actions: [
                                     TextButton(
@@ -501,3 +514,22 @@ Future<void> deleteUser(String uid) async {
   final account =
       await FirebaseFirestore.instance.collection("users").doc('$uid').delete();
 }
+
+Future formDialog(context) => showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+          title: Text('تغيير كلمة المرور'),
+          content: Column(
+            children: <Widget>[ TextFormField(
+            decoration: InputDecoration(hintText: 'أدخل كلمة المرور الحالية'), 
+          ), 
+           
+           TextFormField(
+            decoration: InputDecoration(hintText: 'أدخل كلمة المرور الجديدة'), 
+          ),
+          ])
+        
+
+
+          
+        ));

@@ -33,6 +33,33 @@ class _EditState extends State<Edit> {
 
   static var _firestore;
 
+  static Future<String?> changePassword(String oldPassword, String newPassword) async {
+    User user = FirebaseAuth.instance.currentUser!;
+    AuthCredential credential = EmailAuthProvider.credential(email: user.email!, password: oldPassword);
+
+    Map<String, String?> codeResponses = {
+      // Re-auth responses
+      "user-mismatch": null,
+      "user-not-found": null,
+      "invalid-credential": null,
+      "invalid-email": null,
+      "wrong-password": null,
+      "invalid-verification-code": null,
+      "invalid-verification-id": null,
+      // Update password error codes
+      "weak-password": null,
+      "requires-recent-login": null
+    };
+
+    try {
+      await user.reauthenticateWithCredential(credential);
+      await user.updatePassword(newPassword);
+      return null;
+    } on FirebaseAuthException catch (error) {
+      return codeResponses[error.code] ?? "Unknown";
+    }
+  }
+
   String? validateEmail(String? formEmail) {
     if (formEmail == null || formEmail.isEmpty)
       return 'البريد الالكتروني مطلوب';
