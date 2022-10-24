@@ -1,14 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:either_dart/either.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:taqdaa_application/main.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:taqdaa_application/screens/home_page.dart';
 import '../confige/EcommerceApp.dart';
 import '../controller/BNBCustomePainter.dart';
-import '../models/user_model.dart';
 import 'package:taqdaa_application/screens/login_page.dart';
-
+import '../main.dart';
+import '../methods/authentication_services.dart';
+import '../models/user_model.dart';
+import '../screens/EditProfile.dart';
 import '../screens/ShoppingCart.dart';
+import '../screens/insideMore.dart';
+import 'invoices_view.dart';
+
 import '../screens/list_of_stores.dart';
 import 'NoItmesCart.dart';
 
@@ -21,10 +28,13 @@ class Homepprofile extends StatefulWidget {
 
 class _HomepprofileState extends State<Homepprofile> {
   User? user = FirebaseAuth.instance.currentUser;
-  UserModel loggedInUser = UserModel();
+
+  //UserModel loggedInUser = UserModel();
   bool isInsideHome = false;
-  bool isInsideProfile = true;
-  bool isInsideSettings = false;
+  bool isInsideReceipt = false;
+  bool isInsideMore = true;
+  bool isInsideCart = false;
+
 
   @override
   void initState() {
@@ -34,7 +44,9 @@ class _HomepprofileState extends State<Homepprofile> {
         .doc(user!.uid)
         .get()
         .then((value) {
-      this.loggedInUser = UserModel.fromMap(value.data());
+
+      EcommerceApp.loggedInUser = UserModel.fromMap(value.data());
+
       setState(() {});
     });
   }
@@ -44,10 +56,12 @@ class _HomepprofileState extends State<Homepprofile> {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+
+        automaticallyImplyLeading: true,
         title: Text(
-          "My Profile",
-          style: TextStyle(fontSize: 24),
+          "حسابي",
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
+
         ),
         actions: <Widget>[
           IconButton(
@@ -56,7 +70,11 @@ class _HomepprofileState extends State<Homepprofile> {
               color: Colors.white,
             ),
             onPressed: () {
-              // do something
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Edit()),
+              );
+
             },
           )
         ],
@@ -70,198 +88,264 @@ class _HomepprofileState extends State<Homepprofile> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Stack(
-        children: [
-          Center(
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: Column(
-                // mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  ListTile(
-                    title: Text(
-                      'Name',
-                      style: TextStyle(fontSize: 22),
+
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.only(top: 40),
+          child: Column(
+            // mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: Colors.orange, width: 2.0, //<-- SEE HERE
                     ),
-                    subtitle: Text(
-                      "${loggedInUser.firstName} ${loggedInUser.secondName}",
-                      style: TextStyle(fontSize: 22),
-                    ),
+                    borderRadius: BorderRadius.circular(30.0),
                   ),
-                  ListTile(
-                    title: Text(
-                      'Email',
-                      style: TextStyle(fontSize: 22),
+                  color: Colors.white,
+                  child: Container(
+                      alignment: Alignment.centerLeft,
+                      height: 60,
+                      width: 370,
+                      child: Row(
+                        children: [
+                          Text("   "),
+                          Icon(Icons.person),
+                          Text(
+                            " ${EcommerceApp.loggedInUser.firstName} ${EcommerceApp.loggedInUser.secondName}",
+                            style: TextStyle(
+                                fontSize: 20,
+                                letterSpacing: 0.8,
+                                color: Colors.black),
+                          ),
+                        ],
+                      )),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: Colors.orange, width: 2.0, //<-- SEE HERE
                     ),
-                    subtitle: Text(
-                      "${loggedInUser.email}",
-                      style: TextStyle(fontSize: 22),
-                    ),
+                    borderRadius: BorderRadius.circular(30.0),
                   ),
-                  ListTile(
-                    title: Text(
-                      'Phone Number',
-                      style: TextStyle(fontSize: 22),
+                  color: Colors.white,
+                  child: Container(
+                      alignment: Alignment.centerLeft,
+                      height: 60,
+                      width: 370,
+                      child: Row(
+                        children: [
+                          Text("   "),
+                          Icon(Icons.mail),
+                          Text(
+                            " ${EcommerceApp.loggedInUser.email}",
+                            style: TextStyle(
+                                fontSize: 18,
+                                letterSpacing: 0.8,
+                                color: Colors.black),
+                          ),
+                        ],
+                      )),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: Colors.orange, width: 2.0, //<-- SEE HERE
                     ),
-                    subtitle: Text(
-                      "${loggedInUser.phonenumber}",
-                      style: TextStyle(fontSize: 22),
-                    ),
+                    borderRadius: BorderRadius.circular(30.0),
                   ),
-                  ListTile(
-                    title: Text(
-                      'Date of Birth',
-                      style: TextStyle(fontSize: 22),
+                  color: Colors.white,
+                  child: Container(
+                      alignment: Alignment.centerLeft,
+                      height: 60,
+                      width: 370,
+                      child: Row(
+                        children: [
+                          Text("   "),
+                          Icon(Icons.phone_enabled),
+                          Text(
+                            " ${EcommerceApp.loggedInUser.phonenumber}",
+                            style: TextStyle(
+                                fontSize: 20,
+                                letterSpacing: 0.8,
+                                color: Colors.black),
+                          ),
+                        ],
+                      )),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: Colors.orange, width: 2.0, //<-- SEE HERE
                     ),
-                    subtitle: Text(
-                      "${loggedInUser.dateofbirth}",
-                      style: TextStyle(fontSize: 22),
-                    ),
+                    borderRadius: BorderRadius.circular(30.0),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 40.0),
-                    child: SizedBox(
-                      width: 200,
-                      height: 40,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          logout(context);
-                        },
-                        child: Text(
-                          'Logout',
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
-                        ),
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith((states) {
-                              if (states.contains(MaterialState.pressed)) {
-                                return Colors.grey;
-                              }
-                              return Colors.orange;
-                            }),
-                            shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
+                  color: Colors.white,
+                  child: Container(
+                      alignment: Alignment.centerLeft,
+                      height: 60,
+                      width: 370,
+                      child: Row(
+                        children: [
+                          Text("   "),
+                          Icon(Icons.calendar_month),
+                          Text(
+                            " ${EcommerceApp.loggedInUser.dateofbirth}",
+                            style: TextStyle(
+                                fontSize: 20,
+                                letterSpacing: 0.8,
+                                color: Colors.black),
+                          ),
+                        ],
+                      )),
+                ),
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 10.0, right: 90.0),
+                child: SizedBox(
+                  width: 200,
+                  height: 40,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      showDialog(
+                          context: context,
+                          builder: ((context) {
+                            return AlertDialog(
+                              title: Text("هل تريد حذف الحساب بالفعل؟"),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      deleteUser(
+                                          "${EcommerceApp.loggedInUser.uid}");
+                                      user!.delete();
+
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => LoginPage(),
+                                          ));
+                                      Fluttertoast.showToast(
+                                          msg: "تم حذف الحساب بنجاح");
+                                    },
+                                    child: Text(
+                                      "حذف الحساب",
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                      ),
+                                    )),
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("إلغاء"))
+                              ],
+                            );
+                          }));
+                    },
+                    child: Text(
+                      "حذف الحساب",
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
+                    ),
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith((states) {
+                          if (states.contains(MaterialState.pressed)) {
+                            return Colors.grey;
+                          }
+                          return Colors.red;
+                        }),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30)))),
-                      ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 15.0, right: 90.0),
+                child: SizedBox(
+                  width: 200,
+                  height: 40,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      showDialog(
+                          context: context,
+                          builder: ((context) {
+                            return AlertDialog(
+                              title: Text("هل تريد تسجيل الخروج؟"),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      FirebaseAuthMethods().signOut();
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => LoginPage(),
+                                          ));
+                                    },
+                                    child: Text(
+                                      "تسجيل خروج",
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                      ),
+                                    )),
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("إلغاء"))
+                              ],
+                            );
+                          }));
+                    },
+                    child: Text(
+                      'تسجيل الخروج',
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
                     ),
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith((states) {
+                          if (states.contains(MaterialState.pressed)) {
+                            return Colors.grey;
+                          }
+                          return Colors.orange;
+                        }),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30)))),
                   ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            child: Container(
-              width: size.width,
-              height: 80,
-              color: Colors.white,
-              child: Stack(
-                children: [
-                  CustomPaint(
-                    size: Size(size.width, 80),
-                    painter: BNBCustomePainter(),
-                  ),
-                  Center(
-                      heightFactor: 0.6,
-                      child: Container(
-                        width: 65,
-                        height: 65,
-                        child: FittedBox(
-                          child: FloatingActionButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ListOfStores2()),
-                              );
-                            },
-                            backgroundColor: Colors.orange,
-                            child: Icon(
-                              Icons.document_scanner_outlined,
-                              size: 27,
-                            ),
-                            //elevation: 0.1,
-                          ),
-                        ),
-                      )),
-                  Container(
-                    width: size.width,
-                    height: 80,
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MyHomePage()),
-                                );
-                              },
-                              icon: Icon(
-                                Icons.home_outlined,
-                                size: 35,
-                                color: isInsideHome
-                                    ? Color.fromARGB(255, 254, 176, 60)
-                                    : Colors.white,
-                              )),
-                          IconButton(
-                              onPressed: () {
-                                if (EcommerceApp.haveItems) {
-                                  /////bug fixes
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => shoppingCart()),
-                                  );
-                                } else {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => emptyCart()),
-                                  );
-                                }
-                              },
-                              icon: Icon(
-                                Icons.shopping_cart,
-                                size: 30,
-                                color: Colors.white,
-                              )),
-                          Container(
-                            width: size.width * 0.20,
-                          ),
-                          IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.person,
-                                size: 30,
-                                color: isInsideProfile
-                                    ? Color.fromARGB(255, 254, 176, 60)
-                                    : Colors.white,
-                              )),
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.settings,
-                              size: 30,
-                              color: isInsideSettings
-                                  ? Color.fromARGB(255, 254, 176, 60)
-                                  : Colors.white,
-                            ),
-                          ),
-                        ]),
-                  )
-                ],
-              ),
-            ),
-          )
-        ],
+        ),
+
       ),
     );
   }
@@ -272,3 +356,9 @@ Future<void> logout(BuildContext context) async {
   Navigator.of(context)
       .pushReplacement(MaterialPageRoute(builder: ((context) => LoginPage())));
 }
+
+Future<void> deleteUser(String uid) async {
+  final account =
+      await FirebaseFirestore.instance.collection("users").doc('$uid').delete();
+}
+

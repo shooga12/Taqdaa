@@ -6,6 +6,9 @@ import 'package:taqdaa_application/screens/ShoppingCart.dart';
 import 'package:taqdaa_application/screens/scanBarCode.dart';
 import 'package:firebase_database/firebase_database.dart';
 
+import '../views/scanner.dart';
+
+
 class ListOfStores2 extends StatefulWidget {
   const ListOfStores2({super.key});
 
@@ -22,7 +25,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
 
   Future _scan(BuildContext context) async {
     _counter = await FlutterBarcodeScanner.scanBarcode(
-        "#004297", "Cancel", true, ScanMode.BARCODE);
+        "#FEB139", "Cancel", true, ScanMode.BARCODE);
 
     setState(() {
       EcommerceApp.value = _counter;
@@ -42,11 +45,12 @@ class _ListOfStores2State extends State<ListOfStores2> {
           context: context,
           builder: (context) {
             return AlertDialog(
-                content: Text("Item already have been added."), ///////
+                content: Text("تم إضافة المنتج مسبقًا!"),
                 actions: [
                   TextButton(
-                    onPressed: () => Navigator.pop(context, 'OK'),
-                    child: const Text('OK'),
+                    onPressed: () => Navigator.pop(context, 'حسنًا'),
+                    child: const Text('حسنًا'),
+
                   )
                 ]);
           });
@@ -55,7 +59,8 @@ class _ListOfStores2State extends State<ListOfStores2> {
 
     Query dbref = FirebaseDatabase.instance
         .ref()
-        .child(EcommerceApp.storeId) //Ecommerce.storeName
+        .child(EcommerceApp.storeId)
+
         .child('store')
         .orderByChild('Barcode')
         .equalTo(EcommerceApp.value.substring(1));
@@ -74,11 +79,12 @@ class _ListOfStores2State extends State<ListOfStores2> {
           context: context,
           builder: (context) {
             return AlertDialog(
-                content: Text("Sorry Item not found!"),
+                content: Text("عذراً، لم يتم العثور على المنتج"),
                 actions: [
                   TextButton(
-                    onPressed: () => Navigator.pop(context, 'OK'),
-                    child: const Text('OK'),
+                    onPressed: () => Navigator.pop(context, 'حسنًا'),
+                    child: const Text('حسنًا'),
+
                   )
                 ]);
           });
@@ -93,18 +99,19 @@ class _ListOfStores2State extends State<ListOfStores2> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Choose Store',
-          style: TextStyle(fontSize: 24), //TextStyle(fontFamily: 'Cairo'),
+          'إختر متجرًا',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
         ),
         bottom: PreferredSize(
             child: Flexible(
               child: Card(
                 child: SizedBox(
-                  width: 375,
+                  width: 390,
                   child: TextField(
                     decoration: InputDecoration(
                         prefixIcon: Icon(Icons.search),
-                        hintText: 'Search for a store name..'),
+                        hintText: 'إبحث عن إسم متجر محدد'),
+
                     onChanged: (val) {
                       setState(() {
                         SearchName = val.replaceAll(' ', '');
@@ -121,7 +128,6 @@ class _ListOfStores2State extends State<ListOfStores2> {
                   image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
         ),
         toolbarHeight: 170,
-        //leading: BackButton(),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -149,7 +155,9 @@ class _ListOfStores2State extends State<ListOfStores2> {
                           child: Align(
                         alignment: Alignment.center,
                         child: Text(
-                          'No Results',
+
+                          'لا يوجد نتائج',
+
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 20,
@@ -180,97 +188,119 @@ class _ListOfStores2State extends State<ListOfStores2> {
           snapshot.docs.map((doc) => Store.fromJson(doc.data())).toList());
 
   Widget buildStoresCards(Store store, BuildContext context) {
-    //{required Map store}
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.only(
-          top: 0,
-          left: 15,
-          right: 15,
-          bottom: 3,
-        ),
-        child: Card(
-          child: new InkWell(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  top: 12, bottom: 12, left: 15, right: 12),
-              child: Row(
-                children: <Widget>[
-                  Image.network(
-                    store.StoreLogo,
-                    width: 60,
-                    height: 60,
-                  ),
-                  Column(
-                    children: <Widget>[
-                      Text(
-                        store.StoreName,
-                        style: new TextStyle(
-                          fontSize: 18,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
+      child: Container(
+        child: new InkWell(
+          child: Padding(
+            padding:
+                const EdgeInsets.only(top: 15, bottom: 15, left: 15, right: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.network(
+                  store.StoreLogo,
+                  width: 60,
+                  height: 60,
+                ),
+                Column(
+                  children: <Widget>[
+                    Text(
+                      ' ' + store.StoreName,
+                      style: new TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          ' ' + store.kilometers.toString(),
+                          style: new TextStyle(
+                            fontSize: 12,
+                            color: Color.fromARGB(255, 77, 76, 76),
+                          ),
                         ),
-                      ),
-                      Row(
-                        children: <Widget>[
-                          Text(
-                            store.kilometers.toString(),
-                            style: new TextStyle(
-                              fontSize: 12,
-                              color: Color.fromARGB(255, 77, 76, 76),
-                            ),
+                        Text(
+                          ' كم',
+                          style: new TextStyle(
+                            fontSize: 12,
+                            color: Color.fromARGB(255, 77, 76, 76),
                           ),
-                          Text(
-                            'Km  ',
-                            style: new TextStyle(
-                              fontSize: 12,
-                              color: Color.fromARGB(255, 77, 76, 76),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-
-                  Spacer(),
-                  Icon(Icons.document_scanner_outlined),
-                  //size: 18,
-                ],
-              ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Spacer(),
+                Icon(
+                  size: 26,
+                  Icons.document_scanner_outlined,
+                  textDirection: TextDirection.ltr,
+                  color: Color.fromARGB(255, 254, 177, 57),
+                ),
+                SizedBox(
+                  width: 7,
+                )
+              ],
             ),
-            onTap: () {
-              EcommerceApp.storeId = store.StoreId;
-              if (EcommerceApp.storeName == "") {
-                EcommerceApp.storeName = store.StoreName;
-                _scan(context);
-              } else if (EcommerceApp.storeName == store.StoreName) {
-                _scan(context);
-              } else {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                          content: Text(
-                              "Sorry you already have an order in ${EcommerceApp.storeName}."),
-                          actions: [
-                            ElevatedButton(
-                                onPressed: () async {
-                                  EcommerceApp.storeName = "";
-                                  await deleteCart();
-                                  await deleteCartDublicate();
-                                  await saveUserTotal(0);
-                                  Navigator.pop(context, 'OK');
-                                }, /////add cancelation
-                                child: Text(
-                                    "Cancel ${EcommerceApp.storeName} order")),
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, 'OK'),
-                              child: const Text('OK'),
-                            ),
-                          ]);
-                    });
-              }
-            },
           ),
-          color: Color.fromARGB(243, 243, 239, 231),
+          onTap: () async {
+            EcommerceApp.storeId = store.StoreId;
+            if (EcommerceApp.storeName == "") {
+              EcommerceApp.storeName = store.StoreName;
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => scanner()),
+              // );
+              _scan(context);
+            } else if (EcommerceApp.haveItems &&
+                EcommerceApp.storeName != store.StoreName) {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                        content: Text(
+                            ".${EcommerceApp.storeName}عذرًا، لديك طلب بالفعل في"),
+                        actions: [
+                          ElevatedButton(
+                              onPressed: () async {
+                                EcommerceApp.storeName = "";
+                                await deleteCart();
+                                await deleteCartDublicate();
+                                await saveUserTotal(0);
+                                Navigator.pop(context, 'حسنًا');
+                              },
+                              child:
+                                  Text(" ${EcommerceApp.storeName} إلغاء طلب")),
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'حسنًا'),
+                            child: const Text('حسنًا'),
+                          ),
+                        ]);
+                  });
+            } else {
+              EcommerceApp.storeName = store.StoreName;
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => scanner()),
+              // );
+              _scan(context);
+            }
+          },
+          highlightColor: Color.fromARGB(255, 255, 255, 255),
+        ),
+        decoration: BoxDecoration(
+          color: Color.fromARGB(255, 255, 255, 255),
+          borderRadius: BorderRadius.circular(20.0),
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromARGB(255, 241, 241, 241),
+              offset: Offset.zero,
+              blurRadius: 20.0,
+              blurStyle: BlurStyle.normal,
+            ),
+          ],
+
         ),
       ),
     );

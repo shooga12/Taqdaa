@@ -13,7 +13,7 @@ import '../screens/register_page.dart';
 import '../confige/EcommerceApp.dart';
 import '../controller/Notification_api.dart';
 import 'package:timezone/data/latest.dart' as tz;
-
+import 'package:flutter_localizations/flutter_localizations.dart';
 import '../models/user_model.dart';
 
 void main() async {
@@ -35,6 +35,8 @@ void main() async {
   String closest = "";
   String storeName = "";
   int theIndex = -1;
+  UserModel loggedInUser = UserModel();
+
 
   Future readClosest() async {
     String distance = "";
@@ -48,7 +50,8 @@ void main() async {
         theIndex = i;
       }
     }
-    storeName = documents[theIndex].get("StoreName");
+    // storeName = documents[theIndex].get("StoreName"); //bug fixes
+
   }
 
   await readClosest();
@@ -64,9 +67,9 @@ void main() async {
         if (data["kilometers"] == "0.1") {
           NotificationApi.showScheduledNotification(
               title: 'Taqdaa is waiting for you!',
-              body: 'Hey, ' +
-                  EcommerceApp.userName +
-                  '\nyou\'re very close from ${data['StoreName']} come and shop with us now!', ////bug fixes StoreName
+              body:
+                  'Hey, ${loggedInUser.firstName}\nyou\'re very close from ${data['StoreName']} come and shop with us now!', ////bug fixes StoreName
+
               payload: 'paylod.nav',
               scheduledDate: DateTime.now().add(Duration(seconds: 1)));
         }
@@ -83,6 +86,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Localizations Sample App',
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('ar', 'EN'), // English, no country code
+      ],
       debugShowCheckedModeBanner: false,
       home: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
@@ -116,6 +128,8 @@ class _MyHomePageState extends State<MyHomePage> {
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
 
+  @override
+
   void initState() {
     super.initState();
     FirebaseFirestore.instance
@@ -123,7 +137,8 @@ class _MyHomePageState extends State<MyHomePage> {
         .doc(user!.uid)
         .get()
         .then((value) {
-      this.loggedInUser = UserModel.fromMap(value.data());
+      EcommerceApp.loggedInUser = UserModel.fromMap(value.data());
+
       setState(() {});
     });
   }
@@ -131,59 +146,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-          Text(
-            "Hey, ${loggedInUser.firstName}",
-            style: TextStyle(fontSize: 24),
-          ),
-        ]),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: ((context) {
-                    return AlertDialog(
-                      title: Text("Are you sure you want to Log out?"),
-                      actions: [
-                        TextButton(
-                            onPressed: () {
-                              FirebaseAuthMethods().signOut();
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => LoginPage(),
-                                  ));
-                            },
-                            child: Text("Log out")),
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text("cancel"))
-                      ],
-                    );
-                  }));
-            },
-            icon: Icon(
-              Icons.logout,
-              size: 35,
-              color: Color.fromARGB(255, 32, 7, 121),
-            ),
-          ),
-        ],
-        toolbarHeight: 170,
-        //leading: BackButton(),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
       body: StreamBuilder<List<Store>>(
           stream: readStores(),
           builder: (context, snapshot) {
@@ -198,9 +160,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     payload: 'paylod.nav',
                     scheduledDate: DateTime.now().add(Duration(seconds: 3)));
               }
+              getRewards();
               return HomePage();
-              //   }
-              // );
             } else if (snapshot.hasError) {
               return Text("Some thing went wrong! ${snapshot.error}");
             } else {
@@ -208,6 +169,25 @@ class _MyHomePageState extends State<MyHomePage> {
             }
           }),
     );
+  }
+
+  Future getRewards() async {
+    var collection = FirebaseFirestore.instance
+        .collection('${EcommerceApp.loggedInUser.uid}Total');
+    collection.doc('rewards').snapshots().listen((docSnapshot) {
+      if (docSnapshot.exists) {
+        Map<String, dynamic> data = docSnapshot.data()!;
+
+        // setState(() {
+        //   EcommerceApp.rewards = data['Rewards'];
+        // });
+        if (mounted) {
+          setState(() {
+            EcommerceApp.rewards = data['Rewards'];
+          });
+        }
+      }
+    });
   }
 
   Stream<List<Store>> readStores() => FirebaseFirestore.instance
