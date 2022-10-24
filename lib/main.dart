@@ -15,6 +15,7 @@ import '../controller/NotificationApi.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'model/StoreModel.dart';
 import 'model/user_model.dart';
 // import '../models/user_model.dart';
 

@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
 import 'package:taqdaa_application/screens/scanBarCode.dart';
+import '../model/StoreModel.dart';
 import 'ShoppingCart.dart';
 import 'scanBarCode.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -16,10 +17,10 @@ class ListOfStores2 extends StatefulWidget {
   const ListOfStores2({super.key});
 
   @override
-  State<ListOfStores2> createState() => _ListOfStores2State();
+  State<ListOfStores2> createState() => ListOfStores2State();
 }
 
-class _ListOfStores2State extends State<ListOfStores2> {
+class ListOfStores2State extends State<ListOfStores2> {
   Position? _currentPosition;
 
   Future<bool> _handleLocationPermission() async {
@@ -65,12 +66,13 @@ class _ListOfStores2State extends State<ListOfStores2> {
 
   @override
   final List<Store> Stores = [];
+  static List<Store> NearestStores = [];
   FirebaseDatabase database = FirebaseDatabase.instance;
-  String collectionName = EcommerceApp().getCurrentUser();
+  static String collectionName = EcommerceApp().getCurrentUser();
   String SearchName = '';
   String _counter = "";
 
-  Future _scan(BuildContext context) async {
+  Future scan(BuildContext context) async {
     _counter = await FlutterBarcodeScanner.scanBarcode(
         "#004297", "Cancel", true, ScanMode.BARCODE);
 
@@ -137,6 +139,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
 
   bool flag = false;
   int count = -1;
+  int nearest = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -180,6 +183,10 @@ class _ListOfStores2State extends State<ListOfStores2> {
                   itemCount: stores.length,
                   itemBuilder: (BuildContext context, int index) {
                     var data = stores[index];
+                    if (nearest >= 5) {
+                      NearestStores[nearest] = data;
+                      nearest++;
+                    }
 
                     if (SearchName.isEmpty) {
                       flag = false;
@@ -317,7 +324,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
                 //   context,
                 //   MaterialPageRoute(builder: (context) => scanner()),
                 // );
-                _scan(context);
+                scan(context);
               } else if (EcommerceApp.haveItems &&
                   EcommerceApp.storeName != store.StoreName) {
                 showDialog(
@@ -349,7 +356,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
                 //   context,
                 //   MaterialPageRoute(builder: (context) => scanner()),
                 // );
-                _scan(context);
+                scan(context);
               }
             },
             highlightColor: Color.fromARGB(255, 255, 255, 255),
@@ -466,7 +473,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
     }
   }
 
-  Future saveUserTotal(var total) async {
+  static Future saveUserTotal(var total) async {
     final QuerySnapshot result = await FirebaseFirestore.instance
         .collection('${collectionName}Total')
         .get();
@@ -476,7 +483,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
     }
   }
 
-  Future deleteCart() async {
+  static Future deleteCart() async {
     final QuerySnapshot result =
         await FirebaseFirestore.instance.collection('${collectionName}').get();
     final List<DocumentSnapshot> documents = result.docs;
@@ -485,7 +492,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
     }
   }
 
-  Future deleteCartDublicate() async {
+  static Future deleteCartDublicate() async {
     final QuerySnapshot result = await FirebaseFirestore.instance
         .collection('${collectionName}All')
         .get();
@@ -496,37 +503,37 @@ class _ListOfStores2State extends State<ListOfStores2> {
   }
 }
 
-class Store {
-  final String StoreName;
-  final String StoreLogo;
-  String kilometers;
-  final String StoreId;
-  final num lat;
-  final num lng;
+// class Store {
+//   final String StoreName;
+//   final String StoreLogo;
+//   String kilometers;
+//   final String StoreId;
+//   final num lat;
+//   final num lng;
 
-  Store(
-      {required this.StoreName,
-      required this.StoreLogo,
-      required this.kilometers,
-      required this.StoreId,
-      required this.lat,
-      required this.lng});
+//   Store(
+//       {required this.StoreName,
+//       required this.StoreLogo,
+//       required this.kilometers,
+//       required this.StoreId,
+//       required this.lat,
+//       required this.lng});
 
-  Map<String, dynamic> toJson() => {
-        'StoreName': StoreName,
-        'StoreLogo': StoreLogo,
-        'kilometers': kilometers,
-        'StoreId': StoreId,
-        'lat': lat,
-        'lng': lng,
-      };
+//   Map<String, dynamic> toJson() => {
+//         'StoreName': StoreName,
+//         'StoreLogo': StoreLogo,
+//         'kilometers': kilometers,
+//         'StoreId': StoreId,
+//         'lat': lat,
+//         'lng': lng,
+//       };
 
-  static Store fromJson(Map<String, dynamic> json) => Store(
-        StoreName: json['StoreName'],
-        StoreLogo: json['StoreLogo'],
-        kilometers: json['kilometers'].toString(),
-        StoreId: json['StoreId'],
-        lat: json['lat'],
-        lng: json['lng'],
-      );
-}
+//   static Store fromJson(Map<String, dynamic> json) => Store(
+//         StoreName: json['StoreName'],
+//         StoreLogo: json['StoreLogo'],
+//         kilometers: json['kilometers'].toString(),
+//         StoreId: json['StoreId'],
+//         lat: json['lat'],
+//         lng: json['lng'],
+//       );
+// }
