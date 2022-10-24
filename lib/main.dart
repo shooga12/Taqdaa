@@ -37,6 +37,7 @@ void main() async {
   int theIndex = -1;
   UserModel loggedInUser = UserModel();
 
+
   Future readClosest() async {
     String distance = "";
     final QuerySnapshot result =
@@ -50,6 +51,7 @@ void main() async {
       }
     }
     // storeName = documents[theIndex].get("StoreName"); //bug fixes
+
   }
 
   await readClosest();
@@ -67,6 +69,7 @@ void main() async {
               title: 'Taqdaa is waiting for you!',
               body:
                   'Hey, ${loggedInUser.firstName}\nyou\'re very close from ${data['StoreName']} come and shop with us now!', ////bug fixes StoreName
+
               payload: 'paylod.nav',
               scheduledDate: DateTime.now().add(Duration(seconds: 1)));
         }
@@ -126,6 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
   UserModel loggedInUser = UserModel();
 
   @override
+
   void initState() {
     super.initState();
     FirebaseFirestore.instance
@@ -134,6 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
         .get()
         .then((value) {
       EcommerceApp.loggedInUser = UserModel.fromMap(value.data());
+
       setState(() {});
     });
   }

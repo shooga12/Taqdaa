@@ -27,10 +27,12 @@ class _ScanPageState extends State<ScanPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+
         title: Text(
           "المنتج الذي تم مسحه هو :",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
         ),
+
         flexibleSpace: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
@@ -66,7 +68,9 @@ class _ScanPageState extends State<ScanPage> {
       "quantity": product.quantity,
       "RFID": product.RFID,
       "ProductImage": product.ProductImage,
+
       "returnable": product.returnable,
+
     });
   }
 
@@ -78,7 +82,9 @@ class _ScanPageState extends State<ScanPage> {
       "Store": product.Store,
       "quantity": product.quantity,
       "RFID": product.RFID,
+
       "returnable": product.returnable,
+
     });
   }
 
@@ -100,6 +106,7 @@ class _ScanPageState extends State<ScanPage> {
                           'assets/Rectangle.png',
                           height: 100.0,
                           fit: BoxFit.cover,
+
                         ),
                       ),
                       Padding(
@@ -146,6 +153,7 @@ class _ScanPageState extends State<ScanPage> {
           ),
           Text('\n'),
           //),
+
           Center(
             child: SizedBox(
               width: 200,
@@ -197,6 +205,7 @@ class _ScanPageState extends State<ScanPage> {
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)))),
+
               ),
             ),
           ),
@@ -241,6 +250,7 @@ class Product {
       required this.ProductImage,
       required this.returnable});
 
+
   Map<String, dynamic> toJson() => {
         'Category': Category,
         'Item_number': Item_number,
@@ -249,7 +259,9 @@ class Product {
         'quantity': quantity,
         'RFID': RFID,
         'ProductImage': ProductImage,
+
         'returnable': returnable,
+
       };
 
   static Product fromJson(Map<String, dynamic> json) => Product(
@@ -260,6 +272,8 @@ class Product {
         quantity: json['quantity'],
         RFID: json['RFID'],
         ProductImage: json['ProductImage'],
+
         returnable: json['returnable'],
+
       );
 }

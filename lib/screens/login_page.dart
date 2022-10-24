@@ -1,8 +1,8 @@
+
 import '../methods/authentication_services.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'home_page.dart';
 import 'register_page.dart';
 import '../reusable_widget/reusable_widget.dart';
 import 'reset_page.dart';
@@ -20,7 +20,6 @@ class _LoginPageState extends State<LoginPage> {
   final _passController = TextEditingController();
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
 
-  ///User? user = FirebaseAuth.instance.currentUser;
   String errorMsg = '';
   bool isLoading = false;
 
@@ -48,6 +47,7 @@ class _LoginPageState extends State<LoginPage> {
       body: Form(
         //key: _key,
         //autovalidateMode: AutovalidateMode.onUserInteraction,
+
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.fromLTRB(
@@ -181,7 +181,9 @@ class _LoginPageState extends State<LoginPage> {
                               login();
                             },
                             child: Text(
+
                               'تسجيل الدخول',
+
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -219,6 +221,7 @@ class _LoginPageState extends State<LoginPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Text(" ليس لديك حساب؟",
+
             style: TextStyle(color: Color.fromARGB(255, 15, 53, 120))),
         GestureDetector(
           onTap: () {
@@ -229,7 +232,9 @@ class _LoginPageState extends State<LoginPage> {
                 ));
           },
           child: const Text(
+
             "تسجيل جديد",
+
             style: TextStyle(
                 decoration: TextDecoration.underline,
                 color: Color.fromARGB(255, 15, 53, 120),
@@ -245,6 +250,7 @@ class _LoginPageState extends State<LoginPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Text(" نسيت كلمة المرور؟ ",
+
             style: TextStyle(color: Color.fromARGB(255, 15, 53, 120))),
         GestureDetector(
           onTap: () {
@@ -252,7 +258,9 @@ class _LoginPageState extends State<LoginPage> {
                 MaterialPageRoute(builder: (context) => ResetPassPage()));
           },
           child: const Text(
+
             "إعادة تعيين كلمة المرور",
+
             style: TextStyle(
                 decoration: TextDecoration.underline,
                 color: Color.fromARGB(255, 15, 53, 120),

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+
 import '../screens/list_of_stores.dart';
+
 
 class emptyCart extends StatelessWidget {
   const emptyCart({super.key});
 
   @override
   Widget build(BuildContext context) {
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(10),
@@ -68,5 +71,6 @@ class emptyCart extends StatelessWidget {
         ),
       ),
     );
+
   }
 }

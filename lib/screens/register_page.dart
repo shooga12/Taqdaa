@@ -5,10 +5,6 @@ import 'package:flutter/material.dart';
 import '../reusable_widget/reusable_widget.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'login_page.dart';
-import 'package:intl/date_symbol_data_file.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/date_symbols.dart';
-import 'package:intl/date_symbol_data_custom.dart';
 import 'package:intl/intl.dart';
 import '../models/user_model.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -51,7 +47,9 @@ class _RegisterPageState extends State<RegisterPage> {
     else if (formPassword.length < 8)
       return 'يجب ان تحتوي كلمة السر على 8 خانات أو أكثر';
     else if (formPassword.length > 15)
+
       return 'يجب أن تكون كلمة السر أقل من 15 خانة';
+
     else
       return null;
   }
@@ -80,9 +78,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: firstnameController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: MultiValidator([
+
                     RequiredValidator(errorText: 'مطلوب*'),
                     PatternValidator(r'^[a-z A-Z]+$',
                         errorText: 'يجب أن يتكون الأسم من حروف فقط')
+
                   ]),
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
                   style: TextStyle(
@@ -127,9 +127,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   autovalidateMode: AutovalidateMode.onUserInteraction,
 
                   validator: MultiValidator([
+
                     RequiredValidator(errorText: 'مطلوب *'),
                     PatternValidator(r'^[a-z A-Z]+$',
                         errorText: 'يجب أن يتكون الأسم من حروف فقط')
+
                   ]),
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
                   style: TextStyle(
@@ -221,10 +223,12 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: _passController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: MultiValidator([
+
                     RequiredValidator(errorText: 'مطلوب *'),
                     PatternValidator(
                         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$',
                         errorText: 'كلمة مرور غير صالحة'),
+
                   ]),
                   obscureText: true,
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
@@ -395,7 +399,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                   _passController.text);
                             },
                             child: Text(
+
                               'تسجيل',
+
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -443,7 +449,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 ));
           },
           child: const Text(
+
             "تسجيل دخول",
+
             style: TextStyle(
                 decoration: TextDecoration.underline,
                 color: Color.fromARGB(255, 15, 53, 120),
@@ -475,6 +483,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   )
                 ]);
           });
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LoginPage(),
+          ));
     } on FirebaseAuthException catch (e) {
       print(e);
       showDialog(

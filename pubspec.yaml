@@ -63,6 +63,7 @@ dependencies:
   url_launcher: ^6.1.6
   intl: ^0.17.0
 
+
 flutter_native_splash:
   background_image: "assets/SplashScreen.png"
   image: "assets/logo.png"

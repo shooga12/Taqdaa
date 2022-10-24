@@ -291,6 +291,7 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+
   flutter_native_splash:
     dependency: "direct main"
     description:
@@ -312,6 +313,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.7"
+    
   flutter_phone_direct_caller:
     dependency: "direct main"
     description:
@@ -319,6 +321,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.1"
+
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -691,6 +694,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
+
   vector_math:
     dependency: transitive
     description:

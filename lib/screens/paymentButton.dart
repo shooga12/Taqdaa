@@ -29,12 +29,15 @@ class _MakePaymentState extends State<MakePayment> {
                 size: 30.0,
               ),
               label: Text('الدفع بواسطة باي بال'),
+
               onPressed: () {
                 //-------make paypal payment-----------
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (BuildContext context) =>
                         PaypalPayment(onFinish: (number) async {
+
                           print('رقم الطلب:' + number);
+
                         })));
               },
               style: ElevatedButton.styleFrom(

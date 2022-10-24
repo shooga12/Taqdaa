@@ -23,7 +23,6 @@ class EcommerceApp {
   static int totalSummary = 0;
   static UserModel loggedInUser = UserModel();
   static int pageIndex = 0;
-
   static String uid = '';
   final FirebaseAuth auth = FirebaseAuth.instance;
 

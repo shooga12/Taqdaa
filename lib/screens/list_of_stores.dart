@@ -5,7 +5,9 @@ import 'package:taqdaa_application/confige/EcommerceApp.dart';
 import 'package:taqdaa_application/screens/ShoppingCart.dart';
 import 'package:taqdaa_application/screens/scanBarCode.dart';
 import 'package:firebase_database/firebase_database.dart';
+
 import '../views/scanner.dart';
+
 
 class ListOfStores2 extends StatefulWidget {
   const ListOfStores2({super.key});
@@ -48,6 +50,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'حسنًا'),
                     child: const Text('حسنًا'),
+
                   )
                 ]);
           });
@@ -57,6 +60,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
     Query dbref = FirebaseDatabase.instance
         .ref()
         .child(EcommerceApp.storeId)
+
         .child('store')
         .orderByChild('Barcode')
         .equalTo(EcommerceApp.value.substring(1));
@@ -80,6 +84,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'حسنًا'),
                     child: const Text('حسنًا'),
+
                   )
                 ]);
           });
@@ -106,6 +111,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
                     decoration: InputDecoration(
                         prefixIcon: Icon(Icons.search),
                         hintText: 'إبحث عن إسم متجر محدد'),
+
                     onChanged: (val) {
                       setState(() {
                         SearchName = val.replaceAll(' ', '');
@@ -149,7 +155,9 @@ class _ListOfStores2State extends State<ListOfStores2> {
                           child: Align(
                         alignment: Alignment.center,
                         child: Text(
+
                           'لا يوجد نتائج',
+
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 20,
@@ -292,6 +300,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
               blurStyle: BlurStyle.normal,
             ),
           ],
+
         ),
       ),
     );

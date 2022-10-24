@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
 import 'package:taqdaa_application/main.dart';
 import 'package:taqdaa_application/views/NoItmesCart.dart';
@@ -6,10 +7,12 @@ import 'package:taqdaa_application/views/profile_view.dart';
 import 'package:taqdaa_application/views/rewards_view.dart';
 import 'package:taqdaa_application/views/scanner.dart';
 import '../controller/BNBCustomePainter.dart';
+
 import 'ShoppingCart.dart';
 import '../views/invoices_view.dart';
 import 'list_of_stores.dart';
 import 'insideMore.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -210,6 +213,7 @@ class _homeContentState extends State<homeContent> {
                       height: 100,
                       child: Stack(
                         children: [
+
                           Container(
                             width: 370,
                             height: 105,
@@ -259,6 +263,7 @@ class _homeContentState extends State<homeContent> {
                                   fontSize: 30,
                                   fontWeight: FontWeight.bold,
                                   letterSpacing: 0.8),
+
                             ),
                           ),
                           Padding(

@@ -36,6 +36,7 @@ class _shoppingCartState extends State<shoppingCart> {
           title: Text(
             "سلة التسوق " + EcommerceApp.storeName,
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
+
           ),
           flexibleSpace: Container(
             decoration: BoxDecoration(
@@ -112,32 +113,40 @@ class _shoppingCartState extends State<shoppingCart> {
                               return showDialog(
                                   context: context,
                                   builder: (ctx) => AlertDialog(
+
                                         title: Text("الرجاء التأكيد!"),
                                         content: Text(
                                             "هل أنت متأكد من رغبتك في حذف هذا المنتج؟"),
+
                                         actions: [
                                           TextButton(
                                               onPressed: () {
                                                 Navigator.of(ctx).pop(false);
                                               },
+
                                               child: Text("إلغاء")),
+
                                           ElevatedButton(
                                               onPressed: () {
                                                 Navigator.of(ctx).pop(true);
                                               },
+
                                               child: Text(
                                                 "حذف",
                                                 style: TextStyle(
                                                     color: Color.fromARGB(
                                                         255, 250, 249, 249)),
                                               )),
+
                                         ],
                                       ));
                             },
                             onDismissed: (DismissDirection direction) {
                               if (direction == DismissDirection.endToStart) {
                                 EcommerceApp.counter--;
+
                                 EcommerceApp.NumOfItems--;
+
                                 if (products[index].quantity > 1) {
                                   for (int i = 0;
                                       i < products[index].quantity - 1;
@@ -154,6 +163,7 @@ class _shoppingCartState extends State<shoppingCart> {
                               }
                             },
                             child: buildSecondItems(products[index], context));
+
                       }
                       return Center(child: CircularProgressIndicator());
                     });
@@ -438,6 +448,7 @@ class _shoppingCartState extends State<shoppingCart> {
                             ]),
                       )
                     ],
+
                   ),
                 ),
               )
@@ -493,6 +504,7 @@ class _shoppingCartState extends State<shoppingCart> {
                           product.ProductImage,
                         ),
                       ),
+
                     ),
                   ),
                 )
@@ -600,6 +612,7 @@ class _shoppingCartState extends State<shoppingCart> {
                     color: Color.fromARGB(255, 118, 171, 223))),
           ],
         ),
+
       ),
       color: Color.fromARGB(255, 248, 248, 246),
     );
@@ -654,6 +667,7 @@ class _shoppingCartState extends State<shoppingCart> {
           event.snapshot.children.first.child('Product Name').value;
       var RFID = event.snapshot.children.first.child('RFID').value;
       saveUserItemsDublicate(barcode, productName, RFID);
+
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         duration: const Duration(seconds: 2),
         backgroundColor: Color.fromARGB(255, 135, 155, 190),
@@ -662,6 +676,7 @@ class _shoppingCartState extends State<shoppingCart> {
             style: TextStyle(fontSize: 17, letterSpacing: 0.8)),
         action: null,
       ));
+
       return true;
     } else if (event.snapshot.exists &&
         action == "Decrement" &&
@@ -671,11 +686,13 @@ class _shoppingCartState extends State<shoppingCart> {
           event.snapshot.children.first.child('Barcode').value as String;
       deleteSingleItem(dat);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+
         duration: const Duration(seconds: 2),
         backgroundColor: Color.fromARGB(255, 135, 155, 190),
         content: Text("تم حذف المنتج بنجاح",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 17, letterSpacing: 0.8)),
+
         action: null,
       ));
       return true;
