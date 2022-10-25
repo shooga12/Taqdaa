@@ -16,15 +16,11 @@ class _invoicesDetailsState extends State<invoice_details> {
   _invoicesDetailsState(invoice) {
     this.invoice = invoice;
   }
-
-  bool isInsideHome = false;
-  bool isInsideReceipt = true;
-  bool isInsideMore = false;
-  bool isInsideCart = false;
   int count = -1;
 
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    int earned = (invoice!.total! * 2) ~/ 100;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
@@ -151,9 +147,6 @@ class _invoicesDetailsState extends State<invoice_details> {
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
                   if (invoice!.rewardsDiscount != 0)
                     Row(
                       mainAxisSize: MainAxisSize.max,
@@ -174,9 +167,6 @@ class _invoicesDetailsState extends State<invoice_details> {
                             )),
                       ],
                     ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -200,6 +190,28 @@ class _invoicesDetailsState extends State<invoice_details> {
                           )
                         ],
                       ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: Text('تم اكتسـاب',
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 18,
+                            )),
+                      ),
+                      Spacer(),
+                      Text('+ $earned نقطة',
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontSize: 18,
+                          )),
                     ],
                   ),
                   SizedBox(

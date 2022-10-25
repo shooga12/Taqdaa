@@ -33,12 +33,12 @@ class checkOut {
     if (result != null) /*Successful Payment*/ {
       int reward = 0;
       reward = (EcommerceApp.total * 2) ~/ 100;
-      //make sure works
 
       String urli =
           '$url?payment_method_nonce=${result.paymentMethodNonce.nonce}&device_data=${result.deviceData}';
 
       final http.Response response = await http.post(Uri.parse(urli));
+      EcommerceApp.pageIndex = 0;
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => MyHomePage()),
@@ -54,6 +54,7 @@ class checkOut {
       EcommerceApp.haveItems = false;
       EcommerceApp.NumOfItems = 0;
       EcommerceApp.counter = 0;
+      EcommerceApp.discount = 0;
       showDialog(
           context: context,
           builder: (context) {
@@ -214,8 +215,6 @@ class checkOut {
       'HaveReturnReq': false,
       'status': '',
       'cutomerphone': EcommerceApp.loggedInUser.phonenumber
-
-      ///bug fixes make sure works
     });
 
     Invoice invoice = new Invoice(items,

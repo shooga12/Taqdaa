@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
+import 'package:taqdaa_application/views/rewardsHistory_view.dart';
 import '../views/checkOut_view.dart';
 import 'package:flutter/services.dart';
 

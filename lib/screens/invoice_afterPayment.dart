@@ -17,15 +17,10 @@ class _invoiceafterPaymentState extends State<invoice_afterPayment> {
     this.invoice = invoice;
     //this.itemsList = invoice?.items;
   }
-
-  bool isInsideHome = false;
-  bool isInsideReceipt = true;
-  bool isInsideMore = false;
-  bool isInsideCart = false;
   int count = -1;
 
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
+    int earned = (invoice!.total! * 2) ~/ 100;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
@@ -208,6 +203,28 @@ class _invoiceafterPaymentState extends State<invoice_afterPayment> {
                           ),
                         ],
                       ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: Text('تم اكتسـاب',
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 18,
+                            )),
+                      ),
+                      Spacer(),
+                      Text('+ $earned نقطة',
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontSize: 18,
+                          )),
                     ],
                   ),
                 ],

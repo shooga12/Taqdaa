@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
-import '../confige/EcommerceApp.dart';
-import '../controller/BNBCustomePainter.dart';
-import '../main.dart';
 import '../views/ViewReturnRequests.dart';
 import '../views/profile_view.dart';
-import '../views/NoItmesCart.dart';
-import 'ShoppingCart.dart';
 import 'getHelp.dart';
-import '../views/invoices_view.dart';
-import 'list_of_stores.dart';
 
 class More extends StatefulWidget {
   const More({super.key});

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
 import 'package:flutter/material.dart';
+import 'package:taqdaa_application/main.dart';
 import 'package:taqdaa_application/screens/ShoppingCart.dart';
 import '../confige/EcommerceApp.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -182,9 +183,10 @@ class _ScanPageState extends State<ScanPage> {
                   }
                   EcommerceApp.counter++;
                   EcommerceApp.NumOfItems++;
+                  EcommerceApp.pageIndex = 1;
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => shoppingCart()),
+                    MaterialPageRoute(builder: (context) => MyHomePage()),
                   );
                 },
                 child: Text(

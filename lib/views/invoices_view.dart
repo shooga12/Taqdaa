@@ -1,16 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
 import '../confige/EcommerceApp.dart';
-import '../controller/BNBCustomePainter.dart';
-import '../main.dart';
-import 'NoItmesCart.dart';
-import '../screens/ShoppingCart.dart';
-import '../screens/insideMore.dart';
 import '../screens/invoice_details.dart';
 import '../models/invoice.dart';
-import '../screens/list_of_stores.dart';
-import 'dart:math';
-import 'package:taqdaa_application/models/item.dart';
 
 class invoices extends StatefulWidget {
   const invoices({super.key});
@@ -118,13 +110,6 @@ class _invoicesState extends State<invoices> {
             ),
           ),
           onTap: () async {
-            // Invoice invoice = await writeInvoices();
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => invoice_details(invoice),
-            //   ),
-            // );
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -149,51 +134,4 @@ class _invoicesState extends State<invoices> {
       ),
     );
   }
-
-  // Future<Invoice> writeInvoices() async {
-  //   var items = [];
-  //   Random random = new Random();
-  //   int randomNumber = random.nextInt(1000);
-  //   double vat = (EcommerceApp.total * 15) / 100;
-  //   int subTotal = EcommerceApp.total - vat.toInt();
-
-  //   final QuerySnapshot result = await FirebaseFirestore.instance
-  //       .collection('${collectionName}All')
-
-  //       ///bug fixes All or not
-  //       .get();
-  //   final List<DocumentSnapshot> documents = result.docs;
-  //   for (int i = 0; i < documents.length; i++) {
-  //     items.add(Item(
-  //             barcode: documents[i].get("Item_number"),
-  //             name: documents[i].get("Category"),
-  //             img: documents[i].get("ProductImage"),
-  //             quantity: documents[i].get("quantity"),
-  //             price: documents[i].get("Price"),
-  //             returnable: true)
-  //         .toMap());
-
-  //     ///bug fixes returnable
-  //   }
-  //   FirebaseFirestore.instance.collection('All-Invoices').add({
-  //     "ID": randomNumber.toString(),
-  //     "Date": '20/10/2022',
-
-  //     ///bug fixes date should be generated
-  //     "Total": EcommerceApp.total - EcommerceApp.discount.toInt(),
-  //     "Store": EcommerceApp.storeName,
-  //     "items": items,
-  //     'sub-total': subTotal,
-  //     'vat-total': vat,
-  //   }).catchError((onError) => print(onError));
-
-  //   Invoice invoice = new Invoice(items,
-  //       id: randomNumber.toString(),
-  //       date: '20/10/2022',
-  //       total: EcommerceApp.total - EcommerceApp.discount.toInt(),
-  //       store: EcommerceApp.storeName,
-  //       sub_total: subTotal,
-  //       vat_total: vat);
-  //   return invoice;
-  // }
 }

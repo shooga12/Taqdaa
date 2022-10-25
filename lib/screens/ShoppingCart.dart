@@ -31,22 +31,6 @@ class _shoppingCartState extends State<shoppingCart> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Text(
-            "سلة التسوق " + EcommerceApp.storeName,
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
-
-          ),
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
-          ),
-          toolbarHeight: 170,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-        ),
         body: StreamBuilder<List<Product>>(
             stream: readCartItems(),
             builder: (context, snapshot) {
@@ -113,40 +97,32 @@ class _shoppingCartState extends State<shoppingCart> {
                               return showDialog(
                                   context: context,
                                   builder: (ctx) => AlertDialog(
-
                                         title: Text("الرجاء التأكيد!"),
                                         content: Text(
                                             "هل أنت متأكد من رغبتك في حذف هذا المنتج؟"),
-
                                         actions: [
                                           TextButton(
                                               onPressed: () {
                                                 Navigator.of(ctx).pop(false);
                                               },
-
                                               child: Text("إلغاء")),
-
                                           ElevatedButton(
                                               onPressed: () {
                                                 Navigator.of(ctx).pop(true);
                                               },
-
                                               child: Text(
                                                 "حذف",
                                                 style: TextStyle(
                                                     color: Color.fromARGB(
                                                         255, 250, 249, 249)),
                                               )),
-
                                         ],
                                       ));
                             },
                             onDismissed: (DismissDirection direction) {
                               if (direction == DismissDirection.endToStart) {
                                 EcommerceApp.counter--;
-
                                 EcommerceApp.NumOfItems--;
-
                                 if (products[index].quantity > 1) {
                                   for (int i = 0;
                                       i < products[index].quantity - 1;
@@ -163,7 +139,6 @@ class _shoppingCartState extends State<shoppingCart> {
                               }
                             },
                             child: buildSecondItems(products[index], context));
-
                       }
                       return Center(child: CircularProgressIndicator());
                     });
@@ -174,285 +149,158 @@ class _shoppingCartState extends State<shoppingCart> {
               }
             }),
         bottomNavigationBar: SizedBox(
-            height: 300,
-            child: Stack(children: [
-              Container(
-                  child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        bottom: 10.0, right: 20, left: 21),
-                    child: Container(
-                        alignment: Alignment.centerRight,
-                        child: Row(
-                          children: [
-                            Text(
-                              'المجموع : ',
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 32, 7, 121),
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Spacer(),
-                            Text(
-                                style: TextStyle(
-                                    color: Color.fromARGB(255, 32, 7, 121),
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
-                                (() {
-                                  if (EcommerceApp.finalTotal == 0) {
-                                    saveUserTotal(0);
-                                    EcommerceApp.finalTotal = -1;
-                                    return EcommerceApp.finalTotal.toString() +
-                                        ' ريال';
-                                  } else {
-                                    return EcommerceApp.total.toString() +
-                                        ' ريال';
-                                  }
-                                }())),
-                          ],
-                        )),
-                  ),
-                  Divider(
-                    color: Colors.grey,
-                    indent: 20,
-                    endIndent: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: 200,
-                      height: 40,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(30.0),
-                          ),
-                          border: Border.all(color: Colors.orange, width: 2)),
-                      child: SizedBox(
-                        width: 200,
-                        height: 40,
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            _scan(context, "NewItem");
-                          },
-                          label: Text(
-                            ' إكـمـال المـسـح',
-                            style: const TextStyle(
-                                color: Colors.orange,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18),
-                          ),
-                          icon: Icon(
-                            Icons.document_scanner_outlined,
-                            color: Colors.orange,
-                          ),
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.resolveWith((states) {
-                                if (states.contains(MaterialState.pressed)) {
-                                  return Colors.grey;
-                                }
-                                return Colors.white;
-                              }),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(30)))),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0, bottom: 10),
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: SizedBox(
-                        width: 200,
-                        height: 40,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (EcommerceApp.total == 0 ||
-                                EcommerceApp.finalTotal == 0) {
-                              showDialog(
-                                  context: context,
-                                  builder: (ctx) => AlertDialog(
-                                        content: Text(
-                                          "لا يوجد منتجات!",
-                                          style: TextStyle(fontSize: 18),
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                              onPressed: () {
-                                                Navigator.of(ctx).pop(false);
-                                              },
-                                              child: Text("إلغاء")),
-                                        ],
-                                      ));
-                            } else {
-                              EcommerceApp.totalSummary = EcommerceApp.total;
-                              EcommerceApp.inDollars =
-                                  EcommerceApp.total / 3.75;
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CheckOutSummary()),
-                              );
-                            }
-                          },
-                          child: Text(
-                            'الـدفـع',
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                letterSpacing: 1),
-                          ),
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.resolveWith((states) {
-                                if (states.contains(MaterialState.pressed)) {
-                                  return Colors.grey;
-                                }
-                                return Colors.orange;
-                              }),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(30)))),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              )),
-              Positioned(
-                bottom: 0,
-                left: 0,
+          height: 220,
+          child: Container(
+              child: Column(
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.only(bottom: 10.0, right: 20, left: 21),
                 child: Container(
-                  width: size.width,
-                  height: 80,
-                  color: Colors.white,
-                  child: Stack(
-                    children: [
-                      CustomPaint(
-                        size: Size(size.width, 80),
-                        painter: BNBCustomePainter(),
+                    alignment: Alignment.centerRight,
+                    child: Row(
+                      children: [
+                        Text(
+                          'المجموع : ',
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 32, 7, 121),
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Spacer(),
+                        Text(
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 32, 7, 121),
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                            (() {
+                              if (EcommerceApp.finalTotal == 0) {
+                                saveUserTotal(0);
+                                EcommerceApp.finalTotal = -1;
+                                return EcommerceApp.finalTotal.toString() +
+                                    ' ريال';
+                              } else {
+                                return EcommerceApp.total.toString() + ' ريال';
+                              }
+                            }())),
+                      ],
+                    )),
+              ),
+              Divider(
+                color: Colors.grey,
+                indent: 20,
+                endIndent: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 200,
+                  height: 40,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(30.0),
                       ),
-                      Center(
-                          heightFactor: 0.6,
-                          child: Container(
-                            width: 65,
-                            height: 65,
-                            child: FittedBox(
-                              child: FloatingActionButton(
-                                onPressed: () {
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //       builder: (context) => scanner()),
-                                  // );
-                                  _scan(context, "NewItem");
-                                },
-                                backgroundColor: Colors.orange,
-                                child: Icon(
-                                  Icons.document_scanner_outlined,
-                                  size: 27,
-                                ),
-                              ),
-                            ),
-                          )),
-                      Container(
-                        width: size.width,
-                        height: 80,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              IconButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => MyHomePage()),
-                                    );
-                                  },
-                                  icon: Icon(
-                                    Icons.home_outlined,
-                                    size: 35,
-                                    color: isInsideHome
-                                        ? Color.fromARGB(255, 254, 176, 60)
-                                        : Colors.white,
-                                  )),
-                              IconButton(
-                                  onPressed: () {
-                                    if (EcommerceApp.haveItems) {
-                                      /////bug fixes
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                shoppingCart()),
-                                      );
-                                    } else {
-                                      ///bug fixes New "I don't think their will be a need for it"
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => emptyCart()),
-                                      );
-                                    }
-                                  },
-                                  icon: Icon(
-                                    Icons.shopping_cart,
-                                    size: 30,
-                                    color: isInsideCart
-                                        ? Color.fromARGB(255, 254, 176, 60)
-                                        : Colors.white,
-                                  )),
-                              Container(
-                                width: size.width * 0.20,
-                              ),
-                              IconButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => invoices(),
-                                        ));
-                                  },
-                                  icon: Icon(
-                                    Icons.receipt_long,
-                                    size: 30,
-                                    color: isInsideProfile
-                                        ? Color.fromARGB(255, 254, 176, 60)
-                                        : Colors.white,
-                                  )),
-                              IconButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => More()),
-                                  );
-                                },
-                                icon: Icon(
-                                  Icons.more_horiz,
-                                  size: 30,
-                                  color: isInsideSettings
-                                      ? Color.fromARGB(255, 254, 176, 60)
-                                      : Colors.white,
-                                ),
-                              ),
-                            ]),
-                      )
-                    ],
-
+                      border: Border.all(color: Colors.orange, width: 2)),
+                  child: SizedBox(
+                    width: 200,
+                    height: 40,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        _scan(context, "NewItem");
+                      },
+                      label: Text(
+                        ' إكـمـال المـسـح',
+                        style: const TextStyle(
+                            color: Colors.orange,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                      ),
+                      icon: Icon(
+                        Icons.document_scanner_outlined,
+                        color: Colors.orange,
+                      ),
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.resolveWith((states) {
+                            if (states.contains(MaterialState.pressed)) {
+                              return Colors.grey;
+                            }
+                            return Colors.white;
+                          }),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(30)))),
+                    ),
                   ),
                 ),
-              )
-            ])));
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0, bottom: 10),
+                child: Container(
+                  alignment: Alignment.center,
+                  child: SizedBox(
+                    width: 200,
+                    height: 40,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (EcommerceApp.total == 0 ||
+                            EcommerceApp.finalTotal == 0) {
+                          showDialog(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                    content: Text(
+                                      "لا يوجد منتجات!",
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.of(ctx).pop(false);
+                                          },
+                                          child: Text("إلغاء")),
+                                    ],
+                                  ));
+                        } else {
+                          EcommerceApp.totalSummary = EcommerceApp.total;
+                          EcommerceApp.inDollars = EcommerceApp.total / 3.75;
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CheckOutSummary()),
+                          );
+                        }
+                      },
+                      child: Text(
+                        'الـدفـع',
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            letterSpacing: 1),
+                      ),
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.resolveWith((states) {
+                            if (states.contains(MaterialState.pressed)) {
+                              return Colors.grey;
+                            }
+                            return Colors.orange;
+                          }),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(30)))),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          )),
+        ));
   }
 
   Future<bool> checkItemExist(bool increment, String itemName) async {
@@ -504,7 +352,6 @@ class _shoppingCartState extends State<shoppingCart> {
                           product.ProductImage,
                         ),
                       ),
-
                     ),
                   ),
                 )
@@ -551,14 +398,14 @@ class _shoppingCartState extends State<shoppingCart> {
                                 TextButton(
                                   onPressed: () async {
                                     Navigator.pop(context, 'حسناً');
-                                    if (await _scan(context, "Decrement")) {
-                                      checkItemExist(false, product.Category);
-                                    }
                                   },
                                   child: const Text('حسناً'),
                                 )
                               ]);
                         });
+                    if (await _scan(context, "Decrement")) {
+                      checkItemExist(false, product.Category);
+                    }
                   }
                 },
                 icon: Icon(Icons.remove_circle,
@@ -598,21 +445,20 @@ class _shoppingCartState extends State<shoppingCart> {
                               TextButton(
                                 onPressed: () async {
                                   Navigator.pop(context, 'حسناً');
-                                  if (await _scan(context, "Increment")) {
-                                    checkItemExist(true, product.Category);
-                                    EcommerceApp.counter++;
-                                  }
                                 },
                                 child: const Text('حسناً'),
                               )
                             ]);
                       });
+                  if (await _scan(context, "Increment")) {
+                    checkItemExist(true, product.Category);
+                    EcommerceApp.counter++;
+                  }
                 },
                 icon: Icon(Icons.add_circle,
                     color: Color.fromARGB(255, 118, 171, 223))),
           ],
         ),
-
       ),
       color: Color.fromARGB(255, 248, 248, 246),
     );
@@ -638,7 +484,7 @@ class _shoppingCartState extends State<shoppingCart> {
           context: context,
           builder: (context) {
             return AlertDialog(
-                content: Text("Item already have been added."),
+                content: Text("تم إضافة المنتج مسبقاً."),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'OK'),
@@ -667,7 +513,6 @@ class _shoppingCartState extends State<shoppingCart> {
           event.snapshot.children.first.child('Product Name').value;
       var RFID = event.snapshot.children.first.child('RFID').value;
       saveUserItemsDublicate(barcode, productName, RFID);
-
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         duration: const Duration(seconds: 2),
         backgroundColor: Color.fromARGB(255, 135, 155, 190),
@@ -676,7 +521,6 @@ class _shoppingCartState extends State<shoppingCart> {
             style: TextStyle(fontSize: 17, letterSpacing: 0.8)),
         action: null,
       ));
-
       return true;
     } else if (event.snapshot.exists &&
         action == "Decrement" &&
@@ -686,13 +530,11 @@ class _shoppingCartState extends State<shoppingCart> {
           event.snapshot.children.first.child('Barcode').value as String;
       deleteSingleItem(dat);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-
         duration: const Duration(seconds: 2),
         backgroundColor: Color.fromARGB(255, 135, 155, 190),
         content: Text("تم حذف المنتج بنجاح",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 17, letterSpacing: 0.8)),
-
         action: null,
       ));
       return true;
@@ -748,7 +590,7 @@ class _shoppingCartState extends State<shoppingCart> {
           context: context,
           builder: (context) {
             return AlertDialog(
-                content: Text("Sorry Item not found!"),
+                content: Text("عذرًا المنتج غير موجود!"),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'OK'),

@@ -350,6 +350,7 @@ class _returnRequestState extends State<returnRequest> {
                       child: ElevatedButton(
                         onPressed: () async {
                           added = await addToDB();
+                          EcommerceApp.pageIndex = 0;
                           Navigator.push(
                             context,
                             MaterialPageRoute(

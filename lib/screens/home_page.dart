@@ -22,10 +22,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool isInsideHome = true;
-  bool isInsideReceipt = false;
-  bool isInsideMore = false;
-
   final pages = [
     const homeContent(),
     const shoppingCart(),
@@ -36,7 +32,7 @@ class _HomePageState extends State<HomePage> {
 
   final titles = [
     "مرحبًا، ${EcommerceApp.loggedInUser.firstName}",
-    "سلة التسوق",
+    "سلة التسوق " + EcommerceApp.storeName,
     "سلة التسوق",
     "فواتيري",
     "المزيد"
@@ -132,7 +128,8 @@ class _HomePageState extends State<HomePage> {
                           icon: Icon(
                             Icons.shopping_cart,
                             size: 30,
-                            color: EcommerceApp.pageIndex == 2
+                            color: EcommerceApp.pageIndex == 2 ||
+                                    EcommerceApp.pageIndex == 1
                                 ? Color.fromARGB(255, 254, 176, 60)
                                 : Colors.white,
                           )),

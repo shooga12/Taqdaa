@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:either_dart/either.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -12,12 +11,6 @@ import '../main.dart';
 import '../methods/authentication_services.dart';
 import '../models/user_model.dart';
 import '../screens/EditProfile.dart';
-import '../screens/ShoppingCart.dart';
-import '../screens/insideMore.dart';
-import 'invoices_view.dart';
-
-import '../screens/list_of_stores.dart';
-import 'NoItmesCart.dart';
 
 class Homepprofile extends StatefulWidget {
   const Homepprofile({Key? key}) : super(key: key);
@@ -28,13 +21,11 @@ class Homepprofile extends StatefulWidget {
 
 class _HomepprofileState extends State<Homepprofile> {
   User? user = FirebaseAuth.instance.currentUser;
-
   //UserModel loggedInUser = UserModel();
   bool isInsideHome = false;
   bool isInsideReceipt = false;
   bool isInsideMore = true;
   bool isInsideCart = false;
-
 
   @override
   void initState() {
@@ -44,9 +35,7 @@ class _HomepprofileState extends State<Homepprofile> {
         .doc(user!.uid)
         .get()
         .then((value) {
-
       EcommerceApp.loggedInUser = UserModel.fromMap(value.data());
-
       setState(() {});
     });
   }
@@ -56,12 +45,10 @@ class _HomepprofileState extends State<Homepprofile> {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-
         automaticallyImplyLeading: true,
         title: Text(
           "حسابي",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
-
         ),
         actions: <Widget>[
           IconButton(
@@ -74,7 +61,6 @@ class _HomepprofileState extends State<Homepprofile> {
                 context,
                 MaterialPageRoute(builder: (context) => Edit()),
               );
-
             },
           )
         ],
@@ -88,7 +74,6 @@ class _HomepprofileState extends State<Homepprofile> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-
       body: Center(
         child: Padding(
           padding: EdgeInsets.only(top: 40),
@@ -345,7 +330,6 @@ class _HomepprofileState extends State<Homepprofile> {
             ],
           ),
         ),
-
       ),
     );
   }
@@ -361,4 +345,3 @@ Future<void> deleteUser(String uid) async {
   final account =
       await FirebaseFirestore.instance.collection("users").doc('$uid').delete();
 }
-
