@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,6 @@ import 'package:taqdaa_application/views/NoItmesCart.dart';
 import 'package:taqdaa_application/views/rewards_view.dart';
 import 'package:taqdaa_application/views/scanner.dart';
 import '../controller/BNBCustomePainter.dart';
-//import '../Views/NoItmesCart.dart';
 import '../main.dart';
 import '../model/StoreModel.dart';
 import 'ShoppingCart.dart';
@@ -36,15 +34,18 @@ class _HomePageState extends State<HomePage> {
   List<Offer> OffersList = [];
   bool ImagesAndText = false;
 
-  Stream readOffers() => FirebaseFirestore.instance
+  Stream readOffers = FirebaseFirestore.instance
       .collection('ActiveOffers')
       .snapshots()
-      .map((list) => list.docs.map((doc) => doc.data()).toList());
+      .map(
+          (list) => list.docs.map((doc) => doc.data()).toList()); //ActiveOffers
 
   double pageOffset = 0;
   @override
   void initState() {
-    readOffers();
+    readOffers;
+    //AddOffers();
+    // AddImagesAndText();
     controller
       ..addListener(() {
         setState(() {
@@ -53,6 +54,7 @@ class _HomePageState extends State<HomePage> {
       });
 
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _animateSlider());
   }
 
   final PageController controller = PageController(
@@ -142,9 +144,13 @@ class _HomePageState extends State<HomePage> {
                                       height: 200,
                                       width: 392,
                                       child: StreamBuilder(
-                                          stream: readOffers(),
+                                          stream: readOffers,
                                           builder: (context, snapshot) {
-                                            if (snapshot.hasData) {
+                                            if (snapshot.hasData &&
+                                                snapshot.data!.isEmpty) {
+                                              ////////empty
+                                              return NoOffersCard();
+                                            } else if (snapshot.hasData) {
                                               final offer = snapshot.data!;
                                               return PageView.builder(
                                                   controller: controller,
@@ -152,12 +158,14 @@ class _HomePageState extends State<HomePage> {
                                                   itemBuilder:
                                                       (BuildContext context,
                                                           int index) {
+                                                    // return AddToList(
+                                                    //     offer[index]);
                                                     return buildOfferCards(
                                                         offer[index], index);
                                                   });
                                             } else if (snapshot.hasError) {
                                               return Text(
-                                                  "Some thing went wrong! ${snapshot.error}");
+                                                  "Something went wrong! ${snapshot.error}");
                                             } else {
                                               return Center(
                                                   child:
@@ -165,6 +173,25 @@ class _HomePageState extends State<HomePage> {
                                             }
                                           }),
                                     ),
+                                    // StreamBuilder(
+                                    //       stream: readOffers,
+                                    //       builder: (context, snapshot) {
+                                    //         if (snapshot.hasData &&
+                                    //             snapshot.data!.isEmpty) {
+                                    //           ////////empty
+                                    //           return NoOffersCard();
+                                    //         } else if (snapshot.hasData) {
+                                    //           final offer = snapshot.data!;
+                                    //           return
+                                    //         } else if (snapshot.hasError) {
+                                    //           return Text(
+                                    //               "Something went wrong! ${snapshot.error}");
+                                    //         } else {
+                                    //           return Center(
+                                    //               child:
+                                    //                   CircularProgressIndicator());
+                                    //         }
+                                    //       }),
                                   ],
                                 )),
                               ],
@@ -576,16 +603,36 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _animateSlider() {
+    Future.delayed(Duration(seconds: 2)).then((_) {
+      int nextPage = controller.page!.round() + 1;
+
+      if (nextPage == OffersList.length) {
+        nextPage = 0;
+      }
+
+      controller
+          .animateToPage(nextPage,
+              duration: Duration(seconds: 1), curve: Curves.linear)
+          .then((_) => _animateSlider());
+    });
+  }
+
   // AddToList(Offer offer) {
   //   OffersList.add(offer);
-  //   return SizedBox(width: 0, height: 0);
+  //   return SizedBox(
+  //     width: 0,
+  //   );
   // }
 
   // AddOffers() {
-  //   return StreamBuilder<List<Offer>>(
-  //       stream: readOffers(),
+  //   return StreamBuilder(
+  //       stream: readOffers,
   //       builder: (context, snapshot) {
-  //         if (snapshot.hasData) {
+  //         if (snapshot.hasData && snapshot.data!.isEmpty) {
+  //           ////////empty
+  //           return NoOffersCard();
+  //         } else if (snapshot.hasData) {
   //           final offer = snapshot.data!;
   //           return ListView.builder(
   //               itemCount: offer.length,
@@ -593,12 +640,29 @@ class _HomePageState extends State<HomePage> {
   //                 return AddToList(offer[index]);
   //               });
   //         } else if (snapshot.hasError) {
-  //           return Text("Some thing went wrong! ${snapshot.error}");
+  //           return Text("Something went wrong! ${snapshot.error}");
   //         } else {
   //           return Center(child: CircularProgressIndicator());
   //         }
   //       });
-  // }
+
+  // return StreamBuilder<Offer>(
+  //     stream: readOffers,
+  //     builder: (context, snapshot) {
+  //       if (snapshot.hasData) {
+  //         final offer = snapshot.data!;
+  //         return ListView.builder(
+  //             itemCount: offer.length,
+  //             itemBuilder: (BuildContext context, int index) {
+  //               return AddToList(offer[index]);
+  //             });
+  //       } else if (snapshot.hasError) {
+  //         return Text("Some thing went wrong! ${snapshot.error}");
+  //       } else {
+  //         return Center(child: CircularProgressIndicator());
+  //       }
+  //     });
+  //}
 
   buildStoresCards(Store store, BuildContext context) {
     return Padding(
@@ -753,6 +817,80 @@ class _HomePageState extends State<HomePage> {
 
   //int currentImg = 0;
 
+  NoOffersCard() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
+      child: Container(
+        child: new InkWell(
+          child: Padding(
+            padding:
+                const EdgeInsets.only(top: 15, bottom: 15, left: 15, right: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Text(
+                      'لا يوجد عروض حاليًا',
+                      style: new TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          highlightColor: Color.fromARGB(255, 255, 255, 255),
+        ),
+        decoration: BoxDecoration(
+          color: Color.fromARGB(255, 255, 255, 255),
+          borderRadius: BorderRadius.circular(20.0),
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromARGB(255, 241, 241, 241),
+              offset: Offset.zero,
+              blurRadius: 20.0,
+              blurStyle: BlurStyle.normal,
+            ),
+          ],
+        ),
+      ),
+    );
+    // return Padding(
+    //   padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
+    //   child: Container(
+    //     child: new InkWell(
+    //       child: Padding(
+    //         padding: const EdgeInsets.only(top: 15, left: 15, right: 12),
+    //         child: Row(
+    //           //crossAxisAlignment: CrossAxisAlignment.start,
+    //           children: <Widget>[
+    //             Text('لا يوجد عروض حاليًا',
+    //                 style: TextStyle(
+    //                   fontSize: 20,
+    //                 ))
+    //           ],
+    //         ),
+    //       ),
+    //       highlightColor: Color.fromARGB(255, 255, 255, 255),
+    //     ),
+    //     decoration: BoxDecoration(
+    //       color: Color.fromARGB(255, 255, 255, 255),
+    //       borderRadius: BorderRadius.circular(20.0),
+    //       boxShadow: [
+    //         BoxShadow(
+    //           color: Color.fromARGB(255, 241, 241, 241),
+    //           offset: Offset.zero,
+    //           blurRadius: 20.0,
+    //           blurStyle: BlurStyle.normal,
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    // );
+  }
+
   buildOfferCards(Map data, int index) {
     //double scale = max(0.8, (1 - (pageOffset - index).abs()) + 0.8);
     return Padding(
@@ -791,49 +929,49 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          // onTap: () async {
-          //   EcommerceApp.storeId = store.StoreId;
-          //   if (EcommerceApp.storeName == "") {
-          //     EcommerceApp.storeName = store.StoreName;
-          //     // Navigator.push(
-          //     //   context,
-          //     //   MaterialPageRoute(builder: (context) => scanner()),
-          //     // );
-          //     scan(context);
-          //   } else if (EcommerceApp.haveItems &&
-          //       EcommerceApp.storeName != store.StoreName) {
-          //     showDialog(
-          //         context: context,
-          //         builder: (context) {
-          //           return AlertDialog(
-          //               content: Text(
-          //                   ".${EcommerceApp.storeName}عذرًا، لديك طلب بالفعل في"),
-          //               actions: [
-          //                 ElevatedButton(
-          //                     onPressed: () async {
-          //                       EcommerceApp.storeName = "";
-          //                       await ListOfStores2State.deleteCart();
-          //                       await ListOfStores2State.deleteCartDublicate();
-          //                       await ListOfStores2State.saveUserTotal(0);
-          //                       Navigator.pop(context, 'حسنًا');
-          //                     },
-          //                     child:
-          //                         Text(" ${EcommerceApp.storeName} إلغاء طلب")),
-          //                 TextButton(
-          //                   onPressed: () => Navigator.pop(context, 'حسنًا'),
-          //                   child: const Text('حسنًا'),
-          //                 ),
-          //               ]);
-          //         });
-          //   } else {
-          //     EcommerceApp.storeName = store.StoreName;
-          //     // Navigator.push(
-          //     //   context,
-          //     //   MaterialPageRoute(builder: (context) => scanner()),
-          //     // );
-          //     scan(context);
-          //   }
-          // },
+          onTap: () async {
+            EcommerceApp.storeId = data['StoreId'];
+            if (EcommerceApp.storeName == "") {
+              EcommerceApp.storeName = data['StoreName'];
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => scanner()),
+              // );
+              scan(context);
+            } else if (EcommerceApp.haveItems &&
+                EcommerceApp.storeName != data['StoreName']) {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                        content: Text(
+                            ".${EcommerceApp.storeName}عذرًا، لديك طلب بالفعل في"),
+                        actions: [
+                          ElevatedButton(
+                              onPressed: () async {
+                                EcommerceApp.storeName = "";
+                                await ListOfStores2State.deleteCart();
+                                await ListOfStores2State.deleteCartDublicate();
+                                await ListOfStores2State.saveUserTotal(0);
+                                Navigator.pop(context, 'حسنًا');
+                              },
+                              child:
+                                  Text(" ${EcommerceApp.storeName} إلغاء طلب")),
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'حسنًا'),
+                            child: const Text('حسنًا'),
+                          ),
+                        ]);
+                  });
+            } else {
+              EcommerceApp.storeName = data['StoreName'];
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => scanner()),
+              );
+              scan(context);
+            }
+          },
           highlightColor: Color.fromARGB(255, 255, 255, 255),
         ),
         decoration: BoxDecoration(
@@ -866,6 +1004,53 @@ class _HomePageState extends State<HomePage> {
     //   ),
     // );
   }
+
+//   testCards(context) {
+//     return Container(
+//         height: 200,
+//         width: 392,
+//         child: Column(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             crossAxisAlignment: CrossAxisAlignment.center,
+//             children: <Widget>[
+//               CarouselSlider(
+//                 items: Img1.map((imgUrl) {
+//                   return Builder(
+//                     builder: (BuildContext context) {
+//                       return Container(
+//                         width: MediaQuery.of(context).size.width,
+//                         margin: EdgeInsets.symmetric(horizontal: 10.0),
+//                         decoration: BoxDecoration(
+//                           color: Colors.green,
+//                         ),
+//                         child: Image.network(
+//                           imgUrl,
+//                           fit: BoxFit.fill,
+//                         ),
+//                       );
+//                     },
+//                   );
+//                 }).toList(),
+//                 options: CarouselOptions(
+//                   height: 200.0,
+//                   initialPage: 0,
+//                   enlargeCenterPage: true,
+//                   autoPlay: true,
+//                   reverse: false,
+//                   enableInfiniteScroll: true,
+//                   autoPlayInterval: Duration(seconds: 2),
+//                   autoPlayAnimationDuration: Duration(milliseconds: 2000),
+// //pauseAutoPlayOnTouch: Duration(seconds: 10),
+//                   scrollDirection: Axis.horizontal,
+// // onPageChanged: (index) {
+// // setState(() {
+// // _current = index;
+// // });
+// // },
+//                 ),
+//               )
+//             ]));
+//   }
   //   ImagesAndText = AddImagesAndText();
   //   if (ImagesAndText) {
   //     return Container(

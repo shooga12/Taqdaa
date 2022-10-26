@@ -1,7 +1,10 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import '../model/Offers.dart';
 
 class ListOfOffers extends StatefulWidget {
   const ListOfOffers({super.key});
@@ -15,10 +18,16 @@ class _ListOfOffersState extends State<ListOfOffers> {
   String SearchName = '';
   int count = -1;
 
-  Stream readOffers() => FirebaseFirestore.instance
+  // Stream <List<Offer>> readOffers() => FirebaseFirestore.instance
+  //     .collection('ActiveOffers')
+  //     .snapshots()
+  //     .map((list) => list.docs.map((doc) => doc.data()).toList());
+
+  Stream<List<Offer>> readOffers() => FirebaseFirestore.instance
       .collection('ActiveOffers')
       .snapshots()
-      .map((list) => list.docs.map((doc) => doc.data()).toList());
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Offer.fromJson(doc.data())).toList());
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +47,8 @@ class _ListOfOffersState extends State<ListOfOffers> {
                       hintText: 'إبحث عن إسم عرض محدد'),
                   onChanged: (val) {
                     setState(() {
-                      SearchName = val.replaceAll(' ', '');
+                      SearchName = val;
+                      //.replaceAll(' ', '');
                     });
                   },
                 ),
@@ -55,9 +65,13 @@ class _ListOfOffersState extends State<ListOfOffers> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: StreamBuilder(
+      body: StreamBuilder<List<Offer>>(
           stream: readOffers(),
           builder: (context, snapshot) {
+            if (snapshot.hasData && snapshot.data!.isEmpty) {
+              ////////empty
+              return Nodata();
+            }
             if (snapshot.hasData) {
               final offer = snapshot.data!;
               count = offer.length;
@@ -68,13 +82,14 @@ class _ListOfOffersState extends State<ListOfOffers> {
                     var Current = offer[index];
                     if (SearchName.isEmpty) {
                       flag = false;
-                      return buildOfferCards(offer[index], index);
+                      return buildOfferCards(Current, index);
                     } else if (SearchName.isNotEmpty &&
-                        Current.StoreName.toString()
+                        Current.offerText
+                            .toString()
                             .toLowerCase()
-                            .startsWith(SearchName.toLowerCase())) {
+                            .contains(SearchName.toLowerCase())) {
                       flag = true;
-                      return buildOfferCards(offer[index], index);
+                      return buildOfferCards(Current, index);
                     } else if (flag == false && index == count - 1) {
                       return Container(
                           child: Align(
@@ -91,7 +106,7 @@ class _ListOfOffersState extends State<ListOfOffers> {
                     return nothing();
                   });
             } else if (snapshot.hasError) {
-              return Text("Some thing went wrong! ${snapshot.error}");
+              return Text("Something went wrong! ${snapshot.error}");
             } else {
               return Center(child: CircularProgressIndicator());
             }
@@ -103,7 +118,21 @@ class _ListOfOffersState extends State<ListOfOffers> {
     return Container();
   }
 
-  buildOfferCards(Map data, int index) {
+  Nodata() {
+    return Container(
+        child: Align(
+      alignment: Alignment.center,
+      child: Text(
+        'لا يوجد عروض حاليًا',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 20,
+        ),
+      ),
+    ));
+  }
+
+  buildOfferCards(Offer Offer, int index) {
     //double scale = max(0.8, (1 - (pageOffset - index).abs()) + 0.8);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
@@ -116,11 +145,16 @@ class _ListOfOffersState extends State<ListOfOffers> {
               //crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Image.network(
-                  data['OfferImg'],
+                  Offer.OfferImg
+                  //data['OfferImg'],
+                  ,
                   width: 255,
                   height: 120,
                 ),
-                Text(data['offerText'],
+                Text(
+                    Offer.offerText
+                    //data['offerText'],
+                    ,
                     style: TextStyle(
                       fontSize: 20,
                     ))
