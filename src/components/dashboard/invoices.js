@@ -23,7 +23,7 @@ function InvoiceCard({ invoices }) {
   const [endDate, setEndDate] = useState(today);
   const [errorState, setErrorState] = useState(false);
   const [noInvoices, setNoInvoices] = useState(false);
-
+ 
   const collapse = (id)=>{
     let invoice = document.querySelector('#invoice-'+id+'-body');
     let collapse_header = document.querySelector('#invoice'+id+'-collapse-header');
@@ -153,7 +153,7 @@ function InvoiceCard({ invoices }) {
         </div>
       </div> 
       :
-      invoicesList && invoicesList.map ?
+      invoicesList.length != 0 && invoicesList.map ?
       Object.keys(invoicesList).map(key => (
                 <div className='invoice-card'>
                 <div className='invoice-card-header'>
@@ -216,7 +216,14 @@ function InvoiceCard({ invoices }) {
                 </div>
               </div>
 
-          )) : null}
+          )) : 
+          <div className='w-100 h-100 d-flex justify-content-center'>
+            <div className='d-flex flex-column p-5 justify-content-center align-items-center'>
+              <TbFileInvoice style={{fontSize: '150px', color: '#d2d2d2'}}/>
+              <p style={{fontSize: '40px', color: '#d2d2d2'}}>No Invoices</p>
+            </div>
+          </div> 
+        }
           </>
      )  
 }

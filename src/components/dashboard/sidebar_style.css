@@ -483,3 +483,63 @@ body.shrink .tooltip {
 #password-prompt-container{
   display: none;
 }
+.sub-titles{
+  color:#1E286D;
+}
+.text-orange{
+  color: var(--orange-dark);
+}
+.offer-card{
+  box-shadow: 1px 1px 15px 1px #ebebeb;
+  border-radius: 20px;
+  width: fit-content;
+}
+.delete-offer{
+  color:rgb(169, 0, 0);
+  font-size: 32px;
+  border: none;
+  background-color: transparent;
+}
+.delete-offer:hover{
+  color: rgb(134, 0, 0);
+}
+.active-offer{
+  border-radius: 50px;
+  color: white;
+  border: none;
+  background-color:rgb(169, 0, 0);
+  padding: 0.4em 0.8em 0.4em 0.8em;
+}
+.active-offer:hover{
+  background-color: rgb(134, 0, 0);;
+}
+.inactive-offer{
+  border-radius: 50px;
+  color: white;
+  border: none;
+  background-color:#237A35;
+  padding: 0.4em 0.8em 0.4em 0.8em;
+}
+.inactive-offer:hover{
+  background-color:#185625;
+}
+.add-offer-btn{
+  background-color: var(--orange);
+  color: white;
+  border-radius: 50px;
+  border: none;
+  padding: 0.5em 0.8em 0.5em 0.8em;
+}
+.add-offer-btn:hover{
+  background-color: var(--orange-dark);
+}
+.input-fields{
+  border-radius: 30px;
+  border: 1px solid #898989;
+  padding: 0.3em 0.5em 0.3em 0.5em;
+  width: 380px;
+}
+#percentage-field{
+  width: 360px;
+  margin-right: 0.5em;
+}

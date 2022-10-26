@@ -3,8 +3,7 @@ import "./sidebar_style.css";
 import Logo from '../../shared/Logo.png';
 import { confirmAlert } from 'react-confirm-alert'; 
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
-import { BiBarcode, BiReceipt, BiPackage, BiPurchaseTagAlt }
-from 'react-icons/bi';
+import { BiBarcode, BiReceipt, BiPackage, BiPurchaseTagAlt } from 'react-icons/bi';
 import {IoIosArrowBack} from 'react-icons/io';
 import {RiFileListFill} from 'react-icons/ri';
 import {CgLogOut,CgProfile} from 'react-icons/cg';
@@ -12,7 +11,7 @@ import Dataset from './dataset';
 import Profile from './profile';
 import Invoices from './invoices';
 import Return_Req from './return_request';
-import Exchange_Req from './exchange_request';
+import Offers from './offers';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import auth from '../../shared/firebase';
 import {useNavigate} from 'react-router-dom';
@@ -29,7 +28,6 @@ function Sidebar() {
           navigate('/');
         }
     });
-
 
     const [currentTab, setCurrentTab] = useState(1);
 
@@ -108,7 +106,7 @@ function Sidebar() {
                 <div className="icon">
                   <BiPurchaseTagAlt />
                 </div>
-                <span className="link hide">Exchange Requests</span>
+                <span className="link hide">Offers</span>
               </a>
             </li>
           </ul>
@@ -123,7 +121,7 @@ function Sidebar() {
         </div>
       </nav>
       <main>
-        {currentTab == 0? <Profile /> : currentTab == 1? <Dataset /> : currentTab == 2? <Invoices /> : currentTab == 3? <Products_List /> : currentTab == 4? <Return_Req /> : <Exchange_Req />}
+        {currentTab == 0? <Profile /> : currentTab == 1? <Dataset /> : currentTab == 2? <Invoices /> : currentTab == 3? <Products_List /> : currentTab == 4? <Return_Req /> : <Offers />}
       </main>
    
       </div>
