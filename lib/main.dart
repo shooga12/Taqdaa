@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:taqdaa_application/screens/list_of_stores.dart';
 import '../methods/authentication_services.dart';
 import '../screens/home_page.dart';
@@ -34,6 +35,10 @@ void main() async {
     await Firebase.initializeApp();
   }
 
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  await NotificationApi.init();
   tz.initializeTimeZones();
 
   String closest = "";
@@ -178,7 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
               }
               getRewards();
               read();
-              return HomePage(OffersList);
+              return HomePage();
               //return nothing();
             } else if (snapshot.hasError) {
               return Text("Some thing went wrong! ${snapshot.error}");
@@ -233,21 +238,23 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   read() {
-    return StreamBuilder<List<Offer>>(
-        stream: readOffers(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final offer = snapshot.data!;
-            return ListView.builder(
-                itemCount: offer.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return AddToList(offer[index]);
-                });
-          } else if (snapshot.hasError) {
-            return Text("Some thing went wrong! ${snapshot.error}");
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        });
+    return Expanded(
+      child: StreamBuilder<List<Offer>>(
+          stream: readOffers(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final offer = snapshot.data!;
+              return ListView.builder(
+                  itemCount: offer.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return AddToList(offer[index]);
+                  });
+            } else if (snapshot.hasError) {
+              return Text("Some thing went wrong! ${snapshot.error}");
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          }),
+    );
   }
 }
