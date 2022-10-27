@@ -6,6 +6,8 @@ import 'rewardsHistory_view.dart';
 import '../views/checkOut_view.dart';
 import 'package:flutter/services.dart';
 
+import 'rewardsHistory_view.dart';
+
 class rewards extends StatefulWidget {
   const rewards({super.key});
 
@@ -49,103 +51,101 @@ class _rewardsState extends State<rewards> {
             child: Column(
               children: [
                 InkWell(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        top: 40,
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            //"   current points    ",
-                            "   نقاطك الحالية    ",
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 95, 137, 180),
-                                fontSize: 19.5,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 0.4),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5.0, bottom: 5),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                    height: 100,
-                                    child: Stack(
-                                      children: [
-                                        Container(
-                                          width: 170,
-                                          height: 80,
-                                          decoration: new BoxDecoration(
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(8.0),
-                                            ),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey
-                                                    .withOpacity(0.5),
-                                                spreadRadius: 3,
-                                                blurRadius: 6,
-                                                offset: Offset(0, 3),
-                                              )
-                                            ],
-                                            gradient: LinearGradient(
-                                              colors: [
-                                                Color.fromARGB(
-                                                    255, 95, 137, 180),
-                                                Color.fromARGB(
-                                                    255, 118, 171, 223),
-                                                Color.fromARGB(
-                                                    255, 142, 195, 248)
-                                              ],
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                            ),
-                                            shape: BoxShape.rectangle,
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 14, right: 110),
-                                          child: Container(
-                                            width: 50,
-                                            height: 50,
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                  opacity: 0.75,
-                                                  image: AssetImage(
-                                                      "assets/rewards.png"),
-                                                  fit: BoxFit.fill),
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 17, left: 50, right: 15),
-                                          child: Text(
-                                            "  ${EcommerceApp.rewards} ", //bug fixes
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 30,
-                                                fontWeight: FontWeight.bold,
-                                                letterSpacing: 0.8),
-                                          ),
-                                        ),
-                                      ],
-                                    )),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 40,
                     ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => rewardsHistory()),
-                      );
-                    }),
+                    child: Column(
+                      children: [
+                        Text(
+                          //"   current points    ",
+                          "   نقاطك الحالية    ",
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 95, 137, 180),
+                              fontSize: 19.5,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.4),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5.0, bottom: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                  height: 100,
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                        width: 170,
+                                        height: 80,
+                                        decoration: new BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(8.0),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.grey.withOpacity(0.5),
+                                              spreadRadius: 3,
+                                              blurRadius: 6,
+                                              offset: Offset(0, 3),
+                                            )
+                                          ],
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Color.fromARGB(255, 95, 137, 180),
+                                              Color.fromARGB(
+                                                  255, 118, 171, 223),
+                                              Color.fromARGB(255, 142, 195, 248)
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                          shape: BoxShape.rectangle,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 14, right: 110),
+                                        child: Container(
+                                          width: 50,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                opacity: 0.75,
+                                                image: AssetImage(
+                                                    "assets/rewards.png"),
+                                                fit: BoxFit.fill),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 17, left: 50, right: 15),
+                                        child: Text(
+                                          "  ${EcommerceApp.rewards} ", //bug fixes
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 30,
+                                              fontWeight: FontWeight.bold,
+                                              letterSpacing: 0.8),
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => rewardsHistory()),
+                    );
+                  },
+                ),
                 SizedBox(
                     width: 300,
                     height: 100,
