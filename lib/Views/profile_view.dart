@@ -1,10 +1,11 @@
-import 'dart:js';
+//import 'dart:js';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:either_dart/either.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:taqdaa_application/screens/changepass.dart';
 import '../confige/EcommerceApp.dart';
 import '../controller/BNBCustomePainter.dart';
 import 'package:taqdaa_application/screens/login_page.dart';
@@ -18,6 +19,7 @@ import '../screens/insideMore.dart';
 import 'invoices_view.dart';
 import '../screens/list_of_stores.dart';
 import 'NoItmesCart.dart';
+import '../screens/changepass.dart';
 
 class Homepprofile extends StatefulWidget {
   const Homepprofile({Key? key}) : super(key: key);
@@ -221,7 +223,11 @@ class _HomepprofileState extends State<Homepprofile> {
                         height: 40,
                         child: ElevatedButton(
                           onPressed: () {
-                            formDialog(context);
+                            //formDialog(context);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => UpdatePass()));
                           },
                           child: Text(
                             'تغيير كلمة المرور',
@@ -518,18 +524,12 @@ Future<void> deleteUser(String uid) async {
 Future formDialog(context) => showDialog(
     context: context,
     builder: (context) => AlertDialog(
-          title: Text('تغيير كلمة المرور'),
-          content: Column(
-            children: <Widget>[ TextFormField(
-            decoration: InputDecoration(hintText: 'أدخل كلمة المرور الحالية'), 
-          ), 
-           
-           TextFormField(
-            decoration: InputDecoration(hintText: 'أدخل كلمة المرور الجديدة'), 
+        title: Text('تغيير كلمة المرور'),
+        content: Column(children: <Widget>[
+          TextFormField(
+            decoration: InputDecoration(hintText: 'أدخل كلمة المرور الحالية'),
           ),
-          ])
-        
-
-
-          
-        ));
+          TextFormField(
+            decoration: InputDecoration(hintText: 'أدخل كلمة المرور الجديدة'),
+          ),
+        ])));

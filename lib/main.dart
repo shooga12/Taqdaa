@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:taqdaa_application/screens/list_of_stores.dart';
 import '../methods/authentication_services.dart';
 import '../screens/home_page.dart';
@@ -31,6 +32,12 @@ void main() async {
   } else {
     await Firebase.initializeApp();
   }
+  //------------------------------------------------------------------------------------------------------
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  await NotificationApi.init();
+  //--------------------------------------------------------------------------------------------------------
 
   tz.initializeTimeZones();
 
