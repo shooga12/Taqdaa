@@ -33,6 +33,8 @@ class _HomePageState extends State<HomePage> {
   String _counter = "";
   List<Offer> OffersList = [];
   bool ImagesAndText = false;
+  // bool empty = false;
+  // bool empty = false;
 
   Stream readOffers = FirebaseFirestore.instance
       .collection('ActiveOffers')
@@ -46,6 +48,7 @@ class _HomePageState extends State<HomePage> {
     readOffers;
     //AddOffers();
     // AddImagesAndText();
+    //checkEmpty();
     controller
       ..addListener(() {
         setState(() {
@@ -55,6 +58,27 @@ class _HomePageState extends State<HomePage> {
 
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => _animateSlider());
+  }
+
+  // checkEmpty() {
+  //   StreamBuilder(
+  //       stream: readOffers,
+  //       builder: (context, snapshot) {
+  //         if (snapshot.hasData && snapshot.data!.isEmpty) {
+  //           empty = true;
+  //           return nothing();
+  //         } else if (snapshot.hasError) {
+  //           return Text("Something went wrong! ${snapshot.error}");
+  //         } else {
+  //           return Center(child: CircularProgressIndicator());
+  //         }
+  //       });
+  // }
+
+  nothing() {
+    return SizedBox(
+      width: 0,
+    );
   }
 
   final PageController controller = PageController(
@@ -71,8 +95,10 @@ class _HomePageState extends State<HomePage> {
           children: [
             SingleChildScrollView(
               child: Container(
+                height: 900,
                 child: Column(
                   children: [
+                    // if (empty == false)
                     InkWell(
                         child: Padding(
                       padding: const EdgeInsets.only(
@@ -131,6 +157,7 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ),
                           ),
+                          //if (empty == false)
                           Padding(
                             padding: const EdgeInsets.only(top: 5.0, bottom: 5),
                             child: Row(
@@ -142,15 +169,16 @@ class _HomePageState extends State<HomePage> {
                                   children: [
                                     Container(
                                       height: 200,
-                                      width: 392,
+                                      width: 360,
                                       child: StreamBuilder(
                                           stream: readOffers,
                                           builder: (context, snapshot) {
-                                            if (snapshot.hasData &&
-                                                snapshot.data!.isEmpty) {
-                                              ////////empty
-                                              return NoOffersCard();
-                                            } else if (snapshot.hasData) {
+                                            // if (snapshot.hasData &&
+                                            //     snapshot.data!.isEmpty) {
+                                            //   ////////empty
+                                            //   return NoOffersCard();
+                                            // } else
+                                            if (snapshot.hasData) {
                                               final offer = snapshot.data!;
                                               return PageView.builder(
                                                   controller: controller,
@@ -311,12 +339,12 @@ class _HomePageState extends State<HomePage> {
                                               width: 65,
                                               height: 65,
                                               decoration: BoxDecoration(
-                                                  // image: DecorationImage(
-                                                  //     opacity: 0.75,
-                                                  //     image:
-                                                  //         AssetImage("assets/rewards.png"),
-                                                  //     fit: BoxFit.fill),
-                                                  ),
+                                                image: DecorationImage(
+                                                    opacity: 0.75,
+                                                    image: AssetImage(
+                                                        "assets/rewards.png"),
+                                                    fit: BoxFit.fill),
+                                              ),
                                             ),
                                           ),
                                           Padding(
@@ -675,11 +703,11 @@ class _HomePageState extends State<HomePage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                // Image.network(
-                //   store.StoreLogo,
-                //   width: 60,
-                //   height: 60,
-                // ),
+                Image.network(
+                  store.StoreLogo,
+                  width: 60,
+                  height: 60,
+                ),
                 Column(
                   children: <Widget>[
                     Text(
@@ -713,7 +741,9 @@ class _HomePageState extends State<HomePage> {
                   size: 26,
                   Icons.document_scanner_outlined,
                   textDirection: TextDirection.ltr,
-                  color: Color.fromARGB(255, 95, 137, 202),
+                  color:
+                      //Colors.orange,
+                      Color.fromARGB(255, 95, 137, 202),
                   //Color.fromARGB(255, 254, 177, 57),
                 ),
                 SizedBox(
@@ -758,10 +788,10 @@ class _HomePageState extends State<HomePage> {
                   });
             } else {
               EcommerceApp.storeName = store.StoreName;
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => scanner()),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => scanner()),
+              );
               scan(context);
             }
           },

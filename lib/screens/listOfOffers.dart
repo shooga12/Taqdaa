@@ -17,6 +17,7 @@ class _ListOfOffersState extends State<ListOfOffers> {
   bool flag = false;
   String SearchName = '';
   int count = -1;
+  bool enable = true;
 
   // Stream <List<Offer>> readOffers() => FirebaseFirestore.instance
   //     .collection('ActiveOffers')
@@ -42,6 +43,7 @@ class _ListOfOffersState extends State<ListOfOffers> {
             child: Flexible(
               child: Card(
                 child: TextField(
+                  //enabled: enable,
                   decoration: InputDecoration(
                       prefixIcon: Icon(Icons.search),
                       hintText: 'إبحث عن إسم عرض محدد'),
@@ -69,6 +71,7 @@ class _ListOfOffersState extends State<ListOfOffers> {
           stream: readOffers(),
           builder: (context, snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {
+              //enable = false;
               ////////empty
               return Nodata();
             }
