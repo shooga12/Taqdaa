@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
+import 'package:taqdaa_application/screens/email.dart';
 import 'package:taqdaa_application/views/NoItmesCart.dart';
 import 'package:taqdaa_application/views/rewards_view.dart';
 import 'package:taqdaa_application/views/scanner.dart';
@@ -225,7 +226,8 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => invoices(),
+                                      builder: (context) =>
+                                          email(), // رجعيه invoices
                                     ));
                               },
                               icon: Icon(
