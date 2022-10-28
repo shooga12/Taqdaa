@@ -1,10 +1,10 @@
 import 'dart:io';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:taqdaa_application/screens/list_of_stores.dart';
 import '../methods/authentication_services.dart';
 import '../screens/home_page.dart';
@@ -15,11 +15,10 @@ import '../confige/EcommerceApp.dart';
 import '../controller/NotificationApi.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_localizations/flutter_localizations.dart';
-
 import 'model/Offers.dart';
 import 'model/StoreModel.dart';
 import 'model/user_model.dart';
-// import '../models/user_model.dart';
+import 'package:workmanager/workmanager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,6 +33,19 @@ void main() async {
   } else {
     await Firebase.initializeApp();
   }
+
+//   const fetchBackground = "fetchBackground";
+
+// void callbackDispatcher() {
+//   Workmanager.executeTask((task, inputData) async {
+//     switch (task) {
+//       case fetchBackground:
+//         Position userLocation = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+//         break;
+//     }
+//     return Future.value(true);
+//   });
+// }
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
@@ -134,9 +146,67 @@ class _MyHomePageState extends State<MyHomePage> {
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
 
+  Position? _currentPosition;
+
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location services are disabled. Please enable the services')));
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permissions are denied')));
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location permissions are permanently denied, we cannot request permissions.')));
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> _getCurrentPosition() async {
+    final hasPermission = await _handleLocationPermission();
+
+    if (!hasPermission) return;
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      setState(() => _currentPosition = position);
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
+
+  static const fetchBackground = "fetchBackground";
+
+  void callbackDispatcher() {
+    Workmanager.executeTask((task, inputData) async {
+      switch (task) {
+        case fetchBackground:
+          Position userLocation = await Geolocator.getCurrentPosition(
+              desiredAccuracy: LocationAccuracy.high);
+          break;
+      }
+      return Future.value(true);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    _getCurrentPosition();
     FirebaseFirestore.instance
         .collection("users")
         .doc(user!.uid)
@@ -145,6 +215,17 @@ class _MyHomePageState extends State<MyHomePage> {
       EcommerceApp.loggedInUser = UserModel.fromMap(value.data());
       setState(() {});
     });
+
+    Workmanager.initialize(
+      callbackDispatcher,
+      isInDebugMode: true,
+    );
+
+    Workmanager.registerPeriodicTask(
+      "1",
+      fetchBackground,
+      frequency: Duration(minutes: 30),
+    );
   }
 
   @override

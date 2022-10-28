@@ -318,8 +318,10 @@ class ListOfStores2State extends State<ListOfStores2> {
             ),
             onTap: () async {
               EcommerceApp.storeId = store.StoreId;
+              EcommerceApp.returnDays = store.returnDays;
               if (EcommerceApp.storeName == "") {
                 EcommerceApp.storeName = store.StoreName;
+
                 // Navigator.push(
                 //   context,
                 //   MaterialPageRoute(builder: (context) => scanner()),

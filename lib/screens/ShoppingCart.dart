@@ -6,6 +6,7 @@ import 'package:taqdaa_application/views/checkOut_view.dart';
 import '../controller/BNBCustomePainter.dart';
 import '../main.dart';
 import '../confige/EcommerceApp.dart';
+import '../model/product.dart';
 import '../views/NoItmesCart.dart';
 import '../views/invoices_view.dart';
 import '../views/scanner.dart';
@@ -158,7 +159,7 @@ class _shoppingCartState extends State<shoppingCart> {
                       return Center(child: CircularProgressIndicator());
                     });
               } else if (snapshot.hasError) {
-                return Text("Some thing went wrong! ${snapshot.error}");
+                return Text("Something went wrong! ${snapshot.error}");
               } else {
                 return Center(child: CircularProgressIndicator());
               }

@@ -2,6 +2,7 @@ class Store {
   final String StoreName;
   final String StoreLogo;
   String kilometers;
+  num? returnDays;
   final String StoreId;
   final num lat;
   final num lng;
@@ -10,6 +11,7 @@ class Store {
       {required this.StoreName,
       required this.StoreLogo,
       required this.kilometers,
+      this.returnDays,
       required this.StoreId,
       required this.lat,
       required this.lng});
@@ -18,6 +20,7 @@ class Store {
         'StoreName': StoreName,
         'StoreLogo': StoreLogo,
         'kilometers': kilometers,
+        'returnDays': returnDays,
         'StoreId': StoreId,
         'lat': lat,
         'lng': lng,
@@ -27,6 +30,7 @@ class Store {
         StoreName: json['StoreName'],
         StoreLogo: json['StoreLogo'],
         kilometers: json['kilometers'].toString(),
+        returnDays: json['returnDays'],
         StoreId: json['StoreId'],
         lat: json['lat'],
         lng: json['lng'],

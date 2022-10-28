@@ -9,6 +9,7 @@ class EcommerceApp {
   static String storeId = '';
   static int quantity = 0;
   static int total = 0;
+  static num? returnDays = 0;
   static int finalTotal = -1;
   static String userName = '';
   static String productName = '';

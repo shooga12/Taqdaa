@@ -4,7 +4,9 @@ class Invoice {
   String? id;
   String? store;
   String? date;
+  DateTime? Fulldate;
   num? total;
+  num? returnDays;
   num? vat_total;
   num? sub_total;
   num? rewardsDiscount;
@@ -16,7 +18,9 @@ class Invoice {
       {this.id,
       this.store,
       this.date,
+      this.Fulldate,
       this.total,
+      this.returnDays,
       this.vat_total,
       this.sub_total,
       this.rewardsDiscount,
@@ -31,7 +35,9 @@ class Invoice {
         id: map['ID'],
         store: map['Store'],
         date: map['Date'],
+        Fulldate: map['Fulldate'],
         total: map['Total'],
+        returnDays: map['returnDays'],
         sub_total: map['sub-total'],
         vat_total: map['vat-total'],
         rewardsDiscount: map['rewardsDiscount'],
@@ -45,7 +51,9 @@ class Invoice {
       'id': id,
       'store': store,
       'date': date,
+      'Fulldate': Fulldate,
       'total': total,
+      'returnDays': returnDays,
       'sub_total': sub_total,
       'vat_total': vat_total,
       'rewardsDiscount': rewardsDiscount,

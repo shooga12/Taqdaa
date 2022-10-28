@@ -5,6 +5,8 @@ import '../confige/EcommerceApp.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 
+import '../model/product.dart';
+
 class ScanPage extends StatefulWidget {
   const ScanPage({Key? key}) : super(key: key);
   @override
@@ -219,47 +221,4 @@ class _ScanPageState extends State<ScanPage> {
       return false;
     }
   }
-}
-
-class Product {
-  final String Category;
-  final String Item_number;
-  final int Price;
-  final String Store;
-  final int quantity;
-  final String RFID;
-  final String ProductImage;
-  final bool returnable;
-
-  Product(
-      {required this.Category,
-      required this.Item_number,
-      required this.Price,
-      required this.Store,
-      required this.quantity,
-      required this.RFID,
-      required this.ProductImage,
-      required this.returnable});
-
-  Map<String, dynamic> toJson() => {
-        'Category': Category,
-        'Item_number': Item_number,
-        'Price': Price,
-        'Store': Store,
-        'quantity': quantity,
-        'RFID': RFID,
-        'ProductImage': ProductImage,
-        'returnable': returnable,
-      };
-
-  static Product fromJson(Map<String, dynamic> json) => Product(
-        Category: json['Category'],
-        Item_number: json['Item_number'],
-        Price: json['Price'],
-        Store: json['Store'],
-        quantity: json['quantity'],
-        RFID: json['RFID'],
-        ProductImage: json['ProductImage'],
-        returnable: json['returnable'],
-      );
 }

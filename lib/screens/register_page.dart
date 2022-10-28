@@ -82,7 +82,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: MultiValidator([
                     RequiredValidator(errorText: 'مطلوب*'),
-                    PatternValidator(r'^[a-z A-Z]+$',
+                    PatternValidator(
+                        r'^[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z]+[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z-_]*$',
                         errorText: 'يجب أن يتكون الأسم من حروف فقط')
                   ]),
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
@@ -269,7 +270,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
                   validator: MultiValidator([
                     RequiredValidator(errorText: 'مطلوب *'),
-                    PatternValidator(r'^(?:[+0][1-9])?[0-9]{10,12}$',
+                    PatternValidator(r'^(05)([0-9]{8})$',
                         errorText: 'أدخل رقم هاتف صالح')
                   ]),
                   cursorColor: Color.fromARGB(255, 37, 43, 121),

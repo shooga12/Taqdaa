@@ -8,10 +8,8 @@ import '../confige/EcommerceApp.dart';
 import '../main.dart';
 import 'package:http/http.dart' as http;
 import 'dart:math';
-// import 'package:taqdaa_application/models/item.dart';
 import '../model/invoice.dart';
 import '../model/item.dart';
-// import '../models/invoice.dart';
 import 'package:intl/intl.dart';
 
 class checkOut {
@@ -191,7 +189,9 @@ class checkOut {
     FirebaseFirestore.instance.collection('${collectionName}Invoices').add({
       "ID": randomNumber.toString(),
       "Date": todayDate,
+      "Fulldate": now,
       "Total": EcommerceApp.total - EcommerceApp.discount.toInt(),
+      'returnDays': EcommerceApp.returnDays,
       "Store": EcommerceApp.storeName,
       "items": items,
       'sub-total': subTotal,
@@ -207,6 +207,7 @@ class checkOut {
         .add({
       "ID": randomNumber.toString(),
       "Date": todayDate,
+      "Fulldate": now,
       "Total": EcommerceApp.total - EcommerceApp.discount.toInt(),
       "Store": EcommerceApp.storeName,
       "items": items,
@@ -223,7 +224,9 @@ class checkOut {
     Invoice invoice = new Invoice(items,
         id: randomNumber.toString(),
         date: todayDate,
+        Fulldate: now,
         total: EcommerceApp.total - EcommerceApp.discount.toInt(),
+        returnDays: EcommerceApp.returnDays,
         store: EcommerceApp.storeName,
         sub_total: subTotal,
         vat_total: vat,

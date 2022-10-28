@@ -66,6 +66,8 @@ dependencies:
   url_launcher: ^6.1.6
   intl: ^0.17.0
   carousel_slider: ^4.1.1
+  #workmanager: ^0.5.1
+  workmanager: ^0.2.0
 
 
 dev_dependencies:
