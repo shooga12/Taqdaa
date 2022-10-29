@@ -18,7 +18,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'model/Offers.dart';
 import 'model/StoreModel.dart';
 import 'model/user_model.dart';
-import 'package:workmanager/workmanager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,19 +32,6 @@ void main() async {
   } else {
     await Firebase.initializeApp();
   }
-
-//   const fetchBackground = "fetchBackground";
-
-// void callbackDispatcher() {
-//   Workmanager.executeTask((task, inputData) async {
-//     switch (task) {
-//       case fetchBackground:
-//         Position userLocation = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-//         break;
-//     }
-//     return Future.value(true);
-//   });
-// }
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
@@ -138,15 +124,15 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyHomePage> createState() => MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class MyHomePageState extends State<MyHomePage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
 
-  Position? _currentPosition;
+  static Position? currentPosition;
 
   Future<bool> _handleLocationPermission() async {
     bool serviceEnabled;
@@ -183,30 +169,24 @@ class _MyHomePageState extends State<MyHomePage> {
     if (!hasPermission) return;
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
         .then((Position position) {
-      setState(() => _currentPosition = position);
+      setState(() => currentPosition = position);
     }).catchError((e) {
       debugPrint(e);
     });
   }
 
-  static const fetchBackground = "fetchBackground";
-
-  void callbackDispatcher() {
-    Workmanager.executeTask((task, inputData) async {
-      switch (task) {
-        case fetchBackground:
-          Position userLocation = await Geolocator.getCurrentPosition(
-              desiredAccuracy: LocationAccuracy.high);
-          break;
-      }
-      return Future.value(true);
-    });
-  }
+  static Stream readOffers = FirebaseFirestore.instance
+      .collection('ActiveOffers')
+      .snapshots()
+      .map(
+          (list) => list.docs.map((doc) => doc.data()).toList()); //ActiveOffers
 
   @override
   void initState() {
     super.initState();
     _getCurrentPosition();
+    readOffers;
+    readStores();
     FirebaseFirestore.instance
         .collection("users")
         .doc(user!.uid)
@@ -215,17 +195,6 @@ class _MyHomePageState extends State<MyHomePage> {
       EcommerceApp.loggedInUser = UserModel.fromMap(value.data());
       setState(() {});
     });
-
-    Workmanager.initialize(
-      callbackDispatcher,
-      isInDebugMode: true,
-    );
-
-    Workmanager.registerPeriodicTask(
-      "1",
-      fetchBackground,
-      frequency: Duration(minutes: 30),
-    );
   }
 
   @override
@@ -298,42 +267,10 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Stream<List<Store>> readStores() => FirebaseFirestore.instance
+  static Stream<List<Store>> readStores() => FirebaseFirestore.instance
       .collection('Stores')
       .where('kilometers', isEqualTo: 0.1)
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Store.fromJson(doc.data())).toList());
-
-  // Stream<List<Offer>> readOffers() => FirebaseFirestore.instance
-  //     .collection('ActiveOffers')
-  //     .snapshots()
-  //     .map((snapshot) =>
-  //         snapshot.docs.map((doc) => Offer.fromJson(doc.data())).toList());
-
-  //List<Offer> OffersList = [];
-
-  // AddToList(Offer offer) {
-  //   OffersList.add(offer);
-  //   return SizedBox(width: 0, height: 0);
-  // }
-
-  // AddOffers() {
-  //   return StreamBuilder<List<Offer>>(
-  //       stream: readOffers(),
-  //       builder: (context, snapshot) {
-  //         if (snapshot.hasData) {
-  //           final offer = snapshot.data!;
-  //           return ListView.builder(
-  //               itemCount: offer.length,
-  //               itemBuilder: (BuildContext context, int index) {
-  //                 return AddToList(offer[index]);
-  //               });
-  //         } else if (snapshot.hasError) {
-  //           return Text("Some thing went wrong! ${snapshot.error}");
-  //         } else {
-  //           return Center(child: CircularProgressIndicator());
-  //         }
-  //       });
-  // }
 }

@@ -19,11 +19,6 @@ class _ListOfOffersState extends State<ListOfOffers> {
   int count = -1;
   bool enable = true;
 
-  // Stream <List<Offer>> readOffers() => FirebaseFirestore.instance
-  //     .collection('ActiveOffers')
-  //     .snapshots()
-  //     .map((list) => list.docs.map((doc) => doc.data()).toList());
-
   Stream<List<Offer>> readOffers() => FirebaseFirestore.instance
       .collection('ActiveOffers')
       .snapshots()
@@ -39,24 +34,6 @@ class _ListOfOffersState extends State<ListOfOffers> {
           "جميع العروض",
           style: TextStyle(fontSize: 24),
         ),
-        bottom: PreferredSize(
-            child: Flexible(
-              child: Card(
-                child: TextField(
-                  //enabled: enable,
-                  decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.search),
-                      hintText: 'إبحث عن إسم عرض محدد'),
-                  onChanged: (val) {
-                    setState(() {
-                      SearchName = val;
-                      //.replaceAll(' ', '');
-                    });
-                  },
-                ),
-              ),
-            ),
-            preferredSize: Size.zero),
         flexibleSpace: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
@@ -67,53 +44,107 @@ class _ListOfOffersState extends State<ListOfOffers> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: StreamBuilder<List<Offer>>(
-          stream: readOffers(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData && snapshot.data!.isEmpty) {
-              //enable = false;
-              ////////empty
-              return Nodata();
-            }
-            if (snapshot.hasData) {
-              final offer = snapshot.data!;
-              count = offer.length;
-              return ListView.builder(
-                  //controller: controller,
-                  itemCount: offer.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    var Current = offer[index];
-                    if (SearchName.isEmpty) {
-                      flag = false;
-                      return buildOfferCards(Current, index);
-                    } else if (SearchName.isNotEmpty &&
-                        Current.offerText
-                            .toString()
-                            .toLowerCase()
-                            .contains(SearchName.toLowerCase())) {
-                      flag = true;
-                      return buildOfferCards(Current, index);
-                    } else if (flag == false && index == count - 1) {
-                      return Container(
-                          child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'لا يوجد نتائج',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
-                      ));
-                    }
-                    return nothing();
-                  });
-            } else if (snapshot.hasError) {
-              return Text("Something went wrong! ${snapshot.error}");
-            } else {
-              return Center(child: CircularProgressIndicator());
-            }
-          }),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Container(
+              height: 600,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 60,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 10),
+                      child: TextField(
+                        decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                              // borderSide: const BorderSide(
+                              //     color: Colors.orange, width: 2.0)
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                              // borderSide: const BorderSide(
+                              //     color: Colors.orange, width: 2.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                              // borderSide: const BorderSide(
+                              //     color: Colors.orange, width: 2.0),
+                            ),
+                            prefixIcon: Icon(Icons.search),
+                            hintText: 'إبحث عن إسم عرض محدد'),
+                        onChanged: (val) {
+                          setState(() {
+                            SearchName = val;
+                            //.replaceAll(' ', '');
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 500,
+                    width: 360,
+                    child: StreamBuilder<List<Offer>>(
+                        stream: readOffers(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData && snapshot.data!.isEmpty) {
+                            //enable = false;
+                            ////////empty
+                            return Nodata();
+                          }
+                          if (snapshot.hasData) {
+                            final offer = snapshot.data!;
+                            count = offer.length;
+                            return ListView.builder(
+                                //controller: controller,
+                                itemCount: offer.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  var Current = offer[index];
+                                  if (SearchName.isEmpty) {
+                                    flag = false;
+                                    return buildOfferCards(Current, index);
+                                  } else if (SearchName.isNotEmpty &&
+                                      Current.offerText
+                                          .toString()
+                                          .toLowerCase()
+                                          .contains(SearchName.toLowerCase())) {
+                                    flag = true;
+                                    return buildOfferCards(Current, index);
+                                  } else if (flag == false &&
+                                      index == count - 1) {
+                                    return Container(
+                                        child: Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        'لا يوجد نتائج',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ));
+                                  }
+                                  return nothing();
+                                });
+                          } else if (snapshot.hasError) {
+                            return Text(
+                                "Something went wrong! ${snapshot.error}");
+                          } else {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                        }),
+                  ),
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 
@@ -136,7 +167,6 @@ class _ListOfOffersState extends State<ListOfOffers> {
   }
 
   buildOfferCards(Offer Offer, int index) {
-    //double scale = max(0.8, (1 - (pageOffset - index).abs()) + 0.8);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
       child: Container(
@@ -237,20 +267,5 @@ class _ListOfOffersState extends State<ListOfOffers> {
         ),
       ),
     );
-    // return Container(
-    //   margin: EdgeInsets.only(right: 10, left: 10),
-    //   decoration: BoxDecoration(
-    //       borderRadius: BorderRadius.circular(15.0),
-    //       image: DecorationImage(
-    //         fit: BoxFit.cover,
-    //         image: NetworkImage(data['OfferImg']),
-    //       )),
-    //   child: Center(
-    //     child: Text(
-    //       data['offerText'],
-    //       style: TextStyle(fontSize: 20),
-    //     ),
-    //   ),
-    // );
   }
 }
