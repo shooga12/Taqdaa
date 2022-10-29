@@ -6,6 +6,8 @@ import '../confige/EcommerceApp.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 
+import 'home_page.dart';
+
 class ScanPage extends StatefulWidget {
   const ScanPage({Key? key}) : super(key: key);
   @override
@@ -28,7 +30,6 @@ class _ScanPageState extends State<ScanPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
         title: Text(
           "المنتج الذي تم مسحه هو :",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
@@ -69,9 +70,7 @@ class _ScanPageState extends State<ScanPage> {
       "quantity": product.quantity,
       "RFID": product.RFID,
       "ProductImage": product.ProductImage,
-
       "returnable": product.returnable,
-
     });
   }
 
@@ -83,9 +82,7 @@ class _ScanPageState extends State<ScanPage> {
       "Store": product.Store,
       "quantity": product.quantity,
       "RFID": product.RFID,
-
       "returnable": product.returnable,
-
     });
   }
 
@@ -107,7 +104,6 @@ class _ScanPageState extends State<ScanPage> {
                           'assets/Rectangle.png',
                           height: 100.0,
                           fit: BoxFit.cover,
-
                         ),
                       ),
                       Padding(
@@ -184,9 +180,17 @@ class _ScanPageState extends State<ScanPage> {
                   EcommerceApp.counter++;
                   EcommerceApp.NumOfItems++;
                   EcommerceApp.pageIndex = 1;
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    duration: const Duration(seconds: 2),
+                    backgroundColor: Color.fromARGB(255, 135, 155, 190),
+                    content: Text("تم إضافته بالسلة، سنحتفظ به لمدة ساعة",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 16, letterSpacing: 0.8)),
+                    action: null,
+                  ));
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MyHomePage()),
+                    MaterialPageRoute(builder: (context) => HomePage()),
                   );
                 },
                 child: Text(
@@ -207,7 +211,6 @@ class _ScanPageState extends State<ScanPage> {
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)))),
-
               ),
             ),
           ),
@@ -252,7 +255,6 @@ class Product {
       required this.ProductImage,
       required this.returnable});
 
-
   Map<String, dynamic> toJson() => {
         'Category': Category,
         'Item_number': Item_number,
@@ -261,9 +263,7 @@ class Product {
         'quantity': quantity,
         'RFID': RFID,
         'ProductImage': ProductImage,
-
         'returnable': returnable,
-
       };
 
   static Product fromJson(Map<String, dynamic> json) => Product(
@@ -274,8 +274,6 @@ class Product {
         quantity: json['quantity'],
         RFID: json['RFID'],
         ProductImage: json['ProductImage'],
-
         returnable: json['returnable'],
-
       );
 }

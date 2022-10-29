@@ -2,11 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:taqdaa_application/main.dart';
 import '../models/invoice.dart';
 import '../models/item.dart';
 import '../views/ViewReturnRequests.dart';
 import '../confige/EcommerceApp.dart';
+import 'home_page.dart';
 
 class returnRequest extends StatefulWidget {
   final invoice;
@@ -354,7 +354,8 @@ class _returnRequestState extends State<returnRequest> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MyHomePage(),
+                              builder: (context) =>
+                                  HomePage(), //bug fixes make sure works
                             ),
                           );
                           if (added == true) {

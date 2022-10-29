@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:taqdaa_application/screens/invoice_details.dart';
 
 import '../confige/EcommerceApp.dart';
 import '../models/invoice.dart';
@@ -64,78 +65,94 @@ class _rewardsHistoryState extends State<rewardsHistory> {
 
   buildEarnedRewards(Invoice invoice, BuildContext context) {
     int reward = (invoice.total! * 2) ~/ 100;
-    return Card(
-      child: Padding(
-        padding:
-            const EdgeInsets.only(left: 15.0, right: 15, top: 18, bottom: 5),
-        child: Container(
-          height: 60,
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Icon(
-                    Icons.add,
-                    color: Colors.green,
-                  ),
-                  Text("  $reward.0 نقطة",
-                      style: TextStyle(fontSize: 18, color: Colors.green)),
-                  Spacer(),
-                  Text("${invoice.date}   ", style: TextStyle(fontSize: 18)),
-                ],
-              ),
-              Row(
-                children: [
-                  Spacer(),
-                  Text("رقـم الـفـاتـورة ${invoice.id}  ",
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: Color.fromARGB(133, 80, 80, 80))),
-                ],
-              )
-            ],
+    return InkWell(
+      child: Card(
+        child: Padding(
+          padding:
+              const EdgeInsets.only(left: 15.0, right: 15, top: 18, bottom: 5),
+          child: Container(
+            height: 60,
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.add,
+                      color: Colors.green,
+                    ),
+                    Text("  $reward.0 نقطة",
+                        style: TextStyle(fontSize: 18, color: Colors.green)),
+                    Spacer(),
+                    Text("${invoice.date}   ", style: TextStyle(fontSize: 18)),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Spacer(),
+                    Text("رقـم الـفـاتـورة ${invoice.id}  ",
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Color.fromARGB(133, 80, 80, 80))),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => invoice_details(invoice)),
+        );
+      },
     );
   }
 
   buildDiscountRewards(Invoice invoice, BuildContext context) {
-    return Card(
-      child: Padding(
-        padding:
-            const EdgeInsets.only(left: 15.0, right: 15, top: 18, bottom: 5),
-        child: Container(
-          height: 60,
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Icon(
-                    Icons.remove,
-                    color: Color.fromARGB(255, 227, 45, 45),
-                  ),
-                  Text("  $discount نقطة",
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Color.fromARGB(255, 227, 45, 45))),
-                  Spacer(),
-                  Text("${invoice.date}   ", style: TextStyle(fontSize: 18)),
-                ],
-              ),
-              Row(
-                children: [
-                  Spacer(),
-                  Text("رقـم الـفـاتـورة ${invoice.id}  ",
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: Color.fromARGB(133, 80, 80, 80))),
-                ],
-              )
-            ],
+    return InkWell(
+      child: Card(
+        child: Padding(
+          padding:
+              const EdgeInsets.only(left: 15.0, right: 15, top: 18, bottom: 5),
+          child: Container(
+            height: 60,
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.remove,
+                      color: Color.fromARGB(255, 227, 45, 45),
+                    ),
+                    Text("  $discount نقطة",
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Color.fromARGB(255, 227, 45, 45))),
+                    Spacer(),
+                    Text("${invoice.date}   ", style: TextStyle(fontSize: 18)),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Spacer(),
+                    Text("رقـم الـفـاتـورة ${invoice.id}  ",
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Color.fromARGB(133, 80, 80, 80))),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => invoice_details(invoice)),
+        );
+      },
     );
   }
 }

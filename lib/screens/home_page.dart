@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
-import 'package:taqdaa_application/main.dart';
+import '../controller/Notification_api.dart';
+import 'scanBarCode.dart';
 import 'package:taqdaa_application/views/NoItmesCart.dart';
-import 'package:taqdaa_application/views/profile_view.dart';
 import 'package:taqdaa_application/views/rewards_view.dart';
 import 'package:taqdaa_application/views/scanner.dart';
 import '../controller/BNBCustomePainter.dart';
@@ -13,7 +15,6 @@ import '../views/invoices_view.dart';
 import 'list_of_stores.dart';
 import 'insideMore.dart';
 
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -22,6 +23,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String collectionName = EcommerceApp().getCurrentUser();
   final pages = [
     const homeContent(),
     const shoppingCart(),
@@ -78,11 +80,15 @@ class _HomePageState extends State<HomePage> {
                       child: FloatingActionButton(
                         enableFeedback: false,
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ListOfStores2()),
-                          );
+                          if (EcommerceApp.pageIndex != 1) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ListOfStores2()),
+                            );
+                          } else {
+                            _scan(context, "NewItem");
+                          }
                         },
                         backgroundColor: Colors.orange,
                         child: Icon(
@@ -171,6 +177,71 @@ class _HomePageState extends State<HomePage> {
           ),
         ));
   }
+
+  String _counter = "";
+
+  Future<bool> _scan(BuildContext context, String action) async {
+    _counter = await FlutterBarcodeScanner.scanBarcode(
+        "#FEB139", "Cancel", false, ScanMode.BARCODE);
+
+    setState(() {
+      EcommerceApp.value = _counter;
+    });
+
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('${collectionName}All')
+        .where("Item_number", isEqualTo: EcommerceApp.value.substring(1))
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
+    if (action != "Decrement" && documents.length == 1) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                content: Text("تم إضافة المنتج مسبقاً."),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'OK'),
+                    child: const Text('OK'),
+                  )
+                ]);
+          });
+      return false;
+    }
+
+    Query dbref = FirebaseDatabase.instance
+        .ref()
+        .child(EcommerceApp.storeId)
+        .child('store')
+        .orderByChild('Barcode')
+        .equalTo(EcommerceApp.value.substring(1));
+
+    final event = await dbref.once(DatabaseEventType.value);
+
+    if (event.snapshot.value != null && action == "NewItem") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ScanPage()),
+      );
+      return true;
+    } else if (_counter == "-1") {
+      return false;
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                content: Text("عذرًا المنتج غير موجود!"),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'OK'),
+                    child: const Text('OK'),
+                  )
+                ]);
+          });
+      return false;
+    }
+  }
 }
 
 class homeContent extends StatefulWidget {
@@ -210,7 +281,6 @@ class _homeContentState extends State<homeContent> {
                       height: 100,
                       child: Stack(
                         children: [
-
                           Container(
                             width: 370,
                             height: 105,
@@ -260,7 +330,6 @@ class _homeContentState extends State<homeContent> {
                                   fontSize: 30,
                                   fontWeight: FontWeight.bold,
                                   letterSpacing: 0.8),
-
                             ),
                           ),
                           Padding(

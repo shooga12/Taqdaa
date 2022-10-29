@@ -631,6 +631,7 @@ class _shoppingCartState extends State<shoppingCart> {
         Map<String, dynamic> data = docSnapshot.data()!;
 
         // You can then retrieve the value from the Map like this:
+        //if (mounted)
         setState(() {
           EcommerceApp.total = data['Total'];
         });

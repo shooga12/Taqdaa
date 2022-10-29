@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -34,9 +33,8 @@ void main() async {
 
   String closest = "";
   String storeName = "";
-  int theIndex = -1;
+  int theIndex = 0;
   UserModel loggedInUser = UserModel();
-
 
   Future readClosest() async {
     String distance = "";
@@ -46,12 +44,12 @@ void main() async {
     for (int i = 0; i < documents.length; i++) {
       distance = documents[0].get("kilometers");
       if (distance == "0.1") {
+        ///bug fixes < 0.1
         closest = documents[i].id;
         theIndex = i;
       }
     }
-    // storeName = documents[theIndex].get("StoreName"); //bug fixes
-
+    storeName = documents[theIndex].get("StoreName"); //bug fixes
   }
 
   await readClosest();
@@ -68,8 +66,7 @@ void main() async {
           NotificationApi.showScheduledNotification(
               title: 'Taqdaa is waiting for you!',
               body:
-                  'Hey, ${loggedInUser.firstName}\nyou\'re very close from ${data['StoreName']} come and shop with us now!', ////bug fixes StoreName
-
+                  'Hey, ${loggedInUser.firstName}\nyou\'re very close from ${data['StoreName']} come and shop with us now!',
               payload: 'paylod.nav',
               scheduledDate: DateTime.now().add(Duration(seconds: 1)));
         }
@@ -129,7 +126,6 @@ class _MyHomePageState extends State<MyHomePage> {
   UserModel loggedInUser = UserModel();
 
   @override
-
   void initState() {
     super.initState();
     FirebaseFirestore.instance
@@ -137,9 +133,9 @@ class _MyHomePageState extends State<MyHomePage> {
         .doc(user!.uid)
         .get()
         .then((value) {
-      EcommerceApp.loggedInUser = UserModel.fromMap(value.data());
-
-      setState(() {});
+      setState(() {
+        EcommerceApp.loggedInUser = UserModel.fromMap(value.data());
+      });
     });
   }
 
@@ -178,9 +174,6 @@ class _MyHomePageState extends State<MyHomePage> {
       if (docSnapshot.exists) {
         Map<String, dynamic> data = docSnapshot.data()!;
 
-        // setState(() {
-        //   EcommerceApp.rewards = data['Rewards'];
-        // });
         if (mounted) {
           setState(() {
             EcommerceApp.rewards = data['Rewards'];
