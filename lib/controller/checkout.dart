@@ -18,7 +18,7 @@ class checkOut {
   User? user = FirebaseAuth.instance.currentUser;
   String collectionName = EcommerceApp().getCurrentUser();
   final RFIDs = [];
-  String data1 = "";
+  final barcodes = [];
 
   void payment(BuildContext context) async {
     var request = BraintreeDropInRequest(
@@ -91,8 +91,7 @@ class checkOut {
                       await deleteCart();
                       await deleteCartDublicate();
                       await saveUserTotal(0);
-                      await saveUserRewards(
-                          reward); //bug fixes rewards not gained
+                      await saveUserRewards(reward);
                     },
                     child: const Text('حسنًا'),
                   )
@@ -153,6 +152,7 @@ class checkOut {
     final List<DocumentSnapshot> documents = result.docs;
     for (int i = 0; i < documents.length; i++) {
       RFIDs.add(documents[i].get("RFID"));
+      barcodes.add(documents[i].get("Item_number"));
     }
   }
 
@@ -163,6 +163,16 @@ class checkOut {
       dbref.update({"$collectionName$i": RFIDs[i]});
     }
   }
+
+  // Future deleteItems() async {
+  //   DatabaseReference dbref = FirebaseDatabase.instance
+  //       .ref('Store${EcommerceApp.storeId}')
+  //       .child('store');
+
+  //   for (int i = 0; i < barcodes.length; i++) {
+  //     dbref.orderByChild('Barcode').equalTo(barcodes[i]).ref.remove();
+  //   }
+  // }
 
   Future<Invoice> writeInvoices() async {
     var items = [];
@@ -185,6 +195,7 @@ class checkOut {
         quantity: documents[i].get("quantity"),
         price: documents[i].get("Price"),
         returnable: documents[i].get("returnable"),
+        size: documents[i].get("size"),
       ).toMap());
     }
     FirebaseFirestore.instance.collection('${collectionName}Invoices').add({

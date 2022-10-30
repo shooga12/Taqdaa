@@ -18,6 +18,7 @@ class rewards extends StatefulWidget {
 class _rewardsState extends State<rewards> {
   String collectionName = EcommerceApp().getCurrentUser();
   TextEditingController _controller = TextEditingController();
+  double inRiyals = EcommerceApp.rewards / 10;
 
   @override
   void initState() {
@@ -77,7 +78,7 @@ class _rewardsState extends State<rewards> {
                                     children: [
                                       Container(
                                         width: 170,
-                                        height: 80,
+                                        height: 110,
                                         decoration: new BoxDecoration(
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(8.0),
@@ -127,6 +128,19 @@ class _rewardsState extends State<rewards> {
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 30,
+                                              fontWeight: FontWeight.bold,
+                                              letterSpacing: 0.8),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 72, left: 50, right: 28),
+                                        child: Text(
+                                          "   = ${inRiyals.toDouble()} ريـــال ",
+                                          style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 233, 232, 232),
+                                              fontSize: 14,
                                               fontWeight: FontWeight.bold,
                                               letterSpacing: 0.8),
                                         ),

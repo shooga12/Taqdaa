@@ -101,7 +101,7 @@ class _invoicesDetailsState extends State<invoice_details> {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 10.0),
+                    padding: const EdgeInsets.only(bottom: 5.0),
                     child: Container(
                       height: 1,
                       decoration: BoxDecoration(
@@ -192,9 +192,6 @@ class _invoicesDetailsState extends State<invoice_details> {
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
@@ -215,7 +212,7 @@ class _invoicesDetailsState extends State<invoice_details> {
                     ],
                   ),
                   SizedBox(
-                    height: 40.0,
+                    height: 5.0,
                   ),
                   returnButton(invoice)
                 ],
@@ -233,31 +230,36 @@ class _invoicesDetailsState extends State<invoice_details> {
 
   returnButton(invoice) {
     if (invoice!.HaveReturnReq == false && !invoice.isExpired) {
-      return SizedBox(
-        width: 200,
-        height: 40,
-        child: ElevatedButton(
-          onPressed: () async {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => returnRequest(invoice)),
-            );
-          },
-          child: Text(
-            'طلب استرجاع',
-            style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+      return Padding(
+        padding: const EdgeInsets.only(top: 20.0),
+        child: SizedBox(
+          width: 200,
+          height: 40,
+          child: ElevatedButton(
+            onPressed: () async {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => returnRequest(invoice)),
+              );
+            },
+            child: Text(
+              'طلب استرجاع',
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18),
+            ),
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.resolveWith((states) {
+                  if (states.contains(MaterialState.pressed)) {
+                    return Colors.grey;
+                  }
+                  return Colors.orange;
+                }),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)))),
           ),
-          style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.resolveWith((states) {
-                if (states.contains(MaterialState.pressed)) {
-                  return Colors.grey;
-                }
-                return Colors.orange;
-              }),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30)))),
         ),
       );
     } else if (invoice!.HaveReturnReq == true || invoice.isExpired) {
@@ -357,13 +359,21 @@ class _invoicesDetailsState extends State<invoice_details> {
               Column(
                 children: <Widget>[
                   Text(
-                    " " + item.name,
+                    item.name,
                     style: new TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.bold,
                       color: Color.fromARGB(255, 32, 7, 121),
                     ),
                   ),
+                  if (item.size != "")
+                    Text(
+                      "المـقاس : " + item.size,
+                      style: new TextStyle(
+                        fontSize: 16,
+                        color: Color.fromARGB(255, 32, 7, 121),
+                      ),
+                    ),
                   Text(
                     "  السعر : " + item.price.toString() + ' ريال',
                     textAlign: TextAlign.center,

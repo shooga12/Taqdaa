@@ -150,12 +150,14 @@ class _MyHomePageState extends State<MyHomePage> {
               if (stores.isNotEmpty) {
                 NotificationApi.showScheduledNotification(
                     title: 'Taqdaa is waiting for you!',
-                    body: 'Hey, ' +
-                        EcommerceApp.userName +
-                        '\nyou\'re very close from ${stores.first.StoreName} come and shop with us now!',
+                    body:
+                        'Hey, ${EcommerceApp.loggedInUser.firstName} \nyou\'re very close from Sephora come and shop with us now!',
+
+                    ///bug fixes
                     payload: 'paylod.nav',
                     scheduledDate: DateTime.now().add(Duration(seconds: 3)));
               }
+              checkRequestAccepted();
               getRewards();
               return HomePage();
             } else if (snapshot.hasError) {
@@ -181,6 +183,22 @@ class _MyHomePageState extends State<MyHomePage> {
         }
       }
     });
+  }
+
+  Future checkRequestAccepted() async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('ReturnRequests${EcommerceApp.loggedInUser.uid}')
+        .where('status', isEqualTo: "Accepted")
+        .get();
+    final DocumentSnapshot document = result.docs.first;
+    if (document.exists) {
+      NotificationApi.showScheduledNotification(
+          title: 'Taqdaa is waiting for you!',
+          body:
+              'Hey, ${EcommerceApp.loggedInUser.firstName} \nyour Return request got accepted come and drop it by!',
+          payload: 'paylod.nav',
+          scheduledDate: DateTime.now().add(Duration(seconds: 1)));
+    }
   }
 
   Stream<List<Store>> readStores() => FirebaseFirestore.instance

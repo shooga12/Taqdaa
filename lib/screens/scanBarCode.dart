@@ -71,6 +71,7 @@ class _ScanPageState extends State<ScanPage> {
       "RFID": product.RFID,
       "ProductImage": product.ProductImage,
       "returnable": product.returnable,
+      "size": product.size,
     });
   }
 
@@ -83,6 +84,7 @@ class _ScanPageState extends State<ScanPage> {
       "quantity": product.quantity,
       "RFID": product.RFID,
       "returnable": product.returnable,
+      "size": product.size,
     });
   }
 
@@ -126,13 +128,21 @@ class _ScanPageState extends State<ScanPage> {
                   Column(
                     children: <Widget>[
                       Text(
-                        "\n " + product['Product Name'],
+                        product['Product Name'],
                         style: new TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.bold,
                           color: Color.fromARGB(255, 32, 7, 121),
                         ),
                       ),
+                      if (product['size'] != "")
+                        Text(
+                          "المـقاس : " + product['size'],
+                          style: new TextStyle(
+                            fontSize: 16,
+                            color: Color.fromARGB(255, 32, 7, 121),
+                          ),
+                        ),
                       Text(
                         "   السعر : " + product['Price'].toString() + " ريال",
                         textAlign: TextAlign.center,
@@ -142,7 +152,7 @@ class _ScanPageState extends State<ScanPage> {
                         ),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
@@ -169,6 +179,7 @@ class _ScanPageState extends State<ScanPage> {
                     RFID: product['RFID'],
                     ProductImage: product['ProductImage'],
                     returnable: product['returnable'],
+                    size: product['size'],
                   );
 
                   if (await checkItemExist()) {
@@ -244,6 +255,7 @@ class Product {
   final String RFID;
   final String ProductImage;
   final bool returnable;
+  final String size;
 
   Product(
       {required this.Category,
@@ -253,7 +265,8 @@ class Product {
       required this.quantity,
       required this.RFID,
       required this.ProductImage,
-      required this.returnable});
+      required this.returnable,
+      required this.size});
 
   Map<String, dynamic> toJson() => {
         'Category': Category,
@@ -264,6 +277,7 @@ class Product {
         'RFID': RFID,
         'ProductImage': ProductImage,
         'returnable': returnable,
+        'size': size,
       };
 
   static Product fromJson(Map<String, dynamic> json) => Product(
@@ -275,5 +289,6 @@ class Product {
         RFID: json['RFID'],
         ProductImage: json['ProductImage'],
         returnable: json['returnable'],
+        size: json['size'],
       );
 }

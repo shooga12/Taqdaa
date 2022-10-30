@@ -360,13 +360,21 @@ class _shoppingCartState extends State<shoppingCart> {
             Column(
               children: <Widget>[
                 Text(
-                  "\n " + product.Category,
+                  product.Category,
                   style: new TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Color.fromARGB(255, 32, 7, 121),
                   ),
                 ),
+                if (product.size != "")
+                  Text(
+                    "المـقاس : " + product.size,
+                    style: new TextStyle(
+                      fontSize: 16,
+                      color: Color.fromARGB(255, 32, 7, 121),
+                    ),
+                  ),
                 Text(
                   "  السعر : " + product.Price.toString() + ' ريال',
                   textAlign: TextAlign.center,

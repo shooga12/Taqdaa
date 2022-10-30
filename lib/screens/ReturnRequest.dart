@@ -189,9 +189,15 @@ class _returnRequestState extends State<returnRequest> {
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
-                                          SizedBox(
-                                            height: 5.0,
-                                          ),
+                                          if (item.size != "")
+                                            Text(
+                                              "المـقاس : ${item.size}",
+                                              style: new TextStyle(
+                                                fontSize: 16,
+                                                color: Color.fromARGB(
+                                                    255, 32, 7, 121),
+                                              ),
+                                            ),
                                           Text(
                                             "السعر : " +
                                                 item.price.toString() +
@@ -369,8 +375,32 @@ class _returnRequestState extends State<returnRequest> {
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
-                                      content: Text(
-                                          "تم إرسال الطلب بنجاح! \n سيتم تنبيهك عند قبول الطلب"),
+                                      content: Container(
+                                        height: 280,
+                                        child: Column(
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Image.asset(
+                                                "assets/successfull_payment.png",
+                                                height: 200,
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                "تم إرسال الطلب بنجاح! \n سيتم تنبيهك عند قبول الطلب",
+                                                style: TextStyle(
+                                                    fontSize: 20,
+                                                    color: Color.fromARGB(
+                                                        255, 98, 160, 100)),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                       actions: [
                                         TextButton(
                                           onPressed: () =>

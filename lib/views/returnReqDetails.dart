@@ -218,13 +218,21 @@ class _returnReqDetailsState extends State<returnReq_details> {
             Column(
               children: <Widget>[
                 Text(
-                  " " + item.name,
+                  item.name,
                   style: new TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Color.fromARGB(255, 32, 7, 121),
                   ),
                 ),
+                if (item.size != "")
+                  Text(
+                    "المـقاس : " + item.size,
+                    style: new TextStyle(
+                      fontSize: 16,
+                      color: Color.fromARGB(255, 32, 7, 121),
+                    ),
+                  ),
                 Text(
                   "  السعر : " + item.price.toString() + ' ريال',
                   textAlign: TextAlign.center,

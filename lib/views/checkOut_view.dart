@@ -391,13 +391,21 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
             Column(
               children: <Widget>[
                 Text(
-                  " " + product["Category"],
+                  product["Category"],
                   style: new TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
                     color: Color.fromARGB(255, 32, 7, 121),
                   ),
                 ),
+                if (product['size'] != "")
+                  Text(
+                    "المـقاس : " + product['size'],
+                    style: new TextStyle(
+                      fontSize: 14,
+                      color: Color.fromARGB(255, 32, 7, 121),
+                    ),
+                  ),
                 Text(
                   "  السعر : " + product["Price"].toString() + ' ريال',
                   textAlign: TextAlign.center,

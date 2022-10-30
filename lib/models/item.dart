@@ -5,15 +5,16 @@ class Item {
   num? quantity;
   num? price;
   bool? returnable;
+  String? size;
 
-  Item({
-    this.barcode,
-    this.name,
-    this.img,
-    this.quantity,
-    this.price,
-    this.returnable,
-  });
+  Item(
+      {this.barcode,
+      this.name,
+      this.img,
+      this.quantity,
+      this.price,
+      this.returnable,
+      this.size});
 
   // receiving data from server
   factory Item.fromMap(map) {
@@ -24,6 +25,7 @@ class Item {
       quantity: map['quantity'],
       price: map['price'],
       returnable: map['returnable'],
+      size: map['size'],
     );
   }
 
@@ -36,6 +38,7 @@ class Item {
       'quantity': quantity,
       'price': price,
       'returnable': returnable,
+      'size': size,
     };
   }
 }
