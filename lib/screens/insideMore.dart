@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:taqdaa_application/screens/About_us_page.dart';
 import 'package:taqdaa_application/screens/Send_email.dart';
-import 'package:taqdaa_application/screens/email.dart';
+import 'package:taqdaa_application/screens/Send_email.dart';
 import '../Views/profile_view.dart';
 import '../confige/EcommerceApp.dart';
 import '../controller/BNBCustomePainter.dart';

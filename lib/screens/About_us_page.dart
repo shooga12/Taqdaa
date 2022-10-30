@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../reusable_widget/reusable_widget.dart';
 import 'insideMore.dart';
 
 class AboutUsPage extends StatefulWidget {
@@ -43,26 +44,49 @@ class _AboutUsPageState extends State<AboutUsPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Container(
-        alignment: Alignment.bottomCenter,
-        height: 280,
-        width: 400,
+      body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(
-            top: 60,
-          ),
-          child: Column(children: [
-            Text(
-              "تقضى هي منصة الكترونية متقدمة تربط بين المحلات (المحلات التجارية) والمستخدم، من خلال أنظمة الإدارة التفاعلية يتيح تقضى للمستخدم سهولة اختيار المحل المتواجد به حيث يتم مسح الباركود الموجود في المنتجات ليتم جمعها في العربة والدفع مباشرة ليتم بعد ذلك إمكانية تصفح الفاتورة, وأيضا نوفر خدمات ما بعد البيع في حال كانت هناك مشكلة في أي من المنتجات التي تم شرائها نقدم خدمة الاسترجاع .",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 19.5,
-                  fontWeight: FontWeight.w100,
-                  letterSpacing: 0.4),
+          padding: EdgeInsets.fromLTRB(
+              5,
+              MediaQuery.of(context).size.height * 0.02,
+              5,
+              MediaQuery.of(context).size.height * 0.02),
+          child: Column(children: <Widget>[
+            SignupcloudDcrWidget("assets/Logo.jpg"),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              alignment: Alignment.bottomCenter,
+              height: 280,
+              width: 450,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 5, bottom: 5),
+                child: Column(
+                    // crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "تقضى هي منصة الكترونية متقدمة تربط بين المحلات (المحلات التجارية) والمستخدم، من خلال أنظمة الإدارة التفاعلية يتيح تقضى للمستخدم سهولة اختيار المحل المتواجد به,\n حيث يتم مسح الباركود الموجود في المنتجات ليتم جمعها في العربة والدفع مباشرة ليتم بعد ذلك إمكانية تصفح الفاتورة, وأيضا نوفر خدمات ما بعد البيع في حال كانت هناك مشكلة في أي من المنتجات التي تم شرائها نقدم خدمة الاسترجاع .",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 19.5,
+                            fontWeight: FontWeight.w100,
+                            letterSpacing: 0.4),
+                      ),
+                    ]),
+              ),
             ),
           ]),
         ),
       ),
     );
+  }
+
+  Future AboutUsPage() async {
+    await FirebaseFirestore.instance
+        .collection('About us')
+        .doc("about us")
+        .update({'taqdda': 'About us'});
   }
 }

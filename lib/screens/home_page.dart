@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
-import 'package:taqdaa_application/screens/email.dart';
+import 'package:taqdaa_application/screens/Send_email.dart';
 import 'package:taqdaa_application/views/NoItmesCart.dart';
 import 'package:taqdaa_application/views/rewards_view.dart';
 import 'package:taqdaa_application/views/scanner.dart';
