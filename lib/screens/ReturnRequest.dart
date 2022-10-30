@@ -202,28 +202,30 @@ class _returnRequestState extends State<returnRequest> {
                                         ],
                                       ),
                                       SizedBox(width: 80),
-                                      Expanded(
-                                        flex: 1,
-                                        child: Stack(
-                                          alignment: Alignment.center,
-                                          children: [
-                                            Container(
-                                              width: 35,
-                                              height: 35,
-                                              decoration: new BoxDecoration(
-                                                color: Color.fromARGB(
-                                                    255, 245, 161, 14),
-                                                shape: BoxShape.circle,
-                                              ),
-                                            ),
-                                            Text(
-                                              item.quantity.toString(),
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            )
-                                          ],
-                                        ),
-                                      )
+
+                                      checkQuantity(item)
+                                      // Expanded(
+                                      //   flex: 1,
+                                      //   child: Stack(
+                                      //     alignment: Alignment.center,
+                                      //     children: [
+                                      //       Container(
+                                      //         width: 35,
+                                      //         height: 35,
+                                      //         decoration: new BoxDecoration(
+                                      //           color: Color.fromARGB(
+                                      //               255, 245, 161, 14),
+                                      //           shape: BoxShape.circle,
+                                      //         ),
+                                      //       ),
+                                      //       Text(
+                                      //         item.quantity.toString(),
+                                      //         style: TextStyle(
+                                      //             color: Colors.white),
+                                      //       )
+                                      //     ],
+                                      //   ),
+                                      // )
                                     ],
                                   ),
                                 )
@@ -431,13 +433,88 @@ class _returnRequestState extends State<returnRequest> {
     return Container();
   }
 
+  int first = 1;
+  checkQuantity(item) {
+    if (item.quantity == 1) {
+      return Expanded(
+        flex: 1,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            IconButton(
+                onPressed: () async {},
+                icon: Icon(Icons.remove_circle,
+                    color: Color.fromARGB(255, 195, 195, 195))),
+            Container(
+              width: 35,
+              height: 35,
+              decoration: new BoxDecoration(
+                color: Color.fromARGB(255, 245, 161, 14),
+                shape: BoxShape.circle,
+              ),
+            ),
+            Text(
+              item.quantity.toString(),
+              style: TextStyle(color: Colors.white),
+            ),
+            IconButton(
+                onPressed: () async {},
+                icon: Icon(Icons.add_circle,
+                    color: Color.fromARGB(255, 195, 195, 195))),
+          ],
+        ),
+      );
+    } else if (item.quantity > 1) {
+      return Expanded(
+        flex: 1,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            IconButton(
+                onPressed: () async {
+                  if (first > 1) {
+                    first--;
+                  }
+                },
+                icon: Icon(Icons.remove_circle,
+                    color: first == 1
+                        ? Color.fromARGB(255, 195, 195, 195)
+                        : Color.fromARGB(255, 118, 171, 223))),
+            Container(
+              width: 35,
+              height: 35,
+              decoration: new BoxDecoration(
+                color: Color.fromARGB(255, 245, 161, 14),
+                shape: BoxShape.circle,
+              ),
+            ),
+            Text(
+              first.toString(),
+              style: TextStyle(color: Colors.white),
+            ),
+            IconButton(
+                onPressed: () async {
+                  if (first < item.quantity) {
+                    first++;
+                  }
+                },
+                icon: Icon(Icons.add_circle,
+                    color: first == item.quantity
+                        ? Color.fromARGB(255, 195, 195, 195)
+                        : Color.fromARGB(255, 118, 171, 223))),
+          ],
+        ),
+      );
+    }
+  }
+
   var items = [];
   AddToList(Item item) {
     items.add(Item(
             barcode: item.barcode,
             name: item.name,
             img: item.img,
-            quantity: item.quantity,
+            quantity: first,
             price: item.price,
             returnable: true)
         .toMap());
