@@ -226,8 +226,7 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          email(), // رجعيه invoices
+                                      builder: (context) => invoices(),
                                     ));
                               },
                               icon: Icon(

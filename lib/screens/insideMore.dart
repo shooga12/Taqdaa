@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:taqdaa_application/screens/About_us_page.dart';
+import 'package:taqdaa_application/screens/Send_email.dart';
+import 'package:taqdaa_application/screens/email.dart';
 import '../Views/profile_view.dart';
 import '../confige/EcommerceApp.dart';
 import '../controller/BNBCustomePainter.dart';
@@ -265,7 +268,13 @@ class _MoreState extends State<More> {
             } else if (title == "أحصل على مساعدة") {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => helpPage()),
+                MaterialPageRoute(
+                    builder: (context) => Send_email()), // helpPage()
+              );
+            } else if (title == "عن تقضّى") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AboutUsPage()),
               );
             } else {}
           },

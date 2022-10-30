@@ -66,7 +66,7 @@ dependencies:
   url_launcher: ^6.1.6
   intl: ^0.17.0
   flutter_email_sender: ^5.1.0
-
+  mailto: ^2.0.0
 
 
 dev_dependencies:
@@ -110,6 +110,7 @@ flutter:
     - assets/rewards.png
     - assets/empty_cart.png
     - assets/successfull_payment.png
+    - assets/Logo.jpg
     
     # To add assets to your application, add an assets section, like this:
     # assets:
