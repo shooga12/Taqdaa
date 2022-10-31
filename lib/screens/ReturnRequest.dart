@@ -112,8 +112,8 @@ class _returnRequestState extends State<returnRequest> {
                     itemCount: invoice?.items.length,
                     itemBuilder: (context, index) {
                       var item = invoice?.items[index];
-                      AddToList(item!);
-                      if (item.returnable == true) {
+                      //AddToList(item!);
+                      if (item!.returnable == true) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: Container(
@@ -233,6 +233,7 @@ class _returnRequestState extends State<returnRequest> {
                             ),
                           ),
                         );
+                        AddToList(item);
                       } else {
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),

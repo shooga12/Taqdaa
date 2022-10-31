@@ -42,6 +42,7 @@ class _LoginPageState extends State<LoginPage> {
     return null;
   }
 
+  bool isVisible = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,6 +97,10 @@ class _LoginPageState extends State<LoginPage> {
                     labelStyle: TextStyle(
                         color: Color.fromARGB(236, 113, 113, 117)
                             .withOpacity(0.9)),
+                    hintText: 'email@address.com',
+                    hintStyle: TextStyle(
+                        color: Color.fromARGB(236, 113, 113, 117)
+                            .withOpacity(0.9)),
                     filled: true,
 
                     fillColor: Colors.white.withOpacity(0.9),
@@ -116,11 +121,21 @@ class _LoginPageState extends State<LoginPage> {
                   validator: MultiValidator([
                     RequiredValidator(errorText: 'مطلوب*'),
                   ]),
-                  obscureText: true,
+                  obscureText: isVisible,
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
                   style: TextStyle(
                       color: Color.fromARGB(255, 15, 53, 120).withOpacity(0.9)),
                   decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          isVisible = !isVisible;
+                        });
+                      },
+                      icon: isVisible
+                          ? Icon(Icons.visibility)
+                          : Icon(Icons.visibility_off),
+                    ),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30.0),
                         borderSide:

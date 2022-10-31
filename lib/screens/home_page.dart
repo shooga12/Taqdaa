@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+//import 'package:infinity_page_view/infinity_page_view.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
 import 'package:taqdaa_application/views/NoItmesCart.dart';
@@ -161,17 +162,36 @@ class _HomePageState extends State<HomePage> {
                                             // } else
                                             if (snapshot.hasData) {
                                               final offer = snapshot.data!;
-                                              return PageView.builder(
-                                                  controller: controller,
-                                                  itemCount: offer.length,
-                                                  itemBuilder:
-                                                      (BuildContext context,
-                                                          int index) {
-                                                    // return AddToList(
-                                                    //     offer[index]);
-                                                    return buildOfferCards(
-                                                        offer[index], index);
-                                                  });
+                                              return
+                                                  // InfinityPageView(
+                                                  //     controller: controller,
+                                                  //     itemCount: offer.length,
+                                                  //     itemBuilder:
+                                                  //         (BuildContext context,
+                                                  //             int index) {
+                                                  //       return buildOfferCards(
+                                                  //           offer[index], index);
+                                                  //     });
+                                                  PageView.builder(
+                                                      controller: controller,
+                                                      //itemCount: offer.length,
+                                                      scrollDirection:
+                                                          Axis.horizontal,
+                                                      onPageChanged: (index) {
+                                                        setState(() {
+                                                          var _currentIndex =
+                                                              index %
+                                                                  offer.length;
+                                                        });
+                                                      },
+                                                      itemBuilder:
+                                                          (BuildContext context,
+                                                              int index) {
+                                                        return buildOfferCards(
+                                                            offer[index %
+                                                                offer.length],
+                                                            index);
+                                                      });
                                             } else if (snapshot.hasError) {
                                               return Text(
                                                   "Something went wrong! ${snapshot.error}");
@@ -613,7 +633,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _animateSlider() {
-    Future.delayed(Duration(seconds: 2)).then((_) {
+    Future.delayed(
+      Duration(seconds: 2),
+    ).then((_) {
       int nextPage = controller.page!.round() + 1;
 
       if (nextPage == OffersList.length) {

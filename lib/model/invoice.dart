@@ -35,7 +35,7 @@ class Invoice {
         id: map['ID'],
         store: map['Store'],
         date: map['Date'],
-        Fulldate: map['Fulldate'],
+        // Fulldate: map['Fulldate'],
         total: map['Total'],
         returnDays: map['returnDays'],
         sub_total: map['sub-total'],

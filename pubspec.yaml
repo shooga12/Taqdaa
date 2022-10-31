@@ -67,6 +67,7 @@ dependencies:
   url_launcher: ^6.1.6
   intl: ^0.17.0
   carousel_slider: ^4.1.1
+  #infinity_page_view: ^1.0.0
   #workmanager: ^0.5.1
   #workmanager: ^0.2.0
   #background_fetch: ^1.1.2
