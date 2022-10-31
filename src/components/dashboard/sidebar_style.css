@@ -168,7 +168,6 @@ nav:hover .shrink-btn,
   padding-left: 0.8em;
 }
 
-
 .icon i:last-child {
   opacity: 0;
   color: #fff;
@@ -542,4 +541,51 @@ body.shrink .tooltip {
 #percentage-field{
   width: 360px;
   margin-right: 0.5em;
+}
+.requests-page-btn-active{
+  border-radius: 50px;
+  padding: 0.5em 1em 0.5em 1em;
+  border: none;
+  background-color: var(--orange);
+  color: white;
+  font-size: 19px;
+}
+.requests-page-btn-nonactive{
+  border-radius: 50px;
+  padding: 0.5em 1em 0.5em 1em;
+  border: 1px solid rgb(185, 185, 185);
+  background-color: transparent;
+  color: rgb(143, 143, 143);
+  font-size: 19px;
+}
+.requests-page-btn-active:hover{
+  background-color: var(--orange-dark);
+}
+.requests-page-btn-nonactive:hover{
+  background-color: rgb(243, 243, 243);
+}
+.requests-card{
+  background-color: white;
+  box-shadow: 1px 1px 15px 1px #ebebeb;
+  border-radius: 20px;
+  width: 750px;
+  cursor: pointer;
+}
+.requests-card:hover{
+  background-color: rgb(252, 252, 252);
+}
+.date-text{
+  color: #898989;
+}
+.pending{
+  color: #D08A1B;
+}
+.ready{
+  color: #7cb034;
+}
+.closed-success{
+  color: #237A35;
+}
+.closed-failed{
+  color: #A63B3B;
 }

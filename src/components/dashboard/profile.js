@@ -516,7 +516,7 @@ function Profile(){
 
         return(  
             <>
-            <h1 className="mt-3">Profile</h1>
+            <h1 className="mt-3 pb-3">Profile</h1>
             <span id='saved-success-alert'></span>
             <div id="profile-container">
              <div className='col-8 d-flex justify-content-between'>

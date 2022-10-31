@@ -10,7 +10,7 @@ import {CgLogOut,CgProfile} from 'react-icons/cg';
 import Dataset from './dataset';
 import Profile from './profile';
 import Invoices from './invoices';
-import Return_Req from './return_request';
+import Return_Requests from './return_request';
 import Offers from './offers';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import auth from '../../shared/firebase';
@@ -114,14 +114,14 @@ function Sidebar() {
 
         <div className="sidebar-footer">
           <div className="admin-user tooltip-element" data-tooltip="1">
-            <a href="#" className="log-out" onClick={()=>showAlert('Do You Want To Logout?',() => {auth.signOut(); navigate('/')})}>
+            <a href="#" className="log-out" onClick={()=>showAlert('Do you want to logout?',() => {auth.signOut(); navigate('/')})}>
               <CgLogOut />
             </a>
           </div>
         </div>
       </nav>
       <main>
-        {currentTab == 0? <Profile /> : currentTab == 1? <Dataset /> : currentTab == 2? <Invoices /> : currentTab == 3? <Products_List /> : currentTab == 4? <Return_Req /> : <Offers />}
+        {currentTab == 0? <Profile /> : currentTab == 1? <Dataset /> : currentTab == 2? <Invoices /> : currentTab == 3? <Products_List /> : currentTab == 4? <Return_Requests /> : <Offers />}
       </main>
    
       </div>

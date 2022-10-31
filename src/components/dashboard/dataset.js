@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import "./dataset.css";
-
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import {IoCloudDoneOutline} from 'react-icons/io5'
@@ -250,7 +249,7 @@ function Dataset(){
      
      return(  
         <>
-        <h1 className="mt-3">Products Dataset</h1>
+        <h1 className="mt-3 pb-4">Products Dataset</h1>
         <p id="warning">Uploading a new dataset will replace the current one<br></br>
          <span>Dataset must contain the following feilds with the same names: <strong>Barcode</strong>, <strong>Product Name</strong>, <strong>Price</strong>, <strong>Photo</strong>, <strong>UID</strong>, <strong>Returnable</strong> *Returnable should be True if the item is returnable and False otherwise</span><br></br>
          <span>Only .xlsx and .csv files are acceptable</span>

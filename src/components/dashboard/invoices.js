@@ -265,7 +265,7 @@ function Invoices(){
         
         return(  
             <>
-            <h1 className="mt-3">Invoices</h1>
+            <h1 className="mt-3 pb-5">Invoices</h1>
             {
               invoices?
               <InvoiceCard invoices={invoices}/> 

@@ -14,7 +14,6 @@ import 'reactjs-popup/dist/index.css';
 import {MdModeEditOutline} from 'react-icons/md';
 import { extend } from 'jquery';
 import img2 from './458789.jpeg';
-import pageNum from './reload';
 
 
 
@@ -122,6 +121,7 @@ function Child({ datum }) {
       console.error(error);
      }); 
   }
+  
   const setItemData = (photo, barcode, name, price, uid, returnable)=>{
      setBarcode(barcode);
      setPName(name);
@@ -455,7 +455,7 @@ function Products_List(){
         
         return(   
             <>
-            <h1 className="mt-3" id='l'>Products List</h1>
+            <h1 className="mt-3 pb-4" id='l'>Products List</h1>
             <span id='saved-success-alert'></span>
              {
               items?
