@@ -3,13 +3,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:taqdaa_application/views/checkOut_view.dart';
-import '../controller/BNBCustomePainter.dart';
-import '../main.dart';
 import '../confige/EcommerceApp.dart';
-import '../views/NoItmesCart.dart';
-import '../views/invoices_view.dart';
-import '../views/scanner.dart';
-import 'insideMore.dart';
+import '../models/product_model.dart';
 import 'scanBarCode.dart';
 import 'dart:core';
 

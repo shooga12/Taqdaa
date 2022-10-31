@@ -225,7 +225,7 @@ class _returnReqDetailsState extends State<returnReq_details> {
                     color: Color.fromARGB(255, 32, 7, 121),
                   ),
                 ),
-                if (item.size != "")
+                if (item.size != null)
                   Text(
                     "المـقاس : " + item.size,
                     style: new TextStyle(

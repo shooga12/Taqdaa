@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:taqdaa_application/models/invoice.dart';
 import 'package:taqdaa_application/screens/list_of_stores.dart';
 import '../methods/authentication_services.dart';
 import '../screens/home_page.dart';
@@ -14,6 +15,7 @@ import '../controller/Notification_api.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import '../models/user_model.dart';
+import 'models/store_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -117,17 +119,25 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyHomePage> createState() => MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class MyHomePageState extends State<MyHomePage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
 
+  static Stream readOffers = FirebaseFirestore.instance
+      .collection('ActiveOffers')
+      .snapshots()
+      .map(
+          (list) => list.docs.map((doc) => doc.data()).toList()); //ActiveOffers
+
   @override
   void initState() {
     super.initState();
+    readOffers;
+    readStores();
     FirebaseFirestore.instance
         .collection("users")
         .doc(user!.uid)
@@ -151,15 +161,35 @@ class _MyHomePageState extends State<MyHomePage> {
                 NotificationApi.showScheduledNotification(
                     title: 'Taqdaa is waiting for you!',
                     body:
-                        'Hey, ${EcommerceApp.loggedInUser.firstName} \nyou\'re very close from Sephora come and shop with us now!',
-
-                    ///bug fixes
+                        'Hey, ${EcommerceApp.loggedInUser.firstName} \nyour Return request got accepted come and drop it by!',
                     payload: 'paylod.nav',
-                    scheduledDate: DateTime.now().add(Duration(seconds: 3)));
+                    scheduledDate: DateTime.now().add(Duration(seconds: 1)));
               }
-              checkRequestAccepted();
-              getRewards();
-              return HomePage();
+              return StreamBuilder<List<Invoice>>(
+                  stream: readRequest(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final requests = snapshot.data!;
+                      if (requests.isNotEmpty) {
+                        NotificationApi.showScheduledNotification(
+                            title: 'Taqdaa is waiting for you!',
+                            body:
+                                'Hey, ${EcommerceApp.loggedInUser.firstName} \nyou\'re very close from Sephora come and shop with us now!',
+
+                            ///bug fixes
+                            payload: 'paylod.nav',
+                            scheduledDate:
+                                DateTime.now().add(Duration(seconds: 3)));
+                      }
+                      //checkRequestAccepted(); //bug fixessss
+                      getRewards();
+                      return HomePage();
+                    } else if (snapshot.hasError) {
+                      return Text("Some thing went wrong! ${snapshot.error}");
+                    } else {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  });
             } else if (snapshot.hasError) {
               return Text("Some thing went wrong! ${snapshot.error}");
             } else {
@@ -185,26 +215,33 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Future checkRequestAccepted() async {
-    final QuerySnapshot result = await FirebaseFirestore.instance
-        .collection('ReturnRequests${EcommerceApp.loggedInUser.uid}')
-        .where('status', isEqualTo: "Accepted")
-        .get();
-    final DocumentSnapshot document = result.docs.first;
-    if (document.exists) {
-      NotificationApi.showScheduledNotification(
-          title: 'Taqdaa is waiting for you!',
-          body:
-              'Hey, ${EcommerceApp.loggedInUser.firstName} \nyour Return request got accepted come and drop it by!',
-          payload: 'paylod.nav',
-          scheduledDate: DateTime.now().add(Duration(seconds: 1)));
-    }
-  }
+  // Future checkRequestAccepted() async {
+  //   final QuerySnapshot result = await FirebaseFirestore.instance
+  //       .collection('ReturnRequests${EcommerceApp.loggedInUser.uid}')
+  //       .where('status', isEqualTo: "Accepted")
+  //       .get();
+  //   final DocumentSnapshot document = result.docs.first;
+  //   if (document.exists) {
+  //     NotificationApi.showScheduledNotification(
+  //         title: 'Taqdaa is waiting for you!',
+  //         body:
+  //             'Hey, ${EcommerceApp.loggedInUser.firstName} \nyour Return request got accepted come and drop it by!',
+  //         payload: 'paylod.nav',
+  //         scheduledDate: DateTime.now().add(Duration(seconds: 1)));
+  //   }
+  // }
 
-  Stream<List<Store>> readStores() => FirebaseFirestore.instance
+  static Stream<List<Store>> readStores() => FirebaseFirestore.instance
       .collection('Stores')
       .where('kilometers', isEqualTo: 0.1)
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Store.fromJson(doc.data())).toList());
+
+  static Stream<List<Invoice>> readRequest() => FirebaseFirestore.instance
+      .collection('ReturnRequests${EcommerceApp.loggedInUser.uid}')
+      .where('status', isEqualTo: "Accepted")
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Invoice.fromJson(doc.data())).toList());
 }

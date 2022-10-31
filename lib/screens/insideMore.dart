@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../views/aboutUs_view.dart';
 import '../views/ViewReturnRequests.dart';
 import '../views/profile_view.dart';
 import 'getHelp.dart';
@@ -108,7 +109,12 @@ class _MoreState extends State<More> {
                 context,
                 MaterialPageRoute(builder: (context) => helpPage()),
               );
-            } else {}
+            } else if (title == "عن تقضّى") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AboutUsPage()),
+              );
+            }
           },
           highlightColor: Color.fromARGB(255, 255, 255, 255),
         ),

@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:taqdaa_application/confige/EcommerceApp.dart';
-import 'package:taqdaa_application/screens/ShoppingCart.dart';
-import 'package:taqdaa_application/screens/home_page.dart';
-import 'package:taqdaa_application/screens/scanBarCode.dart';
+import '../confige/EcommerceApp.dart';
+import '../main.dart';
+import 'home_page.dart';
+import 'scanBarCode.dart';
 import 'package:firebase_database/firebase_database.dart';
-
+import '../models/store_model.dart';
 import '../views/scanner.dart';
 
 class ListOfStores2 extends StatefulWidget {
   const ListOfStores2({super.key});
 
   @override
-  State<ListOfStores2> createState() => _ListOfStores2State();
+  State<ListOfStores2> createState() => ListOfStores2State();
 }
 
-class _ListOfStores2State extends State<ListOfStores2> {
+class ListOfStores2State extends State<ListOfStores2> {
   final List<Store> Stores = [];
   FirebaseDatabase database = FirebaseDatabase.instance;
-  String collectionName = EcommerceApp().getCurrentUser();
+  static String collectionName = EcommerceApp().getCurrentUser();
 
   String _counter = "";
 
@@ -100,25 +100,6 @@ class _ListOfStores2State extends State<ListOfStores2> {
           'إختر متجرًا',
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
         ),
-        bottom: PreferredSize(
-            child: Flexible(
-              child: Card(
-                child: SizedBox(
-                  width: 390,
-                  child: TextField(
-                    decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.search),
-                        hintText: 'إبحث عن إسم متجر محدد'),
-                    onChanged: (val) {
-                      setState(() {
-                        SearchName = val.replaceAll(' ', '');
-                      });
-                    },
-                  ),
-                ),
-              ),
-            ),
-            preferredSize: Size.zero),
         flexibleSpace: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
@@ -128,46 +109,96 @@ class _ListOfStores2State extends State<ListOfStores2> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: StreamBuilder<List<Store>>(
-          stream: readStores(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              final stores = snapshot.data!;
-              count = stores.length;
-              return ListView.builder(
-                  itemCount: stores.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    var data = stores[index];
-                    if (SearchName.isEmpty) {
-                      flag = false;
-                      return buildStoresCards(stores[index], context);
-                    } else if (SearchName.isNotEmpty &&
-                        data.StoreName.toString()
-                            .toLowerCase()
-                            .startsWith(SearchName.toLowerCase())) {
-                      flag = true;
-                      return buildStoresCards(stores[index], context);
-                    } else if (flag == false && index == count - 1) {
-                      return Container(
-                          child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'لا يوجد نتائج',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
-                      ));
-                    }
-                    return nothing();
-                  });
-            } else if (snapshot.hasError) {
-              return Text("Some thing went wrong! ${snapshot.error}");
-            } else {
-              return Center(child: CircularProgressIndicator());
-            }
-          }),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Container(
+              height: 600,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 60,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 10),
+                      child: TextField(
+                        decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            prefixIcon: Icon(Icons.search),
+                            hintText: 'إبحث عن إسم عرض محدد'),
+                        onChanged: (val) {
+                          setState(() {
+                            SearchName = val;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 500,
+                    width: 390,
+                    child: StreamBuilder<List<Store>>(
+                        stream: readStores(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            final stores = snapshot.data!;
+                            count = stores.length;
+                            return ListView.builder(
+                                itemCount: stores.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  var data = stores[index];
+                                  if (SearchName.isEmpty) {
+                                    flag = false;
+                                    return buildStoresCards(
+                                        stores[index], context);
+                                  } else if (SearchName.isNotEmpty &&
+                                      data.StoreName.toString()
+                                          .toLowerCase()
+                                          .startsWith(
+                                              SearchName.toLowerCase())) {
+                                    flag = true;
+                                    return buildStoresCards(
+                                        stores[index], context);
+                                  } else if (flag == false &&
+                                      index == count - 1) {
+                                    return Container(
+                                        child: Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        'لا يوجد نتائج',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ));
+                                  }
+                                  return nothing();
+                                });
+                          } else if (snapshot.hasError) {
+                            return Text(
+                                "Some thing went wrong! ${snapshot.error}");
+                          } else {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                        }),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -184,7 +215,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
 
   Widget buildStoresCards(Store store, BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 5),
       child: Container(
         child: new InkWell(
           child: Padding(
@@ -241,6 +272,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
           ),
           onTap: () async {
             EcommerceApp.storeId = store.StoreId;
+            EcommerceApp.returnDays = store.returnDays;
             if (EcommerceApp.storeName == "") {
               EcommerceApp.storeName = store.StoreName;
               // Navigator.push(
@@ -300,7 +332,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
     );
   }
 
-  Future saveUserTotal(var total) async {
+  static Future saveUserTotal(var total) async {
     final QuerySnapshot result = await FirebaseFirestore.instance
         .collection('${collectionName}Total')
         .get();
@@ -310,7 +342,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
     }
   }
 
-  Future deleteCart() async {
+  static Future deleteCart() async {
     final QuerySnapshot result =
         await FirebaseFirestore.instance.collection('${collectionName}').get();
     final List<DocumentSnapshot> documents = result.docs;
@@ -319,7 +351,7 @@ class _ListOfStores2State extends State<ListOfStores2> {
     }
   }
 
-  Future deleteCartDublicate() async {
+  static Future deleteCartDublicate() async {
     final QuerySnapshot result = await FirebaseFirestore.instance
         .collection('${collectionName}All')
         .get();
@@ -328,31 +360,4 @@ class _ListOfStores2State extends State<ListOfStores2> {
       documents[i].reference.delete();
     }
   }
-}
-
-class Store {
-  final String StoreName;
-  final String StoreLogo;
-  final String kilometers;
-  final String StoreId;
-
-  Store(
-      {required this.StoreName,
-      required this.StoreLogo,
-      required this.kilometers,
-      required this.StoreId});
-
-  Map<String, dynamic> toJson() => {
-        'StoreName': StoreName,
-        'StoreLogo': StoreLogo,
-        'kilometers': kilometers,
-        'StoreId': StoreId,
-      };
-
-  static Store fromJson(Map<String, dynamic> json) => Store(
-        StoreName: json['StoreName'],
-        StoreLogo: json['StoreLogo'],
-        kilometers: json['kilometers'].toString(),
-        StoreId: json['StoreId'],
-      );
 }

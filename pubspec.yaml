@@ -62,7 +62,8 @@ dependencies:
   flutter_phone_direct_caller: ^2.1.1
   url_launcher: ^6.1.6
   intl: ^0.17.0
-
+  mailto: ^2.0.0
+  flutter_email_sender: ^5.1.0
 
 flutter_native_splash:
   background_image: "assets/SplashScreen.png"
@@ -105,6 +106,7 @@ flutter:
     - assets/rewards.png
     - assets/empty_cart.png
     - assets/successfull_payment.png
+    - assets/logoWhite.png
     # To add assets to your application, add an assets section, like this:
     # assets:
     #   - images/a_dot_burr.jpeg

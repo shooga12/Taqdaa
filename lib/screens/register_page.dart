@@ -47,9 +47,7 @@ class _RegisterPageState extends State<RegisterPage> {
     else if (formPassword.length < 8)
       return 'يجب ان تحتوي كلمة السر على 8 خانات أو أكثر';
     else if (formPassword.length > 15)
-
       return 'يجب أن تكون كلمة السر أقل من 15 خانة';
-
     else
       return null;
   }
@@ -78,11 +76,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: firstnameController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: MultiValidator([
-
                     RequiredValidator(errorText: 'مطلوب*'),
-                    PatternValidator(r'^[a-z A-Z]+$',
+                    PatternValidator(
+                        r'^[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z]+[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z-_]*$',
                         errorText: 'يجب أن يتكون الأسم من حروف فقط')
-
                   ]),
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
                   style: TextStyle(
@@ -127,11 +124,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   autovalidateMode: AutovalidateMode.onUserInteraction,
 
                   validator: MultiValidator([
-
                     RequiredValidator(errorText: 'مطلوب *'),
                     PatternValidator(r'^[a-z A-Z]+$',
                         errorText: 'يجب أن يتكون الأسم من حروف فقط')
-
                   ]),
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
                   style: TextStyle(
@@ -223,12 +218,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: _passController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: MultiValidator([
-
                     RequiredValidator(errorText: 'مطلوب *'),
                     PatternValidator(
                         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$',
                         errorText: 'كلمة مرور غير صالحة'),
-
                   ]),
                   obscureText: true,
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
@@ -272,7 +265,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
                   validator: MultiValidator([
                     RequiredValidator(errorText: 'مطلوب *'),
-                    PatternValidator(r'^(?:[+0][1-9])?[0-9]{10,12}$',
+                    PatternValidator(r'^(05)([0-9]{8})$',
                         errorText: 'أدخل رقم هاتف صالح')
                   ]),
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
@@ -399,9 +392,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   _passController.text);
                             },
                             child: Text(
-
                               'تسجيل',
-
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -449,9 +440,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ));
           },
           child: const Text(
-
             "تسجيل دخول",
-
             style: TextStyle(
                 decoration: TextDecoration.underline,
                 color: Color.fromARGB(255, 15, 53, 120),

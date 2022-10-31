@@ -164,16 +164,6 @@ class checkOut {
     }
   }
 
-  // Future deleteItems() async {
-  //   DatabaseReference dbref = FirebaseDatabase.instance
-  //       .ref('Store${EcommerceApp.storeId}')
-  //       .child('store');
-
-  //   for (int i = 0; i < barcodes.length; i++) {
-  //     dbref.orderByChild('Barcode').equalTo(barcodes[i]).ref.remove();
-  //   }
-  // }
-
   Future<Invoice> writeInvoices() async {
     var items = [];
     Random random = new Random();
@@ -201,7 +191,9 @@ class checkOut {
     FirebaseFirestore.instance.collection('${collectionName}Invoices').add({
       "ID": randomNumber.toString(),
       "Date": todayDate,
+      "Fulldate": now,
       "Total": EcommerceApp.total - EcommerceApp.discount.toInt(),
+      'returnDays': EcommerceApp.returnDays,
       "Store": EcommerceApp.storeName,
       "items": items,
       'sub-total': subTotal,
@@ -217,6 +209,7 @@ class checkOut {
         .add({
       "ID": randomNumber.toString(),
       "Date": todayDate,
+      "Fulldate": now,
       "Total": EcommerceApp.total - EcommerceApp.discount.toInt(),
       "Store": EcommerceApp.storeName,
       "items": items,
@@ -231,7 +224,9 @@ class checkOut {
     Invoice invoice = new Invoice(items,
         id: randomNumber.toString(),
         date: todayDate,
+        Fulldate: now,
         total: EcommerceApp.total - EcommerceApp.discount.toInt(),
+        returnDays: EcommerceApp.returnDays,
         store: EcommerceApp.storeName,
         sub_total: subTotal,
         vat_total: vat,

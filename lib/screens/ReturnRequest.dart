@@ -205,29 +205,7 @@ class _returnRequestState extends State<returnRequest> {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(width: 80),
-                                      Expanded(
-                                        flex: 1,
-                                        child: Stack(
-                                          alignment: Alignment.center,
-                                          children: [
-                                            Container(
-                                              width: 35,
-                                              height: 35,
-                                              decoration: new BoxDecoration(
-                                                color: Color.fromARGB(
-                                                    255, 245, 161, 14),
-                                                shape: BoxShape.circle,
-                                              ),
-                                            ),
-                                            Text(
-                                              item.quantity.toString(),
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            )
-                                          ],
-                                        ),
-                                      )
+                                      checkQuantity(item)
                                     ],
                                   ),
                                 )
@@ -376,7 +354,7 @@ class _returnRequestState extends State<returnRequest> {
                                 builder: (context) {
                                   return AlertDialog(
                                       content: Container(
-                                        height: 280,
+                                        height: 300,
                                         child: Column(
                                           children: [
                                             Padding(
@@ -461,13 +439,109 @@ class _returnRequestState extends State<returnRequest> {
     return Container();
   }
 
+  int first = 1;
+  checkQuantity(item) {
+    if (item.quantity == 1) {
+      return Expanded(
+        flex: 1,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 85.0),
+              child: IconButton(
+                  onPressed: () async {},
+                  icon: Icon(Icons.remove_circle,
+                      color: Color.fromARGB(255, 195, 195, 195))),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 15.0),
+              child: Container(
+                alignment: Alignment.center,
+                width: 35,
+                height: 35,
+                decoration: new BoxDecoration(
+                  color: Color.fromARGB(255, 245, 161, 14),
+                  shape: BoxShape.circle,
+                ),
+                child: Text(
+                  item.quantity.toString(),
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 55.0),
+              child: IconButton(
+                onPressed: () async {},
+                icon: Icon(Icons.add_circle,
+                    color: Color.fromARGB(255, 195, 195, 195)),
+              ),
+            )
+          ],
+        ),
+      );
+    } else if (item.quantity > 1) {
+      return Expanded(
+        flex: 1,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 85.0),
+              child: IconButton(
+                  onPressed: () async {
+                    if (first > 1) {
+                      first--;
+                    }
+                  },
+                  icon: Icon(Icons.remove_circle,
+                      color: first == 1
+                          ? Color.fromARGB(255, 195, 195, 195)
+                          : Color.fromARGB(255, 118, 171, 223))),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 15.0),
+              child: Container(
+                alignment: Alignment.center,
+                width: 35,
+                height: 35,
+                decoration: new BoxDecoration(
+                  color: Color.fromARGB(255, 245, 161, 14),
+                  shape: BoxShape.circle,
+                ),
+                child: Text(
+                  first.toString(),
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 55.0),
+              child: IconButton(
+                  onPressed: () async {
+                    if (first < item.quantity) {
+                      first++;
+                    }
+                  },
+                  icon: Icon(Icons.add_circle,
+                      color: first == item.quantity
+                          ? Color.fromARGB(255, 195, 195, 195)
+                          : Color.fromARGB(255, 118, 171, 223))),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
   var items = [];
   AddToList(Item item) {
     items.add(Item(
             barcode: item.barcode,
             name: item.name,
             img: item.img,
-            quantity: item.quantity,
+            quantity: first,
             price: item.price,
             returnable: true)
         .toMap());

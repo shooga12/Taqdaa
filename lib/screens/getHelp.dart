@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-import '../confige/EcommerceApp.dart';
-import '../controller/BNBCustomePainter.dart';
-import '../main.dart';
-import '../views/NoItmesCart.dart';
-import 'ShoppingCart.dart';
-import 'insideMore.dart';
-import '../views/invoices_view.dart';
-import 'list_of_stores.dart';
+import 'package:mailto/mailto.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class helpPage extends StatefulWidget {
   const helpPage({super.key});
@@ -29,7 +24,7 @@ class _helpPageState extends State<helpPage> {
         automaticallyImplyLeading: true,
         title: Text(
           "أحصل على مساعدة",
-          style: TextStyle(fontSize: 24),
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
         ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
@@ -41,204 +36,98 @@ class _helpPageState extends State<helpPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Stack(
-        children: [
-          Center(
-            child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Card(
-                      child: new InkWell(
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 12, bottom: 12, left: 15, right: 12),
-                            child: Row(children: <Widget>[
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.phone_enabled,
-                                      size: 30,
-                                      color:
-                                          Color.fromARGB(223, 134, 186, 243))),
-                              Column(children: <Widget>[
-                                Text(
-                                  "أتصل علينا",
-                                  style: new TextStyle(
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ]),
-                              Spacer(),
-                              // Icon(Icons.arrow_forward,
-                              //     color: Color.fromARGB(223, 134, 186, 243)),
-                            ]),
-                          ),
-                          onTap: () async {
-                            await FlutterPhoneDirectCaller.callNumber(
-                                '+966509483390');
-                          }),
-                      color: Color.fromARGB(243, 243, 239, 231),
-                    ),
-                    Card(
-                      child: new InkWell(
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 12, bottom: 12, left: 15, right: 12),
-                            child: Row(children: <Widget>[
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.mail_outline,
-                                      size: 30,
-                                      color:
-                                          Color.fromARGB(223, 134, 186, 243))),
-                              Column(children: <Widget>[
-                                Text(
-                                  "أرسل لنا إيميل",
-                                  style: new TextStyle(
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ]),
-                              Spacer(),
-                              // Icon(Icons.arrow_forward,
-                              //     color: Color.fromARGB(223, 134, 186, 243)),
-                            ]),
-                          ),
-                          onTap: () async {
-                            // String url = 'mailto:nouraalkho2@gmail.com';
-                            // await launchUrl(url);
+      body: Center(
+        child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildCards("تواصل معنا عبر الهاتف", context),
+                buildCards("تواصل معنا عبر الايميل", context),
+              ],
+            )),
+      ),
+    );
+  }
 
-                            // if (await canLaunchUrl(url)) {
-                            //   await launchUrl(url);
-                            // }
-                          }),
-                      color: Color.fromARGB(243, 243, 239, 231),
+  buildCards(String title, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
+      child: Container(
+        child: new InkWell(
+          child: Padding(
+            padding:
+                const EdgeInsets.only(top: 15, bottom: 15, left: 15, right: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                if (title == "تواصل معنا عبر الهاتف")
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.phone_enabled,
+                      size: 40,
+                      color: Color.fromARGB(255, 254, 177, 57),
                     ),
-                  ],
-                )),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            child: Container(
-              width: size.width,
-              height: 80,
-              color: Colors.white,
-              child: Stack(
-                children: [
-                  CustomPaint(
-                    size: Size(size.width, 80),
-                    painter: BNBCustomePainter(),
                   ),
-                  Center(
-                      heightFactor: 0.6,
-                      child: Container(
-                        width: 65,
-                        height: 65,
-                        child: FittedBox(
-                          child: FloatingActionButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ListOfStores2()),
-                              );
-                            },
-                            backgroundColor: Colors.orange,
-                            child: Icon(
-                              Icons.document_scanner_outlined,
-                              size: 27,
-                            ),
-                            //elevation: 0.1,
-                          ),
-                        ),
-                      )),
-                  Container(
-                    width: size.width,
-                    height: 80,
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MyHomePage()),
-                                );
-                              },
-                              icon: Icon(
-                                Icons.home_outlined,
-                                size: 35,
-                                color: isInsideHome
-                                    ? Color.fromARGB(255, 254, 176, 60)
-                                    : Colors.white,
-                              )),
-                          IconButton(
-                              onPressed: () {
-                                if (EcommerceApp.haveItems) {
-                                  /////bug fixes
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => shoppingCart()),
-                                  );
-                                } else {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => emptyCart()),
-                                  );
-                                }
-                              },
-                              icon: Icon(
-                                Icons.shopping_cart,
-                                size: 30,
-                                color: isInsideCart
-                                    ? Color.fromARGB(255, 254, 176, 60)
-                                    : Colors.white,
-                              )),
-                          Container(
-                            width: size.width * 0.20,
-                          ),
-                          IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => invoices(),
-                                    ));
-                              },
-                              icon: Icon(
-                                Icons.receipt_long,
-                                size: 30,
-                                color: isInsideReceipt
-                                    ? Color.fromARGB(255, 254, 176, 60)
-                                    : Colors.white,
-                              )),
-                          IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => More()),
-                              );
-                            },
-                            icon: Icon(
-                              Icons.more_horiz,
-                              size: 30,
-                              color: isInsideMore
-                                  ? Color.fromARGB(255, 254, 176, 60)
-                                  : Colors.white,
-                            ),
-                          ),
-                        ]),
-                  )
-                ],
-              ),
+                if (title == "تواصل معنا عبر الايميل")
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.mail_outline,
+                      size: 40,
+                      color: Color.fromARGB(255, 254, 177, 57),
+                    ),
+                  ),
+                SizedBox(
+                  width: 10.0,
+                ),
+                Text(
+                  title,
+                  style: new TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                Spacer(),
+                Icon(
+                  Icons.arrow_back_ios_rounded,
+                  textDirection: TextDirection.ltr,
+                  color: Color.fromARGB(255, 254, 177, 57),
+                ),
+              ],
             ),
-          )
-        ],
+          ),
+          onTap: () async {
+            if (title == "تواصل معنا عبر الهاتف") {
+              await FlutterPhoneDirectCaller.callNumber('+966509483390');
+            } else if (title == "تواصل معنا عبر الايميل") {
+              String email = Uri.encodeComponent("taqdda@gmail.com");
+              String subject = Uri.encodeComponent("");
+              String body = Uri.encodeComponent(
+                  "Hi! we're Taqdda team, how we can help you");
+              print(subject); //output: Hello%20Flutter
+              Uri mail = Uri.parse("mailto:$email?subject=$subject&body=$body");
+              if (await launchUrl(mail)) {
+                //email app opened
+              } else {
+                //email app is not opened
+              }
+            }
+          },
+          highlightColor: Color.fromARGB(255, 255, 255, 255),
+        ),
+        decoration: BoxDecoration(
+          color: Color.fromARGB(255, 255, 255, 255),
+          borderRadius: BorderRadius.circular(20.0),
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromARGB(255, 241, 241, 241),
+              offset: Offset.zero,
+              blurRadius: 20.0,
+              blurStyle: BlurStyle.normal,
+            ),
+          ],
+        ),
       ),
     );
   }
