@@ -1,22 +1,19 @@
-import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:taqdaa_application/screens/list_of_stores.dart';
-import '../methods/authentication_services.dart';
 import '../screens/home_page.dart';
 import 'package:flutter/foundation.dart';
-import '../screens/login_page.dart';
 import '../screens/register_page.dart';
-import '../confige/EcommerceApp.dart';
 import '../controller/NotificationApi.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'controller/EcommerceApp.dart';
 import 'model/Offers.dart';
 import 'model/StoreModel.dart';
+import 'model/invoice.dart';
 import 'model/user_model.dart';
 
 void main() async {
@@ -52,11 +49,12 @@ void main() async {
     for (int i = 0; i < documents.length; i++) {
       distance = documents[0].get("kilometers");
       if (distance == "0.1") {
+        ///bug fixes < 0.1
         closest = documents[i].id;
         theIndex = i;
       }
     }
-    // storeName = documents[theIndex].get("StoreName"); //bug fixes
+    //storeName = documents[theIndex].get("StoreName"); //bug fixes
   }
 
   await readClosest();
@@ -73,7 +71,7 @@ void main() async {
           NotificationApi.showScheduledNotification(
               title: 'Taqdaa is waiting for you!',
               body:
-                  'Hey, ${loggedInUser.firstName}\nyou\'re very close from ${data['StoreName']} come and shop with us now!', ////bug fixes StoreName
+                  'Hey, ${loggedInUser.firstName}\nyou\'re very close from ${data['StoreName']} come and shop with us now!',
               payload: 'paylod.nav',
               scheduledDate: DateTime.now().add(Duration(seconds: 1)));
         }
@@ -175,6 +173,20 @@ class MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  static Stream<List<Invoice>> readRequest() => FirebaseFirestore.instance
+      .collection('ReturnRequests${EcommerceApp.loggedInUser.uid}')
+      .where('status', isEqualTo: "Accepted")
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Invoice.fromJson(doc.data())).toList());
+
+  static Stream<List<Store>> readStores() => FirebaseFirestore.instance
+      .collection('Stores')
+      .where('kilometers', isEqualTo: 0.1)
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Store.fromJson(doc.data())).toList());
+
   static Stream readOffers = FirebaseFirestore.instance
       .collection('ActiveOffers')
       .snapshots()
@@ -185,7 +197,6 @@ class MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _getCurrentPosition();
-    readOffers;
     readStores();
     FirebaseFirestore.instance
         .collection("users")
@@ -225,16 +236,36 @@ class MyHomePageState extends State<MyHomePage> {
               if (stores.isNotEmpty) {
                 NotificationApi.showScheduledNotification(
                     title: 'Taqdaa is waiting for you!',
-                    body: 'Hey, ' +
-                        EcommerceApp.userName +
-                        '\nyou\'re very close from ${stores.first.StoreName} come and shop with us now!',
+                    body:
+                        'Hey, ${EcommerceApp.loggedInUser.firstName} \nyour Return request got accepted come and drop it by!',
                     payload: 'paylod.nav',
-                    scheduledDate: DateTime.now().add(Duration(seconds: 3)));
+                    scheduledDate: DateTime.now().add(Duration(seconds: 1)));
               }
-              getRewards();
-              //AddOffers();
-              return HomePage();
-              //return nothing();
+              return StreamBuilder<List<Invoice>>(
+                  stream: readRequest(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final requests = snapshot.data!;
+                      if (requests.isNotEmpty) {
+                        NotificationApi.showScheduledNotification(
+                            title: 'Taqdaa is waiting for you!',
+                            body:
+                                'Hey, ${EcommerceApp.loggedInUser.firstName} \nyou\'re very close from Sephora come and shop with us now!',
+
+                            ///bug fixes
+                            payload: 'paylod.nav',
+                            scheduledDate:
+                                DateTime.now().add(Duration(seconds: 3)));
+                      }
+
+                      getRewards();
+                      return HomePage();
+                    } else if (snapshot.hasError) {
+                      return Text("Some thing went wrong! ${snapshot.error}");
+                    } else {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  });
             } else if (snapshot.hasError) {
               return Text("Some thing went wrong! ${snapshot.error}");
             } else {
@@ -255,9 +286,6 @@ class MyHomePageState extends State<MyHomePage> {
       if (docSnapshot.exists) {
         Map<String, dynamic> data = docSnapshot.data()!;
 
-        // setState(() {
-        //   EcommerceApp.rewards = data['Rewards'];
-        // });
         if (mounted) {
           setState(() {
             EcommerceApp.rewards = data['Rewards'];
@@ -266,11 +294,4 @@ class MyHomePageState extends State<MyHomePage> {
       }
     });
   }
-
-  static Stream<List<Store>> readStores() => FirebaseFirestore.instance
-      .collection('Stores')
-      .where('kilometers', isEqualTo: 0.1)
-      .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => Store.fromJson(doc.data())).toList());
 }

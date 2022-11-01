@@ -35,7 +35,7 @@ class Invoice {
         id: map['ID'],
         store: map['Store'],
         date: map['Date'],
-        // Fulldate: map['Fulldate'],
+        //Fulldate: map['Fulldate'],
         total: map['Total'],
         returnDays: map['returnDays'],
         sub_total: map['sub-total'],
@@ -62,4 +62,17 @@ class Invoice {
       'items': items,
     };
   }
+
+  static Invoice fromJson(Map<String, dynamic> json) => Invoice(json['items'],
+      id: json['ID'],
+      store: json['Store'],
+      date: json['Date'],
+      Fulldate: json['Fulldate'],
+      total: json['Total'],
+      returnDays: json['returnDays'],
+      sub_total: json['sub-total'],
+      vat_total: json['vat-total'],
+      rewardsDiscount: json['rewardsDiscount'],
+      HaveReturnReq: json['HaveReturnReq'],
+      isExpired: json['isExpired']);
 }

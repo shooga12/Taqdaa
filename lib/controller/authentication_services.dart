@@ -1,6 +1,6 @@
 import 'package:either_dart/either.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../error/AuthExceptionHandler.dart';
+import 'AuthExceptionHandler.dart';
 
 class FirebaseAuthMethods {
   FirebaseAuth auth = FirebaseAuth.instance;

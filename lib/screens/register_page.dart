@@ -6,12 +6,7 @@ import '../model/user_model.dart';
 import '../reusable_widget/reusable_widget.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'login_page.dart';
-import 'package:intl/date_symbol_data_file.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/date_symbols.dart';
-import 'package:intl/date_symbol_data_custom.dart';
 import 'package:intl/intl.dart';
-// import '../models/user_model.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -51,9 +46,9 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   String? validatePassword(String? formPassword) {
-    // final numericRegex = RegExp(r'[0-9]');
-    // final CharRegex = RegExp(r'[!@#\$&*~]');
-    // final LetterRegex = RegExp(r'[a-z A-Z]');
+    final numericRegex = RegExp(r'[0-9]');
+    final CharRegex = RegExp(r'[!@#\$&*~]');
+    final LetterRegex = RegExp(r'[a-z A-Z]');
 
     if (formPassword == null || formPassword.isEmpty)
       return 'كلمة المرور مطلوبة';
@@ -72,10 +67,6 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   bool isVisible = false;
-  // bool _isPasswordEightCharacters = false;
-  // bool _hasPasswordOneNumber = false;
-  // bool _hasPasswordOneLetter = false;
-  // bool _hasPasswordOneSpecialChar = false;
 
   @override
   Widget build(BuildContext context) {

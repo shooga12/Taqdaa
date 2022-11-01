@@ -7,6 +7,7 @@ class Product {
   final String RFID;
   final String ProductImage;
   final bool returnable;
+  final String size;
 
   Product(
       {required this.Category,
@@ -16,7 +17,8 @@ class Product {
       required this.quantity,
       required this.RFID,
       required this.ProductImage,
-      required this.returnable});
+      required this.returnable,
+      required this.size});
 
   Map<String, dynamic> toJson() => {
         'Category': Category,
@@ -27,6 +29,7 @@ class Product {
         'RFID': RFID,
         'ProductImage': ProductImage,
         'returnable': returnable,
+        'size': size,
       };
 
   static Product fromJson(Map<String, dynamic> json) => Product(
@@ -38,5 +41,6 @@ class Product {
         RFID: json['RFID'],
         ProductImage: json['ProductImage'],
         returnable: json['returnable'],
+        size: json['size'],
       );
 }

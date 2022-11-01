@@ -51,14 +51,12 @@ dependencies:
   firebase_database: ^9.1.4
   geolocator: ^9.0.2
   geocoding: ^2.0.5
-  
   http: ^0.13.5
   flutter_local_notifications: ^11.0.1
   rxdart: ^0.27.5
   timezone: ^0.9.0
   fluttertoast: ^8.0.9
   flutter_native_timezone: ^2.0.0
-  #flutter_native_splash: ^2.2.9
   http_auth: ^1.0.1
   webview_flutter: ^3.0.4
   flutter_braintree: ^2.3.1
@@ -67,10 +65,9 @@ dependencies:
   url_launcher: ^6.1.6
   intl: ^0.17.0
   carousel_slider: ^4.1.1
-  #infinity_page_view: ^1.0.0
-  #workmanager: ^0.5.1
-  #workmanager: ^0.2.0
-  #background_fetch: ^1.1.2
+  mailto: ^2.0.0
+  flutter_email_sender: ^5.1.0
+  
 
 
 dev_dependencies:

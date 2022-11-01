@@ -9,7 +9,6 @@ class EcommerceApp {
   static String storeId = '';
   static int quantity = 0;
   static int total = 0;
-  static num? returnDays = 0;
   static int finalTotal = -1;
   static String userName = '';
   static String productName = '';
@@ -23,9 +22,11 @@ class EcommerceApp {
   static int NumOfItems = 0;
   static int totalSummary = 0;
   static UserModel loggedInUser = UserModel();
-
+  static int pageIndex = 0;
   static String uid = '';
   final FirebaseAuth auth = FirebaseAuth.instance;
+  static num? returnDays = 0;
+  static bool firstOffer = true;
 
   String getCurrentUser() {
     final User? user = auth.currentUser;

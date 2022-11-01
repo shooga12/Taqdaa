@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import '../controller/EcommerceApp.dart';
 import 'rewardsExchange_view.dart';
-import '../confige/EcommerceApp.dart';
 import '../controller/checkout.dart';
 
 class CheckOutSummary extends StatefulWidget {
@@ -14,10 +14,17 @@ class CheckOutSummary extends StatefulWidget {
 class _CheckOutSummaryState extends State<CheckOutSummary> {
   String collectionName = EcommerceApp().getCurrentUser();
   double vat = (EcommerceApp.total * 15) / 100;
+  int offerDiscpunt = EcommerceApp.totalSummary * 20 ~/ 100;
 
   @override
   Widget build(BuildContext context) {
     String subTotal = (EcommerceApp.total - vat).toString();
+    if (EcommerceApp.storeName == "Sephora" && EcommerceApp.firstOffer ||
+        EcommerceApp.storeName == "H&M" && EcommerceApp.firstOffer) {
+      EcommerceApp.totalSummary =
+          EcommerceApp.totalSummary - EcommerceApp.totalSummary * 20 ~/ 100;
+      EcommerceApp.firstOffer = false;
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -124,7 +131,7 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
             ),
           ),
           SizedBox(
-            height: 250, //313,
+            height: 280, //313,
             child: Column(
               children: [
                 Padding(
@@ -176,6 +183,29 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
                           ],
                         ),
                       ),
+                      if (EcommerceApp.storeName == "Sephora" ||
+                          EcommerceApp.storeName == "H&M")
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 6.0),
+                          child: Row(
+                            children: [
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                child: Text('عرض الإجازة',
+                                    style: TextStyle(
+                                      color: Color.fromARGB(255, 227, 45, 45),
+                                      fontSize: 15,
+                                    )),
+                              ),
+                              Spacer(),
+                              Text('- $offerDiscpunt ريال',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 227, 45, 45),
+                                    fontSize: 15,
+                                  )),
+                            ],
+                          ),
+                        ),
                       if (EcommerceApp.rewardsExchanged)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 6.0),
@@ -391,13 +421,21 @@ class _CheckOutSummaryState extends State<CheckOutSummary> {
             Column(
               children: <Widget>[
                 Text(
-                  " " + product["Category"],
+                  product["Category"],
                   style: new TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
                     color: Color.fromARGB(255, 32, 7, 121),
                   ),
                 ),
+                if (product['size'] != "")
+                  Text(
+                    "المـقاس : " + product['size'],
+                    style: new TextStyle(
+                      fontSize: 14,
+                      color: Color.fromARGB(255, 32, 7, 121),
+                    ),
+                  ),
                 Text(
                   "  السعر : " + product["Price"].toString() + ' ريال',
                   textAlign: TextAlign.center,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+
 import '../model/invoice.dart';
-// import '../models/invoice.dart';
 
 class invoice_afterPayment extends StatefulWidget {
   final invoice;
@@ -18,15 +18,11 @@ class _invoiceafterPaymentState extends State<invoice_afterPayment> {
     this.invoice = invoice;
     //this.itemsList = invoice?.items;
   }
-
-  bool isInsideHome = false;
-  bool isInsideReceipt = true;
-  bool isInsideMore = false;
-  bool isInsideCart = false;
   int count = -1;
 
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
+    int earned = (invoice!.total! * 2) ~/ 100;
+    int offerDiscpunt = invoice!.total! * 20 ~/ 100;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
@@ -163,6 +159,29 @@ class _invoiceafterPaymentState extends State<invoice_afterPayment> {
                   SizedBox(
                     height: 10.0,
                   ),
+                  if (invoice!.store == "Sephora" || invoice!.store == "H&M")
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: Text('عرض الإجازة',
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 227, 45, 45),
+                                fontSize: 15,
+                              )),
+                        ),
+                        Spacer(),
+                        Text('- $offerDiscpunt ريال',
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 227, 45, 45),
+                              fontSize: 15,
+                            )),
+                      ],
+                    ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
                   if (invoice!.rewardsDiscount != 0)
                     Row(
                       mainAxisSize: MainAxisSize.max,
@@ -209,6 +228,28 @@ class _invoiceafterPaymentState extends State<invoice_afterPayment> {
                           ),
                         ],
                       ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: Text('تم اكتسـاب',
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 18,
+                            )),
+                      ),
+                      Spacer(),
+                      Text('+ $earned نقطة',
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontSize: 18,
+                          )),
                     ],
                   ),
                 ],
@@ -258,13 +299,21 @@ class _invoiceafterPaymentState extends State<invoice_afterPayment> {
             Column(
               children: <Widget>[
                 Text(
-                  " " + item.name,
+                  item.name,
                   style: new TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Color.fromARGB(255, 32, 7, 121),
                   ),
                 ),
+                if (item.size != "")
+                  Text(
+                    "المـقاس : " + item.size,
+                    style: new TextStyle(
+                      fontSize: 16,
+                      color: Color.fromARGB(255, 32, 7, 121),
+                    ),
+                  ),
                 Text(
                   "  السعر : " + item.price.toString() + ' ريال',
                   textAlign: TextAlign.center,

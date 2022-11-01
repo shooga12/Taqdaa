@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_braintree/flutter_braintree.dart';
-import '../confige/EcommerceApp.dart';
+import '../controller/EcommerceApp.dart';
 import '../main.dart';
 import 'package:http/http.dart' as http;
 

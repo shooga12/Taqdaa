@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:taqdaa_application/views/scanner_Overlay.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
 import 'package:firebase_database/firebase_database.dart';
-import '../confige/EcommerceApp.dart';
+import '../controller/EcommerceApp.dart';
 import '../screens/ShoppingCart.dart';
 import '../screens/scanBarCode.dart';
 

@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
 import 'package:flutter/material.dart';
-import 'package:taqdaa_application/screens/ShoppingCart.dart';
-import '../confige/EcommerceApp.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
-
+import '../controller/EcommerceApp.dart';
 import '../model/product.dart';
+import 'home_page.dart';
 
 class ScanPage extends StatefulWidget {
   const ScanPage({Key? key}) : super(key: key);
@@ -33,6 +32,7 @@ class _ScanPageState extends State<ScanPage> {
           "المنتج الذي تم مسحه هو :",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
         ),
+
         flexibleSpace: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
@@ -69,6 +69,7 @@ class _ScanPageState extends State<ScanPage> {
       "RFID": product.RFID,
       "ProductImage": product.ProductImage,
       "returnable": product.returnable,
+      "size": product.size,
     });
   }
 
@@ -81,6 +82,7 @@ class _ScanPageState extends State<ScanPage> {
       "quantity": product.quantity,
       "RFID": product.RFID,
       "returnable": product.returnable,
+      "size": product.size,
     });
   }
 
@@ -124,13 +126,21 @@ class _ScanPageState extends State<ScanPage> {
                   Column(
                     children: <Widget>[
                       Text(
-                        "\n " + product['Product Name'],
+                        product['Product Name'],
                         style: new TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.bold,
                           color: Color.fromARGB(255, 32, 7, 121),
                         ),
                       ),
+                      if (product['size'] != "")
+                        Text(
+                          "المـقاس : " + product['size'],
+                          style: new TextStyle(
+                            fontSize: 16,
+                            color: Color.fromARGB(255, 32, 7, 121),
+                          ),
+                        ),
                       Text(
                         "   السعر : " + product['Price'].toString() + " ريال",
                         textAlign: TextAlign.center,
@@ -140,7 +150,7 @@ class _ScanPageState extends State<ScanPage> {
                         ),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
@@ -148,6 +158,7 @@ class _ScanPageState extends State<ScanPage> {
           ),
           Text('\n'),
           //),
+
           Center(
             child: SizedBox(
               width: 200,
@@ -166,6 +177,7 @@ class _ScanPageState extends State<ScanPage> {
                     RFID: product['RFID'],
                     ProductImage: product['ProductImage'],
                     returnable: product['returnable'],
+                    size: product['size'],
                   );
 
                   if (await checkItemExist()) {
@@ -176,9 +188,18 @@ class _ScanPageState extends State<ScanPage> {
                   }
                   EcommerceApp.counter++;
                   EcommerceApp.NumOfItems++;
+                  EcommerceApp.pageIndex = 1;
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    duration: const Duration(seconds: 2),
+                    backgroundColor: Color.fromARGB(255, 135, 155, 190),
+                    content: Text("تم إضافته بالسلة، سنحتفظ به لمدة ساعة",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 16, letterSpacing: 0.8)),
+                    action: null,
+                  ));
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => shoppingCart()),
+                    MaterialPageRoute(builder: (context) => HomePage()),
                   );
                 },
                 child: Text(

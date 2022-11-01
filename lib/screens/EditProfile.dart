@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:taqdaa_application/screens/insideMore.dart';
-import '../confige/EcommerceApp.dart';
 import 'package:intl/intl.dart';
+import '../controller/EcommerceApp.dart';
 import '../views/profile_view.dart';
 
 class Edit extends StatefulWidget {
@@ -430,8 +430,8 @@ class _EditState extends State<Edit> {
                                           child: Text(
                                             "نعم",
                                             style: TextStyle(
-                                              color: Colors.green,
-                                            ),
+                                                color: Color.fromARGB(
+                                                    255, 96, 183, 99)),
                                           )),
                                       TextButton(
                                           onPressed: () {

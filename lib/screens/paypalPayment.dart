@@ -1,8 +1,8 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
-import '../services/paypalServices.dart';
+import '../controller/EcommerceApp.dart';
+import '../controller/paypalServices.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import '../confige/EcommerceApp.dart';
 
 class PaypalPayment extends StatefulWidget {
   final Function onFinish;

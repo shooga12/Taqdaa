@@ -2,13 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:taqdaa_application/main.dart';
+import '../controller/EcommerceApp.dart';
 import '../model/invoice.dart';
-// import '../models/invoice.dart';
-// import '../models/item.dart';
 import '../model/item.dart';
 import '../views/ViewReturnRequests.dart';
-import '../confige/EcommerceApp.dart';
+import 'home_page.dart';
 
 class returnRequest extends StatefulWidget {
   final invoice;
@@ -112,8 +110,8 @@ class _returnRequestState extends State<returnRequest> {
                     itemCount: invoice?.items.length,
                     itemBuilder: (context, index) {
                       var item = invoice?.items[index];
-                      //AddToList(item!);
-                      if (item!.returnable == true) {
+                      AddToList(item!);
+                      if (item.returnable == true) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: Container(
@@ -191,9 +189,15 @@ class _returnRequestState extends State<returnRequest> {
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
-                                          SizedBox(
-                                            height: 5.0,
-                                          ),
+                                          if (item.size != "")
+                                            Text(
+                                              "المـقاس : ${item.size}",
+                                              style: new TextStyle(
+                                                fontSize: 16,
+                                                color: Color.fromARGB(
+                                                    255, 32, 7, 121),
+                                              ),
+                                            ),
                                           Text(
                                             "السعر : " +
                                                 item.price.toString() +
@@ -201,31 +205,7 @@ class _returnRequestState extends State<returnRequest> {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(width: 80),
-
                                       checkQuantity(item)
-                                      // Expanded(
-                                      //   flex: 1,
-                                      //   child: Stack(
-                                      //     alignment: Alignment.center,
-                                      //     children: [
-                                      //       Container(
-                                      //         width: 35,
-                                      //         height: 35,
-                                      //         decoration: new BoxDecoration(
-                                      //           color: Color.fromARGB(
-                                      //               255, 245, 161, 14),
-                                      //           shape: BoxShape.circle,
-                                      //         ),
-                                      //       ),
-                                      //       Text(
-                                      //         item.quantity.toString(),
-                                      //         style: TextStyle(
-                                      //             color: Colors.white),
-                                      //       )
-                                      //     ],
-                                      //   ),
-                                      // )
                                     ],
                                   ),
                                 )
@@ -233,7 +213,6 @@ class _returnRequestState extends State<returnRequest> {
                             ),
                           ),
                         );
-                        AddToList(item);
                       } else {
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -355,10 +334,12 @@ class _returnRequestState extends State<returnRequest> {
                       child: ElevatedButton(
                         onPressed: () async {
                           added = await addToDB();
+                          EcommerceApp.pageIndex = 0;
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MyHomePage(),
+                              builder: (context) =>
+                                  HomePage(), //bug fixes make sure works
                             ),
                           );
                           if (added == true) {
@@ -372,8 +353,32 @@ class _returnRequestState extends State<returnRequest> {
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
-                                      content: Text(
-                                          "تم إرسال الطلب بنجاح! \n سيتم تنبيهك عند قبول الطلب"),
+                                      content: Container(
+                                        height: 300,
+                                        child: Column(
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Image.asset(
+                                                "assets/successfull_payment.png",
+                                                height: 200,
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                "تم إرسال الطلب بنجاح! \n سيتم تنبيهك عند قبول الطلب",
+                                                style: TextStyle(
+                                                    fontSize: 20,
+                                                    color: Color.fromARGB(
+                                                        255, 98, 160, 100)),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                       actions: [
                                         TextButton(
                                           onPressed: () =>
@@ -442,26 +447,37 @@ class _returnRequestState extends State<returnRequest> {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            IconButton(
-                onPressed: () async {},
-                icon: Icon(Icons.remove_circle,
-                    color: Color.fromARGB(255, 195, 195, 195))),
-            Container(
-              width: 35,
-              height: 35,
-              decoration: new BoxDecoration(
-                color: Color.fromARGB(255, 245, 161, 14),
-                shape: BoxShape.circle,
+            Padding(
+              padding: const EdgeInsets.only(right: 85.0),
+              child: IconButton(
+                  onPressed: () async {},
+                  icon: Icon(Icons.remove_circle,
+                      color: Color.fromARGB(255, 195, 195, 195))),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 15.0),
+              child: Container(
+                alignment: Alignment.center,
+                width: 35,
+                height: 35,
+                decoration: new BoxDecoration(
+                  color: Color.fromARGB(255, 245, 161, 14),
+                  shape: BoxShape.circle,
+                ),
+                child: Text(
+                  item.quantity.toString(),
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
-            Text(
-              item.quantity.toString(),
-              style: TextStyle(color: Colors.white),
-            ),
-            IconButton(
+            Padding(
+              padding: const EdgeInsets.only(left: 55.0),
+              child: IconButton(
                 onPressed: () async {},
                 icon: Icon(Icons.add_circle,
-                    color: Color.fromARGB(255, 195, 195, 195))),
+                    color: Color.fromARGB(255, 195, 195, 195)),
+              ),
+            )
           ],
         ),
       );
@@ -471,38 +487,48 @@ class _returnRequestState extends State<returnRequest> {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            IconButton(
-                onPressed: () async {
-                  if (first > 1) {
-                    first--;
-                  }
-                },
-                icon: Icon(Icons.remove_circle,
-                    color: first == 1
-                        ? Color.fromARGB(255, 195, 195, 195)
-                        : Color.fromARGB(255, 118, 171, 223))),
-            Container(
-              width: 35,
-              height: 35,
-              decoration: new BoxDecoration(
-                color: Color.fromARGB(255, 245, 161, 14),
-                shape: BoxShape.circle,
+            Padding(
+              padding: const EdgeInsets.only(right: 85.0),
+              child: IconButton(
+                  onPressed: () async {
+                    if (first > 1) {
+                      first--;
+                    }
+                  },
+                  icon: Icon(Icons.remove_circle,
+                      color: first == 1
+                          ? Color.fromARGB(255, 195, 195, 195)
+                          : Color.fromARGB(255, 118, 171, 223))),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 15.0),
+              child: Container(
+                alignment: Alignment.center,
+                width: 35,
+                height: 35,
+                decoration: new BoxDecoration(
+                  color: Color.fromARGB(255, 245, 161, 14),
+                  shape: BoxShape.circle,
+                ),
+                child: Text(
+                  first.toString(),
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
-            Text(
-              first.toString(),
-              style: TextStyle(color: Colors.white),
+            Padding(
+              padding: const EdgeInsets.only(left: 55.0),
+              child: IconButton(
+                  onPressed: () async {
+                    if (first < item.quantity) {
+                      first++;
+                    }
+                  },
+                  icon: Icon(Icons.add_circle,
+                      color: first == item.quantity
+                          ? Color.fromARGB(255, 195, 195, 195)
+                          : Color.fromARGB(255, 118, 171, 223))),
             ),
-            IconButton(
-                onPressed: () async {
-                  if (first < item.quantity) {
-                    first++;
-                  }
-                },
-                icon: Icon(Icons.add_circle,
-                    color: first == item.quantity
-                        ? Color.fromARGB(255, 195, 195, 195)
-                        : Color.fromARGB(255, 118, 171, 223))),
           ],
         ),
       );

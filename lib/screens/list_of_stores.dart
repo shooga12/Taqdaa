@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:taqdaa_application/confige/EcommerceApp.dart';
+import 'package:taqdaa_application/controller/EcommerceApp.dart';
 import 'package:taqdaa_application/screens/scanBarCode.dart';
 import '../main.dart';
 import '../model/StoreModel.dart';
@@ -129,25 +129,29 @@ class ListOfStores2State extends State<ListOfStores2> {
                           vertical: 8.0, horizontal: 10),
                       child: TextField(
                         decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                              // borderSide: const BorderSide(
-                              //     color: Colors.orange, width: 2.0)
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                              // borderSide: const BorderSide(
-                              //     color: Colors.orange, width: 2.0),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                              // borderSide: const BorderSide(
-                              //     color: Colors.orange, width: 2.0),
-                            ),
-                            prefixIcon: Icon(Icons.search),
-                            hintText: 'إبحث عن إسم عرض محدد'),
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            // borderSide: const BorderSide(
+                            //     color: Colors.orange, width: 2.0)
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            // borderSide: const BorderSide(
+                            //     color: Colors.orange, width: 2.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            // borderSide: const BorderSide(
+                            //     color: Colors.orange, width: 2.0),
+                          ),
+                          prefixIcon: Icon(Icons.search),
+                          hintText: 'إبحث عن إسم متجر محدد',
+                          hintStyle: TextStyle(
+                              color: Color.fromARGB(236, 113, 113, 117)
+                                  .withOpacity(0.9)),
+                        ),
                         onChanged: (val) {
                           setState(() {
                             SearchName = val;
@@ -161,7 +165,7 @@ class ListOfStores2State extends State<ListOfStores2> {
                     height: 500,
                     width: 360,
                     child: StreamBuilder<List<Store>>(
-                        stream: MyHomePageState.readStores(),
+                        stream: readStores(),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             final stores = snapshot.data!;
@@ -273,7 +277,8 @@ class ListOfStores2State extends State<ListOfStores2> {
                   size: 26,
                   Icons.document_scanner_outlined,
                   textDirection: TextDirection.ltr,
-                  color: Color.fromARGB(255, 254, 177, 57),
+                  color: Color.fromARGB(255, 95, 137, 202),
+                  // Color.fromARGB(255, 254, 177, 57),
                 ),
                 SizedBox(
                   width: 7,
@@ -343,6 +348,13 @@ class ListOfStores2State extends State<ListOfStores2> {
       ),
     );
   }
+
+  static Stream<List<Store>> readStores() => FirebaseFirestore.instance
+      .collection('Stores')
+      .where('kilometers')
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Store.fromJson(doc.data())).toList());
 
   static Future saveUserTotal(var total) async {
     final QuerySnapshot result = await FirebaseFirestore.instance

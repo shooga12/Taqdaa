@@ -4,7 +4,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_braintree/flutter_braintree.dart';
 import 'package:taqdaa_application/screens/invoice_afterPayment.dart';
-import '../confige/EcommerceApp.dart';
 import '../main.dart';
 import 'package:http/http.dart' as http;
 import 'dart:math';
@@ -12,13 +11,15 @@ import '../model/invoice.dart';
 import '../model/item.dart';
 import 'package:intl/intl.dart';
 
+import 'EcommerceApp.dart';
+
 class checkOut {
   var url = 'https://us-central1-taqdaa-10e41.cloudfunctions.net/paypalPayment';
 
   User? user = FirebaseAuth.instance.currentUser;
   String collectionName = EcommerceApp().getCurrentUser();
   final RFIDs = [];
-  String data1 = "";
+  final barcodes = [];
 
   void payment(BuildContext context) async {
     var request = BraintreeDropInRequest(
@@ -33,12 +34,12 @@ class checkOut {
     if (result != null) /*Successful Payment*/ {
       int reward = 0;
       reward = (EcommerceApp.total * 2) ~/ 100;
-      //make sure works
 
       String urli =
           '$url?payment_method_nonce=${result.paymentMethodNonce.nonce}&device_data=${result.deviceData}';
 
       final http.Response response = await http.post(Uri.parse(urli));
+      EcommerceApp.pageIndex = 0;
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => MyHomePage()),
@@ -54,6 +55,8 @@ class checkOut {
       EcommerceApp.haveItems = false;
       EcommerceApp.NumOfItems = 0;
       EcommerceApp.counter = 0;
+      EcommerceApp.discount = 0;
+      EcommerceApp.firstOffer = false;
       showDialog(
           context: context,
           builder: (context) {
@@ -90,8 +93,7 @@ class checkOut {
                       await deleteCart();
                       await deleteCartDublicate();
                       await saveUserTotal(0);
-                      await saveUserRewards(
-                          reward); //bug fixes rewards not gained
+                      await saveUserRewards(reward);
                     },
                     child: const Text('حسنًا'),
                   )
@@ -152,6 +154,7 @@ class checkOut {
     final List<DocumentSnapshot> documents = result.docs;
     for (int i = 0; i < documents.length; i++) {
       RFIDs.add(documents[i].get("RFID"));
+      barcodes.add(documents[i].get("Item_number"));
     }
   }
 
@@ -184,13 +187,14 @@ class checkOut {
         quantity: documents[i].get("quantity"),
         price: documents[i].get("Price"),
         returnable: documents[i].get("returnable"),
+        size: documents[i].get("size"),
       ).toMap());
     }
     FirebaseFirestore.instance.collection('${collectionName}Invoices').add({
       "ID": randomNumber.toString(),
       "Date": todayDate,
       "Fulldate": now,
-      "Total": EcommerceApp.total - EcommerceApp.discount.toInt(),
+      "Total": EcommerceApp.totalSummary - EcommerceApp.discount.toInt(),
       'returnDays': EcommerceApp.returnDays,
       "Store": EcommerceApp.storeName,
       "items": items,
@@ -208,7 +212,7 @@ class checkOut {
       "ID": randomNumber.toString(),
       "Date": todayDate,
       "Fulldate": now,
-      "Total": EcommerceApp.total - EcommerceApp.discount.toInt(),
+      "Total": EcommerceApp.totalSummary - EcommerceApp.discount.toInt(),
       "Store": EcommerceApp.storeName,
       "items": items,
       'sub-total': subTotal,
@@ -217,8 +221,6 @@ class checkOut {
       'HaveReturnReq': false,
       'status': '',
       'cutomerphone': EcommerceApp.loggedInUser.phonenumber
-
-      ///bug fixes make sure works
     });
 
     Invoice invoice = new Invoice(items,

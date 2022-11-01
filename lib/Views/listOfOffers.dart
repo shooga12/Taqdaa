@@ -1,9 +1,5 @@
-import 'dart:ui';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import '../model/Offers.dart';
 
 class ListOfOffers extends StatefulWidget {
@@ -32,7 +28,7 @@ class _ListOfOffersState extends State<ListOfOffers> {
         automaticallyImplyLeading: true,
         title: Text(
           "جميع العروض",
-          style: TextStyle(fontSize: 24),
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
         ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
@@ -62,25 +58,18 @@ class _ListOfOffersState extends State<ListOfOffers> {
                             fillColor: Colors.white,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20.0),
-                              // borderSide: const BorderSide(
-                              //     color: Colors.orange, width: 2.0)
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20.0),
-                              // borderSide: const BorderSide(
-                              //     color: Colors.orange, width: 2.0),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20.0),
-                              // borderSide: const BorderSide(
-                              //     color: Colors.orange, width: 2.0),
                             ),
                             prefixIcon: Icon(Icons.search),
                             hintText: 'إبحث عن إسم عرض محدد'),
                         onChanged: (val) {
                           setState(() {
                             SearchName = val;
-                            //.replaceAll(' ', '');
                           });
                         },
                       ),
@@ -93,8 +82,6 @@ class _ListOfOffersState extends State<ListOfOffers> {
                         stream: readOffers(),
                         builder: (context, snapshot) {
                           if (snapshot.hasData && snapshot.data!.isEmpty) {
-                            //enable = false;
-                            ////////empty
                             return Nodata();
                           }
                           if (snapshot.hasData) {
@@ -181,8 +168,7 @@ class _ListOfOffersState extends State<ListOfOffers> {
                   Offer.OfferImg
                   //data['OfferImg'],
                   ,
-                  width: 255,
-                  height: 120,
+                  height: 160,
                 ),
                 Text(
                     Offer.offerText
@@ -191,66 +177,9 @@ class _ListOfOffersState extends State<ListOfOffers> {
                     style: TextStyle(
                       fontSize: 20,
                     ))
-                // Row(
-                //   children: <Widget>[
-                //     Text(
-                //       data['offerText'],
-                //       style: new TextStyle(
-                //         fontSize: 16,
-                //         color: Color.fromARGB(255, 77, 76, 76),
-                //       ),
-                //     ),
-                //   ],
-                // ),
-                // .SizedBox(
-                //   width: 7,
-                // )
               ],
             ),
           ),
-          // onTap: () async {
-          //   EcommerceApp.storeId = store.StoreId;
-          //   if (EcommerceApp.storeName == "") {
-          //     EcommerceApp.storeName = store.StoreName;
-          //     // Navigator.push(
-          //     //   context,
-          //     //   MaterialPageRoute(builder: (context) => scanner()),
-          //     // );
-          //     scan(context);
-          //   } else if (EcommerceApp.haveItems &&
-          //       EcommerceApp.storeName != store.StoreName) {
-          //     showDialog(
-          //         context: context,
-          //         builder: (context) {
-          //           return AlertDialog(
-          //               content: Text(
-          //                   ".${EcommerceApp.storeName}عذرًا، لديك طلب بالفعل في"),
-          //               actions: [
-          //                 ElevatedButton(
-          //                     onPressed: () async {
-          //                       EcommerceApp.storeName = "";
-          //                       await ListOfStores2State.deleteCart();
-          //                       await ListOfStores2State.deleteCartDublicate();
-          //                       await ListOfStores2State.saveUserTotal(0);
-          //                       Navigator.pop(context, 'حسنًا');
-          //                     },
-          //                     child:
-          //                         Text(" ${EcommerceApp.storeName} إلغاء طلب")),
-          //                 TextButton(
-          //                   onPressed: () => Navigator.pop(context, 'حسنًا'),
-          //                   child: const Text('حسنًا'),
-          //                 ),
-          //               ]);
-          //         });
-          //   } else {
-          //     EcommerceApp.storeName = store.StoreName;
-          //     // Navigator.push(
-          //     //   context,
-          //     //   MaterialPageRoute(builder: (context) => scanner()),
-          //     // );
-          //     scan(context);
-          //   }
-          // },
           highlightColor: Color.fromARGB(255, 255, 255, 255),
         ),
         decoration: BoxDecoration(

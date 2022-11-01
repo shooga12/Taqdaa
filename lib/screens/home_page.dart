@@ -1,11 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-//import 'package:infinity_page_view/infinity_page_view.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:taqdaa_application/confige/EcommerceApp.dart';
+import 'package:taqdaa_application/controller/EcommerceApp.dart';
 import 'package:taqdaa_application/views/NoItmesCart.dart';
 import 'package:taqdaa_application/views/rewards_view.dart';
 import 'package:taqdaa_application/views/scanner.dart';
@@ -14,7 +11,7 @@ import '../main.dart';
 import '../model/StoreModel.dart';
 import 'ShoppingCart.dart';
 import '../views/invoices_view.dart';
-import 'listOfOffers.dart';
+import '../Views/listOfOffers.dart';
 import 'list_of_stores.dart';
 import 'insideMore.dart';
 import '../model/Offers.dart';
@@ -35,16 +32,16 @@ class _HomePageState extends State<HomePage> {
   List<Offer> OffersList = [];
   bool ImagesAndText = false;
 
-  // Stream readOffers = FirebaseFirestore.instance
-  //     .collection('ActiveOffers')
-  //     .snapshots()
-  //     .map(
-  //         (list) => list.docs.map((doc) => doc.data()).toList()); //ActiveOffers
+  Stream readOffers = FirebaseFirestore.instance
+      .collection('ActiveOffers')
+      .snapshots()
+      .map(
+          (list) => list.docs.map((doc) => doc.data()).toList()); //ActiveOffers
 
   double pageOffset = 0;
   @override
   void initState() {
-    //readOffers;
+    readOffers;
 
     controller
       ..addListener(() {
@@ -77,7 +74,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             SingleChildScrollView(
               child: Container(
-                height: 900,
+                height: 950,
                 child: Column(
                   children: [
                     // if (empty == false)
@@ -153,7 +150,7 @@ class _HomePageState extends State<HomePage> {
                                       height: 230,
                                       width: 360,
                                       child: StreamBuilder(
-                                          stream: MyHomePageState.readOffers,
+                                          stream: readOffers,
                                           builder: (context, snapshot) {
                                             // if (snapshot.hasData &&
                                             //     snapshot.data!.isEmpty) {
@@ -362,7 +359,7 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.only(
-                                                top: 35, right: 330),
+                                                top: 35, right: 300),
                                             child: Icon(
                                               Icons.arrow_back_ios_rounded,
                                               textDirection: TextDirection.ltr,
