@@ -496,35 +496,62 @@ class _RegisterPageState extends State<RegisterPage> {
       try {
         await _auth
             .createUserWithEmailAndPassword(email: email, password: password)
-            .then((value) => {postDetailsToFirestore()})
-            .catchError((e) {
-          Fluttertoast.showToast(msg: e!.message);
-        });
-      } on FirebaseAuthException catch (error) {
-        switch (error.code) {
-          case "invalid-email":
-            errorMsg = "Your email address appears to be malformed.";
-            break;
-          case "wrong-password":
-            errorMsg = "Your password is wrong.";
-            break;
-          case "user-not-found":
-            errorMsg = "User with this email doesn't exist.";
-            break;
-          case "user-disabled":
-            errorMsg = "User with this email has been disabled.";
-            break;
-          case "too-many-requests":
-            errorMsg = "Too many requests";
-            break;
-          case "operation-not-allowed":
-            errorMsg = "Signing in with Email and Password is not enabled.";
-            break;
-          default:
-            errorMsg = "An undefined Error happened.";
-        }
-        Fluttertoast.showToast(msg: errorMsg);
-        print(error.code);
+            .then((value) => {postDetailsToFirestore()});
+      } on FirebaseAuthException catch (e) {
+        print(e);
+        Map<String, String?> codeResponses = {
+          // Re-auth responses
+          "user-mismatch": 'المستخدم غير متطابق',
+          "user-not-found": 'لم يتم العثور على المستخدم',
+          "invalid-credential": 'invalid credential',
+          "invalid-email": 'الايميل غير موجود',
+          "wrong-password": 'كلمة المرور الحالية خاطئة',
+          "invalid-verification-code": 'رمز التحقق غير صالح',
+          "invalid-verification-id": 'معرّف التحقق غير صالح',
+          "user-disabled": 'المستخدم لهذا الايميل معطّل',
+          "too-many-requests": 'طلبات كثيرة',
+          "operation-not-allowed":
+              'تسجيل الدخول من خلال الايميل وكلمة المرور غير مسموح',
+          // Update password error codes
+          "weak-password": 'كلمة المرور غير قوية',
+          "requires-recent-login": 'يتطلب تسجيل دخول حديث'
+        };
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                  content: Text(codeResponses[e.code]!),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, 'حسنًا'),
+                      child: const Text('حسنًا'),
+                    )
+                  ]);
+            });
+        // switch (error.code) {
+        //   case "invalid-email":
+        //     errorMsg = "Your email address appears to be malformed.";
+        //     break;
+        //   case "wrong-password":
+        //     errorMsg = "Your password is wrong.";
+        //     break;
+        //   case "user-not-found":
+        //     errorMsg = "User with this email doesn't exist.";
+        //     break;
+        //   case "user-disabled":
+        //     errorMsg = "User with this email has been disabled.";
+        //     break;
+        //   case "too-many-requests":
+        //     errorMsg = "Too many requests";
+        //     break;
+        //   case "operation-not-allowed":
+        //     errorMsg = "Signing in with Email and Password is not enabled.";
+        //     break;
+        //   default:
+        //     errorMsg = "An undefined Error happened.";
+        // }
+        // Fluttertoast.showToast(msg: errorMsg);
+        // print(error.code);
       }
     }
   }
@@ -547,7 +574,19 @@ class _RegisterPageState extends State<RegisterPage> {
         .collection("users")
         .doc(user.uid)
         .set(userModel.toMap());
-    Fluttertoast.showToast(msg: "Account created successfully :) ");
+        
+    showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                content: Text('تم تسجيل الدخول بنجاح'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'حسنًا'),
+                    child: const Text('حسنًا'),
+                  )
+                ]);
+          });
 
     Navigator.pushAndRemoveUntil((context),
         MaterialPageRoute(builder: (context) => LoginPage()), (route) => false);

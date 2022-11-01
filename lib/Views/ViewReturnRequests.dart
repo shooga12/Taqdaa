@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import '../model/returnModel.dart';
 //import '../models/returnModel.dart';
 import 'returnReqDetails.dart';
+import 'package:status_change/status_change.dart';
+import 'package:date_count_down/date_count_down.dart';
 
 class ViewReturnReq extends StatefulWidget {
   const ViewReturnReq({super.key});
@@ -19,6 +21,33 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
 
   List<returnInvoice> ReturnInvoices = [];
   bool noReturnReq = false;
+
+  // case 1 : pending
+  // case 2 : declined
+  // case 3 : ready to pickup 
+  // case 4 : picked up
+  // case 5 : not picked (date expired)
+
+  bool inCase1 = true;
+  bool inCase2 = false;
+  bool inCase3 = false;
+  bool inCase4 = false;
+  bool inCase5 = false;
+
+
+  DateTime getDueDate() {
+    DateTime startTime = DateTime.now(); //----------- approved/accepted date
+    Duration duration = Duration(days: 7);
+
+    DateTime endDate = startTime.add(duration);
+    return endDate;
+  }
+
+  static int getDaysRemain(endDate) {
+    Duration diff = endDate.difference(DateTime.now());
+    int daysRemain = diff.inDays;
+    return daysRemain;
+  }
 
   @override
   void didChangeDependencies() {
@@ -86,10 +115,104 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
                                 fontWeight: FontWeight.normal,
                               ),
                             ),
+
                           ),
                         ],
+
                       ),
+            //           child: Column(
+            //             children: [
+            //               if (inCase1)
+            //                 Row(
+            //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //                   children: [
+            //                     Text('مقبول'),
+            //                     Text('جاهز للاستلام'),
+            //                     Text('       '),
+            //                   ],
+            //                 ),
+            //               const SizedBox(
+            //                 height: 10,
+            //               ),
+            //               if (inCase1)
+            //                 Row(
+            //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //                   children: [
+            //                     const CircleAvatar(
+            //                       backgroundColor:
+            //                           Color.fromARGB(255, 24, 139, 78),
+            //                       radius: 14,
+            //                       child: Icon(
+            //                         Icons.done,
+            //                         size: 16,
+            //                       ),
+            //                     ),
+            //                     Flexible(
+            //                       flex: 1,
+            //                       child: Container(
+            //                         margin: const EdgeInsets.only(
+            //                           left: 8,
+            //                           right: 8,
+            //                         ),
+            //                         color: Color.fromARGB(255, 24, 139, 78),
+            //                         height: 2,
+            //                       ),
+            //                     ),
+            //                     const CircleAvatar(
+            //                       backgroundColor:
+            //                           Color.fromARGB(255, 24, 139, 78),
+            //                       radius: 14,
+            //                       child: Icon(
+            //                         Icons.store_mall_directory,
+            //                         size: 16,
+            //                       ),
+            //                     ),
+            //                     Flexible(
+            //                       flex: 1,
+            //                       child: Container(
+            //                         margin: const EdgeInsets.only(
+            //                           left: 8,
+            //                           right: 8,
+            //                         ),
+            //                         color: const Color.fromARGB(
+            //                             255, 197, 202, 233),
+            //                         height: 2,
+            //                       ),
+            //                     ),
+            //                     const CircleAvatar(
+            //                       backgroundColor:
+            //                           Color.fromARGB(255, 197, 202, 233),
+            //                       radius: 8,
+            //                     ),
+            //                   ],
+            //                 ),
+            //               if (inCase1) 
+            //                 const SizedBox(
+            //                 height: 10,
+            //               ),
+            //                 Padding(
+            //                   padding: const EdgeInsets.all(12.0),
+            //                   child: Row(
+            //                     mainAxisAlignment:
+            //                         MainAxisAlignment.spaceBetween,
+            //                     children: [
+                               
+            //                       Center(child: Text((
+            //   '*  يرجى ملاحظة أنه لديك مهلة 7 أيام من تاريخ قبول الطلب \n '
+            //  '  آخر يوم لاستلام المنتجات :   '+getDueDate().day.toString()+'/'+getDueDate().month.toString()+'/'+getDueDate().year.toString()+'\n'
+            //   +'   الأيام المتبقية :  '+(getDaysRemain(getDueDate())+1).toString()),) )
+            //                     ],
+            //                   ),
+            //                 ),
+            //             ],
+            //           ),
                     ),
+
+                  //--------
+
+                  // preview status here -test-
+
+                  //---------
                   ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -148,71 +271,435 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
                                       const SizedBox(
                                         height: 20,
                                       ),
+                                      //-----------------------------------------------------------------------------------------
+
                                       Column(
                                         children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text('تحت الدراسة'),
-                                              // Text('جاهزة للاستلام'),
-                                              // Text('تم الإسترجاع'),
-                                            ],
-                                          ),
+                                          if (inCase1)
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text('تحت الدراسة'),
+                                                // Text('جاهزة للاستلام'),
+                                                // Text('تم الإسترجاع'),
+                                              ],
+                                            ),
+                                          if (inCase2)
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text('تحت الدراسة'),
+                                                Text('مرفوض '),
+                                                Text('إغلاق الطلب'),
+                                              ],
+                                            ),
+                                          if (inCase3)
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text('مقبول'),
+                                                Text('جاهز للاستلام'),
+                                                Text('       '),
+                                              ],
+                                            ),
+                                          if (inCase4)
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text('مقبول'),
+                                                Text('    جاهز للاستلام'),
+                                                Text('تم الاستلام'),
+                                              ],
+                                            ),
+                                          if (inCase5)
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text('مقبول'),
+                                                Text(
+                                                  '     جاهز للاستلام',
+                                                ),
+                                                Text('  لم يتم الاستلام'),
+                                                Text('إغلاق الطلب'),
+                                              ],
+                                            ),
                                           const SizedBox(
                                             height: 10,
                                           ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              const CircleAvatar(
-                                                backgroundColor: Color.fromARGB(
-                                                    255, 197, 202, 233),
-                                                radius: 14,
-                                                child: Icon(
-                                                  Icons.timelapse,
-                                                  size: 16,
-                                                ),
-                                              ),
-                                              Flexible(
-                                                flex: 1,
-                                                child: Container(
-                                                  margin: const EdgeInsets.only(
-                                                    left: 8,
-                                                    right: 8,
+                                          if (inCase1)
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                const CircleAvatar(
+                                                  backgroundColor:
+                                                      Color.fromARGB(
+                                                          255, 197, 202, 233),
+                                                  radius: 14,
+                                                  child: Icon(
+                                                    Icons.timelapse,
+                                                    size: 16,
+                                                    color: Colors.white
                                                   ),
-                                                  color: const Color.fromARGB(
-                                                      255, 197, 202, 233),
-                                                  height: 2,
                                                 ),
-                                              ),
-                                              const CircleAvatar(
-                                                backgroundColor: Color.fromARGB(
-                                                    255, 197, 202, 233),
-                                                radius: 8,
-                                              ),
-                                              Flexible(
-                                                flex: 1,
-                                                child: Container(
-                                                  margin: const EdgeInsets.only(
-                                                    left: 8,
-                                                    right: 8,
+                                                Flexible(
+                                                  flex: 1,
+                                                  child: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                      left: 8,
+                                                      right: 8,
+                                                    ),
+                                                    color: const Color.fromARGB(
+                                                        255, 197, 202, 233),
+                                                    height: 2,
                                                   ),
-                                                  color: const Color.fromARGB(
-                                                      255, 197, 202, 233),
-                                                  height: 2,
                                                 ),
-                                              ),
-                                              const CircleAvatar(
-                                                backgroundColor: Color.fromARGB(
-                                                    255, 197, 202, 233),
-                                                radius: 8,
-                                              ),
-                                            ],
-                                          ),
+                                                const CircleAvatar(
+                                                  backgroundColor:
+                                                      Color.fromARGB(
+                                                          255, 197, 202, 233),
+                                                  radius: 8,
+                                                ),
+                                                Flexible(
+                                                  flex: 1,
+                                                  child: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                      left: 8,
+                                                      right: 8,
+                                                    ),
+                                                    color: const Color.fromARGB(
+                                                        255, 197, 202, 233),
+                                                    height: 2,
+                                                  ),
+                                                ),
+                                                const CircleAvatar(
+                                                  backgroundColor:
+                                                      Color.fromARGB(
+                                                          255, 197, 202, 233),
+                                                  radius: 8,
+                                                ),
+                                              ],
+                                            ),
+                                          if (inCase2)
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                const CircleAvatar(
+                                                  backgroundColor:
+                                                      Color.fromARGB(
+                                                          255, 197, 202, 233),
+                                                  radius: 14,
+                                                  child: Icon(
+                                                    Icons.timelapse,
+                                                    size: 16,
+                                                    color: Colors.white
+                                                  ),
+                                                ),
+                                                Flexible(
+                                                  flex: 1,
+                                                  child: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                      left: 8,
+                                                      right: 8,
+                                                    ),
+                                                    color: Color.fromARGB(
+                                                        255, 21, 48, 226),
+                                                    height: 2,
+                                                  ),
+                                                ),
+                                                const CircleAvatar(
+                                                  backgroundColor:
+                                                      Color.fromARGB(
+                                                          255, 255, 106, 106),
+                                                  radius: 14,
+                                                  child: Icon(
+                                                    Icons.error_outline,
+                                                    size: 16,
+                                                    color: Colors.white
+                                                  ),
+                                                ),
+                                                Flexible(
+                                                  flex: 1,
+                                                  child: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                      left: 8,
+                                                      right: 8,
+                                                    ),
+                                                    color: const Color.fromARGB(
+                                                        255, 255, 106, 106),
+                                                    height: 2,
+                                                  ),
+                                                ),
+                                                const CircleAvatar(
+                                                  backgroundColor:
+                                                      Color.fromARGB(
+                                                          255, 255, 106, 106),
+                                                  radius: 14,
+                                                  child: Icon(
+                                                    Icons.close,
+                                                    size: 16,
+                                                    color: Colors.white
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          if (inCase3) // ---- display date
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                const CircleAvatar(
+                                                  backgroundColor:
+                                                      Color.fromARGB(
+                                                          255, 24, 139, 78),
+                                                  radius: 14,
+                                                  child: Icon(
+                                                    Icons.done,
+                                                    size: 16,
+                                                    color: Colors.white
+                                                  ),
+                                                ),
+                                                Flexible(
+                                                  flex: 1,
+                                                  child: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                      left: 8,
+                                                      right: 8,
+                                                    ),
+                                                    color: Color.fromARGB(
+                                                        255, 24, 139, 78),
+                                                    height: 2,
+                                                  ),
+                                                ),
+                                                const CircleAvatar(
+                                                  backgroundColor:
+                                                      Color.fromARGB(
+                                                          255, 24, 139, 78),
+                                                  radius: 14,
+                                                  child: Icon(
+                                                    Icons.store_mall_directory,
+                                                    size: 16,
+                                                    color: Colors.white
+                                                  ),
+                                                ),
+                                                Flexible(
+                                                  flex: 1,
+                                                  child: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                      left: 8,
+                                                      right: 8,
+                                                    ),
+                                                    color: const Color.fromARGB(
+                                                        255, 197, 202, 233),
+                                                    height: 2,
+                                                  ),
+                                                ),
+                                                const CircleAvatar(
+                                                  backgroundColor:
+                                                      Color.fromARGB(
+                                                          255, 197, 202, 233),
+                                                  radius: 8,
+                                                ),
+                                              ],
+                                            ),
+                                            //  +++++++++++++++++++++++++++++++
+                                            const SizedBox(
+                            height: 10,
+                          ),
+                            Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                               
+                                  Center(child: Text((
+              '*  يرجى ملاحظة أنه لديك مهلة 7 أيام من تاريخ قبول الطلب \n '
+             '  آخر يوم لاستلام المنتجات :   '+getDueDate().day.toString()+'/'+getDueDate().month.toString()+'/'+getDueDate().year.toString()+'\n'
+              +'   الأيام المتبقية :  '+(getDaysRemain(getDueDate())+1).toString()),) )
+                                ],
+                              ),
+                            ),
+                                          if (inCase4)
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                const CircleAvatar(
+                                                  backgroundColor:
+                                                      Color.fromARGB(
+                                                          255, 24, 139, 78),
+                                                  radius: 14,
+                                                  child: Icon(
+                                                    Icons.done,
+                                                    size: 16,
+                                                    color: Colors.white
+                                                  ),
+                                                ),
+                                                Flexible(
+                                                  flex: 1,
+                                                  child: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                      left: 8,
+                                                      right: 8,
+                                                    ),
+                                                    color: Color.fromARGB(
+                                                        255, 24, 139, 78),
+                                                    height: 2,
+                                                  ),
+                                                ),
+                                                const CircleAvatar(
+                                                  backgroundColor:
+                                                      Color.fromARGB(
+                                                          255, 24, 139, 78),
+                                                  radius: 14,
+                                                  child: Icon(
+                                                    Icons.store_mall_directory,
+                                                    size: 16,
+                                                    color: Colors.white
+                                                  ),
+                                                ),
+                                                Flexible(
+                                                  flex: 1,
+                                                  child: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                      left: 8,
+                                                      right: 8,
+                                                    ),
+                                                    color: const Color.fromARGB(
+                                                        255, 24, 139, 78),
+                                                    height: 2,
+                                                  ),
+                                                ),
+                                                const CircleAvatar(
+                                                  backgroundColor:
+                                                      Color.fromARGB(
+                                                          255, 24, 139, 78),
+                                                  radius: 14,
+                                                  child: Icon(
+                                                    Icons.done_all_rounded,
+                                                    size: 16,
+                                                    color: Colors.white
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          if (inCase5)
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                const CircleAvatar(
+                                                  backgroundColor:
+                                                      Color.fromARGB(
+                                                          255, 24, 139, 78),
+                                                  radius: 14,
+                                                  child: Icon(Icons.done,
+                                                      size: 16,
+                                                      color: Colors.white),
+                                                ),
+                                                Flexible(
+                                                  flex: 1,
+                                                  child: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                      left: 8,
+                                                      right: 8,
+                                                    ),
+                                                    color: Color.fromARGB(
+                                                        255, 24, 139, 78),
+                                                    height: 2,
+                                                  ),
+                                                ),
+                                                const CircleAvatar(
+                                                  backgroundColor:
+                                                      Color.fromARGB(
+                                                          255, 24, 139, 78),
+                                                  radius: 14,
+                                                  child: Icon(
+                                                      Icons
+                                                          .store_mall_directory,
+                                                      size: 16,
+                                                      color: Colors.white),
+                                                ),
+                                                Flexible(
+                                                  flex: 1,
+                                                  child: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                      left: 6,
+                                                      right: 6,
+                                                    ),
+                                                    color: const Color.fromARGB(
+                                                        255, 24, 139, 78),
+                                                    height: 2,
+                                                  ),
+                                                ),
+                                                const CircleAvatar(
+                                                  backgroundColor:
+                                                      Color.fromARGB(
+                                                          255, 139, 24, 32),
+                                                  radius: 14,
+                                                  child: Icon(
+                                                      Icons.error_rounded,
+                                                      size: 16,
+                                                      color: Colors.white),
+                                                ),
+                                                Flexible(
+                                                  flex: 1,
+                                                  child: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                      left: 6,
+                                                      right: 6,
+                                                    ),
+                                                    color: const Color.fromARGB(
+                                                        255, 139, 24, 32),
+                                                    height: 2,
+                                                  ),
+                                                ),
+                                                const CircleAvatar(
+                                                  backgroundColor:
+                                                      Color.fromARGB(
+                                                          255, 139, 24, 32),
+                                                  radius: 14,
+                                                  child: Icon(
+                                                    Icons.close_rounded,
+                                                    size: 16,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                         ],
                                       ),
+
+                                      //-----------------------------------------------------------------------------------------
+
                                       Padding(
                                         padding: const EdgeInsets.only(
                                             top: 6,

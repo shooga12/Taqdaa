@@ -29,67 +29,54 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  cloud_firestore: ^3.4.6
+  cupertino_icons: ^1.0.2
+  date_count_down: ^2.1.0
+  either_dart: ^0.2.0
+  firebase_auth: ^3.7.0
+  firebase_core: ^1.21.1
+  firebase_database: ^9.1.4
+  firebase_storage: ^10.3.8
   flutter:
     sdk: flutter
-
-  flutter_localizations: # Add this line
-    sdk: flutter         # Add this line
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  firebase_core: ^1.21.1
-  firebase_auth: ^3.7.0
-  cloud_firestore: ^3.4.6
-  provider: ^6.0.3
-  google_fonts: ^3.0.1
-  firebase_storage: ^10.3.8
-  mobile_scanner: ^2.0.0
   flutter_barcode_scanner: ^2.0.0
-  either_dart: ^0.2.0
-  form_field_validator: ^1.1.0
-  firebase_database: ^9.1.4
-  geolocator: ^9.0.2
-  geocoding: ^2.0.5
-  http: ^0.13.5
-  flutter_local_notifications: ^11.0.1
-  rxdart: ^0.27.5
-  timezone: ^0.9.0
-  fluttertoast: ^8.0.9
-  flutter_native_timezone: ^2.0.0
-  #flutter_native_splash: ^2.2.9
-  http_auth: ^1.0.1
-  webview_flutter: ^3.0.4
   flutter_braintree: ^2.3.1
+  flutter_local_notifications: ^11.0.1
+  flutter_localizations:
+    sdk: flutter
+  flutter_native_timezone: ^2.0.0
   flutter_paypal: ^0.0.7
   flutter_phone_direct_caller: ^2.1.1
-  url_launcher: ^6.1.6
+  fluttertoast: ^8.0.9
+  form_field_validator: ^1.1.0
+  geocoding: ^2.0.5
+  geolocator: ^9.0.2
+  google_fonts: ^3.0.1
+  http: ^0.13.5
+  http_auth: ^1.0.1
   intl: ^0.17.0
-  
-
+  mobile_scanner: ^2.0.0
+  provider: ^6.0.3
+  rxdart: ^0.27.5
+  status_change: ^2.0.0
+  timezone: ^0.9.0
+  url_launcher: ^6.1.6
+  webview_flutter: ^3.0.4
 
 dev_dependencies:
+  flutter_lints: ^2.0.0
+  flutter_native_splash: ^2.2.10+1
   flutter_test:
     sdk: flutter
-  flutter_native_splash: ^2.2.10+1  
 
-
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
-  flutter_lints: ^2.0.0
-
-flutter_native_splash: 
-    color: "1e285d"
-    image: assets/splash_400.png
-    android: true
-    ios: true
+flutter_native_splash:
+  color: "1e285d"
+  image: assets/splash_400.png
+  android: true
+  ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter packages.
 flutter:
   # The following line ensures that the Material Icons font is
@@ -109,18 +96,14 @@ flutter:
     - assets/rewards.png
     - assets/empty_cart.png
     - assets/successfull_payment.png
-    
     # To add assets to your application, add an assets section, like this:
     # assets:
     #   - images/a_dot_burr.jpeg
     #   - images/a_dot_ham.jpeg
-
     # An image asset can refer to one or more resolution-specific "variants", see
     # https://flutter.dev/assets-and-images/#resolution-aware
-
     # For details regarding adding assets from package dependencies, see
     # https://flutter.dev/assets-and-images/#from-packages
-
     # To add custom fonts to your application, add a fonts section here,
     # in this "flutter" section. Each entry in this list should have a
     # "family" key with the font family name, and a "fonts" key with a

@@ -99,6 +99,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
+  date_count_down:
+    dependency: "direct main"
+    description:
+      name: date_count_down
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
   dbus:
     dependency: transitive
     description:
@@ -607,6 +614,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.10.0"
+  status_change:
+    dependency: "direct main"
+    description:
+      name: status_change
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   stream_channel:
     dependency: transitive
     description:

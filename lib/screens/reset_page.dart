@@ -38,16 +38,36 @@ class _ResetPassPageState extends State<ResetPassPage> {
           });
     } on FirebaseAuthException catch (e) {
       print(e);
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(content: Text(e.message.toString()), actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, 'حسنًا'),
-                child: const Text('حسنًا'),
-              )
-            ]);
-          });
+        Map<String, String?> codeResponses = {
+          // Re-auth responses
+          "user-mismatch": 'المستخدم غير متطابق',
+          "user-not-found": 'لم يتم العثور على المستخدم',
+          "invalid-credential": 'invalid credential',
+          "invalid-email": 'الايميل غير موجود',
+          "wrong-password": 'كلمة المرور الحالية خاطئة',
+          "invalid-verification-code": 'رمز التحقق غير صالح',
+          "invalid-verification-id": 'معرّف التحقق غير صالح',
+          "user-disabled": 'المستخدم لهذا الايميل معطّل',
+          "too-many-requests": 'طلبات كثيرة',
+          "operation-not-allowed":
+              'تسجيل الدخول من خلال الايميل وكلمة المرور غير مسموح',
+          // Update password error codes
+          "weak-password": 'كلمة المرور غير قوية',
+          "requires-recent-login": 'يتطلب تسجيل دخول حديث',
+          '': e.message.toString()
+        };
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                  content: Text(codeResponses[e.code]!),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, 'حسنًا'),
+                      child: const Text('حسنًا'),
+                    )
+                  ]);
+            });
     }
   }
 

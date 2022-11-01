@@ -269,6 +269,9 @@ class _LoginPageState extends State<LoginPage> {
           .signInWithEmailAndPassword(
               email: _emailController.text, password: _passController.text)
           .then((value) => Navigator.of(context).pop());
+
+
+    
       showDialog(
           context: context,
           builder: (context) {
@@ -283,10 +286,26 @@ class _LoginPageState extends State<LoginPage> {
           });
     } on FirebaseAuthException catch (e) {
       print(e);
+      Map<String, String?> codeResponses = {
+      // Re-auth responses
+      "user-mismatch": 'المستخدم غير متطابق',
+      "user-not-found": 'لم يتم العثور على المستخدم',
+      "invalid-credential": 'invalid credential',
+      "invalid-email": 'الايميل غير موجود',
+      "wrong-password": 'كلمة المرور الحالية خاطئة',
+      "invalid-verification-code": 'رمز التحقق غير صالح',
+      "invalid-verification-id": 'معرّف التحقق غير صالح',
+      "user-disabled":'المستخدم لهذا الايميل معطّل',
+      "too-many-requests":'طلبات كثيرة',
+
+      // Update password error codes
+      "weak-password": 'كلمة المرور غير قوية',
+      "requires-recent-login": 'يتطلب تسجيل دخول حديث'
+    };
       showDialog(
           context: context,
           builder: (context) {
-            return AlertDialog(content: Text(e.message.toString()), actions: [
+            return AlertDialog(content: Text(codeResponses[e.code]!), actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, 'حسنًا'),
                 child: const Text('حسنًا'),
