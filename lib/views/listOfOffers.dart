@@ -172,8 +172,7 @@ class _ListOfOffersState extends State<ListOfOffers> {
                   Offer.OfferImg
                   //data['OfferImg'],
                   ,
-                  width: 255,
-                  height: 120,
+                  height: 160,
                 ),
                 Text(
                     Offer.offerText

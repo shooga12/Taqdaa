@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:taqdaa_application/confige/EcommerceApp.dart';
 import 'package:taqdaa_application/screens/ShoppingCart.dart';
+import 'package:taqdaa_application/screens/home_page.dart';
 import 'rewardsHistory_view.dart';
 import '../views/checkOut_view.dart';
 import 'package:flutter/services.dart';
@@ -260,10 +261,11 @@ class _rewardsState extends State<rewards> {
                             EcommerceApp.rewards -= EcommerceApp.rewardsInput;
                             EcommerceApp.discount +=
                                 EcommerceApp.rewardsInput / 10;
+                            EcommerceApp.pageIndex = 1;
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => shoppingCart()),
+                                  builder: (context) => HomePage()),
                             );
                             Navigator.push(
                               context,

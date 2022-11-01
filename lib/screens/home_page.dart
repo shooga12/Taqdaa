@@ -855,8 +855,7 @@ class _homeContentState extends State<homeContent> {
               children: <Widget>[
                 Image.network(
                   data['OfferImg'],
-                  width: 255,
-                  height: 120,
+                  height: 130,
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -870,7 +869,7 @@ class _homeContentState extends State<homeContent> {
                     Row(
                       children: <Widget>[
                         Text(
-                          data['offerText'],
+                          data['offerText'] + ' ' + data['percentage'],
                           style: new TextStyle(
                             fontSize: 16,
                             color: Color.fromARGB(255, 77, 76, 76),

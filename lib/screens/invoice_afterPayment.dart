@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../confige/EcommerceApp.dart';
 import '../models/invoice.dart';
 
 class invoice_afterPayment extends StatefulWidget {
@@ -21,6 +22,7 @@ class _invoiceafterPaymentState extends State<invoice_afterPayment> {
 
   Widget build(BuildContext context) {
     int earned = (invoice!.total! * 2) ~/ 100;
+    int offerDiscpunt = invoice!.total! * 20 ~/ 100;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
@@ -154,6 +156,29 @@ class _invoiceafterPaymentState extends State<invoice_afterPayment> {
                       ),
                     ],
                   ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  if (invoice!.store == "Sephora" || invoice!.store == "H&M")
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: Text('عرض الإجازة',
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 227, 45, 45),
+                                fontSize: 15,
+                              )),
+                        ),
+                        Spacer(),
+                        Text('- $offerDiscpunt ريال',
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 227, 45, 45),
+                              fontSize: 15,
+                            )),
+                      ],
+                    ),
                   SizedBox(
                     height: 10.0,
                   ),

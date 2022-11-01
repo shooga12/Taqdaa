@@ -55,6 +55,7 @@ class checkOut {
       EcommerceApp.NumOfItems = 0;
       EcommerceApp.counter = 0;
       EcommerceApp.discount = 0;
+      EcommerceApp.firstOffer = false;
       showDialog(
           context: context,
           builder: (context) {
@@ -192,7 +193,7 @@ class checkOut {
       "ID": randomNumber.toString(),
       "Date": todayDate,
       "Fulldate": now,
-      "Total": EcommerceApp.total - EcommerceApp.discount.toInt(),
+      "Total": EcommerceApp.totalSummary - EcommerceApp.discount.toInt(),
       'returnDays': EcommerceApp.returnDays,
       "Store": EcommerceApp.storeName,
       "items": items,
@@ -210,7 +211,7 @@ class checkOut {
       "ID": randomNumber.toString(),
       "Date": todayDate,
       "Fulldate": now,
-      "Total": EcommerceApp.total - EcommerceApp.discount.toInt(),
+      "Total": EcommerceApp.totalSummary - EcommerceApp.discount.toInt(),
       "Store": EcommerceApp.storeName,
       "items": items,
       'sub-total': subTotal,

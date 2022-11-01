@@ -21,6 +21,7 @@ class _invoicesDetailsState extends State<invoice_details> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     int earned = (invoice!.total! * 2) ~/ 100;
+    int offerDiscpunt = invoice!.total! * 20 ~/ 100;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
@@ -39,69 +40,54 @@ class _invoicesDetailsState extends State<invoice_details> {
         elevation: 0,
       ),
       backgroundColor: Colors.white,
-      body: Padding(
-        padding:
-            const EdgeInsets.only(top: 15.0, bottom: 15.0, left: 20, right: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
+      body: SingleChildScrollView(
+          physics: const ScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.only(
+                top: 15.0, bottom: 15.0, left: 20, right: 20),
+            child: Container(
+              height: 700,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "رقم الفاتورة: ${invoice!.id}",
-                    style: new TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
-                  Text(
-                    "المتجر: ${invoice!.store}",
-                    style: new TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
-                  Text(
-                    "${invoice!.date}",
-                    style: new TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            Text(
-              "المنتجات",
-              textAlign: TextAlign.right,
-              style: TextStyle(
-                fontSize: 22,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Container(
-                height: 1,
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                ),
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                  itemCount: invoice?.items.length,
-                  itemBuilder: (context, index) {
-                    return buildSecondItems(invoice?.items[index], context);
-                  }),
-            ),
-            Expanded(
-              child: Column(
                 children: [
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          "رقم الفاتورة: ${invoice!.id}",
+                          style: new TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
+                        Text(
+                          "المتجر: ${invoice!.store}",
+                          style: new TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
+                        Text(
+                          "${invoice!.date}",
+                          style: new TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Text(
+                    "المنتجات",
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      fontSize: 22,
+                    ),
+                  ),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 5.0),
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Container(
                       height: 1,
                       decoration: BoxDecoration(
@@ -109,118 +95,176 @@ class _invoicesDetailsState extends State<invoice_details> {
                       ),
                     ),
                   ),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "المجموع",
-                        style: TextStyle(
-                          fontSize: 18,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Text("${invoice!.sub_total}"),
-                          Text(' ريال')
-                        ],
-                      ),
-                    ],
+                  Expanded(
+                    child: ListView.builder(
+                        itemCount: invoice?.items.length,
+                        itemBuilder: (context, index) {
+                          return buildSecondItems(
+                              invoice?.items[index], context);
+                        }),
                   ),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "الضريبة المضافة 15% ",
-                        style: TextStyle(
-                          fontSize: 18,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Text("${invoice!.vat_total}"),
-                          Text(
-                            ' ريال',
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                  if (invoice!.rewardsDiscount != 0)
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
+                  Expanded(
+                    flex: 2,
+                    child: Column(
                       children: [
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: Text('نـقـاطـي',
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 227, 45, 45),
-                                fontSize: 15,
-                              )),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 5.0),
+                          child: Container(
+                            height: 1,
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                            ),
+                          ),
                         ),
-                        Spacer(),
-                        Text('- ${invoice!.rewardsDiscount} ريال',
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 227, 45, 45),
-                              fontSize: 15,
-                            )),
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "المجموع",
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Text("${invoice!.sub_total}"),
+                                Text(' ريال')
+                              ],
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "الضريبة المضافة 15% ",
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Text("${invoice!.vat_total}"),
+                                Text(
+                                  ' ريال',
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        if (invoice!.store == "Sephora" ||
+                            invoice!.store == "H&M")
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                child: Text('عرض الإجازة',
+                                    style: TextStyle(
+                                      color: Color.fromARGB(255, 227, 45, 45),
+                                      fontSize: 15,
+                                    )),
+                              ),
+                              Spacer(),
+                              Text('- $offerDiscpunt ريال',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 227, 45, 45),
+                                    fontSize: 15,
+                                  )),
+                            ],
+                          ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        if (invoice!.rewardsDiscount != 0)
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                child: Text('نـقـاطـي',
+                                    style: TextStyle(
+                                      color: Color.fromARGB(255, 227, 45, 45),
+                                      fontSize: 15,
+                                    )),
+                              ),
+                              Spacer(),
+                              Text('- ${invoice!.rewardsDiscount} ريال',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 227, 45, 45),
+                                    fontSize: 15,
+                                  )),
+                            ],
+                          ),
+                        if (invoice!.rewardsDiscount != 0)
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "إجمالي الفاتورة",
+                              style: TextStyle(
+                                  fontSize: 22, fontWeight: FontWeight.w500),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  "${invoice!.total}",
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                Text(
+                                  ' ريال',
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w500),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              child: Text('تم اكتسـاب',
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 18,
+                                  )),
+                            ),
+                            Spacer(),
+                            Text('+ $earned نقطة',
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontSize: 18,
+                                )),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 5.0,
+                        ),
+                        returnButton(invoice)
                       ],
                     ),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "إجمالي الفاتورة",
-                        style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.w500),
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "${invoice!.total}",
-                            style: TextStyle(
-                                fontSize: 22, fontWeight: FontWeight.w500),
-                          ),
-                          Text(
-                            ' ريال',
-                            style: TextStyle(
-                                fontSize: 22, fontWeight: FontWeight.w500),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        child: Text('تم اكتسـاب',
-                            style: TextStyle(
-                              color: Colors.green,
-                              fontSize: 18,
-                            )),
-                      ),
-                      Spacer(),
-                      Text('+ $earned نقطة',
-                          style: TextStyle(
-                            color: Colors.green,
-                            fontSize: 18,
-                          )),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 5.0,
-                  ),
-                  returnButton(invoice)
+                  )
                 ],
               ),
             ),
-          ],
-        ),
-      ),
+          )),
     );
   }
 
@@ -324,6 +368,7 @@ class _invoicesDetailsState extends State<invoice_details> {
     }
   }
 
+  ///buugg fixes*********
   canReturn(int days) {
     // var now = new DateTime.now(); //14
     // var dateReturn = invoice!.Fulldate!

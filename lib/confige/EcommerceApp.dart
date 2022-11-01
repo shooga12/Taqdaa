@@ -26,6 +26,7 @@ class EcommerceApp {
   static String uid = '';
   final FirebaseAuth auth = FirebaseAuth.instance;
   static num? returnDays = 0;
+  static bool firstOffer = true;
 
   String getCurrentUser() {
     final User? user = auth.currentUser;
