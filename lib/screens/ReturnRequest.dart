@@ -205,7 +205,92 @@ class _returnRequestState extends State<returnRequest> {
                                           ),
                                         ],
                                       ),
-                                      checkQuantity(item)
+                                      //checkQuantity(item)
+                                      Row(
+                                        children: <Widget>[
+                                          // IconButton(
+                                          //     onPressed: () async {
+                                          //       if (first > 1) {
+                                          //         first--;
+                                          //       }
+                                          //     },
+                                          //     icon: Icon(Icons.remove_circle,
+                                          //         color: first == 1
+                                          //             ? Color.fromARGB(
+                                          //                 255, 195, 195, 195)
+                                          //             : Color.fromARGB(
+                                          //                 255, 118, 171, 223))),
+                                          // Padding(
+                                          //   padding: const EdgeInsets.only(
+                                          //       right: 15.0),
+                                          //   child: Container(
+                                          //     alignment: Alignment.center,
+                                          //     width: 35,
+                                          //     height: 35,
+                                          //     decoration: new BoxDecoration(
+                                          //       color: Color.fromARGB(
+                                          //           255, 245, 161, 14),
+                                          //       shape: BoxShape.circle,
+                                          //     ),
+                                          //     child: Text(
+                                          //       item.quantity.toString(),
+                                          //       style: TextStyle(
+                                          //           color: Colors.white),
+                                          //     ),
+                                          //   ),
+                                          // ),
+                                          // IconButton(
+                                          //   onPressed: () async {},
+                                          //   icon: Icon(Icons.add_circle,
+                                          //       color: Color.fromARGB(
+                                          //           255, 195, 195, 195)),
+                                          // ),
+                                          first != 0
+                                              ? new IconButton(
+                                                  //icon: new Icon(Icons.remove),
+                                                  onPressed: () {
+                                                    if (first > 1) {
+                                                      setState(() => first--);
+                                                    }
+                                                    ;
+                                                  },
+                                                  icon: Icon(
+                                                      Icons.remove_circle,
+                                                      color: first == 1
+                                                          ? Color.fromARGB(255,
+                                                              195, 195, 195)
+                                                          : Color.fromARGB(255,
+                                                              118, 171, 223)))
+                                              : new Container(),
+                                          Container(
+                                            alignment: Alignment.center,
+                                            width: 35,
+                                            height: 35,
+                                            decoration: new BoxDecoration(
+                                              color: Color.fromARGB(
+                                                  255, 245, 161, 14),
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Text(
+                                              first.toString(),
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          new IconButton(
+                                              icon: new Icon(Icons.add_circle,
+                                                  color: first == item.quantity
+                                                      ? Color.fromARGB(
+                                                          255, 195, 195, 195)
+                                                      : Color.fromARGB(
+                                                          255, 118, 171, 223)),
+                                              onPressed: () {
+                                                if (first < item.quantity) {
+                                                  setState(() => first++);
+                                                }
+                                              })
+                                        ],
+                                      ),
                                     ],
                                   ),
                                 )
@@ -213,6 +298,7 @@ class _returnRequestState extends State<returnRequest> {
                             ),
                           ),
                         );
+                        //AddToListDB(item);
                       } else {
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -333,67 +419,84 @@ class _returnRequestState extends State<returnRequest> {
                       height: 40,
                       child: ElevatedButton(
                         onPressed: () async {
-                          added = await addToDB();
-                          EcommerceApp.pageIndex = 0;
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  HomePage(), //bug fixes make sure works
-                            ),
-                          );
-                          if (added == true) {
+                          if (selectedItem.isNotEmpty) {
+                            added = await addToDB();
+                            EcommerceApp.pageIndex = 0;
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ViewReturnReq(),
+                                builder: (context) =>
+                                    HomePage(), //bug fixes make sure works
                               ),
                             );
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                      content: Container(
-                                        height: 300,
-                                        child: Column(
-                                          children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Image.asset(
-                                                "assets/successfull_payment.png",
-                                                height: 200,
+                            if (added == true) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ViewReturnReq(),
+                                ),
+                              );
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                        content: Container(
+                                          height: 300,
+                                          child: Column(
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Image.asset(
+                                                  "assets/successfull_payment.png",
+                                                  height: 200,
+                                                ),
                                               ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Text(
-                                                "تم إرسال الطلب بنجاح! \n سيتم تنبيهك عند قبول الطلب",
-                                                style: TextStyle(
-                                                    fontSize: 20,
-                                                    color: Color.fromARGB(
-                                                        255, 98, 160, 100)),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  "تم إرسال الطلب بنجاح! \n سيتم تنبيهك عند قبول الطلب",
+                                                  style: TextStyle(
+                                                      fontSize: 20,
+                                                      color: Color.fromARGB(
+                                                          255, 98, 160, 100)),
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context, 'حسنًا'),
-                                          child: const Text('حسنًا'),
-                                        )
-                                      ]);
-                                });
-                          } else if (added == false) {
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context, 'حسنًا'),
+                                            child: const Text('حسنًا'),
+                                          )
+                                        ]);
+                                  });
+                            } else if (added == false) {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                        content:
+                                            Text('حدث خطأ، لطفًا حاول لاحقًا'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context, 'حسنًا'),
+                                            child: const Text('حسنًا'),
+                                          )
+                                        ]);
+                                  });
+                            }
+                          } else if (selectedItem.isEmpty) {
                             showDialog(
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
                                       content:
-                                          Text('حدث خطأ، لطفًا حاول لاحقًا'),
+                                          Text("قم باختيار المنتجات أولًا!"),
                                       actions: [
                                         TextButton(
                                           onPressed: () =>
@@ -440,103 +543,110 @@ class _returnRequestState extends State<returnRequest> {
   }
 
   int first = 1;
-  checkQuantity(item) {
-    if (item.quantity == 1) {
-      return Expanded(
-        flex: 1,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 85.0),
-              child: IconButton(
-                  onPressed: () async {},
-                  icon: Icon(Icons.remove_circle,
-                      color: Color.fromARGB(255, 195, 195, 195))),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 15.0),
-              child: Container(
-                alignment: Alignment.center,
-                width: 35,
-                height: 35,
-                decoration: new BoxDecoration(
-                  color: Color.fromARGB(255, 245, 161, 14),
-                  shape: BoxShape.circle,
-                ),
-                child: Text(
-                  item.quantity.toString(),
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 55.0),
-              child: IconButton(
-                onPressed: () async {},
-                icon: Icon(Icons.add_circle,
-                    color: Color.fromARGB(255, 195, 195, 195)),
-              ),
-            )
-          ],
-        ),
-      );
-    } else if (item.quantity > 1) {
-      return Expanded(
-        flex: 1,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 85.0),
-              child: IconButton(
-                  onPressed: () async {
-                    if (first > 1) {
-                      first--;
-                    }
-                  },
-                  icon: Icon(Icons.remove_circle,
-                      color: first == 1
-                          ? Color.fromARGB(255, 195, 195, 195)
-                          : Color.fromARGB(255, 118, 171, 223))),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 15.0),
-              child: Container(
-                alignment: Alignment.center,
-                width: 35,
-                height: 35,
-                decoration: new BoxDecoration(
-                  color: Color.fromARGB(255, 245, 161, 14),
-                  shape: BoxShape.circle,
-                ),
-                child: Text(
-                  first.toString(),
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 55.0),
-              child: IconButton(
-                  onPressed: () async {
-                    if (first < item.quantity) {
-                      first++;
-                    }
-                  },
-                  icon: Icon(Icons.add_circle,
-                      color: first == item.quantity
-                          ? Color.fromARGB(255, 195, 195, 195)
-                          : Color.fromARGB(255, 118, 171, 223))),
-            ),
-          ],
-        ),
-      );
-    }
-  }
+  // checkQuantity(item) {
+  //   if (item.quantity == 1) {
+  //     return Expanded(
+  //       flex: 1,
+  //       child: Stack(
+  //         alignment: Alignment.center,
+  //         children: [
+  //           Padding(
+  //             padding: const EdgeInsets.only(right: 85.0),
+  //             child: IconButton(
+  //                 onPressed: () async {},
+  //                 icon: Icon(Icons.remove_circle,
+  //                     color: Color.fromARGB(255, 195, 195, 195))),
+  //           ),
+  //           Padding(
+  //             padding: const EdgeInsets.only(right: 15.0),
+  //             child: Container(
+  //               alignment: Alignment.center,
+  //               width: 35,
+  //               height: 35,
+  //               decoration: new BoxDecoration(
+  //                 color: Color.fromARGB(255, 245, 161, 14),
+  //                 shape: BoxShape.circle,
+  //               ),
+  //               child: Text(
+  //                 item.quantity.toString(),
+  //                 style: TextStyle(color: Colors.white),
+  //               ),
+  //             ),
+  //           ),
+  //           Padding(
+  //             padding: const EdgeInsets.only(left: 55.0),
+  //             child: IconButton(
+  //               onPressed: () async {},
+  //               icon: Icon(Icons.add_circle,
+  //                   color: Color.fromARGB(255, 195, 195, 195)),
+  //             ),
+  //           )
+  //         ],
+  //       ),
+  //     );
+  //   } else if (item.quantity > 1) {
+  //     return Expanded(
+  //       flex: 1,
+  //       child: Stack(
+  //         alignment: Alignment.center,
+  //         children: [
+  //           Padding(
+  //             padding: const EdgeInsets.only(right: 85.0),
+  //             child: IconButton(
+  //                 onPressed: () async {
+  //                   if (first > 1) {
+  //                     first--;
+  //                   }
+  //                 },
+  //                 icon: Icon(Icons.remove_circle,
+  //                     color: first == 1
+  //                         ? Color.fromARGB(255, 195, 195, 195)
+  //                         : Color.fromARGB(255, 118, 171, 223))),
+  //           ),
+  //           Padding(
+  //             padding: const EdgeInsets.only(right: 15.0),
+  //             child: Container(
+  //               alignment: Alignment.center,
+  //               width: 35,
+  //               height: 35,
+  //               decoration: new BoxDecoration(
+  //                 color: Color.fromARGB(255, 245, 161, 14),
+  //                 shape: BoxShape.circle,
+  //               ),
+  //               child: Text(
+  //                 first.toString(),
+  //                 style: TextStyle(color: Colors.white),
+  //               ),
+  //             ),
+  //           ),
+  //           Padding(
+  //             padding: const EdgeInsets.only(left: 55.0),
+  //             child: IconButton(
+  //                 onPressed: () async {
+  //                   if (first < item.quantity) {
+  //                     first++;
+  //                   }
+  //                 },
+  //                 icon: Icon(Icons.add_circle,
+  //                     color: first == item.quantity
+  //                         ? Color.fromARGB(255, 195, 195, 195)
+  //                         : Color.fromARGB(255, 118, 171, 223))),
+  //           ),
+  //         ],
+  //       ),
+  //     );
+  //   }
+  // }
 
   var items = [];
   AddToList(Item item) {
+    Barcodes.add(item.barcode);
+    returnable.add(item.returnable);
+    checkBoxList.add(false);
+    price.add(item.price);
+  }
+
+  AddToListDB(Item item) {
     items.add(Item(
             barcode: item.barcode,
             name: item.name,
@@ -545,11 +655,6 @@ class _returnRequestState extends State<returnRequest> {
             price: item.price,
             returnable: true)
         .toMap());
-
-    Barcodes.add(item.barcode);
-    returnable.add(item.returnable);
-    checkBoxList.add(false);
-    price.add(item.price);
   }
 
   Future<bool> addToDB() async {

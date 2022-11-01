@@ -67,6 +67,7 @@ dependencies:
   carousel_slider: ^4.1.1
   mailto: ^2.0.0
   flutter_email_sender: ^5.1.0
+  quantity_input: ^1.0.2
   
 
 
@@ -111,6 +112,7 @@ flutter:
     - assets/rewards.png
     - assets/empty_cart.png
     - assets/successfull_payment.png
+    - assets/logoWhite.png
     
     # To add assets to your application, add an assets section, like this:
     # assets:

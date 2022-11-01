@@ -277,7 +277,7 @@ class ListOfStores2State extends State<ListOfStores2> {
                   size: 26,
                   Icons.document_scanner_outlined,
                   textDirection: TextDirection.ltr,
-                  color: Color.fromARGB(255, 95, 137, 202),
+                  color: Colors.orange,
                   // Color.fromARGB(255, 254, 177, 57),
                 ),
                 SizedBox(

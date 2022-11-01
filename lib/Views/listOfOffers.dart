@@ -165,18 +165,31 @@ class _ListOfOffersState extends State<ListOfOffers> {
               //crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Image.network(
-                  Offer.OfferImg
-                  //data['OfferImg'],
-                  ,
+                  Offer.OfferImg,
                   height: 160,
                 ),
-                Text(
-                    Offer.offerText
-                    //data['offerText'],
-                    ,
-                    style: TextStyle(
-                      fontSize: 20,
-                    ))
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      Offer.StoreName,
+                      style: new TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          Offer.offerText + ' ' + Offer.percentage,
+                          style: new TextStyle(
+                            fontSize: 16,
+                            color: Color.fromARGB(255, 77, 76, 76),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                )
               ],
             ),
           ),

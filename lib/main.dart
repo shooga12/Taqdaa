@@ -211,23 +211,23 @@ class MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-          Text(
-            "مرحبًا، ${EcommerceApp.loggedInUser.firstName}",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
-          ),
-        ]),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
-        ),
-        toolbarHeight: 170,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+      // appBar: AppBar(
+      //   automaticallyImplyLeading: false,
+      //   title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+      //     Text(
+      //       "مرحبًا، ${EcommerceApp.loggedInUser.firstName}",
+      //       style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
+      //     ),
+      //   ]),
+      //   flexibleSpace: Container(
+      //     decoration: BoxDecoration(
+      //         image: DecorationImage(
+      //             image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
+      //   ),
+      //   toolbarHeight: 170,
+      //   backgroundColor: Colors.transparent,
+      //   elevation: 0,
+      // ),
       body: StreamBuilder<List<Store>>(
           stream: readStores(),
           builder: (context, snapshot) {

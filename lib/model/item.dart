@@ -2,7 +2,7 @@ class Item {
   String? barcode;
   String? img;
   String? name;
-  num? quantity;
+  final num quantity;
   num? price;
   bool? returnable;
   String? size;
@@ -11,7 +11,7 @@ class Item {
       {this.barcode,
       this.name,
       this.img,
-      this.quantity,
+      required this.quantity,
       this.price,
       this.returnable,
       this.size});
