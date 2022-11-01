@@ -25,6 +25,9 @@ class _RegisterPageState extends State<RegisterPage> {
   final dateofbirthController = TextEditingController();
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
+  final numericRegex = RegExp(r'[0-9]');
+  final CharRegex = RegExp(r'[!@#\$&*~]');
+  final LetterRegex = RegExp(r'[a-z A-Z]');
 
   ///User? user = FirebaseAuth.instance.currentUser;
   String errorMsg = '';
@@ -48,9 +51,17 @@ class _RegisterPageState extends State<RegisterPage> {
       return 'يجب ان تحتوي كلمة السر على 8 خانات أو أكثر';
     else if (formPassword.length > 15)
       return 'يجب أن تكون كلمة السر أقل من 15 خانة';
+    else if (!numericRegex.hasMatch(formPassword))
+      return 'يجب أن تحتوي كلمة السر على رقم واحد على الاقل';
+    else if (!CharRegex.hasMatch(formPassword))
+      return 'يجب أن تحتوي كلمة السر على رمز خاص واحد على الاقل';
+    else if (!LetterRegex.hasMatch(formPassword))
+      return 'يجب أن تحتوي كلمة السر على حرف واحد على الاقل';
     else
       return null;
   }
+
+  bool isVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +136,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
                   validator: MultiValidator([
                     RequiredValidator(errorText: 'مطلوب *'),
-                    PatternValidator(r'^[a-z A-Z]+$',
+                    PatternValidator(
+                        r'^[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z]+[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z-_]*$',
                         errorText: 'يجب أن يتكون الأسم من حروف فقط')
                   ]),
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
@@ -171,10 +183,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: _emailController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
 
-                  validator: MultiValidator([
-                    RequiredValidator(errorText: 'مطلوب *'),
-                    EmailValidator(errorText: 'البريد الالكتروني غير صالح*')
-                  ]),
+                  validator: validateEmail,
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
                   style: TextStyle(
                       color: Color.fromARGB(255, 15, 53, 120).withOpacity(0.9)),
@@ -201,6 +210,10 @@ class _RegisterPageState extends State<RegisterPage> {
                         color: Color.fromARGB(236, 113, 113, 117)
                             .withOpacity(0.9)),
                     filled: true,
+                    hintText: 'email@address.com',
+                    hintStyle: TextStyle(
+                        color: Color.fromARGB(236, 113, 113, 117)
+                            .withOpacity(0.9)),
 
                     fillColor: Colors.white.withOpacity(0.9),
                     // border: OutlineInputBorder(
@@ -217,17 +230,21 @@ class _RegisterPageState extends State<RegisterPage> {
                 TextFormField(
                   controller: _passController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: MultiValidator([
-                    RequiredValidator(errorText: 'مطلوب *'),
-                    PatternValidator(
-                        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$',
-                        errorText: 'كلمة مرور غير صالحة'),
-                  ]),
-                  obscureText: true,
+                  validator: validatePassword,
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
                   style: TextStyle(
                       color: Color.fromARGB(255, 15, 53, 120).withOpacity(0.9)),
                   decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          isVisible = !isVisible;
+                        });
+                      },
+                      icon: isVisible
+                          ? Icon(Icons.visibility)
+                          : Icon(Icons.visibility_off),
+                    ),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30.0),
                         borderSide:
@@ -291,6 +308,10 @@ class _RegisterPageState extends State<RegisterPage> {
                     iconColor: Colors.white,
                     labelText: "أدخل رقم الهاتف",
                     labelStyle: TextStyle(
+                        color: Color.fromARGB(236, 113, 113, 117)
+                            .withOpacity(0.9)),
+                    hintText: '05XXXXXXXX',
+                    hintStyle: TextStyle(
                         color: Color.fromARGB(236, 113, 113, 117)
                             .withOpacity(0.9)),
                     filled: true,

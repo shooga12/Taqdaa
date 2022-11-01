@@ -1,4 +1,3 @@
-
 import '../methods/authentication_services.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -41,13 +40,12 @@ class _LoginPageState extends State<LoginPage> {
     return null;
   }
 
+  bool isVisible = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Form(
-        //key: _key,
-        //autovalidateMode: AutovalidateMode.onUserInteraction,
-
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.fromLTRB(
@@ -61,8 +59,6 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(
                   height: 36,
                 ),
-                // reusableTextField(
-                //     "Enter Email Address", false, _emailController),
                 TextFormField(
                   controller: _emailController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -96,6 +92,10 @@ class _LoginPageState extends State<LoginPage> {
                     labelStyle: TextStyle(
                         color: Color.fromARGB(236, 113, 113, 117)
                             .withOpacity(0.9)),
+                    hintText: 'email@address.com',
+                    hintStyle: TextStyle(
+                        color: Color.fromARGB(236, 113, 113, 117)
+                            .withOpacity(0.9)),
                     filled: true,
 
                     fillColor: Colors.white.withOpacity(0.9),
@@ -109,18 +109,27 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(
                   height: 20,
                 ),
-                // reusableTextField("Enter your password", true, _passController),
                 TextFormField(
                   controller: _passController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: MultiValidator([
                     RequiredValidator(errorText: 'مطلوب*'),
                   ]),
-                  obscureText: true,
+                  obscureText: isVisible,
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
                   style: TextStyle(
                       color: Color.fromARGB(255, 15, 53, 120).withOpacity(0.9)),
                   decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          isVisible = !isVisible;
+                        });
+                      },
+                      icon: isVisible
+                          ? Icon(Icons.visibility)
+                          : Icon(Icons.visibility_off),
+                    ),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30.0),
                         borderSide:
@@ -152,7 +161,6 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(
                   height: 7,
                 ),
-
                 const SizedBox(
                   height: 13,
                 ),
@@ -181,9 +189,7 @@ class _LoginPageState extends State<LoginPage> {
                               login();
                             },
                             child: Text(
-
                               'تسجيل الدخول',
-
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -205,7 +211,6 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                 ),
-
                 notRegistered(context)
               ],
             ),
@@ -221,7 +226,6 @@ class _LoginPageState extends State<LoginPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Text(" ليس لديك حساب؟",
-
             style: TextStyle(color: Color.fromARGB(255, 15, 53, 120))),
         GestureDetector(
           onTap: () {
@@ -232,9 +236,7 @@ class _LoginPageState extends State<LoginPage> {
                 ));
           },
           child: const Text(
-
             "تسجيل جديد",
-
             style: TextStyle(
                 decoration: TextDecoration.underline,
                 color: Color.fromARGB(255, 15, 53, 120),
@@ -250,7 +252,6 @@ class _LoginPageState extends State<LoginPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Text(" نسيت كلمة المرور؟ ",
-
             style: TextStyle(color: Color.fromARGB(255, 15, 53, 120))),
         GestureDetector(
           onTap: () {
@@ -258,9 +259,7 @@ class _LoginPageState extends State<LoginPage> {
                 MaterialPageRoute(builder: (context) => ResetPassPage()));
           },
           child: const Text(
-
             "إعادة تعيين كلمة المرور",
-
             style: TextStyle(
                 decoration: TextDecoration.underline,
                 color: Color.fromARGB(255, 15, 53, 120),

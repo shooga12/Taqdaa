@@ -366,11 +366,19 @@ class _homeContentState extends State<homeContent> {
                                       final offer = snapshot.data!;
                                       return PageView.builder(
                                           controller: controller,
-                                          itemCount: offer.length,
+                                          //itemCount: offer.length,
+                                          scrollDirection: Axis.horizontal,
+                                          onPageChanged: (index) {
+                                            setState(() {
+                                              var _currentIndex =
+                                                  index % offer.length;
+                                            });
+                                          },
                                           itemBuilder: (BuildContext context,
                                               int index) {
                                             return buildOfferCards(
-                                                offer[index], index);
+                                                offer[index % offer.length],
+                                                index);
                                           });
                                     } else if (snapshot.hasError) {
                                       return Text(
