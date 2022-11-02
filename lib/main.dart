@@ -240,7 +240,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   static Stream<List<Invoice>> readRequest() => FirebaseFirestore.instance
       .collection('ReturnRequests${EcommerceApp.loggedInUser.uid}')
-      .where('status', isEqualTo: "Accepted")
+      .where('status', isEqualTo: "ready")
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Invoice.fromJson(doc.data())).toList());

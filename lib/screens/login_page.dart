@@ -280,7 +280,29 @@ class _LoginPageState extends State<LoginPage> {
           context: context,
           builder: (context) {
             return AlertDialog(
-                content: Text('تم تسجيل الدخول بنجاح'),
+                content: Container(
+                  height: 280,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image.asset(
+                          "assets/successfull_payment.png",
+                          height: 200,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "تم تسجيل الدخول بنجاح",
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Color.fromARGB(255, 98, 160, 100)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'حسنًا'),
@@ -290,10 +312,26 @@ class _LoginPageState extends State<LoginPage> {
           });
     } on FirebaseAuthException catch (e) {
       print(e);
+      Map<String, String?> codeResponses = {
+        // Re-auth responses
+        "user-mismatch": 'المستخدم غير متطابق',
+        "user-not-found": 'لم يتم العثور على المستخدم',
+        "invalid-credential": 'invalid credential',
+        "invalid-email": 'الايميل غير موجود',
+        "wrong-password": 'كلمة المرور الحالية خاطئة',
+        "invalid-verification-code": 'رمز التحقق غير صالح',
+        "invalid-verification-id": 'معرّف التحقق غير صالح',
+        "user-disabled": 'المستخدم لهذا الايميل معطّل',
+        "too-many-requests": 'طلبات كثيرة',
+
+        // Update password error codes
+        "weak-password": 'كلمة المرور غير قوية',
+        "requires-recent-login": 'يتطلب تسجيل دخول حديث'
+      };
       showDialog(
           context: context,
           builder: (context) {
-            return AlertDialog(content: Text(e.message.toString()), actions: [
+            return AlertDialog(content: Text(codeResponses[e.code]!), actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, 'حسنًا'),
                 child: const Text('حسنًا'),

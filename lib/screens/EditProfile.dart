@@ -6,6 +6,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:taqdaa_application/screens/insideMore.dart';
 import '../confige/EcommerceApp.dart';
 import 'package:intl/intl.dart';
+import '../views/changePass_view.dart';
 import '../views/profile_view.dart';
 
 class Edit extends StatefulWidget {
@@ -32,6 +33,35 @@ class _EditState extends State<Edit> {
   bool isLoading = false;
 
   static var _firestore;
+
+  static Future<String?> changePassword(
+      String oldPassword, String newPassword) async {
+    User user = FirebaseAuth.instance.currentUser!;
+    AuthCredential credential =
+        EmailAuthProvider.credential(email: user.email!, password: oldPassword);
+
+    Map<String, String?> codeResponses = {
+      // Re-auth responses
+      "user-mismatch": null,
+      "user-not-found": null,
+      "invalid-credential": null,
+      "invalid-email": null,
+      "wrong-password": null,
+      "invalid-verification-code": null,
+      "invalid-verification-id": null,
+      // Update password error codes
+      "weak-password": null,
+      "requires-recent-login": null
+    };
+
+    try {
+      await user.reauthenticateWithCredential(credential);
+      await user.updatePassword(newPassword);
+      return null;
+    } on FirebaseAuthException catch (error) {
+      return codeResponses[error.code] ?? "Unknown";
+    }
+  }
 
   String? validateEmail(String? formEmail) {
     if (formEmail == null || formEmail.isEmpty)
@@ -465,6 +495,40 @@ class _EditState extends State<Edit> {
                       ),
                     ),
                   ),
+                  Padding(
+                      padding: EdgeInsets.only(top: 15.0, right: 90.0),
+                      child: SizedBox(
+                        width: 200,
+                        height: 40,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => UpdatePass()));
+                          },
+                          child: Text(
+                            'تغيير كلمة المرور',
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20),
+                          ),
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.resolveWith((states) {
+                                if (states.contains(MaterialState.pressed)) {
+                                  return Colors.grey;
+                                }
+                                return Color.fromARGB(255, 118, 171, 223);
+                              }),
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(30)))),
+                        ),
+                      )),
                 ],
               ),
             ),
