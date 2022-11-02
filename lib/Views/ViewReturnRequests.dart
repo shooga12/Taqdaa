@@ -24,20 +24,27 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
 
   // case 1 : pending
   // case 2 : declined
-  // case 3 : ready to pickup 
+  // case 3 : ready to pickup
   // case 4 : picked up
   // case 5 : not picked (date expired)
 
-  bool inCase1 = true;
+  bool inCase1 = false;
   bool inCase2 = false;
   bool inCase3 = false;
   bool inCase4 = false;
   bool inCase5 = false;
 
+  void inWhichCase(status) {
+    if (status == 'pending') inCase1 = true;
+    if (status == 'declined') inCase2 = true;
+    if (status == 'ready') inCase3 = true;
+    if (status == 'received') inCase4 = true;
+    if (status == 'notreceived') inCase5 = true;
+  }
 
-  DateTime getDueDate() {
-    DateTime startTime = DateTime.now(); //----------- approved/accepted date
-    Duration duration = Duration(days: 7);
+  DateTime getDueDate(approvedDate, period) {
+    DateTime startTime = approvedDate; //----------- approved/accepted date
+    Duration duration = Duration(days: period);
 
     DateTime endDate = startTime.add(duration);
     return endDate;
@@ -115,97 +122,95 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
                                 fontWeight: FontWeight.normal,
                               ),
                             ),
-
                           ),
                         ],
-
                       ),
-            //           child: Column(
-            //             children: [
-            //               if (inCase1)
-            //                 Row(
-            //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //                   children: [
-            //                     Text('مقبول'),
-            //                     Text('جاهز للاستلام'),
-            //                     Text('       '),
-            //                   ],
-            //                 ),
-            //               const SizedBox(
-            //                 height: 10,
-            //               ),
-            //               if (inCase1)
-            //                 Row(
-            //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //                   children: [
-            //                     const CircleAvatar(
-            //                       backgroundColor:
-            //                           Color.fromARGB(255, 24, 139, 78),
-            //                       radius: 14,
-            //                       child: Icon(
-            //                         Icons.done,
-            //                         size: 16,
-            //                       ),
-            //                     ),
-            //                     Flexible(
-            //                       flex: 1,
-            //                       child: Container(
-            //                         margin: const EdgeInsets.only(
-            //                           left: 8,
-            //                           right: 8,
-            //                         ),
-            //                         color: Color.fromARGB(255, 24, 139, 78),
-            //                         height: 2,
-            //                       ),
-            //                     ),
-            //                     const CircleAvatar(
-            //                       backgroundColor:
-            //                           Color.fromARGB(255, 24, 139, 78),
-            //                       radius: 14,
-            //                       child: Icon(
-            //                         Icons.store_mall_directory,
-            //                         size: 16,
-            //                       ),
-            //                     ),
-            //                     Flexible(
-            //                       flex: 1,
-            //                       child: Container(
-            //                         margin: const EdgeInsets.only(
-            //                           left: 8,
-            //                           right: 8,
-            //                         ),
-            //                         color: const Color.fromARGB(
-            //                             255, 197, 202, 233),
-            //                         height: 2,
-            //                       ),
-            //                     ),
-            //                     const CircleAvatar(
-            //                       backgroundColor:
-            //                           Color.fromARGB(255, 197, 202, 233),
-            //                       radius: 8,
-            //                     ),
-            //                   ],
-            //                 ),
-            //               if (inCase1) 
-            //                 const SizedBox(
-            //                 height: 10,
-            //               ),
-            //                 Padding(
-            //                   padding: const EdgeInsets.all(12.0),
-            //                   child: Row(
-            //                     mainAxisAlignment:
-            //                         MainAxisAlignment.spaceBetween,
-            //                     children: [
-                               
-            //                       Center(child: Text((
-            //   '*  يرجى ملاحظة أنه لديك مهلة 7 أيام من تاريخ قبول الطلب \n '
-            //  '  آخر يوم لاستلام المنتجات :   '+getDueDate().day.toString()+'/'+getDueDate().month.toString()+'/'+getDueDate().year.toString()+'\n'
-            //   +'   الأيام المتبقية :  '+(getDaysRemain(getDueDate())+1).toString()),) )
-            //                     ],
-            //                   ),
-            //                 ),
-            //             ],
-            //           ),
+                      //           child: Column(
+                      //             children: [
+                      //               if (inCase1)
+                      //                 Row(
+                      //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //                   children: [
+                      //                     Text('مقبول'),
+                      //                     Text('جاهز للاستلام'),
+                      //                     Text('       '),
+                      //                   ],
+                      //                 ),
+                      //               const SizedBox(
+                      //                 height: 10,
+                      //               ),
+                      //               if (inCase1)
+                      //                 Row(
+                      //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //                   children: [
+                      //                     const CircleAvatar(
+                      //                       backgroundColor:
+                      //                           Color.fromARGB(255, 24, 139, 78),
+                      //                       radius: 14,
+                      //                       child: Icon(
+                      //                         Icons.done,
+                      //                         size: 16,
+                      //                       ),
+                      //                     ),
+                      //                     Flexible(
+                      //                       flex: 1,
+                      //                       child: Container(
+                      //                         margin: const EdgeInsets.only(
+                      //                           left: 8,
+                      //                           right: 8,
+                      //                         ),
+                      //                         color: Color.fromARGB(255, 24, 139, 78),
+                      //                         height: 2,
+                      //                       ),
+                      //                     ),
+                      //                     const CircleAvatar(
+                      //                       backgroundColor:
+                      //                           Color.fromARGB(255, 24, 139, 78),
+                      //                       radius: 14,
+                      //                       child: Icon(
+                      //                         Icons.store_mall_directory,
+                      //                         size: 16,
+                      //                       ),
+                      //                     ),
+                      //                     Flexible(
+                      //                       flex: 1,
+                      //                       child: Container(
+                      //                         margin: const EdgeInsets.only(
+                      //                           left: 8,
+                      //                           right: 8,
+                      //                         ),
+                      //                         color: const Color.fromARGB(
+                      //                             255, 197, 202, 233),
+                      //                         height: 2,
+                      //                       ),
+                      //                     ),
+                      //                     const CircleAvatar(
+                      //                       backgroundColor:
+                      //                           Color.fromARGB(255, 197, 202, 233),
+                      //                       radius: 8,
+                      //                     ),
+                      //                   ],
+                      //                 ),
+                      //               if (inCase1)
+                      //                 const SizedBox(
+                      //                 height: 10,
+                      //               ),
+                      //                 Padding(
+                      //                   padding: const EdgeInsets.all(12.0),
+                      //                   child: Row(
+                      //                     mainAxisAlignment:
+                      //                         MainAxisAlignment.spaceBetween,
+                      //                     children: [
+
+                      //                       Center(child: Text((
+                      //   '*  يرجى ملاحظة أنه لديك مهلة 7 أيام من تاريخ قبول الطلب \n '
+                      //  '  آخر يوم لاستلام المنتجات :   '+getDueDate().day.toString()+'/'+getDueDate().month.toString()+'/'+getDueDate().year.toString()+'\n'
+                      //   +'   الأيام المتبقية :  '+(getDaysRemain(getDueDate())+1).toString()),) )
+                      //                     ],
+                      //                   ),
+                      //                 ),
+                      //             ],
+                      //           ),
                     ),
 
                   //--------
@@ -219,6 +224,11 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
                     itemCount:
                         ReturnInvoices.length, //--- how many return requests?
                     itemBuilder: (context, index) {
+                      String status = ReturnInvoices[index].status!;
+                      DateTime approvedDate = ReturnInvoices[index].Fulldate;
+                      int period = ReturnInvoices[index].returnDays;
+                      inWhichCase(status);
+
                       return GestureDetector(
                         onTap: () {
                           // Navigator.of(context).push(
@@ -347,11 +357,9 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
                                                       Color.fromARGB(
                                                           255, 197, 202, 233),
                                                   radius: 14,
-                                                  child: Icon(
-                                                    Icons.timelapse,
-                                                    size: 16,
-                                                    color: Colors.white
-                                                  ),
+                                                  child: Icon(Icons.timelapse,
+                                                      size: 16,
+                                                      color: Colors.white),
                                                 ),
                                                 Flexible(
                                                   flex: 1,
@@ -404,11 +412,9 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
                                                       Color.fromARGB(
                                                           255, 197, 202, 233),
                                                   radius: 14,
-                                                  child: Icon(
-                                                    Icons.timelapse,
-                                                    size: 16,
-                                                    color: Colors.white
-                                                  ),
+                                                  child: Icon(Icons.timelapse,
+                                                      size: 16,
+                                                      color: Colors.white),
                                                 ),
                                                 Flexible(
                                                   flex: 1,
@@ -429,10 +435,9 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
                                                           255, 255, 106, 106),
                                                   radius: 14,
                                                   child: Icon(
-                                                    Icons.error_outline,
-                                                    size: 16,
-                                                    color: Colors.white
-                                                  ),
+                                                      Icons.error_outline,
+                                                      size: 16,
+                                                      color: Colors.white),
                                                 ),
                                                 Flexible(
                                                   flex: 1,
@@ -452,11 +457,9 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
                                                       Color.fromARGB(
                                                           255, 255, 106, 106),
                                                   radius: 14,
-                                                  child: Icon(
-                                                    Icons.close,
-                                                    size: 16,
-                                                    color: Colors.white
-                                                  ),
+                                                  child: Icon(Icons.close,
+                                                      size: 16,
+                                                      color: Colors.white),
                                                 ),
                                               ],
                                             ),
@@ -471,11 +474,9 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
                                                       Color.fromARGB(
                                                           255, 24, 139, 78),
                                                   radius: 14,
-                                                  child: Icon(
-                                                    Icons.done,
-                                                    size: 16,
-                                                    color: Colors.white
-                                                  ),
+                                                  child: Icon(Icons.done,
+                                                      size: 16,
+                                                      color: Colors.white),
                                                 ),
                                                 Flexible(
                                                   flex: 1,
@@ -496,10 +497,10 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
                                                           255, 24, 139, 78),
                                                   radius: 14,
                                                   child: Icon(
-                                                    Icons.store_mall_directory,
-                                                    size: 16,
-                                                    color: Colors.white
-                                                  ),
+                                                      Icons
+                                                          .store_mall_directory,
+                                                      size: 16,
+                                                      color: Colors.white),
                                                 ),
                                                 Flexible(
                                                   flex: 1,
@@ -522,24 +523,46 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
                                                 ),
                                               ],
                                             ),
-                                            //  +++++++++++++++++++++++++++++++
-                                            const SizedBox(
-                            height: 10,
-                          ),
-                            Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                               
-                                  Center(child: Text((
-              '*  يرجى ملاحظة أنه لديك مهلة 7 أيام من تاريخ قبول الطلب \n '
-             '  آخر يوم لاستلام المنتجات :   '+getDueDate().day.toString()+'/'+getDueDate().month.toString()+'/'+getDueDate().year.toString()+'\n'
-              +'   الأيام المتبقية :  '+(getDaysRemain(getDueDate())+1).toString()),) )
-                                ],
-                              ),
-                            ),
+                                          //  +++++++++++++++++++++++++++++++
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(12.0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Center(
+                                                    child: Text(
+                                                  ('*  يرجى ملاحظة أنه لديك مهلة 7 أيام من تاريخ قبول الطلب \n '
+                                                          '  آخر يوم لاستلام المنتجات :   ' +
+                                                      getDueDate(approvedDate,
+                                                              period)
+                                                          .day
+                                                          .toString() +
+                                                      '/' +
+                                                      getDueDate(approvedDate,
+                                                              period)
+                                                          .month
+                                                          .toString() +
+                                                      '/' +
+                                                      getDueDate(approvedDate,
+                                                              period)
+                                                          .year
+                                                          .toString() +
+                                                      '\n' +
+                                                      '   الأيام المتبقية :  ' +
+                                                      (getDaysRemain(getDueDate(
+                                                                  approvedDate,
+                                                                  period)) +
+                                                              1)
+                                                          .toString()),
+                                                ))
+                                              ],
+                                            ),
+                                          ),
                                           if (inCase4)
                                             Row(
                                               mainAxisAlignment:
@@ -551,11 +574,9 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
                                                       Color.fromARGB(
                                                           255, 24, 139, 78),
                                                   radius: 14,
-                                                  child: Icon(
-                                                    Icons.done,
-                                                    size: 16,
-                                                    color: Colors.white
-                                                  ),
+                                                  child: Icon(Icons.done,
+                                                      size: 16,
+                                                      color: Colors.white),
                                                 ),
                                                 Flexible(
                                                   flex: 1,
@@ -576,10 +597,10 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
                                                           255, 24, 139, 78),
                                                   radius: 14,
                                                   child: Icon(
-                                                    Icons.store_mall_directory,
-                                                    size: 16,
-                                                    color: Colors.white
-                                                  ),
+                                                      Icons
+                                                          .store_mall_directory,
+                                                      size: 16,
+                                                      color: Colors.white),
                                                 ),
                                                 Flexible(
                                                   flex: 1,
@@ -600,10 +621,9 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
                                                           255, 24, 139, 78),
                                                   radius: 14,
                                                   child: Icon(
-                                                    Icons.done_all_rounded,
-                                                    size: 16,
-                                                    color: Colors.white
-                                                  ),
+                                                      Icons.done_all_rounded,
+                                                      size: 16,
+                                                      color: Colors.white),
                                                 ),
                                               ],
                                             ),
