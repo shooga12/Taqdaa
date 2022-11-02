@@ -339,13 +339,27 @@ class _UpdatePassState extends State<UpdatePass> {
                                       fontSize: 17, letterSpacing: 0.8)),
                               action: null,
                             ));
-                          } else if (!confirmed) {
+                          } 
+                          else if (!confirmed) {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               duration: const Duration(seconds: 2),
                               backgroundColor:
                                   Color.fromARGB(255, 248, 136, 44),
                               content: Text(
                                   'تعذّر تحديث كلمة المرور, تأكيد كلمة المرور الجديدة غير متطابق',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 17, letterSpacing: 0.8)),
+                              action: null,
+                            ));
+                          }
+                           else if (!isValidNewPass) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              duration: const Duration(seconds: 2),
+                              backgroundColor:
+                                  Color.fromARGB(255, 248, 136, 44),
+                              content: Text(
+                                  'تعذّر تحديث كلمة المرور, كلمة المرور الجديدة ضعيفة',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontSize: 17, letterSpacing: 0.8)),
