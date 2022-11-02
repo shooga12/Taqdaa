@@ -1,10 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import "item.dart";
 
 class Invoice {
   String? id;
   String? store;
   String? date;
-  DateTime? Fulldate;
+  Timestamp? Fulldate;
   num? total;
   num? returnDays;
   num? vat_total;

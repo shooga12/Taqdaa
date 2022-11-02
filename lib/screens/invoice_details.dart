@@ -370,13 +370,14 @@ class _invoicesDetailsState extends State<invoice_details> {
 
   ///buugg fixes*********
   canReturn(int days) {
-    // var now = new DateTime.now(); //14
-    // var dateReturn = invoice!.Fulldate!
-    //     .add(Duration(days: days + 1)); //after last date  //9+(5+1)=15
+    var now = new DateTime.now(); //14
+    var invoFullDate = invoice!.Fulldate!.toDate();
+    var dateReturn = invoFullDate
+        .add(Duration(days: days + 1)); //after last date  //9+(5+1)=15
 
-    // if (now == dateReturn) {
-    //   invoice!.isExpired = true;
-    // }
+    if (now == dateReturn) {
+      invoice!.isExpired = true;
+    }
   }
 
   Widget buildSecondItems(dynamic item, BuildContext context) {

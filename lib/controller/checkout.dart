@@ -226,7 +226,7 @@ class checkOut {
     Invoice invoice = new Invoice(items,
         id: randomNumber.toString(),
         date: todayDate,
-        Fulldate: now,
+        Fulldate: Timestamp.fromDate(now),
         total: EcommerceApp.total - EcommerceApp.discount.toInt(),
         returnDays: EcommerceApp.returnDays,
         store: EcommerceApp.storeName,
