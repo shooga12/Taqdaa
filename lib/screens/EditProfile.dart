@@ -7,6 +7,7 @@ import 'package:taqdaa_application/screens/insideMore.dart';
 import 'package:intl/intl.dart';
 import '../controller/EcommerceApp.dart';
 import '../views/profile_view.dart';
+import 'changepass.dart';
 
 class Edit extends StatefulWidget {
   const Edit({Key? key}) : super(key: key);
@@ -42,6 +43,18 @@ class _EditState extends State<Edit> {
     if (!regex.hasMatch(formEmail)) return 'صيغة البريد الالكتروني غير صحيحة';
 
     return null;
+  }
+
+  String? validateName(String? formName) {
+    final nameRegex = RegExp(
+        r'^[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z]+[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z-_]{1,20}$');
+
+    if (formName == null || formName.isEmpty)
+      return 'الاسم مطلوب';
+    else if (!nameRegex.hasMatch(formName))
+      return 'يجب أن يتكون الأسم من حروف فقط';
+    else
+      return null;
   }
 
   @override
@@ -96,19 +109,23 @@ class _EditState extends State<Edit> {
                         child: Column(
                           children: <Widget>[
                             TextFormField(
+                              maxLength: 20,
+                              maxLengthEnforcement:
+                                  MaxLengthEnforcement.enforced,
                               //enabled: false,
                               // initialValue: loggedInUser.firstName,
                               controller: firstnameController,
 
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
-                              validator: MultiValidator([
-                                RequiredValidator(errorText: 'مطلوب*'),
-                                PatternValidator(
-                                    r'^[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z]+[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z-_]*$',
-                                    //r'^[a-z A-Z]+$ || r^/[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FF]/',
-                                    errorText: 'يجب أن يتكون الأسم من حروف فقط')
-                              ]),
+                              validator: validateName,
+                              // MultiValidator([
+                              //   RequiredValidator(errorText: 'مطلوب*'),
+                              //   PatternValidator(
+                              //       r'^[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z]+[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z-_]*$',
+                              //       //r'^[a-z A-Z]+$ || r^/[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FF]/',
+                              //       errorText: 'يجب أن يتكون الأسم من حروف فقط')
+                              // ]),
                               cursorColor: Color.fromARGB(255, 37, 43, 121),
                               style:
                                   TextStyle(fontSize: 20, color: Colors.black),
@@ -146,16 +163,20 @@ class _EditState extends State<Edit> {
                               height: 15,
                             ),
                             TextFormField(
+                              maxLength: 20,
+                              maxLengthEnforcement:
+                                  MaxLengthEnforcement.enforced,
                               controller: lastnameController,
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
 
-                              validator: MultiValidator([
-                                RequiredValidator(errorText: 'مطلوب *'),
-                                PatternValidator(
-                                    r'^[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z]+[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z-_]*$',
-                                    errorText: 'يجب أن يتكون الأسم من حروف فقط')
-                              ]),
+                              validator: validateName,
+                              // MultiValidator([
+                              //   RequiredValidator(errorText: 'مطلوب *'),
+                              //   PatternValidator(
+                              //       r'^[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z]+[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z-_]*$',
+                              //       errorText: 'يجب أن يتكون الأسم من حروف فقط')
+                              // ]),
                               cursorColor: Color.fromARGB(255, 37, 43, 121),
                               style:
                                   TextStyle(fontSize: 20, color: Colors.black),
@@ -187,51 +208,52 @@ class _EditState extends State<Edit> {
                               keyboardType: TextInputType.name,
                               //--------------------------------------
                             ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            //email field
-                            TextFormField(
-                              controller: emailController,
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
+                            // const SizedBox(
+                            //   height: 15,
+                            // ),
+                            // //email field
+                            // TextFormField(
+                            //   controller: emailController,
+                            //   autovalidateMode:
+                            //       AutovalidateMode.onUserInteraction,
 
-                              validator: MultiValidator([
-                                RequiredValidator(errorText: 'مطلوب *'),
-                                EmailValidator(
-                                    errorText: 'البريد الالكتروني غير صالح*')
-                              ]),
-                              cursorColor: Color.fromARGB(255, 37, 43, 121),
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.black),
+                            //   validator: MultiValidator([
+                            //     RequiredValidator(errorText: 'مطلوب *'),
+                            //     EmailValidator(
+                            //         errorText: 'البريد الالكتروني غير صالح*')
+                            //   ]),
+                            //   cursorColor: Color.fromARGB(255, 37, 43, 121),
+                            //   style:
+                            //       TextStyle(fontSize: 20, color: Colors.black),
 
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                    borderSide: const BorderSide(
-                                        color: Colors.orange, width: 2.0)),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30.0),
-                                  borderSide: const BorderSide(
-                                      color: Color.fromARGB(255, 15, 53, 120),
-                                      width: 2.0),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30.0),
-                                  borderSide: const BorderSide(
-                                      color: Colors.orange, width: 2.0),
-                                ),
-                                prefixIcon:
-                                    Icon(Icons.email, color: Colors.black),
-                                iconColor: Colors.white,
-                                labelText: "البريد الالكتروني",
-                                filled: true,
-                                fillColor: Colors.white.withOpacity(0.9),
-                              ),
+                            //   decoration: InputDecoration(
+                            //     border: OutlineInputBorder(
+                            //         borderRadius: BorderRadius.circular(30.0),
+                            //         borderSide: const BorderSide(
+                            //             color: Colors.orange, width: 2.0)),
+                            //     focusedBorder: OutlineInputBorder(
+                            //       borderRadius: BorderRadius.circular(30.0),
+                            //       borderSide: const BorderSide(
+                            //           color: Color.fromARGB(255, 15, 53, 120),
+                            //           width: 2.0),
+                            //     ),
+                            //     enabledBorder: OutlineInputBorder(
+                            //       borderRadius: BorderRadius.circular(30.0),
+                            //       borderSide: const BorderSide(
+                            //           color: Colors.orange, width: 2.0),
+                            //     ),
+                            //     prefixIcon:
+                            //         Icon(Icons.email, color: Colors.black),
+                            //     iconColor: Colors.white,
+                            //     labelText: "البريد الالكتروني",
+                            //     filled: true,
+                            //     fillColor: Colors.white.withOpacity(0.9),
+                            //   ),
+                            //   readOnly: true,
 
-                              keyboardType: TextInputType.emailAddress,
-                              //--------------------------------------
-                            ),
+                            //   keyboardType: TextInputType.emailAddress,
+                            //   //--------------------------------------
+                            // ),
 
                             const SizedBox(
                               height: 15,
@@ -285,7 +307,7 @@ class _EditState extends State<Edit> {
                               //--------------------------------------
                             ),
                             const SizedBox(
-                              height: 10,
+                              height: 15,
                             ),
                             //-------birthday field----------
                             GestureDetector(
@@ -360,6 +382,41 @@ class _EditState extends State<Edit> {
                   ),
                   SizedBox(
                     height: 20.0,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10.0, right: 90.0),
+                    child: SizedBox(
+                      width: 200,
+                      height: 40,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => UpdatePass(),
+                              ));
+                        },
+                        child: Text(
+                          'تغيير كلمة المرور',
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20),
+                        ),
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.resolveWith((states) {
+                              if (states.contains(MaterialState.pressed)) {
+                                return Colors.grey;
+                              }
+                              return Colors.orange;
+                            }),
+                            shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30)))),
+                      ),
+                    ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 10.0, right: 90.0),

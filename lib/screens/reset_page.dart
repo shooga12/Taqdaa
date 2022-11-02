@@ -65,7 +65,6 @@ class _ResetPassPageState extends State<ResetPassPage> {
                     image: AssetImage("assets/Vector.png"), fit: BoxFit.fill)),
           ),
           toolbarHeight: 170,
-          //leading: BackButton(),
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
@@ -122,10 +121,7 @@ class _ResetPassPageState extends State<ResetPassPage> {
                         color: Color.fromARGB(236, 113, 113, 117)
                             .withOpacity(0.9)),
                     filled: true,
-
                     fillColor: Colors.white.withOpacity(0.9),
-                    // border: OutlineInputBorder(
-                    //  borderRadius: BorderRadius.circular(30.0),),
                   ),
 
                   keyboardType: TextInputType.emailAddress,
@@ -139,7 +135,6 @@ class _ResetPassPageState extends State<ResetPassPage> {
                 onPressed: () {
                   resetPass();
                 },
-                //ButtonStyle: BorderRadius.circular(30),
                 child: Text(
                   "إعادة تعيين كلمة المرور",
                   style: const TextStyle(
@@ -159,19 +154,6 @@ class _ResetPassPageState extends State<ResetPassPage> {
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)))),
               )
-
-              //     ReusableButton(context, 'Reset Password', (){
-              //       FirebaseAuth.instance
-              //     .sendPasswordResetEmail(email: _emailController.text).then((value)=>Navigator.of(context).pop());
-              // showDialog(
-              //     context: context,
-              //     builder: (context) {
-              //       return AlertDialog(
-              //         content: Text(
-              //             'We have sent you an email with a password reset link, Check your inbox'),
-              //       );
-              //     });
-              //     })
             ],
           ),
         ));

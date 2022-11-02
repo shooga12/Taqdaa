@@ -46,7 +46,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   String? validatePassword(String? formPassword) {
-    final numericRegex = RegExp(r'[0-9]');
+    final numericRegex = RegExp(r'[0-9]'); //{1,10}$
     final CharRegex = RegExp(r'[!@#\$&*~]');
     final LetterRegex = RegExp(r'[a-z A-Z]');
 
@@ -54,8 +54,6 @@ class _RegisterPageState extends State<RegisterPage> {
       return 'كلمة المرور مطلوبة';
     else if (formPassword.length < 8)
       return 'يجب ان تحتوي كلمة السر على 8 خانات أو أكثر';
-    else if (formPassword.length > 15)
-      return 'يجب أن تكون كلمة السر أقل من 15 خانة';
     else if (!numericRegex.hasMatch(formPassword))
       return 'يجب أن تحتوي كلمة السر على رقم واحد على الاقل';
     else if (!CharRegex.hasMatch(formPassword))
@@ -66,7 +64,19 @@ class _RegisterPageState extends State<RegisterPage> {
       return null;
   }
 
-  bool isVisible = false;
+  String? validateName(String? formName) {
+    final nameRegex = RegExp(
+        r'^[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z]+[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z-_]{1,20}$');
+
+    if (formName == null || formName.isEmpty)
+      return 'الاسم مطلوب';
+    else if (!nameRegex.hasMatch(formName))
+      return 'يجب أن يتكون الأسم من حروف فقط';
+    else
+      return null;
+  }
+
+  bool isVisible = true;
 
   @override
   Widget build(BuildContext context) {
@@ -89,14 +99,17 @@ class _RegisterPageState extends State<RegisterPage> {
                   height: 20,
                 ),
                 TextFormField(
+                  maxLength: 20,
+                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
                   controller: firstnameController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: MultiValidator([
-                    RequiredValidator(errorText: 'مطلوب*'),
-                    PatternValidator(
-                        r'^[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z]+[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z-_]*$',
-                        errorText: 'يجب أن يتكون الأسم من حروف فقط')
-                  ]),
+                  validator: validateName,
+                  // MultiValidator([
+                  //   RequiredValidator(errorText: 'مطلوب*'),
+                  //   PatternValidator(
+                  //       r'^[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z]+[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z-_]*$',
+                  //       errorText: 'يجب أن يتكون الأسم من حروف فقط')
+                  // ]),
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
                   style: TextStyle(
                       color: Color.fromARGB(255, 15, 53, 120).withOpacity(0.9)),
@@ -136,15 +149,18 @@ class _RegisterPageState extends State<RegisterPage> {
                   height: 20,
                 ),
                 TextFormField(
+                  maxLength: 20,
+                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
                   controller: lastnameController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
 
-                  validator: MultiValidator([
-                    RequiredValidator(errorText: 'مطلوب *'),
-                    PatternValidator(
-                        r'^[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z]+[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z-_]*$',
-                        errorText: 'يجب أن يتكون الأسم من حروف فقط')
-                  ]),
+                  validator: validateName,
+                  // MultiValidator([
+                  //   RequiredValidator(errorText: 'مطلوب *'),
+                  //   PatternValidator(
+                  //       r'^[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z]+[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z-_]*$',
+                  //       errorText: 'يجب أن يتكون الأسم من حروف فقط')
+                  // ]),
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
                   style: TextStyle(
                       color: Color.fromARGB(255, 15, 53, 120).withOpacity(0.9)),
@@ -237,6 +253,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 // reusableTextField("Enter your password", true, _passController),
                 TextFormField(
+                  maxLength: 15,
+                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
                   controller: _passController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: validatePassword,
@@ -532,38 +550,78 @@ class _RegisterPageState extends State<RegisterPage> {
       try {
         await _auth
             .createUserWithEmailAndPassword(email: email, password: password)
-            .then((value) => {postDetailsToFirestore()})
-            .catchError((e) {
-          Fluttertoast.showToast(msg: e!.message);
-        });
-      } on FirebaseAuthException catch (error) {
-        switch (error.code) {
-          case "invalid-email":
-            errorMsg = "Your email address appears to be malformed.";
-            break;
-          case "wrong-password":
-            errorMsg = "Your password is wrong.";
-            break;
-          case "user-not-found":
-            errorMsg = "User with this email doesn't exist.";
-            break;
-          case "user-disabled":
-            errorMsg = "User with this email has been disabled.";
-            break;
-          case "too-many-requests":
-            errorMsg = "Too many requests";
-            break;
-          case "operation-not-allowed":
-            errorMsg = "Signing in with Email and Password is not enabled.";
-            break;
-          default:
-            errorMsg = "An undefined Error happened.";
-        }
-        Fluttertoast.showToast(msg: errorMsg);
-        print(error.code);
+            .then((value) => {postDetailsToFirestore()});
+      } on FirebaseAuthException catch (e) {
+        print(e);
+        Map<String, String?> codeResponses = {
+          // Re-auth responses
+          "user-mismatch": 'المستخدم غير متطابق',
+          "user-not-found": 'لم يتم العثور على المستخدم',
+          "invalid-credential": 'invalid credential',
+          "invalid-email": 'الايميل غير موجود',
+          "wrong-password": 'كلمة المرور الحالية خاطئة',
+          "invalid-verification-code": 'رمز التحقق غير صالح',
+          "invalid-verification-id": 'معرّف التحقق غير صالح',
+          "user-disabled": 'المستخدم لهذا الايميل معطّل',
+          "too-many-requests": 'طلبات كثيرة',
+          "operation-not-allowed":
+              'تسجيل الدخول من خلال الايميل وكلمة المرور غير مسموح',
+          // Update password error codes
+          "weak-password": 'كلمة المرور غير قوية',
+          "requires-recent-login": 'يتطلب تسجيل دخول حديث'
+        };
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                  content: Text(codeResponses[e.code]!),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, 'حسنًا'),
+                      child: const Text('حسنًا'),
+                    )
+                  ]);
+            });
       }
     }
   }
+  // void register(String email, String password) async {
+  //   if (_key.currentState!.validate()) {
+  //     try {
+  //       await _auth
+  //           .createUserWithEmailAndPassword(email: email, password: password)
+  //           .then((value) => {postDetailsToFirestore()})
+  //           .catchError((e) {
+  //         Fluttertoast.showToast(msg: e!.message);
+  //       });
+  //     } on FirebaseAuthException catch (error) {
+  //       switch (error.code) {
+  //         case "invalid-email":
+  //           errorMsg = "Your email address appears to be malformed.";
+  //           break;
+  //         case "wrong-password":
+  //           errorMsg = "Your password is wrong.";
+  //           break;
+  //         case "user-not-found":
+  //           errorMsg = "User with this email doesn't exist.";
+  //           break;
+  //         case "user-disabled":
+  //           errorMsg = "User with this email has been disabled.";
+  //           break;
+  //         case "too-many-requests":
+  //           errorMsg = "Too many requests";
+  //           break;
+  //         case "operation-not-allowed":
+  //           errorMsg = "Signing in with Email and Password is not enabled.";
+  //           break;
+  //         default:
+  //           errorMsg = "An undefined Error happened.";
+  //       }
+  //       Fluttertoast.showToast(msg: errorMsg);
+  //       print(error.code);
+  //     }
+  //   }
+  // }
 
   postDetailsToFirestore() async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
