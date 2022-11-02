@@ -22,6 +22,8 @@ class _UpdatePassState extends State<UpdatePass> {
   bool isInsideCart = false;
   final currentPasswordController = TextEditingController();
   final newPasswordController = TextEditingController();
+  final RepeatPasswordController = TextEditingController();
+
   final emailController = TextEditingController();
 
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
@@ -174,6 +176,60 @@ class _UpdatePassState extends State<UpdatePass> {
                             const SizedBox(
                               height: 10,
                             ),
+                            TextFormField(
+                              controller: RepeatPasswordController,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+
+                              validator: (validator) {
+                                RequiredValidator(errorText: '* مطلوب');
+
+                                if (validator != newPasswordController.text)
+                                  return 'تأكيد كلمة المرور غير متطابق';
+                                return null;
+                              },
+
+                              // validator: MultiValidator([
+                              //   RequiredValidator(errorText: 'مطلوب *'),
+                              //   MatchValidator(errorText: 'passwords do not match').validateMatch(newPasswordController.text, RepeatPasswordController.text),
+                              //   ConfirmationResult(newPasswordController.text, RepeatPasswordController.text)
+
+                              //   // PatternValidator(
+                              //   //     r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$',
+                              //   //     errorText: 'كلمة مرور الحالية خاطئة'),
+                              // ]),
+                              obscureText: true,
+                              cursorColor: Color.fromARGB(255, 37, 43, 121),
+                              style:
+                                  TextStyle(fontSize: 20, color: Colors.black),
+
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30.0),
+                                    borderSide: const BorderSide(
+                                        color: Colors.orange, width: 2.0)),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  borderSide: const BorderSide(
+                                      color: Color.fromARGB(255, 15, 53, 120),
+                                      width: 2.0),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  borderSide: const BorderSide(
+                                      color: Colors.orange, width: 2.0),
+                                ),
+                                prefixIcon:
+                                    Icon(Icons.lock, color: Colors.black),
+                                iconColor: Colors.white,
+                                labelText: "تأكيد كلمة المرور الجديدة",
+                                filled: true,
+                                fillColor: Colors.white.withOpacity(0.9),
+                              ),
+
+                              keyboardType: TextInputType.visiblePassword,
+                              //--------------------------------------
+                            ),
                           ],
                         ),
                       ),
@@ -189,10 +245,17 @@ class _UpdatePassState extends State<UpdatePass> {
                       height: 40,
                       child: ElevatedButton(
                         onPressed: () async {
+                          bool confirmed = ConfirmationResult(
+                              newPasswordController.text,
+                              RepeatPasswordController.text);
+                          bool changed = !noChange(
+                              currentPasswordController.text,
+                              newPasswordController.text);
+
                           final String? trySavePassChange = await saveChanges(
                               currentPasswordController.text,
                               newPasswordController.text);
-                          if (isValidNewPass) {
+                          if (isValidNewPass && changed && confirmed) {
                             showDialog(
                                 context: context,
                                 builder: ((context) {
@@ -264,6 +327,30 @@ class _UpdatePassState extends State<UpdatePass> {
                                     ],
                                   );
                                 }));
+                          } else if (!changed) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              duration: const Duration(seconds: 2),
+                              backgroundColor:
+                                  Color.fromARGB(255, 248, 136, 44),
+                              content: Text(
+                                  'تعذّر تحديث كلمة المرور, لم تقم بأي تعديلات على كلمة مرورك القديمة',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 17, letterSpacing: 0.8)),
+                              action: null,
+                            ));
+                          } else if (!confirmed) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              duration: const Duration(seconds: 2),
+                              backgroundColor:
+                                  Color.fromARGB(255, 248, 136, 44),
+                              content: Text(
+                                  'تعذّر تحديث كلمة المرور, تأكيد كلمة المرور الجديدة غير متطابق',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 17, letterSpacing: 0.8)),
+                              action: null,
+                            ));
                           }
                         },
                         child: Text(
@@ -297,15 +384,28 @@ class _UpdatePassState extends State<UpdatePass> {
     );
   }
 
-  bool? isNewPassValid;
+  late bool isMatch;
+  late bool isSamePass;
   // bool? isLnameValid;
   // bool? isEmailValid;
   // bool? isPhoneValid;
 
-  isValidFields() {
-    isValidNewPass ? isNewPassValid = true : isNewPassValid = false;
+  bool ConfirmationResult(newpass, repeatNewpass) {
+    if (newpass != repeatNewpass)
+      isMatch = false;
+    else
+      isMatch = true;
 
-    return isNewPassValid;
+    return isMatch;
+  }
+
+  bool noChange(currentPass, newpass) {
+    if (currentPass != newpass)
+      isSamePass = false;
+    else
+      isSamePass = true;
+
+    return isSamePass;
   }
 
   bool get isValidNewPass {
