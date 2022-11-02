@@ -10,6 +10,9 @@ class returnInvoice {
   List<Item> items = [];
   bool? HaveReturnReq;
   String? status;
+  DateTime? Fulldate;
+  bool? isExpired;
+  int? returnDays;
 
   returnInvoice(
     List items, {
@@ -20,6 +23,9 @@ class returnInvoice {
     this.vat_total,
     this.sub_total,
     this.status,
+    this.Fulldate,
+  this.isExpired,
+  this.returnDays,
   }) {
     items.forEach((e) => this.items.add(Item.fromMap(e)));
   }
@@ -35,6 +41,9 @@ class returnInvoice {
       sub_total: map['sub-total'],
       vat_total: map['vat-total'],
       status: map['status'],
+      Fulldate: map['Fulldate'],
+      isExpired: map['isExpired'],
+      returnDays: map['returnDays'],
     );
   }
 

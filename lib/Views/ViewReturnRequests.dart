@@ -225,8 +225,8 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
                         ReturnInvoices.length, //--- how many return requests?
                     itemBuilder: (context, index) {
                       String status = ReturnInvoices[index].status!;
-                      DateTime approvedDate = ReturnInvoices[index].Fulldate;
-                      int period = ReturnInvoices[index].returnDays;
+                      DateTime? approvedDate = ReturnInvoices[index].Fulldate;
+                      int? period = ReturnInvoices[index].returnDays;
                       inWhichCase(status);
 
                       return GestureDetector(
