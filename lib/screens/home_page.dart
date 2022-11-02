@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart' hide Query;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -257,20 +259,53 @@ class _homeContentState extends State<homeContent> {
   List<Offer> OffersList = [];
   String collectionName = EcommerceApp().getCurrentUser();
 
-  double pageOffset = 0;
+  Stream readOffers = FirebaseFirestore.instance
+      .collection('ActiveOffers')
+      .snapshots()
+      .map(
+          (list) => list.docs.map((doc) => doc.data()).toList()); //ActiveOffers
+
+  //double pageOffset = 0;
+
+  PageController controller = PageController(
+    viewportFraction: 0.8,
+    initialPage: 0,
+  );
+  //int currentPageValue = 0;
+  int nextPage = 0;
+  Timer? _timer;
+
   @override
   void initState() {
-    //readOffers;
+    readOffers;
 
-    controller
-      ..addListener(() {
-        setState(() {
-          pageOffset = controller.page!;
-        });
-      });
+    _timer = Timer.periodic(Duration(seconds: 2), (Timer timer) {
+      nextPage = controller.page!.round() + 1;
+      if (nextPage == OffersList.length) {
+        nextPage = 0;
+      }
+
+      controller.animateToPage(
+        nextPage,
+        duration: Duration(seconds: 1),
+        curve: Curves.linear,
+      );
+    });
+
+    // controller
+    //   ..addListener(() {
+    //     setState(() {
+    //       pageOffset = controller.page!;
+    //     });
+    //   });
 
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _animateSlider());
+    //WidgetsBinding.instance.addPostFrameCallback((_) => _animateSlider());
+  }
+
+  void dispose() {
+    super.dispose();
+    _timer?.cancel();
   }
 
   nothing() {
@@ -278,11 +313,6 @@ class _homeContentState extends State<homeContent> {
       width: 0,
     );
   }
-
-  final PageController controller = PageController(
-    viewportFraction: 0.8,
-    initialPage: 0,
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -681,20 +711,20 @@ class _homeContentState extends State<homeContent> {
     }
   }
 
-  void _animateSlider() {
-    Future.delayed(Duration(seconds: 2)).then((_) {
-      int nextPage = controller.page!.round() + 1;
+  // void _animateSlider() {
+  //   Future.delayed(Duration(seconds: 2)).then((_) {
+  //     int nextPage = controller.page!.round() + 1;
 
-      if (nextPage == OffersList.length) {
-        nextPage = 0;
-      }
+  //     if (nextPage == OffersList.length) {
+  //       nextPage = 0;
+  //     }
 
-      controller
-          .animateToPage(nextPage,
-              duration: Duration(seconds: 1), curve: Curves.linear)
-          .then((_) => _animateSlider());
-    });
-  }
+  //     controller
+  //         .animateToPage(nextPage,
+  //             duration: Duration(seconds: 1), curve: Curves.linear)
+  //         .then((_) => _animateSlider());
+  //   });
+  // }
 
   Widget buildStoresCards(Store store, BuildContext context) {
     return Padding(

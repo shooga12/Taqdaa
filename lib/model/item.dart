@@ -2,7 +2,7 @@ class Item {
   String? barcode;
   String? img;
   String? name;
-  final num quantity;
+  late final num quantity;
   num? price;
   bool? returnable;
   String? size;

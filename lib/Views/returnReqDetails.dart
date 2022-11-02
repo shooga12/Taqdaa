@@ -205,11 +205,11 @@ class _returnReqDetailsState extends State<returnReq_details> {
                     margin: EdgeInsets.all(10),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(50),
-                      child: Image(
-                        image: NetworkImage(
-                          item.img,
-                        ),
-                      ),
+                      // child: Image(
+                      //   image: NetworkImage(
+                      //     item.img,
+                      //   ),
+                      // ),
                     ),
                   ),
                 )

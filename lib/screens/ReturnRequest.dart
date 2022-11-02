@@ -74,7 +74,7 @@ class _returnRequestState extends State<returnRequest> {
                     height: 60,
                     width: 370,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(0.0),
                       child: Row(
                         children: [
                           Text(" "),
@@ -155,15 +155,14 @@ class _returnRequestState extends State<returnRequest> {
                                       child: Container(
                                         width: 55,
                                         margin: EdgeInsets.all(10),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                          child: Image(
-                                            image: NetworkImage(
-                                              '${item.img}',
-                                            ),
-                                          ),
-                                        ),
+                                        // child: ClipRRect(
+                                        //   borderRadius:
+                                        //       BorderRadius.circular(50),
+                                        //   child: Image.network(
+                                        //     '${item.img}',
+                                        //     height: 60,
+                                        //   ),
+                                        // ),
                                       ),
                                     )
                                   ]),
@@ -171,127 +170,121 @@ class _returnRequestState extends State<returnRequest> {
                                 SizedBox(width: 20),
                                 Expanded(
                                   flex: 3,
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "${item.name}",
-                                            style: TextStyle(
-                                              color: Color.fromARGB(
-                                                  255, 32, 7, 121),
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          if (item.size != "")
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(0.0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      // mainAxisAlignment:
+                                      //     MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
                                             Text(
-                                              "المـقاس : ${item.size}",
-                                              style: new TextStyle(
-                                                fontSize: 16,
+                                              "${item.name}",
+                                              style: TextStyle(
                                                 color: Color.fromARGB(
                                                     255, 32, 7, 121),
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
                                               ),
                                             ),
-                                          Text(
-                                            "السعر : " +
-                                                item.price.toString() +
-                                                ' ريال',
-                                          ),
-                                        ],
-                                      ),
-                                      //checkQuantity(item)
-                                      Row(
-                                        children: <Widget>[
-                                          // IconButton(
-                                          //     onPressed: () async {
-                                          //       if (first > 1) {
-                                          //         first--;
-                                          //       }
-                                          //     },
-                                          //     icon: Icon(Icons.remove_circle,
-                                          //         color: first == 1
-                                          //             ? Color.fromARGB(
-                                          //                 255, 195, 195, 195)
-                                          //             : Color.fromARGB(
-                                          //                 255, 118, 171, 223))),
-                                          // Padding(
-                                          //   padding: const EdgeInsets.only(
-                                          //       right: 15.0),
-                                          //   child: Container(
-                                          //     alignment: Alignment.center,
-                                          //     width: 35,
-                                          //     height: 35,
-                                          //     decoration: new BoxDecoration(
-                                          //       color: Color.fromARGB(
-                                          //           255, 245, 161, 14),
-                                          //       shape: BoxShape.circle,
-                                          //     ),
-                                          //     child: Text(
-                                          //       item.quantity.toString(),
-                                          //       style: TextStyle(
-                                          //           color: Colors.white),
-                                          //     ),
-                                          //   ),
-                                          // ),
-                                          // IconButton(
-                                          //   onPressed: () async {},
-                                          //   icon: Icon(Icons.add_circle,
-                                          //       color: Color.fromARGB(
-                                          //           255, 195, 195, 195)),
-                                          // ),
-                                          first != 0
-                                              ? new IconButton(
-                                                  //icon: new Icon(Icons.remove),
-                                                  onPressed: () {
-                                                    if (first > 1) {
-                                                      setState(() => first--);
-                                                    }
-                                                    ;
-                                                  },
-                                                  icon: Icon(
-                                                      Icons.remove_circle,
-                                                      color: first == 1
-                                                          ? Color.fromARGB(255,
-                                                              195, 195, 195)
-                                                          : Color.fromARGB(255,
-                                                              118, 171, 223)))
-                                              : new Container(),
-                                          Container(
-                                            alignment: Alignment.center,
-                                            width: 35,
-                                            height: 35,
-                                            decoration: new BoxDecoration(
-                                              color: Color.fromARGB(
-                                                  255, 245, 161, 14),
-                                              shape: BoxShape.circle,
+                                            if (item.size != "")
+                                              Text(
+                                                "المـقاس : ${item.size}",
+                                                style: new TextStyle(
+                                                  fontSize: 16,
+                                                  color: Color.fromARGB(
+                                                      255, 32, 7, 121),
+                                                ),
+                                              ),
+                                            Text(
+                                              "السعر : " +
+                                                  item.price.toString() +
+                                                  ' ريال',
                                             ),
-                                            child: Text(
-                                              first.toString(),
-                                              style: TextStyle(
-                                                  color: Colors.white),
+                                          ],
+                                        ),
+                                        //checkQuantity(item)
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: <Widget>[
+                                                first != 0
+                                                    ? new IconButton(
+                                                        //icon: new Icon(Icons.remove),
+                                                        onPressed: () {
+                                                          if (first > 1) {
+                                                            setState(() {
+                                                              first--;
+                                                              listentoChange(
+                                                                  item);
+                                                            });
+                                                          }
+                                                          ;
+                                                        },
+                                                        icon: Icon(
+                                                            Icons.remove_circle,
+                                                            color: first == 1
+                                                                ? Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        195,
+                                                                        195,
+                                                                        195)
+                                                                : Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        118,
+                                                                        171,
+                                                                        223)))
+                                                    : new Container(),
+                                                Container(
+                                                  alignment: Alignment.center,
+                                                  width: 35,
+                                                  height: 35,
+                                                  decoration: new BoxDecoration(
+                                                    color: Color.fromARGB(
+                                                        255, 245, 161, 14),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: Text(
+                                                    first.toString(),
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
+                                                new IconButton(
+                                                    icon: new Icon(
+                                                        Icons.add_circle,
+                                                        color: first ==
+                                                                item.quantity
+                                                            ? Color.fromARGB(
+                                                                255,
+                                                                195,
+                                                                195,
+                                                                195)
+                                                            : Color.fromARGB(
+                                                                255,
+                                                                118,
+                                                                171,
+                                                                223)),
+                                                    onPressed: () {
+                                                      if (first <
+                                                          item.quantity) {
+                                                        setState(() {
+                                                          first++;
+                                                          listentoChange(item);
+                                                        });
+                                                      }
+                                                    })
+                                              ],
                                             ),
-                                          ),
-                                          new IconButton(
-                                              icon: new Icon(Icons.add_circle,
-                                                  color: first == item.quantity
-                                                      ? Color.fromARGB(
-                                                          255, 195, 195, 195)
-                                                      : Color.fromARGB(
-                                                          255, 118, 171, 223)),
-                                              onPressed: () {
-                                                if (first < item.quantity) {
-                                                  setState(() => first++);
-                                                }
-                                              })
-                                        ],
-                                      ),
-                                    ],
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 )
                               ],
@@ -322,15 +315,15 @@ class _returnRequestState extends State<returnRequest> {
                                       child: Container(
                                         width: 55,
                                         margin: EdgeInsets.all(10),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                          child: Image(
-                                            image: NetworkImage(
-                                              '${item.img}',
-                                            ),
-                                          ),
-                                        ),
+                                        // child: ClipRRect(
+                                        //   borderRadius:
+                                        //       BorderRadius.circular(50),
+                                        //   child: Image(
+                                        //     image: NetworkImage(
+                                        //       '${item.img}',
+                                        //     ),
+                                        //   ),
+                                        // ),
                                       ),
                                     )
                                   ]),
@@ -640,13 +633,6 @@ class _returnRequestState extends State<returnRequest> {
 
   var items = [];
   AddToList(Item item) {
-    Barcodes.add(item.barcode);
-    returnable.add(item.returnable);
-    checkBoxList.add(false);
-    price.add(item.price);
-  }
-
-  AddToListDB(Item item) {
     items.add(Item(
             barcode: item.barcode,
             name: item.name,
@@ -655,6 +641,44 @@ class _returnRequestState extends State<returnRequest> {
             price: item.price,
             returnable: true)
         .toMap());
+    Barcodes.add(item.barcode);
+    returnable.add(item.returnable);
+    checkBoxList.add(false);
+    price.add(item.price);
+  }
+
+  // AddToListDB(Item item) {
+  //   items.add(Item(
+  //           barcode: item.barcode,
+  //           name: item.name,
+  //           img: item.img,
+  //           quantity: first,
+  //           price: item.price,
+  //           returnable: true)
+  //       .toMap());
+  // }
+
+  listentoChange(Item item) {
+    for (int i = 0; i < items.length; i++) {
+      if (items[i].containsKey("barcode")) {
+        if (items[i]["barcode"] == Barcodes[i]) {
+          items[i]["quantity"] = first;
+        }
+        ;
+        // items[i].forEach((k, v) {
+        //   if (Barcodes.contains(item.barcode)) {
+        //   // changed from indexOf as recommended in comments
+        //   item.quantity = first;
+
+        // });
+      }
+      //items.map((e) => null);
+      // for (item in items) {
+      //   if (Barcodes.contains(item.barcode)) {
+      //     // changed from indexOf as recommended in comments
+      //     item.quantity = first;
+      //   }
+    }
   }
 
   Future<bool> addToDB() async {

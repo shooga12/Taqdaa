@@ -198,6 +198,7 @@ class MyHomePageState extends State<MyHomePage> {
     super.initState();
     _getCurrentPosition();
     readStores();
+    readOffers;
     FirebaseFirestore.instance
         .collection("users")
         .doc(user!.uid)

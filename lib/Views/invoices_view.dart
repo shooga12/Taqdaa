@@ -36,11 +36,14 @@ class _invoicesState extends State<invoices> {
       child: Padding(
           padding:
               const EdgeInsets.only(left: 10, right: 10, bottom: 10, top: 15),
-          child: ListView.builder(
-              itemCount: invoices.length,
-              itemBuilder: (context, index) {
-                return buildInvoiceCard(invoices[index], context);
-              })),
+          child: Container(
+            height: 700,
+            child: ListView.builder(
+                itemCount: invoices.length,
+                itemBuilder: (context, index) {
+                  return buildInvoiceCard(invoices[index], context);
+                }),
+          )),
     );
   }
 

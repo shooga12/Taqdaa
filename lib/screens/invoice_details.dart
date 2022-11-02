@@ -400,14 +400,26 @@ class _invoicesDetailsState extends State<invoice_details> {
                     child: Container(
                       width: 55,
                       margin: EdgeInsets.all(10),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: Image(
-                          image: NetworkImage(
-                            item.img,
-                          ),
-                        ),
-                      ),
+                      // child: Image.network(
+                      //   '${item.img}',
+                      //   height: 60,
+                      // ),
+                      // child: ClipRRect(
+                      //   borderRadius: BorderRadius.circular(50),
+                      //   child: Image(
+                      //     image: NetworkImage(
+                      //       item.img,
+                      //     ),
+                      //   ),
+                      // ),
+                      // ClipRRect(
+                      //     borderRadius: BorderRadius.circular(50),
+                      //     child: Image(
+                      //       image: NetworkImage(
+                      //         item.img,
+                      //       ),
+                      //     ),
+                      //   ),
                     ),
                   )
                 ]),
