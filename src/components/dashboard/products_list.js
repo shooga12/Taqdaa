@@ -12,7 +12,6 @@ import Sidebar from './sidebar';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import {MdModeEditOutline} from 'react-icons/md';
-import { extend } from 'jquery';
 import img2 from './458789.jpeg';
 
 
@@ -121,7 +120,7 @@ function Child({ datum }) {
       console.error(error);
      }); 
   }
-  
+
   const setItemData = (photo, barcode, name, price, uid, returnable)=>{
      setBarcode(barcode);
      setPName(name);
@@ -167,7 +166,6 @@ function Child({ datum }) {
     fileType = fileType.toString().toLowerCase();
     let validExtensions = ["image/jpeg","image/png","image/jpg"]; //adding some valid image extensions in array
     if(!validExtensions.includes(fileType)){
-        //alert("Only .jpeg, jpg, and .png files are allowed");
         document.querySelector('#error-msg-photo').innerHTML = 'Only .jpeg, jpg, and .png files are allowed<br>';
         document.querySelector('#error-msg-photo').style.visibility = "visible";
         e.target.value = "";
@@ -460,7 +458,8 @@ function Products_List(){
              {
               items?
               <Child datum={items}/> 
-              : <img src={loading} className="loading-img"></img>
+              : 
+              <img src={loading} className="loading-img"></img>
              }  
             </>     
         )    

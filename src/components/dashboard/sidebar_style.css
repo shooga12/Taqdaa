@@ -564,6 +564,28 @@ body.shrink .tooltip {
 .requests-page-btn-nonactive:hover{
   background-color: rgb(243, 243, 243);
 }
+.requests-page-btn-active-sub{
+  border-radius: 50px;
+  padding: 0.5em 0.6em 0.5em .6em;
+  border: none;
+  background-color: var(--orange);
+  color: white;
+  font-size: 17px;
+}
+.requests-page-btn-nonactive-sub{
+  border-radius: 50px;
+  padding: 0.5em 0.6em 0.5em .6em;
+  border: 1px solid rgb(185, 185, 185);
+  background-color: transparent;
+  color: rgb(143, 143, 143);
+  font-size: 17px;
+}
+.requests-page-btn-active-sub:hover{
+  background-color: var(--orange-dark);
+}
+.requests-page-btn-nonactive-sub:hover{
+  background-color: rgb(243, 243, 243);
+}
 .requests-card{
   background-color: white;
   box-shadow: 1px 1px 15px 1px #ebebeb;
@@ -588,4 +610,44 @@ body.shrink .tooltip {
 }
 .closed-failed{
   color: #A63B3B;
+}
+.modal-footer{
+  justify-content: flex-start;
+}
+#request-details-arrow{
+  font-size: 18px;
+}
+.decline-btn{
+  background-color:#A63B3B;
+  color: white;
+  border-radius: 30px;
+  padding: 0.3em 0.8em 0.3em 0.8em;
+  border: none;
+  font-size: 18px;
+  margin-left: 0.8em;
+}
+.decline-btn:hover{
+  background-color:#812626;
+}
+.accept-btn{
+  background-color:#237A35;
+  color: white;
+  border-radius: 30px;
+  padding: 0.3em 0.8em 0.3em 0.8em;
+  border: none;
+  font-size: 18px;
+}
+.accept-btn:hover{
+  background-color:#175523;
+}
+.pick-btn{
+  background-color:#7cb034;
+  color: white;
+  border-radius: 30px;
+  padding: 0.3em 0.8em 0.3em 0.8em;
+  border: none;
+  font-size: 18px;
+}
+.pick-btn:hover{
+  background-color:#69962b;
 }
