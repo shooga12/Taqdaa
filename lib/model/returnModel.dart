@@ -51,4 +51,14 @@ class returnInvoice {
       'status': status,
     };
   }
+
+  static returnInvoice fromJson(Map<String, dynamic> json) =>
+      returnInvoice(json['items'],
+          id: json['id'],
+          store: json['store'],
+          date: json['date'],
+          total: json['total'],
+          sub_total: json['sub-total'],
+          vat_total: json['vat-total'],
+          status: json['status']);
 }

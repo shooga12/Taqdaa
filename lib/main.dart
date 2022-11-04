@@ -14,6 +14,7 @@ import 'controller/EcommerceApp.dart';
 import 'model/Offers.dart';
 import 'model/StoreModel.dart';
 import 'model/invoice.dart';
+import 'model/returnModel.dart';
 import 'model/user_model.dart';
 
 void main() async {
@@ -173,12 +174,13 @@ class MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  static Stream<List<Invoice>> readRequest() => FirebaseFirestore.instance
+  static Stream<List<returnInvoice>> readRequest() => FirebaseFirestore.instance
       .collection('ReturnRequests${EcommerceApp.loggedInUser.uid}')
-      .where('status', isEqualTo: "Accepted")
+      .where('status', isEqualTo: "ready")
       .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => Invoice.fromJson(doc.data())).toList());
+      .map((snapshot) => snapshot.docs
+          .map((doc) => returnInvoice.fromJson(doc.data()))
+          .toList());
 
   static Stream<List<Store>> readStores() => FirebaseFirestore.instance
       .collection('Stores')
@@ -236,22 +238,21 @@ class MyHomePageState extends State<MyHomePage> {
               final stores = snapshot.data!;
               if (stores.isNotEmpty) {
                 NotificationApi.showScheduledNotification(
-                    title: 'Taqdaa is waiting for you!',
-                    body:
-                        'Hey, ${EcommerceApp.loggedInUser.firstName} \nyour Return request got accepted come and drop it by!',
+                    title: 'تقضّى بانتظارك!',
+                    body: 'مرحبًا, ${EcommerceApp.loggedInUser.firstName} \n ',
                     payload: 'paylod.nav',
                     scheduledDate: DateTime.now().add(Duration(seconds: 1)));
               }
-              return StreamBuilder<List<Invoice>>(
+              return StreamBuilder<List<returnInvoice>>(
                   stream: readRequest(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       final requests = snapshot.data!;
                       if (requests.isNotEmpty) {
                         NotificationApi.showScheduledNotification(
-                            title: 'Taqdaa is waiting for you!',
+                            title: 'تقضّى بانتظارك!',
                             body:
-                                'Hey, ${EcommerceApp.loggedInUser.firstName} \nyou\'re very close from Sephora come and shop with us now!',
+                                'مرحبًا, ${EcommerceApp.loggedInUser.firstName} \nطلب استرجاعك تم قبوله , وهو جاهز للاستلام',
 
                             ///bug fixes
                             payload: 'paylod.nav',
