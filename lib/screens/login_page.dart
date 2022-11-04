@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
     return null;
   }
 
-  bool isVisible = false;
+  bool isVisible = true;
 
   @override
   Widget build(BuildContext context) {

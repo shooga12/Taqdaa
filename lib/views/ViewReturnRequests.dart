@@ -22,25 +22,33 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
   List<returnInvoice> ReturnInvoices = [];
   bool noReturnReq = false;
 
-  bool inCase1 = true;
+  bool inCase1 = false;
   bool inCase2 = false;
   bool inCase3 = false;
   bool inCase4 = false;
   bool inCase5 = false;
 
-  DateTime getDueDate() {
-    DateTime startTime = DateTime.now(); //----------- approved/accepted date
-    Duration duration = Duration(days: 7);
-
-    DateTime endDate = startTime.add(duration);
-    return endDate;
+  void inWhichCase(status) {
+    if (status == 'pending') inCase1 = true;
+    if (status == 'declined') inCase2 = true;
+    if (status == 'ready') inCase3 = true;
+    if (status == 'received') inCase4 = true;
+    if (status == 'notreceived') inCase5 = true;
   }
 
-  static int getDaysRemain(endDate) {
-    Duration diff = endDate.difference(DateTime.now());
-    int daysRemain = diff.inDays;
-    return daysRemain;
-  }
+  // DateTime getDueDate(approvedDate, period) {
+  //   DateTime startTime = approvedDate; //----------- approved/accepted date
+  //   Duration duration = Duration(days: period);
+
+  //   DateTime endDate = startTime.add(duration);
+  //   return endDate;
+  // }
+
+  // static int getDaysRemain(endDate) {
+  //   Duration diff = endDate.difference(DateTime.now());
+  //   int daysRemain = diff.inDays;
+  //   return daysRemain;
+  // }
 
   @override
   void didChangeDependencies() {
@@ -124,6 +132,10 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
                     itemCount:
                         ReturnInvoices.length, //--- how many return requests?
                     itemBuilder: (context, index) {
+                      String status = ReturnInvoices[index].status!;
+                      //DateTime? approvedDate = ReturnInvoices[index].Fulldate;
+                      int? period = 7; //ReturnInvoices[index].returnDays;
+                      inWhichCase(status);
                       return GestureDetector(
                         onTap: () {
                           // Navigator.of(context).push(
@@ -418,42 +430,6 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
                                                 ),
                                               ],
                                             ),
-                                          //  +++++++++++++++++++++++++++++++
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(7.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Center(
-                                                    child: Text(
-                                                  ('*  يرجى ملاحظة أنه لديك مهلة 7 أيام من تاريخ قبول  \nالطلب.\n'
-                                                          'آخر يوم لاستلام المنتجات:   ' +
-                                                      getDueDate()
-                                                          .day
-                                                          .toString() +
-                                                      '/' +
-                                                      getDueDate()
-                                                          .month
-                                                          .toString() +
-                                                      '/' +
-                                                      getDueDate()
-                                                          .year
-                                                          .toString() +
-                                                      '\n' +
-                                                      'الأيام المتبقية :  ' +
-                                                      (getDaysRemain(
-                                                                  getDueDate()) +
-                                                              1)
-                                                          .toString()),
-                                                ))
-                                              ],
-                                            ),
-                                          ),
                                           if (inCase4)
                                             Row(
                                               mainAxisAlignment:
@@ -606,6 +582,58 @@ class _ViewReturnReqState extends State<ViewReturnReq> {
                                                 ),
                                               ],
                                             ),
+                                          //  +++++++++++++++++++++++++++++++
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(7.0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Center(
+                                                    child: Text(
+                                                  ('*  يرجى ملاحظة أنه لديك مهلة 7 أيام من تاريخ قبول  \nالطلب.\n'
+                                                          'آخر يوم لاستلام المنتجات:   ' +
+                                                      '9/11/2022\n'
+                                                          // getDueDate(
+                                                          //         DateTime.utc(
+                                                          //             2022, 11, 2),
+                                                          //         period)
+                                                          //     .day
+                                                          //     .toString() +
+                                                          // '/' +
+                                                          // getDueDate(
+                                                          //         DateTime.utc(
+                                                          //             2022, 11, 2),
+                                                          //         period)
+                                                          //     .month
+                                                          //     .toString() +
+                                                          // '/' +
+                                                          // getDueDate(
+                                                          //         DateTime.utc(
+                                                          //             2022, 11, 2),
+                                                          //         period)
+                                                          //     .year
+                                                          //     .toString() +
+                                                          // '\n' +
+                                                          'الأيام المتبقية :  ' +
+                                                      '7'
+                                                  // (getDaysRemain(getDueDate(
+                                                  //             DateTime.utc(
+                                                  //                 2022,
+                                                  //                 11,
+                                                  //                 2),
+                                                  //             period)) +
+                                                  //         1)
+                                                  //.toString()
+                                                  ),
+                                                ))
+                                              ],
+                                            ),
+                                          ),
                                         ],
                                       ),
 

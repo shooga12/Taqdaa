@@ -3,9 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:taqdaa_application/screens/home_page.dart';
 import 'package:taqdaa_application/screens/insideMore.dart';
-import '../confige/EcommerceApp.dart';
 import 'package:intl/intl.dart';
+import '../confige/EcommerceApp.dart';
 import '../views/profile_view.dart';
 
 class UpdatePass extends StatefulWidget {
@@ -16,8 +17,14 @@ class UpdatePass extends StatefulWidget {
 }
 
 class _UpdatePassState extends State<UpdatePass> {
+  bool isInsideHome = false;
+  bool isInsideReceipt = false;
+  bool isInsideMore = true;
+  bool isInsideCart = false;
   final currentPasswordController = TextEditingController();
   final newPasswordController = TextEditingController();
+  final RepeatPasswordController = TextEditingController();
+
   final emailController = TextEditingController();
 
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
@@ -27,11 +34,31 @@ class _UpdatePassState extends State<UpdatePass> {
   bool isLoading = false;
 
   static var _firestore;
+  bool isVisible = true;
 
   @override
   void initState() {
     super.initState();
     emailController.text = EcommerceApp.loggedInUser.email!;
+  }
+
+  String? validatePassword(String? formPassword) {
+    final numericRegex = RegExp(r'[0-9]'); //{1,10}$
+    final CharRegex = RegExp(r'[!@#\$&*~]');
+    final LetterRegex = RegExp(r'[a-z A-Z]');
+
+    if (formPassword == null || formPassword.isEmpty)
+      return 'كلمة المرور مطلوبة';
+    else if (formPassword.length < 8)
+      return 'يجب ان تحتوي كلمة السر على 8 خانات أو أكثر';
+    else if (!numericRegex.hasMatch(formPassword))
+      return 'يجب أن تحتوي كلمة السر على رقم واحد على الاقل';
+    else if (!CharRegex.hasMatch(formPassword))
+      return 'يجب أن تحتوي كلمة السر على رمز خاص واحد على الاقل';
+    else if (!LetterRegex.hasMatch(formPassword))
+      return 'يجب أن تحتوي كلمة السر على حرف واحد على الاقل';
+    else
+      return null;
   }
 
   String CurrentUser = "";
@@ -43,7 +70,7 @@ class _UpdatePassState extends State<UpdatePass> {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         title: Text(
-          "تحديث كلمة المرور",
+          "تغيير كلمة المرور",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.w100),
         ),
         flexibleSpace: Container(
@@ -77,6 +104,9 @@ class _UpdatePassState extends State<UpdatePass> {
                           children: <Widget>[
                             //current field
                             TextFormField(
+                              maxLength: 15,
+                              maxLengthEnforcement:
+                                  MaxLengthEnforcement.enforced,
                               controller: currentPasswordController,
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
@@ -87,12 +117,22 @@ class _UpdatePassState extends State<UpdatePass> {
                                 //     r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$',
                                 //     errorText: 'كلمة مرور الحالية خاطئة'),
                               ]),
-                              obscureText: true,
+                              obscureText: isVisible,
                               cursorColor: Color.fromARGB(255, 37, 43, 121),
                               style:
                                   TextStyle(fontSize: 20, color: Colors.black),
 
                               decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      isVisible = !isVisible;
+                                    });
+                                  },
+                                  icon: isVisible
+                                      ? Icon(Icons.visibility)
+                                      : Icon(Icons.visibility_off),
+                                ),
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(30.0),
                                     borderSide: const BorderSide(
@@ -125,22 +165,31 @@ class _UpdatePassState extends State<UpdatePass> {
                             ),
                             //----New password Field----
                             TextFormField(
+                              maxLength: 15,
+                              maxLengthEnforcement:
+                                  MaxLengthEnforcement.enforced,
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
                               controller: newPasswordController,
 
-                              validator: MultiValidator([
-                                RequiredValidator(errorText: 'مطلوب *'),
-                                PatternValidator(
-                                    r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$',
-                                    errorText: 'كلمة مرور غير صالحة'),
-                              ]),
-                              obscureText: true,
+                              validator: validatePassword,
+
+                              obscureText: isVisible,
                               cursorColor: Color.fromARGB(255, 37, 43, 121),
                               style:
                                   TextStyle(fontSize: 20, color: Colors.black),
 
                               decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      isVisible = !isVisible;
+                                    });
+                                  },
+                                  icon: isVisible
+                                      ? Icon(Icons.visibility)
+                                      : Icon(Icons.visibility_off),
+                                ),
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(30.0),
                                     borderSide: const BorderSide(
@@ -170,6 +219,73 @@ class _UpdatePassState extends State<UpdatePass> {
                             const SizedBox(
                               height: 10,
                             ),
+                            TextFormField(
+                              maxLength: 15,
+                              maxLengthEnforcement:
+                                  MaxLengthEnforcement.enforced,
+                              controller: RepeatPasswordController,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+
+                              validator: (validator) {
+                                RequiredValidator(errorText: '* مطلوب');
+
+                                if (validator != newPasswordController.text)
+                                  return 'تأكيد كلمة المرور غير متطابق';
+                                return null;
+                              },
+
+                              // validator: MultiValidator([
+                              //   RequiredValidator(errorText: 'مطلوب *'),
+                              //   MatchValidator(errorText: 'passwords do not match').validateMatch(newPasswordController.text, RepeatPasswordController.text),
+                              //   ConfirmationResult(newPasswordController.text, RepeatPasswordController.text)
+
+                              //   // PatternValidator(
+                              //   //     r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$',
+                              //   //     errorText: 'كلمة مرور الحالية خاطئة'),
+                              // ]),
+                              obscureText: true,
+                              cursorColor: Color.fromARGB(255, 37, 43, 121),
+                              style:
+                                  TextStyle(fontSize: 20, color: Colors.black),
+
+                              decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      isVisible = !isVisible;
+                                    });
+                                  },
+                                  icon: isVisible
+                                      ? Icon(Icons.visibility)
+                                      : Icon(Icons.visibility_off),
+                                ),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30.0),
+                                    borderSide: const BorderSide(
+                                        color: Colors.orange, width: 2.0)),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  borderSide: const BorderSide(
+                                      color: Color.fromARGB(255, 15, 53, 120),
+                                      width: 2.0),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  borderSide: const BorderSide(
+                                      color: Colors.orange, width: 2.0),
+                                ),
+                                prefixIcon:
+                                    Icon(Icons.lock, color: Colors.black),
+                                iconColor: Colors.white,
+                                labelText: "تأكيد كلمة المرور الجديدة",
+                                filled: true,
+                                fillColor: Colors.white.withOpacity(0.9),
+                              ),
+
+                              keyboardType: TextInputType.visiblePassword,
+                              //--------------------------------------
+                            ),
                           ],
                         ),
                       ),
@@ -185,10 +301,17 @@ class _UpdatePassState extends State<UpdatePass> {
                       height: 40,
                       child: ElevatedButton(
                         onPressed: () async {
+                          bool confirmed = ConfirmationResult(
+                              newPasswordController.text,
+                              RepeatPasswordController.text);
+                          bool changed = !noChange(
+                              currentPasswordController.text,
+                              newPasswordController.text);
+
                           final String? trySavePassChange = await saveChanges(
                               currentPasswordController.text,
                               newPasswordController.text);
-                          if (isValidNewPass) {
+                          if (isValidNewPass && changed && confirmed) {
                             showDialog(
                                 context: context,
                                 builder: ((context) {
@@ -213,12 +336,12 @@ class _UpdatePassState extends State<UpdatePass> {
                                                         letterSpacing: 0.8)),
                                                 action: null,
                                               ));
-
+                                              EcommerceApp.pageIndex = 4;
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                        More(),
+                                                        HomePage(),
                                                   ));
                                               Navigator.push(
                                                   context,
@@ -260,6 +383,42 @@ class _UpdatePassState extends State<UpdatePass> {
                                     ],
                                   );
                                 }));
+                          } else if (!changed) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              duration: const Duration(seconds: 2),
+                              backgroundColor:
+                                  Color.fromARGB(255, 248, 136, 44),
+                              content: Text(
+                                  'تعذّر تحديث كلمة المرور, لم تقم بأي تعديلات على كلمة مرورك القديمة',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 17, letterSpacing: 0.8)),
+                              action: null,
+                            ));
+                          } else if (!confirmed) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              duration: const Duration(seconds: 2),
+                              backgroundColor:
+                                  Color.fromARGB(255, 248, 136, 44),
+                              content: Text(
+                                  'تعذّر تحديث كلمة المرور, تأكيد كلمة المرور الجديدة غير متطابق',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 17, letterSpacing: 0.8)),
+                              action: null,
+                            ));
+                          } else if (!isValidNewPass) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              duration: const Duration(seconds: 2),
+                              backgroundColor:
+                                  Color.fromARGB(255, 248, 136, 44),
+                              content: Text(
+                                  'تعذّر تحديث كلمة المرور, كلمة المرور الجديدة ضعيفة',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 17, letterSpacing: 0.8)),
+                              action: null,
+                            ));
                           }
                         },
                         child: Text(
@@ -293,15 +452,28 @@ class _UpdatePassState extends State<UpdatePass> {
     );
   }
 
-  bool? isNewPassValid;
+  late bool isMatch;
+  late bool isSamePass;
   // bool? isLnameValid;
   // bool? isEmailValid;
   // bool? isPhoneValid;
 
-  isValidFields() {
-    isValidNewPass ? isNewPassValid = true : isNewPassValid = false;
+  bool ConfirmationResult(newpass, repeatNewpass) {
+    if (newpass != repeatNewpass)
+      isMatch = false;
+    else
+      isMatch = true;
 
-    return isNewPassValid;
+    return isMatch;
+  }
+
+  bool noChange(currentPass, newpass) {
+    if (currentPass != newpass)
+      isSamePass = false;
+    else
+      isSamePass = true;
+
+    return isSamePass;
   }
 
   bool get isValidNewPass {

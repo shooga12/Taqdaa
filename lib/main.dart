@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:taqdaa_application/models/invoice.dart';
+import 'package:taqdaa_application/models/returnModel.dart';
 import 'package:taqdaa_application/screens/list_of_stores.dart';
 import '../methods/authentication_services.dart';
 import '../screens/home_page.dart';
@@ -165,7 +166,7 @@ class MyHomePageState extends State<MyHomePage> {
                     payload: 'paylod.nav',
                     scheduledDate: DateTime.now().add(Duration(seconds: 1)));
               }
-              return StreamBuilder<List<Invoice>>(
+              return StreamBuilder<List<returnInvoice>>(
                   stream: readRequest(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
@@ -238,10 +239,11 @@ class MyHomePageState extends State<MyHomePage> {
       .map((snapshot) =>
           snapshot.docs.map((doc) => Store.fromJson(doc.data())).toList());
 
-  static Stream<List<Invoice>> readRequest() => FirebaseFirestore.instance
+  static Stream<List<returnInvoice>> readRequest() => FirebaseFirestore.instance
       .collection('ReturnRequests${EcommerceApp.loggedInUser.uid}')
       .where('status', isEqualTo: "ready")
       .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => Invoice.fromJson(doc.data())).toList());
+      .map((snapshot) => snapshot.docs
+          .map((doc) => returnInvoice.fromJson(doc.data()))
+          .toList());
 }

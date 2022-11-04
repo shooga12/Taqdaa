@@ -49,8 +49,6 @@ class _RegisterPageState extends State<RegisterPage> {
       return 'كلمة المرور مطلوبة';
     else if (formPassword.length < 8)
       return 'يجب ان تحتوي كلمة السر على 8 خانات أو أكثر';
-    else if (formPassword.length > 15)
-      return 'يجب أن تكون كلمة السر أقل من 15 خانة';
     else if (!numericRegex.hasMatch(formPassword))
       return 'يجب أن تحتوي كلمة السر على رقم واحد على الاقل';
     else if (!CharRegex.hasMatch(formPassword))
@@ -61,7 +59,19 @@ class _RegisterPageState extends State<RegisterPage> {
       return null;
   }
 
-  bool isVisible = false;
+  String? validateName(String? formName) {
+    final nameRegex = RegExp(
+        r'^[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z]+[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z-_]{1,20}$');
+
+    if (formName == null || formName.isEmpty)
+      return 'الاسم مطلوب';
+    else if (!nameRegex.hasMatch(formName))
+      return 'يجب أن يتكون الأسم من حروف فقط';
+    else
+      return null;
+  }
+
+  bool isVisible = true;
 
   @override
   Widget build(BuildContext context) {
@@ -84,14 +94,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   height: 20,
                 ),
                 TextFormField(
+                  maxLength: 20,
+                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
                   controller: firstnameController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: MultiValidator([
-                    RequiredValidator(errorText: 'مطلوب*'),
-                    PatternValidator(
-                        r'^[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z]+[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z-_]*$',
-                        errorText: 'يجب أن يتكون الأسم من حروف فقط')
-                  ]),
+                  validator: validateName,
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
                   style: TextStyle(
                       color: Color.fromARGB(255, 15, 53, 120).withOpacity(0.9)),
@@ -131,15 +138,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   height: 20,
                 ),
                 TextFormField(
+                  maxLength: 20,
+                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
                   controller: lastnameController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-
-                  validator: MultiValidator([
-                    RequiredValidator(errorText: 'مطلوب *'),
-                    PatternValidator(
-                        r'^[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z]+[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z-_]*$',
-                        errorText: 'يجب أن يتكون الأسم من حروف فقط')
-                  ]),
+                  validator: validateName,
                   cursorColor: Color.fromARGB(255, 37, 43, 121),
                   style: TextStyle(
                       color: Color.fromARGB(255, 15, 53, 120).withOpacity(0.9)),
@@ -228,6 +231,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 // reusableTextField("Enter your password", true, _passController),
                 TextFormField(
+                  maxLength: 15,
+                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
                   controller: _passController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: validatePassword,

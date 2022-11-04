@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
   ];
 
   final titles = [
-    "مرحبًا، ${EcommerceApp.loggedInUser.firstName}",
+    "مرحبًا، ${EcommerceApp.loggedInUser.firstName}                               ",
     "سلة التسوق " + EcommerceApp.storeName,
     "سلة التسوق",
     "فواتيري",
