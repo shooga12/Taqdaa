@@ -1,17 +1,10 @@
 ![IMG_6823](https://user-images.githubusercontent.com/39588988/218162395-c22f1aff-a9e2-4233-b08b-14364b3ef3f3.PNG)
+
 # taqdaa_application
 
-A new Flutter project.
+Taqdaa aims to reduce the crowded lines at the cashier, where customers can checkout themselves by scanning the barcode of the products they take where the app adds it up to their cart and after ending the shopping journey they can pay for their cart and have their invoices saved in the app.
+Taqdaa also aims to provide extra security for stores that uses RFID security tags on their items where the tags become deactivated after payment and that insures no stealing and more reliability.
 
-## Getting Started
+The crowded lines at the cashier cost big stores big loses and that what makes people avoid going to them cause they hate waiting in line But our app solves the problem you go in scan your item’s barcode checkout yourself and thats it your invoice is saved and you are ready to go.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+In the other hand having online invoices cause the environment huge benefits paper invoices are a complete resource drain often to just throw them away, that is If you send online invoices instead of printing 300 of them, you will save 900 sheets of paper which means 0 trees are cut! + Enough fuel to travel 8 miles.
